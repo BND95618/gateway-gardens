@@ -1,0 +1,79 @@
+<!-- /plants/templates/master.html -->
+<!-- PRODUCTION DEPLOYMENT: (D4B p. 318) - used to display static files in the templates -->
+<!-- {x% load static %x} -->
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta description="Plant Database">
+  
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- AR: <link rel="stylesheet" href="{x% static 'css/global.css' %x}"> -->
+
+  <style>
+    .mySlides {display:none}
+    .w3-left, .w3-right, .w3-badge {cursor:pointer}
+    .w3-badge {height:13px;width:13px;padding:0}
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      color: white;
+      text-align: left;
+    }
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      color: white;
+      text-align: center;
+    }
+  </style>
+
+  <!-- Added for Quill -->
+  <!--  AR: x{ form.media }x -->
+
+  <title>Gateway Gardens</title>
+</head>
+<header>
+  <!-- Navigation Bar -->
+  <div class="w3-top">
+    <div class="w3-bar w3-light-grey">
+      <a href="{% url 'plants:index' %}"            class="w3-bar-item w3-button">Home</a>
+      <a href="{% url 'plants:gardens_summary' %}"  class="w3-bar-item w3-button">My Garden</a>
+      <a href="{% url 'plants:myplants_summary' %}" class="w3-bar-item w3-button">My Plants</a>
+      <a href="{% url 'plants:plants_search' %}"    class="w3-bar-item w3-button">All Plants</a>
+      <a href="{% url 'plants:plants_glossary' %}"  class="w3-bar-item w3-button">Glossary</a>
+      <a href="{% url 'plants:plants_reference' %}" class="w3-bar-item w3-button">Reference</a>
+      <a href="{% url 'plants:plants_about' %}"     class="w3-bar-item w3-button">About</a>
+      <!-- drop down account menu item -->
+      <div class="w3-dropdown-hover w3-right">
+        {% if user.is_authenticated %}
+          <button class="w3-button">{{ user.username }}</button>
+        {% else %}
+          <button class="w3-button">Account</button>
+        {% endif %}
+        <div class="w3-dropdown-content w3-bar-block w3-card-4 ">
+          {% if user.is_authenticated %}
+            <!-- AR -->
+            <form action="#" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Logout" class="w3-bar-item w3-button">
+            </form>
+          {% else %}
+            <!-- AR -->
+            <a href="#" class="w3-bar-item w3-button">Login </a>
+            <a href="#" class="w3-bar-item w3-button">Signup</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  <!-- Header is completed on each page -->
+
+  {% block content %}
+  {% endblock %}
+
+</html>

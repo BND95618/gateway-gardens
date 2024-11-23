@@ -10,7 +10,13 @@ RUN python -m venv /py && \
     /py/bin/pip install --upgrade pip && \
     /py/bin/pip install -r /requirements.txt
 
-ENV PATH="/py/bin:$PATH"
+COPY ./scripts /scripts
+RUN chmod -R +x /scripts
+
+ENV PATH="/scripts:/py/bin:$PATH"
 
 COPY ./app /app
 WORKDIR /app
+
+EXPOSE 80
+CMD ["/scripts/run.sh"]
