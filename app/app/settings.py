@@ -149,3 +149,32 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
     MEDIA_ROOT  = '/app/media/'
+
+# Quill Rich Text Editor configuration
+QUILL_CONFIGS = {
+    'default':{
+        'theme': 'snow',
+        'modules': {
+            'syntax': True,
+            'toolbar': [
+                [
+                    {'font': []},
+                    {'header': []},
+                    {'align': []},
+                    'bold', 
+                    'italic', 
+                    'underline', 
+                    'strike', 
+                    'blockquote',
+                    { 'indent': '-1'}, 
+                    { 'indent': '+1' },
+                    {'list': 'ordered'},
+                    {'list': 'bullet' },
+                    {'color': []},
+                    {'background': []},
+                ],
+                ['clean'],
+            ]
+        }
+    }
+}
