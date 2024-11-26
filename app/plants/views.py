@@ -5,11 +5,23 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-# from .models import Garden, Plant, Comment
-# from .forms  import GardenAddUpdateForm, PlantAddUpdateForm, PlantCommentForm
+from .models import Garden, Plant, Comment
+from .forms  import GardenAddUpdateForm, PlantAddUpdateForm, PlantCommentForm
 
 import math
 import os
+
+# Define attribute select options
+plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
+sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
+water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
+bloom_color_opt  = ["tbd", "white", "red", "pink", "green", "blue", "orange"]
+bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
+pollinators_opt  = ["tbd", "Bees", "Butterfiles", "Hummingbirds", "None"]
+ca_native_opt    = ["tbd", "Yes", "No"]
+usda_zones       = ["tbd", "1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", 
+                    "8a", "8b", "9a", "9b", "10a", "10b"]
+# sunset_zones     = list(range(1, 25))
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
