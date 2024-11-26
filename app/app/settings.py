@@ -92,7 +92,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -111,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -123,13 +121,31 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# STATIC_URL defines the URL prefix used to access static files in your templates
 STATIC_URL = 'static/'
+# MEDIA_URL defines the URL prefix used to access media files in your templates
+MEDIA_URL  = 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Required for AWS Lightsail to allow CSRF_TOKEN to work properly
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Determine if the container/image is running on AWS Lightsail (1) or locally (0)
+# If so, setup AWS S3 storage
+if (os.environ.get('IS_ON_AWS', '0') == '1'):
+    DEFAULT_FILE_STORAGE    = 'app.s3_backends.MediaS3Storage'
+    STATICFILES_STORAGE     = 'app.s3_backends.StaticS3Storage'
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_ACL         = 'public-read'
+    AWS_QUERYSTRING_AUTH    = False
+    # Added to resolve issue running on AWS Lightsail
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+else:
+    MEDIA_ROOT  = '/app/media/'

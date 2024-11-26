@@ -1,0 +1,18 @@
+/* app/plants/static/plants/css/global.css
+   Element Selectors = tag
+   Class Selectors   = '.'
+   ID Selectors      = '#'
+
+   CSS combinators:
+   > descendant selector (space)
+   > child selector (>)
+   > adjacent sibling selector (+)
+   > general sibling selector (~)
+*/
+body {
+    font-family: chalkboard, verdana, sans-serif;
+}
+h1 { 
+    color: purple; 
+    font-family: chalkboard, verdana, sans-serif;
+}

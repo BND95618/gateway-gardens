@@ -1,6 +1,6 @@
 <!-- /plants/templates/master.html -->
 <!-- PRODUCTION DEPLOYMENT: (D4B p. 318) - used to display static files in the templates -->
-<!-- {x% load static %x} -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -10,7 +10,7 @@
   
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <!-- AR: <link rel="stylesheet" href="{x% static 'css/global.css' %x}"> -->
+  <link rel="stylesheet" href="{% static 'plants/style.css' %}">
 
   <style>
     .mySlides {display:none}
