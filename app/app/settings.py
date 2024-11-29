@@ -24,6 +24,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+#DEBUG=1
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
@@ -96,15 +97,22 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+    # checks the similarity between the password and a set of attributes of the user
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
+    # checks whether the password meets a minimum length
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "OPIONS": {
+            "min_length": 9,
+        }
     },
+    # checks whether the password occurs in a list of common passwords
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
+    # checks whether the password isn’t entirely numeric
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -149,6 +157,10 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
     MEDIA_ROOT  = '/app/media/'
+
+# Directs user to login page when login is required
+# AR: needs to be fixed
+LOGIN_URL = 'plants/user_login/'
 
 # Quill Rich Text Editor configuration
 QUILL_CONFIGS = {

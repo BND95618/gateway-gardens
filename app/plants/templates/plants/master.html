@@ -59,14 +59,14 @@
         <div class="w3-dropdown-content w3-bar-block w3-card-4 ">
           {% if user.is_authenticated %}
             <!-- AR -->
-            <form action="#" method="post">
+            <form action="{% url 'plants:user_logout' %}" method="post">
               {% csrf_token %}
               <input type="submit" value="Logout" class="w3-bar-item w3-button">
             </form>
           {% else %}
             <!-- AR -->
-            <a href="#" class="w3-bar-item w3-button">Login </a>
-            <a href="#" class="w3-bar-item w3-button">Signup</a>
+            <a href="{% url 'plants:user_login' %}"  class="w3-bar-item w3-button">Login </a>
+            <a href="{% url 'plants:user_signup' %}" class="w3-bar-item w3-button">Signup</a>
           {% endif %}
         </div>
       </div>

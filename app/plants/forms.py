@@ -89,6 +89,45 @@ USDA_ZONE_CHOICES = (
 	("13b (65F to 70F)",  "13b (65F to 70F)"),
 )
 
+class UserSignupForm(forms.Form):
+	username = forms.CharField(
+		label="username", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	password = forms.CharField(
+		label="password", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	email = forms.EmailField(
+		label="email", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	first_name = forms.CharField(
+		label="first_name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	last_name = forms.CharField(
+		label="last_name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	
+class UserLoginForm(forms.Form):
+	username = forms.CharField(
+		label="username", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	password = forms.CharField(
+		label="password", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	
 class GardenAddUpdateForm(forms.Form):
 	name = forms.CharField(
 		label="Garden Name", 

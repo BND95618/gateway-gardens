@@ -1,21 +1,69 @@
 <!-- /app/plants/templates/plants/gardens_summary.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Garden Summary{% endblock %}
+{% block title %}My Garden Summary{% endblock %}
 
 {% block content %}
 
 <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">Garden Summary</h1>
+      <div class="w3-dropdown-hover">
+        <button class="w3-button w3-green">Menu</button>
+        <div class="w3-dropdown-content w3-bar-block w3-card-4">
+          <a href="{% url 'plants:gardens_update' garden.id %}" class="w3-bar-item w3-button">Update</a> 
+          <!-- AR: Add update functionality -->
+          <!-- AR: Add delete functionality -->
+          <a href="#" class="w3-bar-item w3-button">Delete</a>
+        </div>
+      </div>
+      <h1 class="w3-bar-item">{{ garden.name }}</h1>
     </div>
   </div>
 </header>
 
-<!-- Garden Summary -->
+<!-- main content -->
 <body>
-  <div class="w3-container" style="margin-top:140px;">
-    <h2>Under Construction</h1>
+  <div class="w3-container" style="margin-top:150px; margin-bottom:32px;">
+    <div class="w3-content w3-display-container" style="max-width:900px">
+      <!-- Load the images -->
+      {% if garden.image_1 %}
+        <img src="{{ garden.image_1.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_2 %}
+        <img src="{{ garden.image_2.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_3 %}
+        <img src="{{ garden.image_3.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_4 %}
+        <img src="{{ garden.image_4.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_5 %}
+        <img src="{{ garden.image_5.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_6 %}
+        <img src="{{ garden.image_6.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_7 %}
+        <img src="{{ garden.image_7.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      {% if garden.image_8 %}
+        <img src="{{ garden.image_8.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+      {% endif %}
+      <!-- Slide show -->
+      <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+        <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+        <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(4)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(5)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(6)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(7)"></span>
+        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(8)"></span>
+      </div>
+    </div>
   </div>
 </body>
 
@@ -23,5 +71,34 @@
 <footer class="w3-container w3-green">
   <p>Footer</p>
 </footer>
+
+<script>
+  var slideIndex = 1;
+  showDivs(slideIndex);
+    
+  function plusDivs(n) {
+    showDivs(slideIndex += n);
+  }
+    
+  function currentDiv(n) {
+    showDivs(slideIndex = n);
+  }
+    
+  function showDivs(n) {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("demo");
+    if (n > x.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = x.length}
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";  
+    }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" w3-white", "");
+    }
+    x[slideIndex-1].style.display = "block";  
+    dots[slideIndex-1].className += " w3-white";
+  }
+</script>
 
 {% endblock %}
