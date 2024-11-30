@@ -31,10 +31,9 @@ def index(request):
     """ Render the landing page for Gateway Gardens app """
     return render(request, 'plants/index.html')
 
-# Home page view
 @login_required()
 def gardens_summary(request):
-    """ Render the Garden Summary page for Gateway Gardens app """
+    """ Render the individual user's garden summary for Gateway Gardens app """
     gardens = Garden.objects.all()
     template = loader.get_template("plants/gardens_summary.html")
     context = {}
@@ -53,10 +52,9 @@ def gardens_summary(request):
         return HttpResponseRedirect(reverse('plants:gardens_add')) 
     return HttpResponse(template.render(context, request))
 
-# Add garden to the database
 @login_required()
 def gardens_add(request):
-    """ AR """
+    """ Add garden to the database """
     garden = Garden()
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
@@ -100,10 +98,9 @@ def gardens_add(request):
         context = { 'form' : form }
         return render(request, 'plants/gardens_add.html', context)
 
-# Update garden details
 @login_required()
 def gardens_update(request, id):
-    """ AR """
+    """ Update garden details """
     garden = Garden.objects.get(id=id)
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
@@ -186,8 +183,7 @@ def gardens_update(request, id):
                     'form' : form,
                   }
         return render(request, 'plants/gardens_update.html', context)
-
-# My Plants page  
+ 
 @login_required()
 def myplants_summary(request):
     """ Render the My Plants page for Gateway Gardens app """
@@ -292,9 +288,9 @@ def plants_search(request):
               }
     return HttpResponse(template.render(context, request))
 
-# Show a detailed view of a specific plant
 @login_required()
 def plants_details(request, id):
+    """ Show a detailed view of a specific plant """
     plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
     # AR
     # comments = Comment.objects.filter(plant__pk=id)        # get all comments related to the plant
@@ -373,9 +369,9 @@ def plants_add(request):
         context = { 'form' : form }
         return render(request, 'plants/plants_add.html', context)
 
-# Update an existing plant
 @login_required()
 def plants_update(request, id):
+    """ Update the attributes for an existing plant """
     plant = Plant.objects.get(id=id)
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -470,7 +466,15 @@ def plants_update(request, id):
         context = { 'form' : form }
         return render(request, 'plants/plants_update.html', context)
 
-
+@login_required()
+def plants_delete(request, id):
+    """ Delete selected plant from the database  """
+    plant = Plant.objects.get(id=id)
+    if request.POST:
+      plant.delete()
+      return HttpResponseRedirect(reverse('plants:plants_search')) 
+    context = {'plant': plant}
+    return render(request, 'plants/plants_delete.html', context)
 
 @login_required
 def plants_glossary(request):
