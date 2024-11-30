@@ -466,6 +466,16 @@ def plants_update(request, id):
         context = { 'form' : form }
         return render(request, 'plants/plants_update.html', context)
 
+def plant2garden(request, id):
+    """ Add a plant to a garden """
+    plant = Plant.objects.get(id=id)
+    gardens = Garden.objects.all()
+    for garden in gardens:
+        # Only the owner of the garden can add plants to their garden
+        if (garden.owner == request.user.username):      # Select the garden based upon current user
+            plant.gardens.add(garden)                    # Associate the plant to the selected garden
+    return HttpResponseRedirect(reverse('plants:plants_search'))
+
 @login_required()
 def plants_delete(request, id):
     """ Delete selected plant from the database  """
