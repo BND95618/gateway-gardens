@@ -1,0 +1,15 @@
+<!-- /plants/templates/plants_delete.html -->
+{% extends "master.html" %}
+
+{% block title %}Delete Plant?{% endblock %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <h1>Do you want to delete the plant: "{{ plant.commonName }}"?</h1>
+  <p>
+    <button type="submit">Yes</button>
+    <a href="{% url 'plants_search' %}"><button type="button">No</button></a>
+  </p>
+</form>
+{% endblock %}
