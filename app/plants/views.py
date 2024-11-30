@@ -292,6 +292,33 @@ def plants_search(request):
               }
     return HttpResponse(template.render(context, request))
 
+# Show a detailed view of a specific plant
+@login_required()
+def plants_details(request, id):
+    plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
+    # AR
+    # comments = Comment.objects.filter(plant__pk=id)        # get all comments related to the plant
+    # format attributes
+    plant.sun_exposure = string_display(plant.sun_exposure)
+    plant.water_rqmts  = string_display(plant.water_rqmts)
+    plant.bloom_color  = string_display(plant.bloom_color)
+    plant.bloom_season = string_display(plant.bloom_season)
+    plant.pollinators  = string_display(plant.pollinators)
+
+    if (plant.height_inch != 0):
+        height_adj = plant.height_feet + (plant.height_inch / 12)
+        plant.height_feet = math.floor(height_adj)
+        plant.height_inch = plant.height_inch%12
+    if (plant.width_inch != 0):
+        width_adj = plant.width_feet + (plant.width_inch / 12)
+        plant.width_feet = math.floor(width_adj)
+        plant.width_inch = plant.width_inch%12
+    template = loader.get_template("plants/plants_details.html")  # loads the plant_details.html template
+    context = { "plant"    : plant, 
+ # AR               "comments" : comments, 
+            }
+    return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
+
 @login_required()
 def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """

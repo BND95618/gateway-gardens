@@ -1,5 +1,5 @@
 <!-- /plants/templates/plants_details.html -->
-{% extends "master.html" %}
+{% extends "plants/master.html" %}
 
 {% block title %}Plant Details{% endblock %}
 
@@ -8,7 +8,7 @@
   <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">{{ plant.commonName }} / {{ plant.genus }} {{ plant.species }}</h1>
-      <a href="{% url 'plants_update'  plant.id %}" class="w3-button">update</a>
+      <a href="{X% url 'plants:plants_update'  plant.id %X}" class="w3-button">update</a>
     </div>
   </div>
 </header>
@@ -133,7 +133,8 @@
         {{ comment.comment.html|safe|escape }}
         <hr>
       {% endfor %}
-      <p><a href="{% url 'plants_comment' plant.id %}">Add comment</a></p>
+      <!-- AR -->
+      <p><a href="{x% url 'plants:plants_comment' plant.id %x}">Add comment</a></p>
     </fieldset>
     <hr>
     <p>Creator: {{ plant.creator }}</p>
