@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-#DEBUG=1
+# DEBUG=1
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'plants',
+    'django_quill',
 ]
 
 MIDDLEWARE = [
@@ -160,7 +161,8 @@ else:
 
 # Directs user to login page when login is required
 # AR: needs to be fixed
-LOGIN_URL = 'plants/user_login/'
+LOGIN_REDIRECT_URL  = "index"
+LOGOUT_REDIRECT_URL = "index"
 
 # Quill Rich Text Editor configuration
 QUILL_CONFIGS = {

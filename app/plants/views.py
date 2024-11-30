@@ -32,7 +32,7 @@ def index(request):
     return render(request, 'plants/index.html')
 
 # Home page view
-@login_required
+@login_required()
 def gardens_summary(request):
     """ Render the Garden Summary page for Gateway Gardens app """
     gardens = Garden.objects.all()
@@ -53,11 +53,8 @@ def gardens_summary(request):
         return HttpResponseRedirect(reverse('plants:gardens_add')) 
     return HttpResponse(template.render(context, request))
 
-
-    #return render(request, 'plants/gardens_summary.html')
-
 # Add garden to the database
-@login_required
+@login_required()
 def gardens_add(request):
     """ AR """
     garden = Garden()
@@ -104,7 +101,7 @@ def gardens_add(request):
         return render(request, 'plants/gardens_add.html', context)
 
 # Update garden details
-@login_required
+@login_required()
 def gardens_update(request, id):
     """ AR """
     garden = Garden.objects.get(id=id)
@@ -191,7 +188,7 @@ def gardens_update(request, id):
         return render(request, 'plants/gardens_update.html', context)
 
 # My Plants page  
-@login_required
+@login_required()
 def myplants_summary(request):
     """ Render the My Plants page for Gateway Gardens app """
     # AR: Under construction
@@ -202,10 +199,152 @@ def myplants_summary(request):
     context = { "plants" : plants }
     return HttpResponse(template.render(context, request))
 
-@login_required
+@login_required()
 def plants_search(request):
-    """ Render the Plants Search for Gateway Gardens app """
-    return render(request, 'plants/plants_search.html')
+    """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
+    if request.method == 'POST':                             # Executed when search is initiated
+        template = loader.get_template("plants/plants_search.html")
+        # Get the search criteria
+        type_x_option        = request.POST["type_x_option"]
+        sun_exposure_option  = request.POST["sun_exposure_option"]
+        water_rqmts_option   = request.POST["water_rqmts_option"]
+        bloom_color_option   = request.POST["bloom_color_option"]
+        bloom_season_option  = request.POST["bloom_season_option"]
+        pollinators_option   = request.POST["pollinators_option"]
+        ca_native_option     = request.POST["ca_native_option"]
+        garden_option        = request.POST["garden_option"]
+        # Save the search criteria - will be used to make the fields "sticky"
+        type_x_value         = type_x_option
+        sun_exposure_value   = sun_exposure_option
+        water_rqmts_value    = water_rqmts_option
+        bloom_color_value    = bloom_color_option
+        bloom_season_value   = bloom_season_option
+        pollinators_value    = pollinators_option
+        ca_native_value      = ca_native_option
+        garden_value         = garden_option
+        # Plant query -> 'all' or those in the garden owned by the current user
+        if garden_option == "Mine":
+            plants = Plant.objects.filter(gardens__garden_owner=request.user.username)
+        else:
+            plants = Plant.objects.all()
+        # Run through the search criteria to select the plants to show
+        for plant in plants:
+            if  ((type_x_option       == plant.type_x)       or (type_x_option       == "Any") or (plant.type_x       == "tbd")) and \
+                ((sun_exposure_option in plant.sun_exposure) or (sun_exposure_option == "Any") or (plant.sun_exposure == "tbd")) and \
+                ((water_rqmts_option  == plant.water_rqmts)  or (water_rqmts_option  == "Any") or (plant.water_rqmts  == "tbd")) and \
+                ((bloom_color_option  in plant.bloom_color)  or (bloom_color_option  == "Any") or (plant.bloom_color  == "tbd")) and \
+                ((bloom_season_option in plant.bloom_season) or (bloom_season_option == "Any") or (plant.bloom_season == "tbd")) and \
+                ((pollinators_option  in plant.pollinators)  or (pollinators_option  == "Any") or (plant.pollinators  == "tbd")) and \
+                ((ca_native_option    == plant.ca_native)    or (ca_native_option    == "Any") or (plant.ca_native    == "tbd")):
+                plant.show = "yes"
+            else:
+                plant.show = "no"
+        context = { "plants"             : plants,
+                    # Search attributes
+                    'plant_types'        : plant_types,
+                    "sun_exposure_opt"   : sun_exposure_opt,
+                    "water_rqmts_opt"    : water_rqmts_opt,
+                    "bloom_color_opt"    : bloom_color_opt,
+                    "bloom_season_opt"   : bloom_season_opt,
+                    "pollinators_opt"    : pollinators_opt,
+                    "ca_native_opt"      : ca_native_opt,
+                    # Search option values from previous search if applicable else default of "Any"
+                    "type_x_value"       : type_x_value,
+                    "sun_exposure_value" : sun_exposure_value,
+                    "water_rqmts_value"  : water_rqmts_value,
+                    "bloom_color_value"  : bloom_color_value,
+                    "bloom_season_value" : bloom_season_value,
+                    'pollinators_value'  : pollinators_value,
+                    'ca_native_value'    : ca_native_value,
+                    'garden_value'       : garden_value,
+                  }
+        return render(request, "plants/plants_search.html", context)
+    else:                                                       # Executed when search page is initialized
+        plants = Plant.objects.all()
+        # set search field defaults
+        type_x_value       = "Any"
+        sun_exposure_value = "Any"
+        water_rqmts_value  = "Any"
+        bloom_color_value  = "Any"
+        bloom_season_value = "Any"
+        pollinators_value  = "Any"
+        ca_native_value    = "Any"
+        garden_value       = "Any"
+        for plant in plants:
+            plant.show = "yes"
+        template = loader.get_template("plants/plants_search.html")
+        context = { "plants"             : plants,
+                    # search field options
+                    "plant_types"        : plant_types,
+                    "sun_exposure_opt"   : sun_exposure_opt,
+                    "water_rqmts_opt"    : water_rqmts_opt,
+                    "bloom_color_opt"    : bloom_color_opt,
+                    "bloom_season_opt"   : bloom_season_opt,
+                    "pollinators_opt"    : pollinators_opt,
+                    "ca_native_opt"      : ca_native_opt,
+                    # search field defaults
+                    "type_x_value"       : type_x_value,
+                    "sun_exposure_value" : sun_exposure_value,
+                    "water_rqmts_value"  : water_rqmts_value,
+                    "pollinators_value"  : pollinators_value,
+                    'ca_native_value'    : ca_native_value,
+                    'garden_value'       : garden_value,
+              }
+    return HttpResponse(template.render(context, request))
+
+@login_required()
+def plants_add(request):
+    """ Render the page to add plants to the database for Gateway Gardens app """
+    plant = Plant()
+    if request.POST:
+        form = PlantAddUpdateForm(request.POST, request.FILES)
+        if form.is_valid():
+            plant.commonName    = form.cleaned_data.get('commonName')
+            plant.type_x        = form.cleaned_data.get('type_x')
+            plant.bloom_color   = form.cleaned_data.get('bloom_color')
+            plant.bloom_season  = form.cleaned_data.get('bloom_season')
+            plant.pollinators   = form.cleaned_data.get('pollinators')
+            plant.height_feet   = form.cleaned_data.get('height_feet')
+            plant.height_inch   = form.cleaned_data.get('height_inch')
+            plant.width_feet    = form.cleaned_data.get('width_feet')
+            plant.width_inch    = form.cleaned_data.get('width_inch')
+            plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
+            plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
+            plant.ca_native     = form.cleaned_data.get('ca_native')
+            plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
+            plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
+            plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
+            plant.kingdom       = form.cleaned_data.get('kingdom')
+            plant.division      = form.cleaned_data.get('division')
+            plant.class_x       = form.cleaned_data.get('class_x')
+            plant.order         = form.cleaned_data.get('order')
+            plant.family        = form.cleaned_data.get('family')
+            plant.genus         = form.cleaned_data.get('genus')
+            plant.species       = form.cleaned_data.get('species')
+            plant.variety       = form.cleaned_data.get('variety')
+            plant.description   = form.cleaned_data.get('description')
+            plant.pruning       = form.cleaned_data.get('pruning')
+            plant.fertilization = form.cleaned_data.get('fertilization')
+            # Check to see if an image file has been specified
+            if 'image_1' in request.FILES:
+                plant.image_1 = request.FILES['image_1']
+                plant.caption_1 = form.cleaned_data.get('caption_1')
+            if 'image_2' in request.FILES:
+                plant.image_2 = request.FILES['image_2']
+                plant.caption_2 = form.cleaned_data.get('caption_2')
+            if 'image_3' in request.FILES:
+                plant.image_3 = request.FILES['image_3']
+                plant.caption_3 = form.cleaned_data.get('caption_3')
+            if 'image_4' in request.FILES:
+                plant.image_4 = request.FILES['image_4']
+                plant.caption_4 = form.cleaned_data.get('caption_4')
+            plant.author        = request.user.username
+            plant.save()
+        return HttpResponseRedirect(reverse('plants:plants_search'))
+    else:
+        form = PlantAddUpdateForm()
+        context = { 'form' : form }
+        return render(request, 'plants/plants_add.html', context)
 
 @login_required
 def plants_glossary(request):
@@ -268,3 +407,22 @@ def user_logout(request):
     """ User Logout function for Gateway Gardens app """
     logout(request)
     return render(request, 'plants/index.html')
+
+def string2list(string):
+    """ Utility: convert list in string form to a list """
+    # print('string: ', string)
+    temp = string
+    temp = temp.replace("[", "")
+    temp = temp.replace("'", "")
+    temp = temp.replace("]", "")
+    temp = temp.split(", ")
+    # print('list: ', temp)
+    return(temp)
+
+def string_display(string):
+    """ Utility: formal string for display """
+    temp = string
+    temp = temp.replace("[", "")
+    temp = temp.replace("'", "")
+    temp = temp.replace("]", "")
+    return(temp)

@@ -12,6 +12,7 @@ urlpatterns = [
     path('gardens_update/<int:id>', views.gardens_update,   name="gardens_update"),
     path('myplants_summary',        views.myplants_summary, name='myplants_summary'),
     path('plants_search',           views.plants_search,    name='plants_search'),
+    path('plants_add',              views.plants_add,       name='plants_add'),
     path('plants_glossary',         views.plants_glossary,  name='plants_glossary'),
     path('plants_reference',        views.plants_reference, name='plants_reference'),
     path('plants_about',            views.plants_about,     name='plants_about'),
