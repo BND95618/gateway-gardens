@@ -292,8 +292,7 @@ def plants_search(request):
 def plants_details(request, id):
     """ Show a detailed view of a specific plant """
     plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
-    # AR
-    # comments = Comment.objects.filter(plant__pk=id)        # get all comments related to the plant
+    comments = Comment.objects.filter(plant__pk=id)      # get all comments related to the plant
     # format attributes
     plant.sun_exposure = string_display(plant.sun_exposure)
     plant.water_rqmts  = string_display(plant.water_rqmts)
@@ -311,7 +310,7 @@ def plants_details(request, id):
         plant.width_inch = plant.width_inch%12
     template = loader.get_template("plants/plants_details.html")  # loads the plant_details.html template
     context = { "plant"    : plant, 
- # AR               "comments" : comments, 
+                "comments" : comments, 
             }
     return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
 
@@ -465,6 +464,27 @@ def plants_update(request, id):
                                         })
         context = { 'form' : form }
         return render(request, 'plants/plants_update.html', context)
+
+@login_required()
+def plants_comment(request, id):
+    """ Add a comment to a plant """
+    plant = Plant.objects.get(id=id)
+    comment = Comment()
+    if request.POST:
+        form = PlantCommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment.author  = request.user.username            #
+            comment.subject = form.cleaned_data.get("subject") #
+            comment.comment = form.cleaned_data.get("comment") #
+            comment.plant = plant                              # link the comment to the specific plant
+            comment.save()
+        return HttpResponseRedirect(reverse('plants:plants_details', args=(plant.id,))) 
+    else:
+        form = PlantCommentForm()
+        context = { 'plant' : plant,
+                    'form'  : form,
+                  }
+        return render(request, 'plants/plants_comment.html', context)
 
 def plant2garden(request, id):
     """ Add a plant to a garden """
