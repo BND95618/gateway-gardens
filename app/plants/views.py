@@ -373,6 +373,105 @@ def plants_add(request):
         context = { 'form' : form }
         return render(request, 'plants/plants_add.html', context)
 
+# Update an existing plant
+@login_required()
+def plants_update(request, id):
+    plant = Plant.objects.get(id=id)
+    if request.POST:
+        form = PlantAddUpdateForm(request.POST, request.FILES)
+        if form.is_valid():
+            plant.commonName    = form.cleaned_data.get('commonName')
+            plant.type_x        = form.cleaned_data.get('type_x')
+            plant.bloom_color   = form.cleaned_data.get('bloom_color')
+            plant.bloom_season  = form.cleaned_data.get('bloom_season')
+            plant.height_feet   = form.cleaned_data.get('height_feet')
+            plant.height_inch   = form.cleaned_data.get('height_inch')
+            plant.width_feet    = form.cleaned_data.get('width_feet')
+            plant.width_inch    = form.cleaned_data.get('width_inch')
+            plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
+            plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
+            plant.pollinators   = form.cleaned_data.get('pollinators')
+            plant.ca_native     = form.cleaned_data.get('ca_native')
+            plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
+            plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
+            plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
+            plant.kingdom       = form.cleaned_data.get('kingdom')
+            plant.division      = form.cleaned_data.get('division')
+            plant.class_x       = form.cleaned_data.get('class_x')
+            plant.order         = form.cleaned_data.get('order')
+            plant.family        = form.cleaned_data.get('family')
+            plant.genus         = form.cleaned_data.get('genus')
+            plant.species       = form.cleaned_data.get('species')
+            plant.variety       = form.cleaned_data.get('variety')
+            plant.description   = form.cleaned_data.get('description')
+            plant.pruning       = form.cleaned_data.get('pruning')
+            plant.fertilization = form.cleaned_data.get('fertilization')
+            # Process images - check for new image - if yes, delete any existing image
+            if 'image_4' in request.FILES:
+                if (plant.image_1):
+                    os.remove(plant.image_1.path)
+                plant.image_1 = request.FILES['image_1']
+                plant.caption_1 = form.cleaned_data.get('caption_1')
+            if 'image_2' in request.FILES:
+                if (plant.image_2):
+                    os.remove(plant.image_2.path)
+                plant.image_2 = request.FILES['image_2']
+                plant.caption_2 = form.cleaned_data.get('caption_2')
+            if 'image_3' in request.FILES:
+                if (plant.image_3):
+                    os.remove(plant.image_3.path)
+                plant.image_3 = request.FILES['image_3']
+                plant.caption_3 = form.cleaned_data.get('caption_3')   
+            if 'image_4' in request.FILES:
+                if (plant.image_4):
+                    os.remove(plant.image_4.path)
+                plant.image_4 = request.FILES['image_4']
+                plant.caption_4 = form.cleaned_data.get('caption_4')      
+            plant.save()
+        return HttpResponseRedirect(reverse('plants:plants_search'))
+    else:
+        # convert string-based lists (retrieved from db) to true Python lists
+        bloom_color_list  = string2list(plant.bloom_color)
+        bloom_season_list = string2list(plant.bloom_season)
+        pollinators_list  = string2list(plant.pollinators)
+        sun_exposure_list = string2list(plant.sun_exposure)
+        # set the update form with the current db values
+        form = PlantAddUpdateForm(initial={ 'commonName'    : plant.commonName,
+                                            'type_x'        : plant.type_x,
+                                            'bloom_color'   : bloom_color_list,
+                                            'bloom_season'  : bloom_season_list,
+                                            'height_feet'   : plant.height_feet,
+                                            'height_inch'   : plant.height_inch,
+                                            'width_feet'    : plant.width_feet,
+                                            'width_inch'    : plant.width_inch,
+                                            'pollinators'   : pollinators_list,
+                                            'sun_exposure'  : sun_exposure_list,
+                                            'water_rqmts'   : plant.water_rqmts,
+                                            'ca_native'     : plant.ca_native,
+                                            'usda_zone_max' : plant.usda_zone_max,
+                                            'usda_zone_min' : plant.usda_zone_min,
+                                            'sunset_zones'  : plant.sunset_zones,
+                                            'description'   : plant.description,
+                                            'pruning'       : plant.pruning,
+                                            'fertilization' : plant.fertilization,
+                                            'kingdom'       : plant.kingdom,
+                                            'division'      : plant.division, 
+                                            'class_x'       : plant.class_x,
+                                            'order'         : plant.order,
+                                            'family'        : plant.family,
+                                            'genus'         : plant.genus,
+                                            'species'       : plant.species,
+                                            'variety'       : plant.variety,
+                                            'image_1'       : plant.image_1,
+                                            'image_2'       : plant.image_2,
+                                            'image_3'       : plant.image_3,
+                                            'image_4'       : plant.image_4,
+                                        })
+        context = { 'form' : form }
+        return render(request, 'plants/plants_update.html', context)
+
+
+
 @login_required
 def plants_glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
