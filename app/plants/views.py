@@ -19,9 +19,11 @@ import os
 plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
-bloom_color_opt  = ["tbd", "white", "red", "pink", "green", "blue", "orange"]
+ph_opt           = ["tbd", "6.6", "6.8", "7.0", "7.2", "7.4", "7.6"]
+bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "purple", "green", "blue", "orange"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterfiles", "Hummingbirds", "None"]
+ucd_all_star_opt = ["tbd", "Yes", "No"]
 ca_native_opt    = ["tbd", "Yes", "No"]
 usda_zones       = ["tbd", "1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", 
                     "8a", "8b", "9a", "9b", "10a", "10b"]
@@ -207,6 +209,7 @@ def plants_search(request):
         bloom_color_option   = request.POST["bloom_color_option"]
         bloom_season_option  = request.POST["bloom_season_option"]
         pollinators_option   = request.POST["pollinators_option"]
+        ucd_all_star_option  = request.POST["ucd_all_star_option"]
         ca_native_option     = request.POST["ca_native_option"]
         garden_option        = request.POST["garden_option"]
         # Save the search criteria - will be used to make the fields "sticky"
@@ -216,6 +219,7 @@ def plants_search(request):
         bloom_color_value    = bloom_color_option
         bloom_season_value   = bloom_season_option
         pollinators_value    = pollinators_option
+        ucd_all_star_value   = ucd_all_star_option
         ca_native_value      = ca_native_option
         garden_value         = garden_option
         # Plant query -> 'all' or those in the garden owned by the current user
@@ -231,7 +235,15 @@ def plants_search(request):
                 ((bloom_color_option  in plant.bloom_color)  or (bloom_color_option  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_option in plant.bloom_season) or (bloom_season_option == "Any") or (plant.bloom_season == "tbd")) and \
                 ((pollinators_option  in plant.pollinators)  or (pollinators_option  == "Any") or (plant.pollinators  == "tbd")) and \
+                ((ucd_all_star_option == plant.ucd_all_star) or (ucd_all_star_option == "Any") or (plant.ucd_all_star == "tbd")) and \
                 ((ca_native_option    == plant.ca_native)    or (ca_native_option    == "Any") or (plant.ca_native    == "tbd")):
+                # format multiselect attributes to remove [, ', and ]
+                plant.sun_exposure = string_display(plant.sun_exposure)
+                plant.water_rqmts  = string_display(plant.water_rqmts)
+                plant.bloom_color  = string_display(plant.bloom_color)
+                plant.bloom_season = string_display(plant.bloom_season)
+                plant.pollinators  = string_display(plant.pollinators)
+                # show selected plant
                 plant.show = "yes"
             else:
                 plant.show = "no"
@@ -243,6 +255,7 @@ def plants_search(request):
                     "bloom_color_opt"    : bloom_color_opt,
                     "bloom_season_opt"   : bloom_season_opt,
                     "pollinators_opt"    : pollinators_opt,
+                    "ucd_all_star_opt"   : ucd_all_star_opt,
                     "ca_native_opt"      : ca_native_opt,
                     # Search option values from previous search if applicable else default of "Any"
                     "type_x_value"       : type_x_value,
@@ -251,6 +264,7 @@ def plants_search(request):
                     "bloom_color_value"  : bloom_color_value,
                     "bloom_season_value" : bloom_season_value,
                     'pollinators_value'  : pollinators_value,
+                    'ucd_all_star_value' : ucd_all_star_value,
                     'ca_native_value'    : ca_native_value,
                     'garden_value'       : garden_value,
                   }
@@ -264,9 +278,18 @@ def plants_search(request):
         bloom_color_value  = "Any"
         bloom_season_value = "Any"
         pollinators_value  = "Any"
+        ucd_all_star_value = "Any"
         ca_native_value    = "Any"
         garden_value       = "Any"
+
         for plant in plants:
+            # format multiselect attributes to remove [, ', and ]
+            plant.sun_exposure = string_display(plant.sun_exposure)
+            plant.water_rqmts  = string_display(plant.water_rqmts)
+            plant.bloom_color  = string_display(plant.bloom_color)
+            plant.bloom_season = string_display(plant.bloom_season)
+            plant.pollinators  = string_display(plant.pollinators)
+            # show all plants on initial rendering
             plant.show = "yes"
         template = loader.get_template("plants/plants_search.html")
         context = { "plants"             : plants,
@@ -277,12 +300,14 @@ def plants_search(request):
                     "bloom_color_opt"    : bloom_color_opt,
                     "bloom_season_opt"   : bloom_season_opt,
                     "pollinators_opt"    : pollinators_opt,
+                    "ucd_all_star_opt"   : ucd_all_star_opt,
                     "ca_native_opt"      : ca_native_opt,
                     # search field defaults
                     "type_x_value"       : type_x_value,
                     "sun_exposure_value" : sun_exposure_value,
                     "water_rqmts_value"  : water_rqmts_value,
                     "pollinators_value"  : pollinators_value,
+                    'ucd_all_star_value' : ucd_all_star_value,
                     'ca_native_value'    : ca_native_value,
                     'garden_value'       : garden_value,
               }
@@ -293,7 +318,7 @@ def plants_details(request, id):
     """ Show a detailed view of a specific plant """
     plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
     comments = Comment.objects.filter(plant__pk=id)      # get all comments related to the plant
-    # format attributes
+    # format multiselect attributes to remove [, ', and ]
     plant.sun_exposure = string_display(plant.sun_exposure)
     plant.water_rqmts  = string_display(plant.water_rqmts)
     plant.bloom_color  = string_display(plant.bloom_color)
@@ -332,6 +357,9 @@ def plants_add(request):
             plant.width_inch    = form.cleaned_data.get('width_inch')
             plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
+            plant.pH_min        = form.cleaned_data.get('pH_min')
+            plant.pH_max        = form.cleaned_data.get('pH_max')
+            plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
             plant.ca_native     = form.cleaned_data.get('ca_native')
             plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
             plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
@@ -385,7 +413,10 @@ def plants_update(request, id):
             plant.width_inch    = form.cleaned_data.get('width_inch')
             plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
+            plant.pH_min        = form.cleaned_data.get('pH_min')
+            plant.pH_max        = form.cleaned_data.get('pH_max')
             plant.pollinators   = form.cleaned_data.get('pollinators')
+            plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
             plant.ca_native     = form.cleaned_data.get('ca_native')
             plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
             plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
@@ -442,6 +473,9 @@ def plants_update(request, id):
                                             'pollinators'   : pollinators_list,
                                             'sun_exposure'  : sun_exposure_list,
                                             'water_rqmts'   : plant.water_rqmts,
+                                            'pH_min'        : plant.pH_min,
+                                            'pH_max'        : plant.pH_max,
+                                            'ucd_all_star'  : plant.ucd_all_star,
                                             'ca_native'     : plant.ca_native,
                                             'usda_zone_max' : plant.usda_zone_max,
                                             'usda_zone_min' : plant.usda_zone_min,

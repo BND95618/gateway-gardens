@@ -157,7 +157,8 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     # Added to resolve issue running on AWS Lightsail
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
-    MEDIA_ROOT  = '/app/media/'
+    STATIC_ROOT  = '/app/static/'
+    MEDIA_ROOT   = '/app/media/'
 
 # Directs user to login page when login is required
 # AR: needs to be fixed

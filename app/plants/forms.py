@@ -16,13 +16,15 @@ TYPE_CHOICES = (
 	("Vine",        "Vine"),
 )
 BLOOM_COLOR_CHOICES = ( 
-	("tbd",    "tbd"),
-	("white",  "white"),
-	("red",    "red"), 
+	('tbd',    'tbd'),
+	('white',  'white'),
+	('yellow', 'yellow'),
+	('red',    'red'), 
 	('pink',   'pink'),
-	("green",  "green"), 
-	("blue",   "blue"), 
-	("orange", "orange"), 
+	('purple', 'purple'),
+	('green',  'green'), 
+	('blue',   'blue'), 
+	('orange', 'orange'), 
 ) 
 BLOOM_SEASON_CHOICES = (
 	("tbd",    "tbd"),
@@ -53,6 +55,29 @@ WATER_RQMTS_CHOICES = (
 	("Medium",    "Medium"),
 	("High",      "High"),
 	("Very High", "Very High"),
+)
+PH_MIN_CHOICES = (
+	("tbd", "tbd"),
+	("6.6", "6.6"),
+	("6.8", "6.8"),
+	("7.0", "7.0"),
+	("7.2", "7.2"),
+	("7.4", "7.4"),
+	("7.6", "7.6"),
+)
+PH_MAX_CHOICES = (
+	("tbd", "tbd"),
+	("6.6", "6.6"),
+	("6.8", "6.8"),
+	("7.0", "7.0"),
+	("7.2", "7.2"),
+	("7.4", "7.4"),
+	("7.6", "7.6"),
+)
+UCD_ALL_STAR_CHOICES = (
+	("tbd", "tbd"),
+	("Yes", "Yes"),
+	("No",  "No"),
 )
 CA_NATIVE_CHOICES = (
 	("tbd", "tbd"),
@@ -276,6 +301,23 @@ class PlantAddUpdateForm(forms.Form):
 	water_rqmts = forms.ChoiceField(
 		label="Water Requirements",
 		choices = WATER_RQMTS_CHOICES, 
+		required=False,
+		)
+	pH_min = forms.ChoiceField(
+		label="pH (min)",
+		choices = PH_MIN_CHOICES, 
+		required=False,
+		)
+	pH_max = forms.ChoiceField(
+		label="pH (max)",
+		choices = PH_MAX_CHOICES, 
+		required=False,
+		)
+	ucd_all_star = forms.ChoiceField(
+		label="UCD All-Star",
+		initial = 'tbd',
+		choices = UCD_ALL_STAR_CHOICES, 
+		widget=forms.RadioSelect,
 		required=False,
 		)
 	ca_native = forms.ChoiceField(

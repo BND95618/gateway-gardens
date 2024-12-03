@@ -46,11 +46,13 @@ class Garden(models.Model):
     
 # My Plants in My Garden - many-to-one relationship
 class MyPlant(models.Model):
+    # connection to a specific garden in the Garden db table
+    plant        = models.ForeignKey(Garden, on_delete=models.CASCADE)
+    #
+    owner        = models.CharField(max_length=64, default="tbd", blank=True)
     date         = models.DateField(auto_now_add=True)
     location     = models.CharField(max_length=64, default="tbd", blank=True)
     sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
-    # connection to a specific garden in the Garden db table
-    plant        = models.ForeignKey(Garden, on_delete=models.CASCADE)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False)
 
@@ -66,17 +68,20 @@ class Plant(models.Model):
     # Attributes
     type_x        = models.CharField(max_length=32,  default="tbd", blank=True)
     bloom_color   = models.CharField(max_length=128, default="tbd", blank=True)
-    bloom_season  = models.CharField(max_length=32,  default="tbd", blank=True)
+    bloom_season  = models.CharField(max_length=64,  default="tbd", blank=True)
     height_feet   = models.IntegerField(default=0, blank=True, null=True)
     height_inch   = models.IntegerField(default=0, blank=True, null=True)
     width_feet    = models.IntegerField(default=0, blank=True, null=True)
     width_inch    = models.IntegerField(default=0, blank=True, null=True)
-    sun_exposure  = models.CharField(max_length=32,  default="tbd", blank=True)
-    water_rqmts   = models.CharField(max_length=32,  default="tbd", blank=True)
-    pollinators   = models.CharField(max_length=32,  default="tbd", blank=True)
+    sun_exposure  = models.CharField(max_length=64,  default="tbd", blank=True)
+    water_rqmts   = models.CharField(max_length=64,  default="tbd", blank=True)
+    pH_min        = models.CharField(max_length=16,  default="tbd", blank=True)
+    pH_max        = models.CharField(max_length=16,  default="tbd", blank=True)
+    pollinators   = models.CharField(max_length=64,  default="tbd", blank=True)
+    ucd_all_star  = models.CharField(max_length=8,   default="tbd", blank=True)
     ca_native     = models.CharField(max_length=8,   default="tbd", blank=True)
-    usda_zone_min = models.CharField(max_length=16,  default="tbd", blank=True)
-    usda_zone_max = models.CharField(max_length=16,  default="tbd", blank=True)
+    usda_zone_min = models.CharField(max_length=32,  default="tbd", blank=True)
+    usda_zone_max = models.CharField(max_length=32,  default="tbd", blank=True)
     sunset_zones  = models.CharField(max_length=32,  default="tbd", blank=True)
     # Text boxes
     description   = QuillField(blank=True, null=True)

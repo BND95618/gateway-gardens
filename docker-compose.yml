@@ -7,7 +7,8 @@ services:
     ports:
       - 8000:8000
     command: >
-      sh -c "python manage.py migrate && \
+      sh -c "python manage.py makemigrations plants && \
+             python manage.py migrate && \
              python manage.py runserver 0.0.0.0:8000"
     environment:
       - DEBUG=1
@@ -20,7 +21,7 @@ services:
         condition: service_healthy
              
   database:
-    image: postgres:16-alpine
+    image: postgres:12-alpine
     volumes:
       - db-dev-data:/var/lib/postgresql/data
     environment:
