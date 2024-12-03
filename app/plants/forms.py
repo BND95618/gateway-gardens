@@ -56,16 +56,13 @@ WATER_RQMTS_CHOICES = (
 	("High",      "High"),
 	("Very High", "Very High"),
 )
-PH_MIN_CHOICES = (
-	("tbd", "tbd"),
-	("6.6", "6.6"),
-	("6.8", "6.8"),
-	("7.0", "7.0"),
-	("7.2", "7.2"),
-	("7.4", "7.4"),
-	("7.6", "7.6"),
+SOIL_TYPE_CHOICES = (
+	("tbd",    "tbd"),
+	("Sandy",  "Sandy"),
+	("loamy",  "Loamy"),
+	("Clay",   "Clay"),
 )
-PH_MAX_CHOICES = (
+PH_CHOICES = (
 	("tbd", "tbd"),
 	("6.6", "6.6"),
 	("6.8", "6.8"),
@@ -238,6 +235,30 @@ class GardenAddUpdateForm(forms.Form):
 		required=False
 		)
 	
+class MyPlantAddForm(forms.Form):
+	location = forms.CharField(
+		label='Location', 
+		max_length=64, 
+		required=False,
+		)
+	sun_exposure = forms.MultipleChoiceField(
+		label="Sun Exposure",
+		initial='tbd',
+		choices = SUN_EXPOSURE_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	pH = forms.ChoiceField(
+		label="pH",
+		choices = PH_CHOICES, 
+		required=False,
+		)
+	soil_type = forms.ChoiceField(
+		label="Soil Type",
+		choices = SOIL_TYPE_CHOICES, 
+		required=False,
+		)
+
 class PlantAddUpdateForm(forms.Form):
 	commonName = forms.CharField(
 		label="Common Name", 
@@ -305,12 +326,12 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	pH_min = forms.ChoiceField(
 		label="pH (min)",
-		choices = PH_MIN_CHOICES, 
+		choices = PH_CHOICES, 
 		required=False,
 		)
 	pH_max = forms.ChoiceField(
 		label="pH (max)",
-		choices = PH_MAX_CHOICES, 
+		choices = PH_CHOICES, 
 		required=False,
 		)
 	ucd_all_star = forms.ChoiceField(

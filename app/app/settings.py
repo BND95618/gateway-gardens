@@ -162,8 +162,8 @@ else:
 
 # Directs user to login page when login is required
 # AR: needs to be fixed
-LOGIN_REDIRECT_URL  = "index"
-LOGOUT_REDIRECT_URL = "index"
+LOGIN_REDIRECT_URL  = "/plants/index"
+LOGOUT_REDIRECT_URL = "/plants/index"
 
 # Quill Rich Text Editor configuration
 QUILL_CONFIGS = {

@@ -9,8 +9,8 @@ from django.urls import reverse
 
 from django_quill.fields import QuillField
 
-# Garden description table
 class Garden(models.Model):
+    """ My Garden description table """
     name         = models.CharField(max_length=64, default="tbd", blank=True)
     city         = models.CharField(max_length=32, default="tbd", blank=True)
     state        = models.CharField(max_length=16, default="tbd", blank=True)
@@ -44,26 +44,8 @@ class Garden(models.Model):
     def get_absolute_url(self):
         return reverse("plants_search")
     
-# My Plants in My Garden - many-to-one relationship
-class MyPlant(models.Model):
-    # connection to a specific garden in the Garden db table
-    plant        = models.ForeignKey(Garden, on_delete=models.CASCADE)
-    #
-    owner        = models.CharField(max_length=64, default="tbd", blank=True)
-    date         = models.DateField(auto_now_add=True)
-    location     = models.CharField(max_length=64, default="tbd", blank=True)
-    sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
-    # Administrative stuff
-    slug         = models.SlugField(default="tbd", null=False)
-
-    def __str__(self):
-        return self.location
-    
-    def get_absolute_url(self):
-        return reverse("plants_search")
-
-# Plant description table
 class Plant(models.Model):
+    """ Plant description table """
     commonName    = models.CharField(max_length=255)
     # Attributes
     type_x        = models.CharField(max_length=32,  default="tbd", blank=True)
@@ -118,8 +100,31 @@ class Plant(models.Model):
     def get_absolute_url(self):
         return reverse("plants_search")
 
-# comments to plant many-to-one relationship
+class MyPlant(models.Model):
+    """ Plants that are in My Garden """
+    # Many-to-one relationship - many "myplants" can be associated with each "plant"
+    # connection to a specific plant in the Plant db table
+    plant        = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    #
+    owner        = models.CharField(max_length=64, default="tbd", blank=True)
+    date         = models.DateField(auto_now_add=True)
+    #
+    location     = models.CharField(max_length=64, default="tbd", blank=True)
+    sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
+    pH           = models.CharField(max_length=16, default="tbd", blank=True)
+    soil_type    = models.CharField(max_length=16, default="tbd", blank=True)
+    # Administrative stuff
+    slug         = models.SlugField(default="tbd", null=False)
+
+    def __str__(self):
+        return self.location
+    
+    def get_absolute_url(self):
+        return reverse("plants_search")
+
 class Comment(models.Model):
+    """ Plant comments """
+    # Many-to-one relationship - many "comments" can be associated with each "plant"
     # db fields for the comment
     author  = models.CharField(max_length=64, default="tbd", blank=True)
     date    = models.DateField(auto_now_add=True)

@@ -14,8 +14,38 @@
 
 <!-- My Plants -->
 <body>
-  <div class="w3-container" style="margin-top:140px;">
-    <h2>Under Construction</h1>
+  <!-- My Plant Table -->
+  <div class="w3-container" id="main" style="margin-top:140px;">
+    <table class="w3-table-all w3-hoverable">
+      <thead>
+        <tr class="w3-light-grey">
+          <th>Common Name   </th>
+          <th>Genus         </th>
+          <th>Species       </th>
+          <th>Type          </th>
+          <th>Location      </th>
+          <th>Sun Exposure  </th>
+          <th>pH            </th>
+          <th>Soil Type     </th>
+          <th class="w3-center">Happy?        </th>
+          <th class="w3-center">Plant Details </th>
+        </tr>
+      </thead>
+      {% for my_plant in my_plants %}  
+        <tr class="w3-hover-green">
+          <td>{{ my_plant.plant.commonName }}</td>
+          <td style="font-style: italic;">{{ my_plant.plant.genus    }}</td>
+          <td style="font-style: italic;">{{ my_plant.plant.species  }}</td>
+          <td>{{ my_plant.plant.type_x     }}</td>
+          <td>{{ my_plant.location         }}</td>
+          <td>{{ my_plant.sun_exposure     }}</td>
+          <td>{{ my_plant.pH               }}</td>
+          <td>{{ my_plant.soil_type        }}</td>
+          <td class="w3-center">TBD          </td>
+          <td class="w3-center"><a href="{% url 'plants:plants_details' my_plant.plant.id %}"><i class="material-icons">library_books</i></a></td>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
 </body>
 
