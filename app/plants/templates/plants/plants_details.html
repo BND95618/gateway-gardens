@@ -7,7 +7,12 @@
 
   <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">{{ plant.commonName }} / {{ plant.genus }} {{ plant.species }}</h1>
+      <h1 class="w3-bar-item">
+        {{ plant.commonName }} 
+        <span style="font-style: italic;">
+          ( {{ plant.genus }} {{ plant.species }} )
+        </span>
+      </h1>
       <a href="{% url 'plants:plants_update'  plant.id %}" class="w3-button">update</a>
     </div>
   </div>
@@ -23,24 +28,24 @@
         </header>
         <div class="w3-container w3-border">
           <p>Type:               {{ plant.type_x }}</p>
-          <p>Sun Exposure:       {{ plant.sun_exposure }}</p>
-          <p>Water Requirements: {{ plant.water_rqmts  }}</p>
-          <p>pH Requirements:    {{ plant.pH_min }} through {{ plant.pH_max }}</p>
           <p>Bloom Color:        {{ plant.bloom_color  }}</p>
           <p>Bloom Season:       {{ plant.bloom_season }}</p>
+          <p>Height: {{ plant.height_feet }} feet {{ plant.height_inch }} inches </p>
+          <p>Width:  {{ plant.width_feet  }} feet {{ plant.width_inch  }} inches </p>
           <p>Pollinators:        {{ plant.pollinators  }}</p>
           <p>UCD All-Star:       {{ plant.ucd_all_star }}</p>
           <p>California Native:  {{ plant.ca_native    }}</p>
-          <p>Height: {{ plant.height_feet }} feet {{ plant.height_inch }} inches </p>
-          <p>Width:  {{ plant.width_feet  }} feet {{ plant.width_inch  }} inches </p>
-        </div> 
+          </div> 
       </div>
 
       <div class="w3-col s4">
         <header class="w3-container w3-green w3-border">
-          <h3>Zones</h3>
+          <h3>Environmental Needs</h3>
         </header>
         <div class="w3-container w3-border">
+          <p>Sun Exposure:       {{ plant.sun_exposure }}</p>
+          <p>Water Requirements: {{ plant.water_rqmts  }}</p>
+          <p>pH Requirements:    {{ plant.pH_min }} through {{ plant.pH_max }}</p>
           <p>USDA Zones:   {{ plant.usda_zone_min }} through {{ plant.usda_zone_max }}</p>
           <p>Sunset Zones: {{ plant.sunset_zones }}</p>
         </div>
@@ -51,14 +56,17 @@
           <h3>Scientific Naming Taxonomy</h3>
         </header>
         <div class="w3-container w3-border">
-          <p>Kingdom:  {{ plant.kingdom }}</p>
-          <p>Division: {{ plant.division }}</p>
-          <p>Class:    {{ plant.class_x }}</p>
-          <p>Order:    {{ plant.order }}</p>
-          <p>Family:   {{ plant.family }}</p>
-          <p>Genus:    {{ plant.genus }}</p>
-          <p>Species:  {{ plant.species }}</p>
-          <p>Variety:  {{ plant.variety }}</p>
+          <p>Kingdom:       {{ plant.kingdom }}</p>
+          <p>Subingdom:     {{ plant.subkingdom }}</p>
+          <p>Superdivision: {{ plant.superdivision }}</p>
+          <p>Division:      {{ plant.division }}</p>
+          <p>Class:         {{ plant.class_x }}</p>
+          <p>Subclass:      {{ plant.subclass }}</p>
+          <p>Order:         {{ plant.order }}</p>
+          <p>Family:        {{ plant.family }}</p>
+          <p>Genus:         {{ plant.genus }}</p>
+          <p>Species:       {{ plant.species }}</p>
+          <p>Variety:       {{ plant.variety }}</p>
         </div>
       </div>
     </div>

@@ -16,15 +16,16 @@ TYPE_CHOICES = (
 	("Vine",        "Vine"),
 )
 BLOOM_COLOR_CHOICES = ( 
-	('tbd',    'tbd'),
-	('white',  'white'),
-	('yellow', 'yellow'),
-	('red',    'red'), 
-	('pink',   'pink'),
-	('purple', 'purple'),
-	('green',  'green'), 
-	('blue',   'blue'), 
-	('orange', 'orange'), 
+	('tbd',       'tbd'),
+	('white',     'white'),
+	('yellow',    'yellow'),
+	('red',       'red'), 
+	('pink',      'pink'),
+	('pale pink', 'pale pink'),
+	('purple',    'purple'),
+	('green',     'green'), 
+	('blue',      'blue'), 
+	('orange',    'orange'), 
 ) 
 BLOOM_SEASON_CHOICES = (
 	("tbd",    "tbd"),
@@ -64,12 +65,32 @@ SOIL_TYPE_CHOICES = (
 )
 PH_CHOICES = (
 	("tbd", "tbd"),
+	("5.5", "5.5"),
+	("5.6", "5.6"),
+	("5.7", "5.7"),
+	("5.8", "5.8"),
+	("5.9", "5.9"),
+	("6.0", "6.0"),
+	("6.1", "6.1"),
+	("6.2", "6.2"),
+	("6.3", "6.3"),
+	("6.4", "6.4"),
+	("6.5", "6.5"),
 	("6.6", "6.6"),
+	("6.7", "6.7"),
 	("6.8", "6.8"),
+	("6.9", "6.9"),
 	("7.0", "7.0"),
+	("7.1", "7.1"),
 	("7.2", "7.2"),
+	("7.3", "7.3"),
 	("7.4", "7.4"),
+	("7.5", "7.5"),
 	("7.6", "7.6"),
+	("7.7", "7.7"),
+	("7.8", "7.8"),
+	("7.9", "7.9"),
+	("8.0", "8.0"),
 )
 UCD_ALL_STAR_CHOICES = (
 	("tbd", "tbd"),
@@ -259,6 +280,17 @@ class MyPlantAddForm(forms.Form):
 		required=False,
 		)
 
+# class MyPlantCommentForm(forms.Form):
+# 	subject = forms.CharField(
+# 		label='Subject', 
+# 		max_length=64, 
+# 		required=False,
+# 		)
+# 	comment = QuillFormField(
+# 		label="Comment",
+# 		required=False,
+# 	)
+
 class PlantAddUpdateForm(forms.Form):
 	commonName = forms.CharField(
 		label="Common Name", 
@@ -384,6 +416,18 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=255, 
 		required=False,
 		)
+	subkingdom = forms.CharField(
+		label="Subkingdom",
+		initial="tbd",
+		max_length=255, 
+		required=False,
+		)
+	superdivision = forms.CharField(
+		label="Superdivision", 
+		initial="tbd",
+		max_length=255, 
+		required=False,
+		)
 	division = forms.CharField(
 		label="Division", 
 		initial="tbd",
@@ -392,6 +436,12 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	class_x = forms.CharField(
 		label="Class", 
+		initial="tbd",
+		max_length=255, 
+		required=False,
+		)
+	subclass = forms.CharField(
+		label="Subclass", 
 		initial="tbd",
 		max_length=255, 
 		required=False,

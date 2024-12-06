@@ -8,9 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User                        # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
-from .models import Garden, MyPlant, Plant, Comment
+from .models import Garden, MyPlant, Plant, Comment # MyPlantComment 
 from .forms  import UserSignupForm, UserLoginForm
-from .forms  import GardenAddUpdateForm, MyPlantAddForm
+from .forms  import GardenAddUpdateForm, MyPlantAddForm # MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
 import math
@@ -20,8 +20,11 @@ import os
 plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
-ph_opt           = ["tbd", "6.6", "6.8", "7.0", "7.2", "7.4", "7.6"]
-bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "purple", "green", "blue", "orange"]
+ph_opt           = ["tbd", "5.5", "5.6", "5.7", "5.8", "5.9", 
+                    "6.0", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "6.9",
+                    "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
+                    "8.0"]
+bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", "blue", "orange"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterfiles", "Hummingbirds", "None"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
@@ -195,6 +198,9 @@ def myplants_summary(request):
         return HttpResponseRedirect(reverse('plants:user_login'))
     my_plants = MyPlant.objects.filter(owner = request.user.username)
     template = loader.get_template('plants/myplants_summary.html')
+    for my_plant in my_plants:
+        # format multiselect attributes to remove [, ', and ]
+        my_plant.sun_exposure = string_display(my_plant.sun_exposure)
     context = { 'my_plants' : my_plants }
     return HttpResponse(template.render(context, request))
 
@@ -219,6 +225,43 @@ def myplants_add(request, id):
         form = MyPlantAddForm()
         context = { 'form'  : form }
         return render(request, 'plants/myplants_add.html', context)
+
+# def myplants_details(request, id):
+#     """ Show a detailed view of a specific plant """
+#     if not request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('plants:user_login'))
+#     # Uses the id to locate the correct record in the MyPlant table
+#     myplant = MyPlant.objects.get(id=id)  
+#     # get all comments related to the plant                
+#     myplant_comments = MyPlantComment.objects.filter(plant__pk=id) 
+#     template = loader.get_template("plants/myplants_details.html")
+#     context = { "myplant"  : myplant, 
+#                 "myplant_comments" : myplant_comments, 
+#               }
+#     # Send "context" to template and output the html from the template
+#     return HttpResponse(template.render(context, request)) 
+
+# def myplants_comment(request, id):
+#     """ Associate a comment to a myplant """
+#     if not request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('plants:user_login'))
+#     myplant = MyPlant.objects.get(id=id)
+#     my_plant_comment = MyPlantComment()
+#     if request.POST:
+#         form = MyPlantCommentForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             my_plant_comment.author  = request.user.username            #
+#             my_plant_comment.subject = form.cleaned_data.get("subject") #
+#             my_plant_comment.comment = form.cleaned_data.get("comment") #
+#             my_plant_comment.myplant = myplant                          # link the comment to the specific plant
+#             my_plant_comment.save()
+#         return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
+#     else:
+#         form = MyPlantCommentForm()
+#         context = { 'myplant' : myplant,
+#                     'form'  : form,
+#                   }
+#         return render(request, 'plants/myplants_comment.html', context)
 
 def plants_search(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
@@ -391,8 +434,11 @@ def plants_add(request):
             plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
             plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
             plant.kingdom       = form.cleaned_data.get('kingdom')
+            plant.subkingdom    = form.cleaned_data.get('subkingdom')
+            plant.superdivision = form.cleaned_data.get('superdivision')
             plant.division      = form.cleaned_data.get('division')
             plant.class_x       = form.cleaned_data.get('class_x')
+            plant.subclass      = form.cleaned_data.get('subclass')
             plant.order         = form.cleaned_data.get('order')
             plant.family        = form.cleaned_data.get('family')
             plant.genus         = form.cleaned_data.get('genus')
@@ -449,8 +495,11 @@ def plants_update(request, id):
             plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
             plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
             plant.kingdom       = form.cleaned_data.get('kingdom')
+            plant.subkingdom    = form.cleaned_data.get('subkingdom')
+            plant.superdivision = form.cleaned_data.get('superdivision')
             plant.division      = form.cleaned_data.get('division')
             plant.class_x       = form.cleaned_data.get('class_x')
+            plant.subclass      = form.cleaned_data.get('subclass')
             plant.order         = form.cleaned_data.get('order')
             plant.family        = form.cleaned_data.get('family')
             plant.genus         = form.cleaned_data.get('genus')
@@ -511,8 +560,11 @@ def plants_update(request, id):
                                             'pruning'       : plant.pruning,
                                             'fertilization' : plant.fertilization,
                                             'kingdom'       : plant.kingdom,
+                                            'subkingdom'    : plant.subkingdom,
+                                            'superdivision' : plant.superdivision, 
                                             'division'      : plant.division, 
                                             'class_x'       : plant.class_x,
+                                            'subclass'      : plant.subclass,
                                             'order'         : plant.order,
                                             'family'        : plant.family,
                                             'genus'         : plant.genus,

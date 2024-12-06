@@ -43,7 +43,7 @@ class Garden(models.Model):
     
     def get_absolute_url(self):
         return reverse("plants_search")
-    
+
 class Plant(models.Model):
     """ Plant description table """
     commonName    = models.CharField(max_length=255)
@@ -59,7 +59,7 @@ class Plant(models.Model):
     water_rqmts   = models.CharField(max_length=64,  default="tbd", blank=True)
     pH_min        = models.CharField(max_length=16,  default="tbd", blank=True)
     pH_max        = models.CharField(max_length=16,  default="tbd", blank=True)
-    pollinators   = models.CharField(max_length=64,  default="tbd", blank=True)
+    pollinators   = models.CharField(max_length=72,  default="tbd", blank=True)
     ucd_all_star  = models.CharField(max_length=8,   default="tbd", blank=True)
     ca_native     = models.CharField(max_length=8,   default="tbd", blank=True)
     usda_zone_min = models.CharField(max_length=32,  default="tbd", blank=True)
@@ -71,8 +71,11 @@ class Plant(models.Model):
     fertilization = QuillField(blank=True, null=True)
     # Plant taxonomy
     kingdom       = models.CharField(max_length=64, default="tbd", blank=True)
+    subkingdom    = models.CharField(max_length=64, default="tbd", blank=True)
+    superdivision = models.CharField(max_length=64, default="tbd", blank=True)
     division      = models.CharField(max_length=64, default="tbd", blank=True)
     class_x       = models.CharField(max_length=64, default="tbd", blank=True)
+    subclass      = models.CharField(max_length=64, default="tbd", blank=True)
     order         = models.CharField(max_length=64, default="tbd", blank=True)
     family        = models.CharField(max_length=64, default="tbd", blank=True)
     genus         = models.CharField(max_length=64, default="tbd", blank=True)
@@ -100,6 +103,25 @@ class Plant(models.Model):
     def get_absolute_url(self):
         return reverse("plants_search")
 
+class Comment(models.Model):
+    """ Plant comments """
+    # Many-to-one relationship - many "comments" can be associated with each "plant"
+    # db fields for the comment
+    author  = models.CharField(max_length=64, default="tbd", blank=True)
+    date    = models.DateField(auto_now_add=True)
+    subject = models.CharField(max_length=64, default="tbd", blank=True)
+    comment = QuillField(blank=True, null=True)
+    # connection to a specific plant in the Plant db table
+    plant   = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    # Administrative stuff
+    slug    = models.SlugField(default="", null=False)
+
+    def __str__(self):
+        return self.author
+    
+    def get_absolute_url(self):
+        return reverse("plants_search")
+     
 class MyPlant(models.Model):
     """ Plants that are in My Garden """
     # Many-to-one relationship - many "myplants" can be associated with each "plant"
@@ -122,21 +144,21 @@ class MyPlant(models.Model):
     def get_absolute_url(self):
         return reverse("plants_search")
 
-class Comment(models.Model):
-    """ Plant comments """
-    # Many-to-one relationship - many "comments" can be associated with each "plant"
-    # db fields for the comment
-    author  = models.CharField(max_length=64, default="tbd", blank=True)
-    date    = models.DateField(auto_now_add=True)
-    subject = models.CharField(max_length=64, default="tbd", blank=True)
-    comment = QuillField(blank=True, null=True)
-    # connection to a specific plant in the Plant db table
-    plant   = models.ForeignKey(Plant, on_delete=models.CASCADE)
-    # Administrative stuff
-    slug    = models.SlugField(default="", null=False)
+# class MyPlantComment(models.Model):
+#     """ My Plant comments """
+#     # Many-to-one relationship 
+#     # - many "comments" can be associated with each "My Plant" record
+#     author  = models.CharField(max_length=64, default="tbd", blank=True)
+#     date    = models.DateField(auto_now_add=True)
+#     subject = models.CharField(max_length=64, default="tbd", blank=True)
+#     comment = QuillField(blank=True, null=True)
+#     # connection to a specific plant in the MyPlant db table
+#     myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+#     # Administrative stuff
+#     slug    = models.SlugField(default="", null=False)
 
-    def __str__(self):
-        return self.author
+#     def __str__(self):
+#         return self.author
     
-    def get_absolute_url(self):
-        return reverse("plants_search")
+#     def get_absolute_url(self):
+#         return reverse("myplants_details")
