@@ -8,9 +8,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User                        # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
-from .models import Garden, MyPlant, Plant, Comment # MyPlantComment 
+from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
 from .forms  import UserSignupForm, UserLoginForm
-from .forms  import GardenAddUpdateForm, MyPlantAddForm # MyPlantCommentForm
+from .forms  import GardenAddUpdateForm, MyPlantAddForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
 import math
@@ -226,42 +226,44 @@ def myplants_add(request, id):
         context = { 'form'  : form }
         return render(request, 'plants/myplants_add.html', context)
 
-# def myplants_details(request, id):
-#     """ Show a detailed view of a specific plant """
-#     if not request.user.is_authenticated:
-#         return HttpResponseRedirect(reverse('plants:user_login'))
-#     # Uses the id to locate the correct record in the MyPlant table
-#     myplant = MyPlant.objects.get(id=id)  
-#     # get all comments related to the plant                
-#     myplant_comments = MyPlantComment.objects.filter(plant__pk=id) 
-#     template = loader.get_template("plants/myplants_details.html")
-#     context = { "myplant"  : myplant, 
-#                 "myplant_comments" : myplant_comments, 
-#               }
-#     # Send "context" to template and output the html from the template
-#     return HttpResponse(template.render(context, request)) 
+def myplants_details(request, id):
+    """ Show a detailed view of a specific plant """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:user_login'))
+    # Uses the id to locate the correct record in the MyPlant table
+    myplant = MyPlant.objects.get(id=id)
+    plant   = Plant.objects.get(id=myplant.plant.id)
+    # get all comments related to the plant                
+    myplant_comments = MyPlantComment.objects.filter(myplant__pk=id) 
+    template = loader.get_template("plants/myplants_details.html")
+    context  = { "myplant"          : myplant, 
+                 "plant"            : plant,
+                 "myplant_comments" : myplant_comments, 
+               }
+    # Send "context" to template and output the html from the template
+    return HttpResponse(template.render(context, request)) 
 
-# def myplants_comment(request, id):
-#     """ Associate a comment to a myplant """
-#     if not request.user.is_authenticated:
-#         return HttpResponseRedirect(reverse('plants:user_login'))
-#     myplant = MyPlant.objects.get(id=id)
-#     my_plant_comment = MyPlantComment()
-#     if request.POST:
-#         form = MyPlantCommentForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             my_plant_comment.author  = request.user.username            #
-#             my_plant_comment.subject = form.cleaned_data.get("subject") #
-#             my_plant_comment.comment = form.cleaned_data.get("comment") #
-#             my_plant_comment.myplant = myplant                          # link the comment to the specific plant
-#             my_plant_comment.save()
-#         return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
-#     else:
-#         form = MyPlantCommentForm()
-#         context = { 'myplant' : myplant,
-#                     'form'  : form,
-#                   }
-#         return render(request, 'plants/myplants_comment.html', context)
+def myplants_comment(request, id):
+    """ Associate a comment to a myplant """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:user_login'))
+    myplant = MyPlant.objects.get(id=id)
+    my_plant_comment = MyPlantComment()
+    if request.POST:
+        form = MyPlantCommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            my_plant_comment.author  = request.user.username            #
+            my_plant_comment.subject = form.cleaned_data.get("subject") #
+            my_plant_comment.comment = form.cleaned_data.get("comment") #
+            my_plant_comment.myplant = myplant                          # link the comment to the specific plant
+            my_plant_comment.save()
+        return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
+    else:
+        form = MyPlantCommentForm()
+        context = { 'myplant' : myplant,
+                    'form'    : form,
+                  }
+        return render(request, 'plants/myplants_comment.html', context)
 
 def plants_search(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """

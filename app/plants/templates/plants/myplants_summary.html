@@ -15,7 +15,7 @@
 <!-- My Plants -->
 <body onload="sortTable(0)">
   <!-- My Plant Table -->
-  <div class="w3-container" id="main" style="margin-top:140px;">
+  <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable">
       <thead>
         <tr class="w3-light-grey">
@@ -42,7 +42,11 @@
           <td>{{ my_plant.pH               }}</td>
           <td>{{ my_plant.soil_type        }}</td>
           <td class="w3-center">TBD          </td>
-          <td class="w3-center"><a href="{% url 'plants:plants_details' my_plant.plant.id %}"><i class="material-icons">library_books</i></a></td>
+          <td class="w3-center">
+            <a href="{% url 'plants:myplants_details' my_plant.id %}">
+              <i class="material-icons">library_books</i>
+            </a>
+          </td>
         </tr>
       {% endfor %}
     </table>
@@ -101,7 +105,7 @@
 </body>
 
 <!-- Footer -->
-<footer class="w3-container w3-green">
+<footer class="w3-container w3-green" style="margin-top:20px;">
   <p>Footer</p>
 </footer>
 

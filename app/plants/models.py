@@ -144,21 +144,21 @@ class MyPlant(models.Model):
     def get_absolute_url(self):
         return reverse("plants_search")
 
-# class MyPlantComment(models.Model):
-#     """ My Plant comments """
-#     # Many-to-one relationship 
-#     # - many "comments" can be associated with each "My Plant" record
-#     author  = models.CharField(max_length=64, default="tbd", blank=True)
-#     date    = models.DateField(auto_now_add=True)
-#     subject = models.CharField(max_length=64, default="tbd", blank=True)
-#     comment = QuillField(blank=True, null=True)
-#     # connection to a specific plant in the MyPlant db table
-#     myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
-#     # Administrative stuff
-#     slug    = models.SlugField(default="", null=False)
+class MyPlantComment(models.Model):
+    """ My Plant comments """
+    # Many-to-one relationship 
+    # - many "comments" can be associated with each "My Plant" record
+    author  = models.CharField(max_length=64, default="tbd", blank=True)
+    date    = models.DateField(auto_now_add=True)
+    subject = models.CharField(max_length=64, default="tbd", blank=True)
+    comment = QuillField(blank=True, null=True)
+    # connection to a specific plant in the MyPlant db table
+    myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+    # Administrative stuff
+    slug    = models.SlugField(default="", null=False)
 
-#     def __str__(self):
-#         return self.author
+    def __str__(self):
+        return self.author
     
-#     def get_absolute_url(self):
-#         return reverse("myplants_details")
+    def get_absolute_url(self):
+        return reverse("myplants_details")

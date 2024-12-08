@@ -280,16 +280,16 @@ class MyPlantAddForm(forms.Form):
 		required=False,
 		)
 
-# class MyPlantCommentForm(forms.Form):
-# 	subject = forms.CharField(
-# 		label='Subject', 
-# 		max_length=64, 
-# 		required=False,
-# 		)
-# 	comment = QuillFormField(
-# 		label="Comment",
-# 		required=False,
-# 	)
+class MyPlantCommentForm(forms.Form):
+	subject = forms.CharField(
+		label='Subject', 
+		max_length=64, 
+		required=False,
+		)
+	comment = QuillFormField(
+		label="Comment",
+		required=False,
+	)
 
 class PlantAddUpdateForm(forms.Form):
 	commonName = forms.CharField(
