@@ -220,11 +220,27 @@ def myplants_add(request, id):
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
             my_plant.plant        = plant                                 # link my_plant to the specific plant
             my_plant.save()
-        return HttpResponseRedirect(reverse('plants:index')) 
+        return HttpResponseRedirect(reverse('plants:plants_search')) 
     else:
         form = MyPlantAddForm()
-        context = { 'form'  : form }
+        context = { 'form' : form }
         return render(request, 'plants/myplants_add.html', context)
+
+def myplants_remove(request, id):
+    """ Remove selected plant from the MyPlants database  """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:user_login'))
+    #
+    plant = Plant.objects.get(id=id)
+    if request.POST:
+        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+        for my_plant in my_plants:
+            if my_plant.plant == plant:
+                my_plant.delete()
+        return HttpResponseRedirect(reverse('plants:plants_search')) 
+    else:
+        context = { 'plant' : plant }
+        return render(request, 'plants/myplants_remove.html', context)
 
 def myplants_details(request, id):
     """ Show a detailed view of a specific plant """
@@ -313,9 +329,9 @@ def plants_search(request):
                 plant.bloom_season = string_display(plant.bloom_season)
                 plant.pollinators  = string_display(plant.pollinators)
                 # show selected plant
-                plant.show = "yes"
+                plant.plant_show = "yes"
             else:
-                plant.show = "no"
+                plant.plant_show = "no"
         context = { "plants"             : plants,
                     # Search attributes
                     'plant_types'        : plant_types,
@@ -339,7 +355,8 @@ def plants_search(request):
                   }
         return render(request, "plants/plants_search.html", context)
     else:                                                       # Executed when search page is initialized
-        plants = Plant.objects.all()
+        plants   = Plant.objects.all()
+        my_plants = MyPlant.objects.filter(owner = request.user.username)
         # set search field defaults
         type_x_value       = "Any"
         sun_exposure_value = "Any"
@@ -359,9 +376,15 @@ def plants_search(request):
             plant.bloom_season = string_display(plant.bloom_season)
             plant.pollinators  = string_display(plant.pollinators)
             # show all plants on initial rendering
-            plant.show = "yes"
+            plant.plant_show = "yes"
+            # check to determine if the current user has already claimed the plant
+            plant.plant_mine = "no"
+            for my_plant in my_plants:
+                if my_plant.plant == plant:
+                    plant.plant_mine = "yes"
         template = loader.get_template("plants/plants_search.html")
         context = { "plants"             : plants,
+                    "my_plants"          : my_plants,
                     # search field options
                     "plant_types"        : plant_types,
                     "sun_exposure_opt"   : sun_exposure_opt,
@@ -577,7 +600,7 @@ def plants_update(request, id):
                                             'image_3'       : plant.image_3,
                                             'image_4'       : plant.image_4,
                                         })
-        context = { 'form' : form }
+        context = { 'plant' : plant, 'form' : form }
         return render(request, 'plants/plants_update.html', context)
 
 def plants_comment(request, id):

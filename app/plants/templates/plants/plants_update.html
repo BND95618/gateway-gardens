@@ -7,7 +7,12 @@
 
 <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">Update Plant</h1>
+      <h1 class="w3-bar-item">
+        Update Plant: {{ plant.commonName }} 
+        <span style="font-style: italic;">
+          ( {{ plant.genus }} {{ plant.species }} )
+        </span>
+      </h1>
     </div>
   </div>
 </header>

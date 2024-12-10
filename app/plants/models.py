@@ -93,7 +93,8 @@ class Plant(models.Model):
     # Administrative stuff
     creator       = models.CharField(max_length=64, default="tbd", blank=True)
     creation_date = models.DateField(auto_now_add=True)
-    plant_show    = models.CharField(max_length=8,  default="No", blank=True)
+    plant_show    = models.CharField(max_length=8,  default="no", blank=True)
+    plant_mine    = models.CharField(max_length=8,  default="no", blank=True)
     gardens       = models.ManyToManyField(Garden, blank=True)
     slug          = models.SlugField(default="", null=False)
 
@@ -126,7 +127,8 @@ class MyPlant(models.Model):
     """ Plants that are in My Garden """
     # Many-to-one relationship - many "myplants" can be associated with each "plant"
     # connection to a specific plant in the Plant db table
-    plant        = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    # related_name allows reverse look-up - find all 'myplants' that are associated with a particular 'plant'
+    plant        = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='myplants')
     #
     owner        = models.CharField(max_length=64, default="tbd", blank=True)
     date         = models.DateField(auto_now_add=True)

@@ -171,7 +171,7 @@
         </tr>
       </thead>
       {% for plant in plants %}
-        {% if plant.show == "yes" %}   
+        {% if plant.plant_show == "yes" %}   
           <tr class="w3-hover-green">
             <td>{{ plant.commonName                   }}</td>
             <td>{{ plant.type_x                       }}</td>
@@ -182,16 +182,76 @@
             <td>{{ plant.pollinators |cut:"["|cut:"]" }}</td>
             <td>{{ plant.species                      }}</td>
             <td class="w3-center">{{ plant.ca_native   }}</td>
-            <!-- AR -->
-            <td class="w3-center"><a href="{% url 'plants:plants_details' plant.id %}"><i class="material-icons">library_books</i></a></td>
-            <td class="w3-center"><a href="{% url 'plants:plants_update'  plant.id %}"><i class="material-icons">edit         </i></a></td>
-            <td class="w3-center"><a href="{% url 'plants:plants_delete'  plant.id %}"><i class="material-icons">delete       </i></a></td>
-            <td class="w3-center"><a href="{% url 'plants:myplants_add'   plant.id %}"><i class="material-icons">add          </i></a></td>
+            <!-- Plant Details Icon/Link -->
+            <td class="w3-center">
+              <div class="w3-tooltip">
+                <a href="{% url 'plants:plants_details' plant.id %}">
+                  <i class="material-icons">
+                    library_books
+                  </i>
+                  <span style="position:absolute; left:0; bottom:34px;" 
+                            class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    Details
+                  </span>
+                </a>
+              </div>
+            </td>
+            <!-- Plant Update Icon/Link -->
+            <td class="w3-center">
+              <div class="w3-tooltip">
+                <a href="{% url 'plants:plants_update' plant.id %}">
+                  <i class="material-icons">
+                    edit
+                  </i>
+                  <span style="position:absolute; left:0; bottom:34px;" 
+                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    Edit
+                  </span>
+                </a>
+              </div>
+            </td>
+            <!-- Plant Delete Icon/Link -->
+            <td class="w3-center">
+              <div class="w3-tooltip">
+                <a href="#">
+                  <i class="material-icons">
+                    delete
+                  </i>
+                  <span style="position:absolute; left:0; bottom:34px;" 
+                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    Delete
+                  </span>
+                </a>
+              </div>
+            </td>
+            <!-- Add plant to My Plants Icon/Link -->
+            <td class="w3-center">
+              <div class="w3-tooltip">
+                {% if plant.plant_mine == "yes" %}
+                  <a href="{% url 'plants:myplants_remove' plant.id %}">
+                    <i class="material-icons">check</i>
+                    <span style="position:absolute; left:0; bottom:34px;" 
+                          class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                      My Plant
+                    </span>
+                  </a>
+                {% else %}
+                  <a href="{% url 'plants:myplants_add' plant.id %}">
+                    <i class="material-icons">add</i>
+                    <span style="position:absolute; left:0; bottom:34px;" 
+                          class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                      My Plant
+                    </span>
+                  </a>
+                {% endif %}
+              </div>
+            </td>
           </tr>
         {% endif %}
       {% endfor %}
     </table>
   </div>
+<!-- AR: Move script to separate  file -->
   <script>
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
