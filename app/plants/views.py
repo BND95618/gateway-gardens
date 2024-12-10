@@ -214,6 +214,7 @@ def myplants_add(request, id):
         form = MyPlantAddForm(request.POST)
         if form.is_valid():
             my_plant.owner        = request.user.username                 #
+            my_plant.date_planted = form.cleaned_data.get("date_planted") #
             my_plant.location     = form.cleaned_data.get("location")     #
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
             my_plant.pH           = form.cleaned_data.get("pH")           #

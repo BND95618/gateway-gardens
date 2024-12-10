@@ -133,6 +133,7 @@ class MyPlant(models.Model):
     owner        = models.CharField(max_length=64, default="tbd", blank=True)
     date         = models.DateField(auto_now_add=True)
     #
+    date_planted = models.DateField(default="2000-01-01", blank=True)
     location     = models.CharField(max_length=64, default="tbd", blank=True)
     sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
     pH           = models.CharField(max_length=16, default="tbd", blank=True)

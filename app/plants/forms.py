@@ -257,6 +257,11 @@ class GardenAddUpdateForm(forms.Form):
 		)
 	
 class MyPlantAddForm(forms.Form):
+	date_planted = forms.DateField(
+		label="Date Planted",
+		initial='2000-01-01',
+		required=False,
+	)
 	location = forms.CharField(
 		label='Location', 
 		max_length=64, 
