@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'plants',
     'django_quill',
+    'django_flatpickr',
 ]
 
 MIDDLEWARE = [
@@ -164,6 +165,12 @@ else:
 # AR: needs to be fixed
 LOGIN_REDIRECT_URL  = "/plants/index"
 LOGOUT_REDIRECT_URL = "/plants/index"
+
+# GLobal settings for all django_flatpickr inputs
+DJANGO_FLATPICKR = {
+    # Name of the theme to use - https://flatpickr.js.org/themes/
+    "theme_name": "dark",
+}
 
 # Quill Rich Text Editor configuration
 QUILL_CONFIGS = {

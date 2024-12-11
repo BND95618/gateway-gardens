@@ -248,12 +248,20 @@ def myplants_details(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:user_login'))
     # Uses the id to locate the correct record in the MyPlant table
-    myplant = MyPlant.objects.get(id=id)
-    plant   = Plant.objects.get(id=myplant.plant.id)
+    my_plant = MyPlant.objects.get(id=id)
+    # format multiselect attributes to remove [, ', and ]
+    my_plant.sun_exposure = string_display(my_plant.sun_exposure)
+    plant   = Plant.objects.get(id=my_plant.plant.id)
+    # format multiselect attributes to remove [, ', and ] 
+    plant.sun_exposure = string_display(plant.sun_exposure)
+    plant.water_rqmts  = string_display(plant.water_rqmts)
+    plant.bloom_color  = string_display(plant.bloom_color)
+    plant.bloom_season = string_display(plant.bloom_season)
+    plant.pollinators  = string_display(plant.pollinators)
     # get all comments related to the plant                
     myplant_comments = MyPlantComment.objects.filter(myplant__pk=id) 
     template = loader.get_template("plants/myplants_details.html")
-    context  = { "myplant"          : myplant, 
+    context  = { "my_plant"          : my_plant, 
                  "plant"            : plant,
                  "myplant_comments" : myplant_comments, 
                }

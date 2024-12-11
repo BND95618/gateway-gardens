@@ -15,6 +15,8 @@
 <!-- Add Plant to My Plants -->
 <body>
   <div class="w3-container" style="margin-top:140px;">
+    <!-- Required for django_flatpickr -->
+    {{ form.media }}
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}

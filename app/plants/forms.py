@@ -2,6 +2,7 @@
 
 from django import forms 
 from django_quill.forms import QuillFormField
+from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
 
 TYPE_CHOICES = (
 	("tbd",         "tbd"),
@@ -258,8 +259,8 @@ class GardenAddUpdateForm(forms.Form):
 	
 class MyPlantAddForm(forms.Form):
 	date_planted = forms.DateField(
+		widget=DatePickerInput(),
 		label="Date Planted",
-		initial='2000-01-01',
 		required=False,
 	)
 	location = forms.CharField(

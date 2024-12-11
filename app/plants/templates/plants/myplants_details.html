@@ -8,13 +8,13 @@
   <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">
-        {{ myplant.plant.commonName }} 
+        {{ my_plant.plant.commonName }} 
         <span style="font-style: italic;">
-          ( {{ myplant.plant.genus }} {{ myplant.plant.species }} )
+          ( {{ my_plant.plant.genus }} {{ my_plant.plant.species }} )
         </span>
       </h1>
       <!-- AR: link to My Plant update page-->
-      <a href="{x% url 'plants:myplants_update'  myplant.id %x}" class="w3-button">update</a>
+      <a href="{x% url 'plants:myplants_update'  my_plant.id %x}" class="w3-button">update</a>
     </div>
   </div>
 </header>
@@ -28,9 +28,9 @@
           <h3>Characteristics</h3>
         </header>
         <div class="w3-container w3-border">
-          <p>Date Planted:        {{ myplant.date_planted }}</p>
-          <p>Location:            {{ myplant.location }}</p>
-          <p>Sun Exposure:        {{ myplant.sun_exposure  }}</p>
+          <p>Date Planted:        {{ my_plant.date_planted }}</p>
+          <p>Location:            {{ my_plant.location }}</p>
+          <p>Sun Exposure:        {{ my_plant.sun_exposure  }}</p>
         </div> 
       </div>
     </div>
@@ -47,11 +47,8 @@
         {{ comment.comment.html|safe|escape }}
         <hr>
       {% endfor %}
-      <p><a href="{% url 'plants:myplants_comment' myplant.id %}">Add comment</a></p>
+      <p><a href="{% url 'plants:myplants_comment' my_plant.id %}">Add comment</a></p>
     </fieldset>
-    <hr>
-    <p>Creator: {{ plant.creator }}</p>
-    <p>Creation Date: {{ plant.creation_date }}</p>
   </div>
 
   <hr>
