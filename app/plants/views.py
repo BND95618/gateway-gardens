@@ -539,6 +539,7 @@ def plants_update(request, id):
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
+            plant.pronunciation = form.cleaned_data.get('pronunciation')
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
             plant.fertilization = form.cleaned_data.get('fertilization')
@@ -604,6 +605,7 @@ def plants_update(request, id):
                                             'genus'         : plant.genus,
                                             'species'       : plant.species,
                                             'variety'       : plant.variety,
+                                            'pronunciation' : plant.pronunciation,
                                             'image_1'       : plant.image_1,
                                             'image_2'       : plant.image_2,
                                             'image_3'       : plant.image_3,

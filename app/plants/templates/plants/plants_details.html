@@ -12,8 +12,31 @@
         <span style="font-style: italic;">
           ( {{ plant.genus }} {{ plant.species }} )
         </span>
+        <!-- Change audio to link entered into plant db -->
+        <span class="w3-tooltip">
+          <audio id="player" src="{{ plant.pronunciation }}"></audio>
+          <span style="cursor:pointer" onclick="document.getElementById('player').play()">
+            <i class="material-icons w3-green">volume_up</i>
+          </span>
+          <!-- Tool Tip -->
+          <span style="font-size:16px; position:absolute; left:0; bottom:34px;" 
+                class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+             Pronounce
+           </span>
+        </span>
+        <span class="w3-tooltip">
+          <a href="{% url 'plants:plants_update' plant.id %}">
+            <i class="material-icons">
+              edit
+            </i>
+            <!-- Tool Tip -->
+            <span style="font-size:16px; position:absolute; left:0; bottom:34px;" 
+                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+              Edit
+            </span>
+          </a>
+        </span>
       </h1>
-      <a href="{% url 'plants:plants_update' plant.id %}" class="w3-button">update</a>
     </div>
   </div>
 </header>

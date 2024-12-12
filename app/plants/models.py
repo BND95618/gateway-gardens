@@ -81,6 +81,7 @@ class Plant(models.Model):
     genus         = models.CharField(max_length=64, default="tbd", blank=True)
     species       = models.CharField(max_length=64, default="tbd", blank=True)
     variety       = models.CharField(max_length=64, default="tbd", blank=True)
+    pronunciation = models.URLField(blank=True, null=True)
     # Images
     image_1       = models.ImageField(upload_to='images/', blank=True, null=True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
