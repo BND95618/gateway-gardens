@@ -14,7 +14,7 @@
         </span>
       </h1>
       <!-- AR: link to My Plant update page-->
-      <a href="{x% url 'plants:myplants_update'  my_plant.id %x}" class="w3-button">update</a>
+      <a href="{% url 'plants:myplants_update' my_plant.id %}" class="w3-button">update</a>
     </div>
   </div>
 </header>

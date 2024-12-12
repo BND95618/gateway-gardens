@@ -257,7 +257,7 @@ class GardenAddUpdateForm(forms.Form):
 		required=False
 		)
 	
-class MyPlantAddForm(forms.Form):
+class MyPlantAddUpdateForm(forms.Form):
 	date_planted = forms.DateField(
 		widget=DatePickerInput(),
 		label="Date Planted",
@@ -269,7 +269,7 @@ class MyPlantAddForm(forms.Form):
 		required=False,
 		)
 	sun_exposure = forms.MultipleChoiceField(
-		label="Sun Exposure",
+		label='Sun Exposure',
 		initial='tbd',
 		choices = SUN_EXPOSURE_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
@@ -517,6 +517,10 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=64, 
 		required=False,
 		)
+	creator_notes  = QuillFormField(
+		label="Creator Notes:",
+		required=False,
+	)
 	
 class PlantCommentForm(forms.Form):
 	subject = forms.CharField(

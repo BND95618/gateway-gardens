@@ -94,6 +94,7 @@ class Plant(models.Model):
     # Administrative stuff
     creator       = models.CharField(max_length=64, default="tbd", blank=True)
     creation_date = models.DateField(auto_now_add=True)
+    creator_notes = QuillField(blank=True, null=True)
     plant_show    = models.CharField(max_length=8,  default="no", blank=True)
     plant_mine    = models.CharField(max_length=8,  default="no", blank=True)
     gardens       = models.ManyToManyField(Garden, blank=True)

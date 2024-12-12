@@ -1,20 +1,20 @@
-<!-- app/plants/templates/plants/myplants_add.html -->
+<!-- app/plants/templates/plants/myplants_update.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Add Plant to My Plants{% endblock %}
+{% block title %}My Plants Update{% endblock %}
 
 {% block content %}
 
   <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">
-        Adding: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} to My Garden
-      </h1>
+        Updating: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} in My Garden
+    </h1>
     </div>
   </div>
 </header>
 
-<!-- Add Plant to My Plants -->
+<!-- Update Plant in My Plants -->
 <body>
   <div class="w3-container" style="margin-top:140px;">
     <!-- Required for django_flatpickr -->

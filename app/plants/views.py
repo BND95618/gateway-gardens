@@ -10,7 +10,7 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
 from .forms  import UserSignupForm, UserLoginForm
-from .forms  import GardenAddUpdateForm, MyPlantAddForm, MyPlantCommentForm
+from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
 import math
@@ -211,7 +211,7 @@ def myplants_add(request, id):
     plant = Plant.objects.get(id=id)
     my_plant = MyPlant()
     if request.POST:
-        form = MyPlantAddForm(request.POST)
+        form = MyPlantAddUpdateForm(request.POST)
         if form.is_valid():
             my_plant.owner        = request.user.username                 #
             my_plant.date_planted = form.cleaned_data.get("date_planted") #
@@ -223,9 +223,37 @@ def myplants_add(request, id):
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:plants_search')) 
     else:
-        form = MyPlantAddForm()
+        form = MyPlantAddUpdateForm()
         context = { 'form' : form }
         return render(request, 'plants/myplants_add.html', context)
+    
+def myplants_update(request, id):
+    """ Update details related a specific My Plant """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:user_login'))
+    my_plant = MyPlant.objects.get(id=id)
+    if request.POST:
+        form = MyPlantAddUpdateForm(request.POST, request.FILES)
+        if form.is_valid():
+            my_plant.date_planted = form.cleaned_data.get("date_planted") #
+            my_plant.location     = form.cleaned_data.get("location")     #
+            my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
+            my_plant.pH           = form.cleaned_data.get("pH")           #
+            my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.save()
+        return HttpResponseRedirect(reverse('plants:myplants_summary')) 
+    else:
+        # convert string-based lists (retrieved from db) to true Python lists
+        sun_exposure_list = string2list(my_plant.sun_exposure)
+        # set the update form with the current db values
+        form = MyPlantAddUpdateForm(initial={ 'date_planted' : my_plant.date_planted,
+                                              'location'     : my_plant.location,
+                                              'sun_exposure' : sun_exposure_list,
+                                              'pH'           : my_plant.pH,
+                                              'soil_type'    : my_plant.soil_type,
+                                            })
+        context = { 'form' : form }
+        return render(request, 'plants/myplants_update.html', context)
 
 def myplants_remove(request, id):
     """ Remove selected plant from the MyPlants database  """
@@ -483,18 +511,19 @@ def plants_add(request):
             plant.fertilization = form.cleaned_data.get('fertilization')
             # Check to see if an image file has been specified
             if 'image_1' in request.FILES:
-                plant.image_1 = request.FILES['image_1']
+                plant.image_1   = request.FILES['image_1']
                 plant.caption_1 = form.cleaned_data.get('caption_1')
             if 'image_2' in request.FILES:
-                plant.image_2 = request.FILES['image_2']
+                plant.image_2   = request.FILES['image_2']
                 plant.caption_2 = form.cleaned_data.get('caption_2')
             if 'image_3' in request.FILES:
-                plant.image_3 = request.FILES['image_3']
+                plant.image_3   = request.FILES['image_3']
                 plant.caption_3 = form.cleaned_data.get('caption_3')
             if 'image_4' in request.FILES:
-                plant.image_4 = request.FILES['image_4']
+                plant.image_4   = request.FILES['image_4']
                 plant.caption_4 = form.cleaned_data.get('caption_4')
-            plant.author        = request.user.username
+            plant.creator       = request.user.username
+            plant.creator_notes = form.cleaned_data.get('creator_notes')
             plant.save()
         return HttpResponseRedirect(reverse('plants:plants_search'))
     else:
@@ -563,7 +592,8 @@ def plants_update(request, id):
                 if (plant.image_4):
                     os.remove(plant.image_4.path)
                 plant.image_4 = request.FILES['image_4']
-                plant.caption_4 = form.cleaned_data.get('caption_4')      
+                plant.caption_4 = form.cleaned_data.get('caption_4') 
+            plant.creator_notes = form.cleaned_data.get('creator_notes')     
             plant.save()
         return HttpResponseRedirect(reverse('plants:plants_search'))
     else:
@@ -610,6 +640,7 @@ def plants_update(request, id):
                                             'image_2'       : plant.image_2,
                                             'image_3'       : plant.image_3,
                                             'image_4'       : plant.image_4,
+                                            'creator_notes' : plant.creator_notes,
                                         })
         context = { 'plant' : plant, 'form' : form }
         return render(request, 'plants/plants_update.html', context)
