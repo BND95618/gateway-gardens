@@ -55,10 +55,11 @@ class Plant(models.Model):
     height_inch   = models.IntegerField(default=0, blank=True, null=True)
     width_feet    = models.IntegerField(default=0, blank=True, null=True)
     width_inch    = models.IntegerField(default=0, blank=True, null=True)
-    sun_exposure  = models.CharField(max_length=64,  default="tbd", blank=True)
+    sun_exposure  = models.CharField(max_length=128, default="tbd", blank=True)
     water_rqmts   = models.CharField(max_length=64,  default="tbd", blank=True)
     pH_min        = models.CharField(max_length=16,  default="tbd", blank=True)
     pH_max        = models.CharField(max_length=16,  default="tbd", blank=True)
+    soil_type     = models.CharField(max_length=64,  default="tbd", blank=True)
     pollinators   = models.CharField(max_length=72,  default="tbd", blank=True)
     ucd_all_star  = models.CharField(max_length=8,   default="tbd", blank=True)
     ca_native     = models.CharField(max_length=8,   default="tbd", blank=True)
@@ -140,7 +141,7 @@ class MyPlant(models.Model):
     location     = models.CharField(max_length=64, default="tbd", blank=True)
     sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
     pH           = models.CharField(max_length=16, default="tbd", blank=True)
-    soil_type    = models.CharField(max_length=16, default="tbd", blank=True)
+    soil_type    = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False)
 

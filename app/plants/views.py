@@ -490,6 +490,7 @@ def plants_add(request):
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
             plant.pH_min        = form.cleaned_data.get('pH_min')
             plant.pH_max        = form.cleaned_data.get('pH_max')
+            plant.soil_type     = form.cleaned_data.get("soil_type")
             plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
             plant.ca_native     = form.cleaned_data.get('ca_native')
             plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
@@ -506,6 +507,7 @@ def plants_add(request):
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
+            plant.pronunciation = form.cleaned_data.get('pronunciation')
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
             plant.fertilization = form.cleaned_data.get('fertilization')
@@ -551,6 +553,7 @@ def plants_update(request, id):
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
             plant.pH_min        = form.cleaned_data.get('pH_min')
             plant.pH_max        = form.cleaned_data.get('pH_max')
+            plant.soil_type     = form.cleaned_data.get('soil_type')
             plant.pollinators   = form.cleaned_data.get('pollinators')
             plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
             plant.ca_native     = form.cleaned_data.get('ca_native')
@@ -573,7 +576,7 @@ def plants_update(request, id):
             plant.pruning       = form.cleaned_data.get('pruning')
             plant.fertilization = form.cleaned_data.get('fertilization')
             # Process images - check for new image - if yes, delete any existing image
-            if 'image_4' in request.FILES:
+            if 'image_1' in request.FILES:
                 if (plant.image_1):
                     os.remove(plant.image_1.path)
                 plant.image_1 = request.FILES['image_1']
@@ -602,6 +605,7 @@ def plants_update(request, id):
         bloom_season_list = string2list(plant.bloom_season)
         pollinators_list  = string2list(plant.pollinators)
         sun_exposure_list = string2list(plant.sun_exposure)
+        soil_type_list    = string2list(plant.soil_type)
         # set the update form with the current db values
         form = PlantAddUpdateForm(initial={ 'commonName'    : plant.commonName,
                                             'type_x'        : plant.type_x,
@@ -616,6 +620,7 @@ def plants_update(request, id):
                                             'water_rqmts'   : plant.water_rqmts,
                                             'pH_min'        : plant.pH_min,
                                             'pH_max'        : plant.pH_max,
+                                            'soil_type'     : soil_type_list,
                                             'ucd_all_star'  : plant.ucd_all_star,
                                             'ca_native'     : plant.ca_native,
                                             'usda_zone_max' : plant.usda_zone_max,

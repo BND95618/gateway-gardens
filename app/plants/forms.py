@@ -280,9 +280,11 @@ class MyPlantAddUpdateForm(forms.Form):
 		choices = PH_CHOICES, 
 		required=False,
 		)
-	soil_type = forms.ChoiceField(
+	soil_type = forms.MultipleChoiceField(
 		label="Soil Type",
+		initial='tbd',
 		choices = SOIL_TYPE_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
 
@@ -370,6 +372,12 @@ class PlantAddUpdateForm(forms.Form):
 	pH_max = forms.ChoiceField(
 		label="pH (max)",
 		choices = PH_CHOICES, 
+		required=False,
+		)
+	soil_type = forms.MultipleChoiceField(
+		label="Soil Type",
+		choices = SOIL_TYPE_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
 	ucd_all_star = forms.ChoiceField(
@@ -484,7 +492,7 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	pronunciation = forms.URLField(
 		label="Pronunciation URL",
-		initial="tbd", 
+		initial="https://temp.com", 
 		max_length=255, 
 		required=False
 	)
