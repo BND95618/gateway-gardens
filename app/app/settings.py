@@ -35,7 +35,6 @@ ALLOWED_HOSTS.extend(
 )
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,7 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'plants',
+    # Rich text editor
     'django_quill',
+    # Calendar for selecting dates
     'django_flatpickr',
 ]
 
@@ -166,7 +167,7 @@ else:
 LOGIN_REDIRECT_URL  = "/plants/index"
 LOGOUT_REDIRECT_URL = "/plants/index"
 
-# GLobal settings for all django_flatpickr inputs
+# Global settings for all django_flatpickr inputs
 DJANGO_FLATPICKR = {
     # Name of the theme to use - https://flatpickr.js.org/themes/
     "theme_name": "dark",

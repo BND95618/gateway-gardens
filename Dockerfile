@@ -33,4 +33,4 @@ RUN chmod -R +x /scripts
 COPY ./app /app
 
 EXPOSE 80
-CMD ["/scripts/run.sh"]
+CMD ["/scripts/run.sh", "-u"]

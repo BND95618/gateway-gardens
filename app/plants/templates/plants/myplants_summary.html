@@ -23,8 +23,6 @@
           <th style="cursor:pointer" onclick="sortTable(1)">Genus         </th>
           <th style="cursor:pointer" onclick="sortTable(2)">Species       </th>
           <th style="cursor:pointer" onclick="sortTable(3)">Type          </th>
-          <!-- AR: remove owner column-->
-          <th style="cursor:pointer" onclick="sortTable(4)">Owner      </th>
           <th style="cursor:pointer" onclick="sortTable(5)">Location      </th>
           <th style="cursor:pointer" onclick="sortTable(6)">Sun Exposure  </th>
           <th style="cursor:pointer" onclick="sortTable(7)">pH            </th>
@@ -39,12 +37,11 @@
           <td style="font-style: italic;">{{ my_plant.plant.genus    }}</td>
           <td style="font-style: italic;">{{ my_plant.plant.species  }}</td>
           <td>{{ my_plant.plant.type_x     }}</td>
-          <!-- AR: remove owner column-->
-          <td>{{ my_plant.owner            }}</td>
           <td>{{ my_plant.location         }}</td>
           <td>{{ my_plant.sun_exposure     }}</td>
           <td>{{ my_plant.pH               }}</td>
           <td>{{ my_plant.soil_type        }}</td>
+          <!-- AR: Implement Happy function -->
           <td class="w3-center">TBD          </td>
           <td class="w3-center">
             <a href="{% url 'plants:myplants_details' my_plant.id %}">

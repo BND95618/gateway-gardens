@@ -117,16 +117,17 @@
   {% endif %}
 </div>
 
-<div id="modal01" class="w3-modal" onclick="this.style.display='none'">
-  <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+<!-- Plant images: modal -->
+<!-- AR: Reduce the size of the modal to fit on a laptop screen -->
+<div id="image_modal" class="w3-modal" onclick="this.style.display='none'">
   <div class="w3-modal-content w3-animate-zoom">
-    <img id="img01" style="width:100%">
+    <img id="image" style="width:100%">
   </div>
 </div>
 
 <script>
   function onClick(element) {
-    document.getElementById("img01").src = element.src;
-    document.getElementById("modal01").style.display = "block";
+    document.getElementById("image").src = element.src;
+    document.getElementById("image_modal").style.display = "block";
   }
 </script>

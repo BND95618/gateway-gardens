@@ -6,9 +6,9 @@
 {% block content %}
 
 <!-- complete the header from master.html -->
-  <div class="w3-bar w3-green">
-    <h1 class="w3-bar-item">Garden/Plant Web Site</h1>
-  </div>
+    <div class="w3-bar w3-green">
+      <h1 class="w3-bar-item">Garden/Plant Web Site</h1>
+    </div>
   </div>
 </header>
 
@@ -17,10 +17,34 @@
   <div class="w3-container" style="margin-top:150px;">
     <p>Check out all our <a href="{% url 'plants:plants_search' %}">plants</a></p>
   </div>
+
+  <!-- Login modal - html to be inserted by Javascript -->
+  <dialog id="login_modal">
+    <p> Login form HTML to be Inserted Here! </p>
+  </dialog>
+
+  <!-- Do not load the login script if the user is already logged in -->
+  <!-- Otherwise an error will occur since the addEventListener will not find the "login" menu item -->
+  {% if user.is_authenticated %}
+  {% else %}
+    <script>
+      // The login button is in the "account" drop-down menu
+      const login_button = document.getElementById("login_button")
+      // There is a <dialog></dialog> at top of HTML body
+      const login_modal  = document.getElementById('login_modal')
+      //
+      fetch("{% url 'plants:user_login' %}") 
+        .then(response => response.text())
+        .then(html => {login_modal.innerHTML = html;})
+      // enable the model upon clicking of the "login" menu itsm
+      login_button.addEventListener("click", (event) => {login_modal.showModal();})
+    </script>
+  {% endif %}
+
 </body>
 
 <!-- Footer -->
-<footer class="w3-container w3-green">
+<footer class="w3-container w3-green w3-margin-top">
   <p>Footer</p>
 </footer>
 

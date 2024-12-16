@@ -739,21 +739,18 @@ def user_signup(request):
 def user_login(request):
     """ Render the User Login Page for Gateway Gardens app """
     if request.POST:
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            username   = form.cleaned_data.get('username')
-            password   = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return render(request, 'plants/index.html')
-            else:
-                # AR: create message and return to login page
-                return render(request, 'plants/user_login.html')
+        username   = request.POST.get('username')
+        password   = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        # Login the user if they have been authenticated else indicate login failure
+        if user is not None:
+            login(request, user)
+            return render(request, 'plants/index.html')
+        else:
+            # AR: Indicate on password input form that the username and/or password was invalid
+            return render(request, 'plants/index.html')
     else:
-        form = UserLoginForm()
-        context = { 'form' : form }
-        return render(request, 'plants/user_login.html', context)
+        return render(request, 'plants/user_login_modal.html')
     
 def user_logout(request):
     """ User Logout function for Gateway Gardens app """

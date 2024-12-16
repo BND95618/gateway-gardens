@@ -36,7 +36,7 @@ class Garden(models.Model):
     image_8      = models.ImageField(upload_to='images/', blank=True, null=True)
     caption_8    = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
-    slug         = models.SlugField(default="tbd", null=False)
+    slug         = models.SlugField(default="tbd", null=False, blank=True)
         
     def __str__(self):
         return self.name
@@ -99,7 +99,7 @@ class Plant(models.Model):
     plant_show    = models.CharField(max_length=8,  default="no", blank=True)
     plant_mine    = models.CharField(max_length=8,  default="no", blank=True)
     gardens       = models.ManyToManyField(Garden, blank=True)
-    slug          = models.SlugField(default="", null=False)
+    slug          = models.SlugField(default="", null=False, blank=True)
 
     def __str__(self):
         return self.commonName
@@ -118,7 +118,7 @@ class Comment(models.Model):
     # connection to a specific plant in the Plant db table
     plant   = models.ForeignKey(Plant, on_delete=models.CASCADE)
     # Administrative stuff
-    slug    = models.SlugField(default="", null=False)
+    slug    = models.SlugField(default="", null=False, blank=True)
 
     def __str__(self):
         return self.author
@@ -143,7 +143,7 @@ class MyPlant(models.Model):
     pH           = models.CharField(max_length=16, default="tbd", blank=True)
     soil_type    = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
-    slug         = models.SlugField(default="tbd", null=False)
+    slug         = models.SlugField(default="tbd", null=False, blank=True)
 
     def __str__(self):
         return self.location
@@ -162,7 +162,7 @@ class MyPlantComment(models.Model):
     # connection to a specific plant in the MyPlant db table
     myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
     # Administrative stuff
-    slug    = models.SlugField(default="", null=False)
+    slug    = models.SlugField(default="", null=False, blank=True)
 
     def __str__(self):
         return self.author
