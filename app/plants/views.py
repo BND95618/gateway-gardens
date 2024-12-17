@@ -40,7 +40,7 @@ def index(request):
 def gardens_summary(request):
     """ Render the individual user's garden summary for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     gardens = Garden.objects.all()
     template = loader.get_template("plants/gardens_summary.html")
     context = {}
@@ -62,7 +62,7 @@ def gardens_summary(request):
 def gardens_add(request):
     """ Add garden to the database """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden()
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
@@ -109,7 +109,7 @@ def gardens_add(request):
 def gardens_update(request, id):
     """ Update garden details """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden.objects.get(id=id)
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
@@ -195,7 +195,7 @@ def gardens_update(request, id):
  
 def myplants_summary(request):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     my_plants = MyPlant.objects.filter(owner = request.user.username)
     template = loader.get_template('plants/myplants_summary.html')
     for my_plant in my_plants:
@@ -207,7 +207,7 @@ def myplants_summary(request):
 def myplants_add(request, id):
     """ Associate a 'plant' to 'my_plant' """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     my_plant = MyPlant()
     if request.POST:
@@ -230,7 +230,7 @@ def myplants_add(request, id):
 def myplants_update(request, id):
     """ Update details related a specific My Plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     my_plant = MyPlant.objects.get(id=id)
     if request.POST:
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
@@ -258,7 +258,7 @@ def myplants_update(request, id):
 def myplants_remove(request, id):
     """ Remove selected plant from the MyPlants database  """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     #
     plant = Plant.objects.get(id=id)
     if request.POST:
@@ -274,7 +274,7 @@ def myplants_remove(request, id):
 def myplants_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     # Uses the id to locate the correct record in the MyPlant table
     my_plant = MyPlant.objects.get(id=id)
     # format multiselect attributes to remove [, ', and ]
@@ -299,7 +299,7 @@ def myplants_details(request, id):
 def myplants_comment(request, id):
     """ Associate a comment to a myplant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
     my_plant_comment = MyPlantComment()
     if request.POST:
@@ -321,7 +321,7 @@ def myplants_comment(request, id):
 def plants_search(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     if request.method == 'POST':                             # Executed when search is initiated
         template = loader.get_template("plants/plants_search.html")
         # Get the search criteria
@@ -445,7 +445,7 @@ def plants_search(request):
 def plants_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
     comments = Comment.objects.filter(plant__pk=id)      # get all comments related to the plant
     # format multiselect attributes to remove [, ', and ]
@@ -472,7 +472,7 @@ def plants_details(request, id):
 def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant()
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -507,6 +507,7 @@ def plants_add(request):
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
+            plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             plant.pronunciation = form.cleaned_data.get('pronunciation')
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
@@ -536,7 +537,7 @@ def plants_add(request):
 def plants_update(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -571,6 +572,7 @@ def plants_update(request, id):
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
+            plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             plant.pronunciation = form.cleaned_data.get('pronunciation')
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
@@ -640,6 +642,7 @@ def plants_update(request, id):
                                             'genus'         : plant.genus,
                                             'species'       : plant.species,
                                             'variety'       : plant.variety,
+                                            'phonetic_spelling' : plant.phonetic_spelling,
                                             'pronunciation' : plant.pronunciation,
                                             'image_1'       : plant.image_1,
                                             'image_2'       : plant.image_2,
@@ -653,7 +656,7 @@ def plants_update(request, id):
 def plants_comment(request, id):
     """ Associate a comment to a plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     comment = Comment()
     if request.POST:
@@ -675,7 +678,7 @@ def plants_comment(request, id):
 def plant2garden(request, id):
     """ Add a plant to a garden """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     gardens = Garden.objects.all()
     for garden in gardens:
@@ -687,7 +690,7 @@ def plant2garden(request, id):
 def plants_delete(request, id):
     """ Delete selected plant from the database  """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
       plant.delete()
@@ -698,19 +701,19 @@ def plants_delete(request, id):
 def plants_glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_glossary.html')
 
 def plants_reference(request):
     """ Render the Reference Page for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_reference.html')
 
 def plants_about(request):
     """ Render the About Page for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:user_login'))
+        return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_about.html')
 
 def user_signup(request):

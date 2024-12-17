@@ -490,6 +490,12 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=255, 
 		required=False
 		)
+	phonetic_spelling = forms.CharField(
+		label="Phonetic Spelling",
+		initial="tbd", 
+		max_length=32, 
+		required=False
+		)
 	pronunciation = forms.URLField(
 		label="Pronunciation URL",
 		initial="https://temp.com", 
