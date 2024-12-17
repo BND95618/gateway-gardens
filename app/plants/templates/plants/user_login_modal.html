@@ -9,9 +9,8 @@
     </div>
   </form>
   <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-    <!-- Cancel login -->
-    <!-- AR: web page hangs after 'cancel' is clicked -->
-    <button onclick="document.getElementById('login_modal').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
+    <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
+    <button onclick="location.reload();" type="button" class="w3-button w3-red">Cancel</button>
     <!-- AR: Go to reset password page -->
     <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
   </div>

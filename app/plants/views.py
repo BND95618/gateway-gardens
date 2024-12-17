@@ -752,7 +752,7 @@ def user_login(request):
                 login(request, user)
                 return render(request, 'plants/index.html')
             else:
-                # # AR: Indicate on password input form that the username and/or password was invalid
+                # AR: Indicate on password input form that the username and/or password was invalid
                 return render(request, 'plants/index.html')
     else:
         form = UserLoginForm()
