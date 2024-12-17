@@ -134,40 +134,40 @@ USDA_ZONE_CHOICES = (
 )
 
 class UserSignupForm(forms.Form):
-	username = forms.CharField(
-		label="username", 
+	signup_username = forms.CharField(
+		label="Username", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
-	password = forms.CharField(
-		label="password", 
+	signup_password = forms.CharField(
+		label="Password", 
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	email = forms.EmailField(
-		label="email", 
+		label="e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	first_name = forms.CharField(
-		label="first_name", 
+		label="First Name", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	last_name = forms.CharField(
-		label="last_name", 
+		label="Last Name", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	
 class UserLoginForm(forms.Form):
 	username = forms.CharField(
-		label="username", 
+		label="Username", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	password = forms.CharField(
-		label="password", 
+		label="Password", 
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)

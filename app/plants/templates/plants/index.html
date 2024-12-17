@@ -18,10 +18,33 @@
     <p>Check out all our <a href="{% url 'plants:plants_search' %}">plants</a></p>
   </div>
 
+  <!-- Sign Up modal - html to be inserted by Javascript -->
+  <dialog id="signup_modal">
+    <p> Sign Up form HTML to be Inserted Here! </p>
+  </dialog>
+
   <!-- Login modal - html to be inserted by Javascript -->
   <dialog id="login_modal">
     <p> Login form HTML to be Inserted Here! </p>
   </dialog>
+
+  <!-- Do not load the signup script if the user is already logged in -->
+  <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
+  {% if user.is_authenticated %}
+  {% else %}
+    <script>
+      // The signup button is in the "account" drop-down menu
+      const signup_button = document.getElementById("signup_button")
+      // There is a <dialog></dialog> at top of HTML body
+      const signup_modal  = document.getElementById('signup_modal')
+      //
+      fetch("{% url 'plants:user_signup' %}") 
+        .then(response => response.text())
+        .then(html => {signup_modal.innerHTML = html;})
+      // enable the model upon clicking of the "signup" menu itsm
+      signup_button.addEventListener("click", (event) => { signup_modal.showModal(); })
+    </script>
+  {% endif %}
 
   <!-- Do not load the login script if the user is already logged in -->
   <!-- Otherwise an error will occur since the addEventListener will not find the "login" menu item -->
@@ -37,7 +60,7 @@
         .then(response => response.text())
         .then(html => {login_modal.innerHTML = html;})
       // enable the model upon clicking of the "login" menu itsm
-      login_button.addEventListener("click", (event) => {login_modal.showModal();})
+      login_button.addEventListener("click", (event) => { login_modal.showModal(); })
     </script>
   {% endif %}
 

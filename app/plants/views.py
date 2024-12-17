@@ -721,39 +721,43 @@ def user_signup(request):
     if request.POST:
         form = UserSignupForm(request.POST)
         if form.is_valid():
-            username   = form.cleaned_data.get('username')
-            password   = form.cleaned_data.get('password')
-            email      = form.cleaned_data.get('email')
-            first_name = form.cleaned_data.get('first_name')
-            last_name  = form.cleaned_data.get('last_name')
+            signup_username = form.cleaned_data.get('signup_username')
+            signup_password = form.cleaned_data.get('signup_password')
+            email           = form.cleaned_data.get('email')
+            first_name      = form.cleaned_data.get('first_name')
+            last_name       = form.cleaned_data.get('last_name')
             # AR: Check validity of username (unique, characters) and handle appropriately
             # AR: Handle case where password is unuseable
             # AR: Handle case where email is unuseable 
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(signup_username, email, signup_password)
             user.first_name = first_name
             user.last_name  = last_name
             user.save()
-        return render(request, 'plants/user_login.html')
+        return render(request, 'plants/index.html')
     else:
         form = UserSignupForm()
         context = { 'form' : form }
-        return render(request, 'plants/user_signup.html', context)
+        return render(request, 'plants/user_signup_modal.html', context)
     
 def user_login(request):
     """ Render the User Login Page for Gateway Gardens app """
     if request.POST:
-        username   = request.POST.get('username')
-        password   = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        # Login the user if they have been authenticated else indicate login failure
-        if user is not None:
-            login(request, user)
-            return render(request, 'plants/index.html')
-        else:
-            # AR: Indicate on password input form that the username and/or password was invalid
-            return render(request, 'plants/index.html')
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            username   = form.cleaned_data.get('username')
+            password   = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            # Login the user if they have been authenticated else indicate login failure
+            if user is not None:
+                login(request, user)
+                return render(request, 'plants/index.html')
+            else:
+                # # AR: Indicate on password input form that the username and/or password was invalid
+                return render(request, 'plants/index.html')
     else:
-        return render(request, 'plants/user_login_modal.html')
+        form = UserLoginForm()
+        context = { 'form' : form }
+        return render(request, 'plants/user_login_modal.html', context)
     
 def user_logout(request):
     """ User Logout function for Gateway Gardens app """

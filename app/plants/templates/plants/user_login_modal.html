@@ -1,26 +1,18 @@
-<!--  -->
+<!-- /app/plants/templates/plants/user_login_modal.html -->
 
 <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
   <form class="w3-container" action="{% url 'plants:user_login' %}" method="post">
     {% csrf_token %}
     <div class="w3-section">
-      <!-- Request username -->
-      <label for="id_username"><b>Username</b></label>
-      <input id ="id_username" class= w3-input w3-border w3-margin-bottom" 
-             type="text" placeholder="Enter Username" name="username" autocomplete=on required>
-      <!-- Request password -->
-      <label for="id_password"><b>Password</b></label>
-      <input id ="id_password" class="w3-input w3-border" 
-             type="password" placeholder="Enter Password" name="password" autocomplete=on required>
-      <!-- Submit login request -->
+      {{ form.as_p }}
       <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
     </div>
   </form>
   <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
     <!-- Cancel login -->
+    <!-- AR: web page hangs after 'cancel' is clicked -->
     <button onclick="document.getElementById('login_modal').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
     <!-- AR: Go to reset password page -->
     <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
   </div>
-
 </div>
