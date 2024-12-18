@@ -19,14 +19,14 @@
   </div>
 
   <!-- Sign Up modal - html to be inserted by Javascript -->
-  <dialog id="signup_modal">
+  <div id="signup_modal" class="w3-modal">
     <p> Sign Up form HTML to be Inserted Here! </p>
-  </dialog>
+  </div>
 
   <!-- Login modal - html to be inserted by Javascript -->
-  <dialog id="login_modal">
+  <div id="login_modal" class="w3-modal">
     <p> Login form HTML to be Inserted Here! </p>
-  </dialog>
+  </div>
 
   <!-- Do not load the signup script if the user is already logged in -->
   <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
@@ -42,7 +42,7 @@
         .then(response => response.text())
         .then(html => {signup_modal.innerHTML = html;})
       // enable the model upon clicking of the "signup" menu itsm
-      signup_button.addEventListener("click", (event) => { signup_modal.showModal(); })
+      signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
     </script>
   {% endif %}
 
@@ -60,7 +60,7 @@
         .then(response => response.text())
         .then(html => {login_modal.innerHTML = html;})
       // enable the model upon clicking of the "login" menu itsm
-      login_button.addEventListener("click", (event) => { login_modal.showModal(); })
+      login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
     </script>
   {% endif %}
 
