@@ -28,12 +28,26 @@
         </header>
         <div class="w3-container w3-border">
           <p>Date Planted:        {{ my_plant.date_planted }}</p>
-          <p>Location:            {{ my_plant.location }}</p>
-          <p>Sun Exposure:        {{ my_plant.sun_exposure  }}</p>
+          <p>Location:            {{ my_plant.location     }}</p>
+          <p>Sun Exposure:        {{ my_plant.sun_exposure }}</p>
+          <p>pH:                  {{ my_plant.pH           }}</p>
+          <p>Soil Type:           {{ my_plant.soil_type    }}</p>
         </div> 
       </div>
     </div>
   </div>
+
+  <div class="w3-margin">
+    <div class="w3-card-4 w3-margin-top">
+      <header class="w3-container w3-green">
+        <h3>My Notes:</h3>
+      </header>
+      <div class="w3-container">
+        {{ my_plant.notes.html|safe|escape }}
+      </div>
+    </div>
+  </div>
+
   <hr>
 
   <!-- Comments -->

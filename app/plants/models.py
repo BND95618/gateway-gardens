@@ -138,11 +138,11 @@ class MyPlant(models.Model):
     date         = models.DateField(auto_now_add=True)
     #
     date_planted = models.DateField(default="2000-01-01", null=True, blank=True)
- #   date_planted = models.DateField(blank=True)
     location     = models.CharField(max_length=64, default="tbd", blank=True)
     sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
     pH           = models.CharField(max_length=16, default="tbd", blank=True)
     soil_type    = models.CharField(max_length=64, default="tbd", blank=True)
+    notes        = QuillField(blank=True, null=True)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 

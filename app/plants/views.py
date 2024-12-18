@@ -201,6 +201,7 @@ def myplants_summary(request):
     for my_plant in my_plants:
         # format multiselect attributes to remove [, ', and ]
         my_plant.sun_exposure = string_display(my_plant.sun_exposure)
+        my_plant.soil_type    = string_display(my_plant.soil_type)
     context = { 'my_plants' : my_plants }
     return HttpResponse(template.render(context, request))
 
@@ -219,6 +220,7 @@ def myplants_add(request, id):
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
             my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.plant        = plant                                 # link my_plant to the specific plant
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:plants_search')) 
@@ -240,6 +242,7 @@ def myplants_update(request, id):
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
             my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
     else:
@@ -251,6 +254,7 @@ def myplants_update(request, id):
                                               'sun_exposure' : sun_exposure_list,
                                               'pH'           : my_plant.pH,
                                               'soil_type'    : my_plant.soil_type,
+                                              'notes'        : my_plant.notes,
                                             })
         context = { 'form' : form }
         return render(request, 'plants/myplants_update.html', context)

@@ -290,6 +290,11 @@ class MyPlantAddUpdateForm(forms.Form):
 		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
+	notes = QuillFormField(
+		label="My Notes",
+		initial="tbd",
+		required=False,
+	)
 
 class MyPlantCommentForm(forms.Form):
 	subject = forms.CharField(
@@ -416,14 +421,17 @@ class PlantAddUpdateForm(forms.Form):
 	#
 	description = QuillFormField(
 		label="Description",
+		initial="tbd",
 		required=False,
 	)
 	pruning = QuillFormField(
 		label="Pruning Considerations",
+		initial="tbd",
 		required=False,
 	)
 	fertilization = QuillFormField(
 		label="Fertilization Considerations",
+		initial="tbd",
 		required=False,
 	)
 	# plant taxonomy
