@@ -137,27 +137,30 @@ class UserSignupForm(forms.Form):
 	signup_username = forms.CharField(
 		label="Username", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class' : 'w3-input w3-border'}),
 		)
 	signup_password = forms.CharField(
 		label="Password", 
 		max_length=64,
-		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class' : 'w3-input w3-border'}),
 		)
 	email = forms.EmailField(
 		label="e-mail address", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'email'}),
 		)
 	first_name = forms.CharField(
 		label="First Name", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'given-name'}),
 		)
 	last_name = forms.CharField(
 		label="Last Name", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'family-name'}),
 		)
 	
 class UserLoginForm(forms.Form):
