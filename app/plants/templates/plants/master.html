@@ -58,6 +58,7 @@
         {% endif %}
         <div class="w3-dropdown-content w3-bar-block w3-card-4 ">
           {% if user.is_authenticated %}
+            <button id="update_button" class="w3-bar-item w3-button">Update </button>
             <!-- AR -->
             <form action="{% url 'plants:user_logout' %}" method="post">
               {% csrf_token %}
@@ -65,8 +66,9 @@
             </form>
           {% else %}
             <!-- AR -->
-            <button id="login_button"  class="w3-bar-item w3-button">Login   </button>
-            <button id="signup_button" class="w3-bar-item w3-button">Sign Up </button>
+            <button id="login_button"    class="w3-bar-item w3-button">Login    </button>
+            <button id="signup_button"   class="w3-bar-item w3-button">Sign Up  </button>
+            <button id="recovery_button" class="w3-bar-item w3-button">Recovery </button>
           {% endif %}
         </div>
       </div>

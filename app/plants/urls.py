@@ -28,5 +28,7 @@ urlpatterns = [
     path('plants_about',              views.plants_about,     name='plants_about'),
     path('user_signup',               views.user_signup,      name='user_signup'),
     path('user_login',                views.user_login,       name='user_login'),
+    path('user_update',               views.user_update,      name='user_update'),
+    path('user_recovery',             views.user_recovery,    name='user_recovery'),
     path('user_logout',               views.user_logout,      name='user_logout'),
 ]

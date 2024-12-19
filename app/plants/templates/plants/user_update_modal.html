@@ -1,18 +1,18 @@
-<!-- /app/plants/templates/plants/user_login_modal.html -->
+<!-- /app/plants/templates/plants/user_update_modal.html -->
 
 <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
-  <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
-    <h3>User Login</h3>
+  <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+    <h3>User Update</h3>
   </div>
-  <form class="w3-container" action="{% url 'plants:user_login' %}" method="post">
+  <form class="w3-container" action="{% url 'plants:user_update' %}" method="post">
     {% csrf_token %}
     <div class="w3-section">
       {{ form.as_p }}
-      <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
+      <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Update User</button>
     </div>
   </form>
   <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-    <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
+    <!-- Cancel update - the page reload clears the modal and keeps the page from hanging -->
     <button onclick="location.reload();" type="button" class="w3-button w3-red">Cancel</button>
     <!-- AR: Go to reset password page -->
     <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>

@@ -9,7 +9,7 @@ from django.contrib.auth.models import User                        # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
-from .forms  import UserSignupForm, UserLoginForm
+from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
@@ -724,6 +724,7 @@ def user_signup(request):
     """ Render the User Signup Page for Gateway Gardens app """
     if request.POST:
         form = UserSignupForm(request.POST)
+        # AR: Add second password entry for comparison to frst password entry
         if form.is_valid():
             signup_username = form.cleaned_data.get('signup_username')
             signup_password = form.cleaned_data.get('signup_password')
@@ -743,6 +744,61 @@ def user_signup(request):
         context = { 'form' : form }
         return render(request, 'plants/user_signup_modal.html', context)
     
+def user_update(request):
+    """ Render the User Update Page for Gateway Gardens app """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    user = request.user
+    if request.POST:
+        form = UserUpdateForm(request.POST)
+        # AR: Add second password entry for comparison to frst password entry
+        if form.is_valid():
+            new_username   = form.cleaned_data.get('new_username')
+            new_password   = form.cleaned_data.get('new_password')
+            new_email      = form.cleaned_data.get('new_email')
+            new_first_name = form.cleaned_data.get('new_first_name')
+            new_last_name  = form.cleaned_data.get('new_last_name')
+            # AR: Check validity of username (unique, characters) and handle appropriately
+            # AR: Handle case where password is unuseable
+            # AR: Handle case where email is unuseable 
+            user.username   = new_username
+            user.password   = new_password
+            user.email      = new_email
+            user.first_name = new_first_name
+            user.last_name  = new_last_name
+            user.save()
+        return render(request, 'plants/index.html')
+    else:
+        form = UserUpdateForm(initial={'new_username'   : user.username,
+                                       'new_password'   : '********',
+                                       'new_email'      : user.email,
+                                       'new_first_name' : user.first_name,
+                                       'new_last_name'  : user.last_name,
+                                       })
+        context = { 'form' : form }
+        return render(request, 'plants/user_update_modal.html', context)
+    
+def user_recovery(request):
+    """ Render the User Recovery Page for Gateway Gardens app """
+    # AR: Implement Account Recovery view 
+    if request.POST:
+        form = UserRecoveryForm(request.POST)
+        if form.is_valid():
+            recovery_username   = form.cleaned_data.get('reovery_username')
+            recoovery_password   = form.cleaned_data.get('recovery_password')
+            # Login the user if they have been authenticated else indicate login failure
+            user = request.user
+            if user is not None:
+                login(request, user)
+                return render(request, 'plants/index.html')
+            else:
+                # AR: Indicate on password input form that the username and/or password was invalid
+                return render(request, 'plants/index.html')
+    else:
+        form = UserRecoveryForm()
+        context = { 'form' : form }
+        return render(request, 'plants/user_recovery_modal.html', context)
+
 def user_login(request):
     """ Render the User Login Page for Gateway Gardens app """
     if request.POST:

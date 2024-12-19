@@ -175,6 +175,48 @@ class UserLoginForm(forms.Form):
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	
+class UserUpdateForm(forms.Form):
+	new_username = forms.CharField(
+		label="New Username", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	new_password = forms.CharField(
+		label="New Password", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	new_email = forms.EmailField(
+		label="New e-mail address", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'email'}),
+		)
+	new_first_name = forms.CharField(
+		label="New First Name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'given-name'}),
+		)
+	new_last_name = forms.CharField(
+		label="New Last Name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+								      'autocomplete' : 'family-name'}),
+		)
+	
+class UserRecoveryForm(forms.Form):
+	recovery_username = forms.CharField(
+		label="Username", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	recovery_password = forms.CharField(
+		label="Password", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	
 class GardenAddUpdateForm(forms.Form):
 	name = forms.CharField(
 		label="Garden Name", 
