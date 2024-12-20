@@ -512,7 +512,8 @@ def plants_add(request):
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
-            plant.pronunciation = form.cleaned_data.get('pronunciation')
+            if 'audio_name' in request.FILES:
+                plant.audio_name    = request.FILES['audio_name']
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
             plant.fertilization = form.cleaned_data.get('fertilization')
@@ -577,7 +578,8 @@ def plants_update(request, id):
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
-            plant.pronunciation = form.cleaned_data.get('pronunciation')
+            if 'audio_name' in request.FILES:
+                plant.audio_name    = request.FILES['audio_name']
             plant.description   = form.cleaned_data.get('description')
             plant.pruning       = form.cleaned_data.get('pruning')
             plant.fertilization = form.cleaned_data.get('fertilization')
@@ -630,29 +632,29 @@ def plants_update(request, id):
                                             'ucd_all_star'  : plant.ucd_all_star,
                                             'ca_native'     : plant.ca_native,
                                             'usda_zone_max' : plant.usda_zone_max,
-                                            'usda_zone_min' : plant.usda_zone_min,
-                                            'sunset_zones'  : plant.sunset_zones,
-                                            'description'   : plant.description,
-                                            'pruning'       : plant.pruning,
-                                            'fertilization' : plant.fertilization,
-                                            'kingdom'       : plant.kingdom,
-                                            'subkingdom'    : plant.subkingdom,
-                                            'superdivision' : plant.superdivision, 
-                                            'division'      : plant.division, 
-                                            'class_x'       : plant.class_x,
-                                            'subclass'      : plant.subclass,
-                                            'order'         : plant.order,
-                                            'family'        : plant.family,
-                                            'genus'         : plant.genus,
-                                            'species'       : plant.species,
-                                            'variety'       : plant.variety,
+                                            'usda_zone_min'     : plant.usda_zone_min,
+                                            'sunset_zones'      : plant.sunset_zones,
+                                            'description'       : plant.description,
+                                            'pruning'           : plant.pruning,
+                                            'fertilization'     : plant.fertilization,
+                                            'kingdom'           : plant.kingdom,
+                                            'subkingdom'        : plant.subkingdom,
+                                            'superdivision'     : plant.superdivision, 
+                                            'division'          : plant.division, 
+                                            'class_x'           : plant.class_x,
+                                            'subclass'          : plant.subclass,
+                                            'order'             : plant.order,
+                                            'family'            : plant.family,
+                                            'genus'             : plant.genus,
+                                            'species'           : plant.species,
+                                            'variety'           : plant.variety,
                                             'phonetic_spelling' : plant.phonetic_spelling,
-                                            'pronunciation' : plant.pronunciation,
-                                            'image_1'       : plant.image_1,
-                                            'image_2'       : plant.image_2,
-                                            'image_3'       : plant.image_3,
-                                            'image_4'       : plant.image_4,
-                                            'creator_notes' : plant.creator_notes,
+                                            'audio_name'        : plant.audio_name,
+                                            'image_1'           : plant.image_1,
+                                            'image_2'           : plant.image_2,
+                                            'image_3'           : plant.image_3,
+                                            'image_4'           : plant.image_4,
+                                            'creator_notes'     : plant.creator_notes,
                                         })
         context = { 'plant' : plant, 'form' : form }
         return render(request, 'plants/plants_update.html', context)

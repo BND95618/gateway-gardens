@@ -549,12 +549,8 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=32, 
 		required=False
 		)
-	pronunciation = forms.URLField(
-		label="Pronunciation URL",
-		initial="https://temp.com", 
-		max_length=255, 
-		required=False
-	)
+	# plant scientific name pronunciation
+	audio_name = forms.FileField(required=False)
 	# plant images
 	image_1   = forms.ImageField(required=False)
 	caption_1 = forms.CharField(

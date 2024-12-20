@@ -52,7 +52,7 @@
       fetch("{% url 'plants:user_signup' %}") 
         .then(response => response.text())
         .then(html => {signup_modal.innerHTML = html;})
-      // enable the model upon clicking of the "signup" menu itsm
+      // enable the model display upon clicking of the "signup" menu item
       signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
     </script>
   {% endif %}
@@ -71,7 +71,7 @@
       fetch("{% url 'plants:user_login' %}") 
         .then(response => response.text())
         .then(html => {login_modal.innerHTML = html;})
-      // enable the model upon clicking of the "login" menu itsm
+      // enable the model display upon clicking of the "login" menu item
       login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
     </script>
   {% endif %}
@@ -89,7 +89,7 @@
       fetch("{% url 'plants:user_update' %}") 
         .then(response => response.text())
         .then(html => {update_modal.innerHTML = html;})
-      // enable the model upon clicking of the "signup" menu itsm
+      // enable the model display upon clicking of the "signup" menu item
       update_button.addEventListener("click", (event) => { update_modal.style.display='block' })
     </script>
   {% endif %}
@@ -108,7 +108,7 @@
       fetch("{% url 'plants:user_recovery' %}") 
         .then(response => response.text())
         .then(html => {recovery_modal.innerHTML = html;})
-      // enable the model upon clicking of the "recovery" menu itsm
+      // enable the model disply upon clicking of the "recovery" menu item
       recovery_button.addEventListener("click", (event) => { recovery_modal.style.display='block' })
     </script>
   {% endif %}

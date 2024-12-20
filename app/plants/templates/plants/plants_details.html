@@ -12,10 +12,10 @@
         <span style="font-style: italic;">
           ( {{ plant.genus }} {{ plant.species }} )
         </span>
-        <!-- Change audio to link entered into plant db -->
+        <!-- Scientific Name Pronunciation -->
         <span class="w3-tooltip">
-          <audio id="player" src="{{ plant.pronunciation }}"></audio>
-          <span style="cursor:pointer" onclick="document.getElementById('player').play()">
+          <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
+          <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
             <i class="material-icons w3-green">volume_up</i>
           </span>
           <!-- Tool Tip -->
