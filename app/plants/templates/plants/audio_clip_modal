@@ -1,0 +1,376 @@
+<!-- /app/plants/templates/plants/audiio_clip_modal.html -->
+
+  <!-- Audio recorder CSS here -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .wrapper {
+       height: 100%;
+       display: flex;
+       flex-direction: column;
+    }
+
+    h1, h2 {
+      font-size: 2rem;
+      text-align: center;
+      font-weight: normal;
+      padding: 0.5rem 0 0 0;
+    }
+
+    .main-controls {
+      padding: 0.5rem 0;
+    }
+
+    canvas {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    #buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    #buttons button {
+      font-size: 1rem;
+      padding: 1rem;
+      width: calc(50% - 0.25rem);
+    }
+
+    button {
+      font-size: 1rem;
+      background: #0088cc;
+      text-align: center;
+      color: white;
+      border: none;
+      transition: all 0.2s;
+      padding: 0.5rem;
+    }
+
+    button:hover, button:focus {
+      box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
+      background: #0ae;
+    }
+
+    button:active {
+      box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 0.5);
+      transform: translateY(2px);
+    }
+
+    /* Make the clips use as much space as possible, and
+     * also show a scrollbar when there are too many clips to show
+     * in the available space */
+    .sound-clips {
+      flex: 1;
+      overflow: auto;
+    }
+
+    section, article {
+      display: block;
+    }
+
+    .clip {
+      padding-bottom: 1rem;
+    }
+
+    audio {
+      width: 100%;
+      display: block;
+      margin: 1rem auto 0.5rem;
+    }
+
+    .clip p {
+      display: inline-block;
+      font-size: 1rem;
+    }
+
+    .clip button {
+      font-size: 1rem;
+      float: right;
+    }
+
+    button.delete {
+      background: #f00;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    /* Checkbox hack to control information box display */
+
+    label {
+    font-size: 3rem;
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    z-index: 5;
+    cursor: pointer;
+    background-color: black;
+    border-radius: 10px;
+    }
+
+    input[type="checkbox"] {
+    position: absolute;
+    top: -100px;
+    }
+
+    aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(100%);
+    transition: 0.3s all ease-out;
+    background-color: #efefef;
+    padding: 1rem;
+    }
+
+    aside p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    }
+
+    aside a {
+    color: #666;
+    }
+
+    /* Toggled State of information box */
+    input[type="checkbox"]:checked ~ aside {
+    transform: translateX(0);
+    }
+
+    /* Cursor when clip name is clicked over */
+
+    .clip p {
+    cursor: pointer;
+    }
+
+    /* Adjustments for wider screens */
+    @media all and (min-width: 800px) {
+    /* Don't take all the space as readability is lost when line length
+        goes past a certain size */
+      .wrapper {
+        width: 90%;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+
+  <!-- Audio recorder HTML here -->
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
+    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+      <h3>User Sign Up</h3>
+    </div>
+    <div class="wrapper">
+
+      <header>
+        <h1>Web dictaphone</h1>
+      </header>
+
+      <section class="main-controls">
+        <canvas class="visualizer" height="60px"></canvas>
+        <div id="buttons">
+          <button class="record">Record</button>
+          <button class="stop">Stop</button>
+        </div>
+      </section>
+
+      <section class="sound-clips">
+        <!-- Javascript will insert soundclips here -->
+      </section>
+
+    </div>
+
+    <label for="toggle">❔</label>
+    <input type="checkbox" id="toggle">
+
+  </div>
+
+  <!-- Audio recorder Javascript here -->
+  <script>
+    // Set up basic variables for app
+    const record = document.querySelector(".record");
+    const stop = document.querySelector(".stop");
+    const soundClips = document.querySelector(".sound-clips");
+    const canvas = document.querySelector(".visualizer");
+    const mainSection = document.querySelector(".main-controls");
+
+    // Disable stop button while not recording
+    stop.disabled = true;
+
+    // Visualiser setup - create web audio api context and canvas
+    let audioCtx;
+    const canvasCtx = canvas.getContext("2d");
+
+    // Main block for doing the audio recording
+    if (navigator.mediaDevices.getUserMedia) {
+    console.log("The mediaDevices.getUserMedia() method is supported.");
+
+    const constraints = { audio: true };
+    let chunks = [];
+
+    let onSuccess = function (stream) {
+        const mediaRecorder = new MediaRecorder(stream);
+
+        visualize(stream);
+
+        record.onclick = function () {
+        mediaRecorder.start();
+        console.log(mediaRecorder.state);
+        console.log("Recorder started.");
+        record.style.background = "red";
+
+        stop.disabled = false;
+        record.disabled = true;
+        };
+
+        stop.onclick = function () {
+        mediaRecorder.stop();
+        console.log(mediaRecorder.state);
+        console.log("Recorder stopped.");
+        record.style.background = "";
+        record.style.color = "";
+
+        stop.disabled = true;
+        record.disabled = false;
+        };
+
+        mediaRecorder.onstop = function (e) {
+        console.log("Last data to read (after MediaRecorder.stop() called).");
+
+        const clipName = prompt(
+            "Enter a name for your sound clip?",
+            "My unnamed clip"
+        );
+
+        const clipContainer = document.createElement("article");
+        const clipLabel = document.createElement("p");
+        const audio = document.createElement("audio");
+        const deleteButton = document.createElement("button");
+
+        clipContainer.classList.add("clip");
+        audio.setAttribute("controls", "");
+        deleteButton.textContent = "Delete";
+        deleteButton.className = "delete";
+
+        if (clipName === null) {
+            clipLabel.textContent = "My unnamed clip";
+        } else {
+            clipLabel.textContent = clipName;
+        }
+
+        clipContainer.appendChild(audio);
+        clipContainer.appendChild(clipLabel);
+        clipContainer.appendChild(deleteButton);
+        soundClips.appendChild(clipContainer);
+
+        audio.controls = true;
+        const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+        chunks = [];
+        const audioURL = window.URL.createObjectURL(blob);
+        audio.src = audioURL;
+        console.log("recorder stopped");
+
+        deleteButton.onclick = function (e) {
+            e.target.closest(".clip").remove();
+        };
+
+        clipLabel.onclick = function () {
+            const existingName = clipLabel.textContent;
+            const newClipName = prompt("Enter a new name for your sound clip?");
+            if (newClipName === null) {
+            clipLabel.textContent = existingName;
+            } else {
+            clipLabel.textContent = newClipName;
+            }
+        };
+        };
+
+        mediaRecorder.ondataavailable = function (e) {
+        chunks.push(e.data);
+        };
+    };
+
+    let onError = function (err) {
+        console.log("The following error occured: " + err);
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+    } else {
+    console.log("MediaDevices.getUserMedia() not supported on your browser!");
+    }
+
+    function visualize(stream) {
+    if (!audioCtx) {
+        audioCtx = new AudioContext();
+    }
+
+    const source = audioCtx.createMediaStreamSource(stream);
+
+    const bufferLength = 2048;
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = bufferLength;
+    const dataArray = new Uint8Array(bufferLength);
+
+    source.connect(analyser);
+
+    draw();
+
+    function draw() {
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
+
+        requestAnimationFrame(draw);
+
+        analyser.getByteTimeDomainData(dataArray);
+
+        canvasCtx.fillStyle = "rgb(200, 200, 200)";
+        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        canvasCtx.lineWidth = 2;
+        canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+        canvasCtx.beginPath();
+
+        let sliceWidth = (WIDTH * 1.0) / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+        let v = dataArray[i] / 128.0;
+        let y = (v * HEIGHT) / 2;
+
+        if (i === 0) {
+            canvasCtx.moveTo(x, y);
+        } else {
+            canvasCtx.lineTo(x, y);
+        }
+
+        x += sliceWidth;
+        }
+
+        canvasCtx.lineTo(canvas.width, canvas.height / 2);
+        canvasCtx.stroke();
+    }
+    }
+
+    window.onresize = function () {
+    canvas.width = mainSection.offsetWidth;
+    };
+
+    window.onresize();
+  </script>

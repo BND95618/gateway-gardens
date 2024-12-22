@@ -844,3 +844,9 @@ def string_display(string):
     temp = temp.replace("'", "")
     temp = temp.replace("]", "")
     return(temp)
+
+def fiddle(request):
+    """ Render the Fiddle Page for testing of new functions """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    return render(request, 'plants/fiddle.html')

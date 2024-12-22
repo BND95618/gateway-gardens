@@ -31,4 +31,6 @@ urlpatterns = [
     path('user_update',               views.user_update,      name='user_update'),
     path('user_recovery',             views.user_recovery,    name='user_recovery'),
     path('user_logout',               views.user_logout,      name='user_logout'),
+    # view for testing purposes
+    path('fiddle',                    views.fiddle,           name='fiddle'),
 ]
