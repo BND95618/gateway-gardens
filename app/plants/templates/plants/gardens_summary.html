@@ -1,10 +1,35 @@
 <!-- /app/plants/templates/plants/gardens_summary.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}My Garden Summary{% endblock %}
+{% block title %}
+  <title>My Garden | Summary</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+  <!-- Insert template css here -->
+  <style>
+    .mySlides {display:none}
+    .w3-left, .w3-right, .w3-badge {cursor:pointer}
+    .w3-badge {height:13px;width:13px;padding:0}
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      color: white;
+      text-align: left;
+    }
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      color: white;
+      text-align: center;
+    }
+  </style>
+{% endblock css %}
 
+{% block header-completion %}
 <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <div class="w3-dropdown-hover">
@@ -19,10 +44,10 @@
       <h1 class="w3-bar-item">{{ garden.name }}</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
+{% block content %}
 <!-- main content -->
-<body>
   <div class="w3-container" style="margin-top:150px; margin-bottom:32px;">
     <div class="w3-content w3-display-container" style="max-width:900px">
       <!-- Load the images -->
@@ -66,13 +91,10 @@
       </div>
     </div>
   </div>
-</body>
+{% endblock content%}
 
-<!-- Footer -->
-<footer class="w3-container w3-green">
-  <p>Footer</p>
-</footer>
-
+{% block js %}
+<!-- Insert template Javascript here -->
 <script>
   var slideIndex = 1;
   showDivs(slideIndex);
@@ -101,5 +123,4 @@
     dots[slideIndex-1].className += " w3-white";
   }
 </script>
-
-{% endblock %}
+{% endblock js %}

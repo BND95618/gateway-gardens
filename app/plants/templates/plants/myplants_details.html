@@ -1,11 +1,16 @@
 <!-- /plants/templates/plnts/myplants_details.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Plant Details{% endblock %}
+{% block title %}
+  <title>My Plants | Details</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-  <!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">
         {{ my_plant.plant.commonName }} 
@@ -16,9 +21,9 @@
       <a href="{% url 'plants:myplants_update' my_plant.id %}" class="w3-button">update</a>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<body>
+{% block content %}
   <!-- My Plant Attributes -->
   <div style="margin-top:140px;">
     <div class="w3-row-padding">
@@ -66,11 +71,8 @@
 
   <hr>
   {% include "plants/plants_details_insert.html" %}
-</body>
+{% endblock content %}
 
-<!-- Footer -->
-<footer class="w3-container w3-green" style="margin-top:20px;">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

@@ -1,19 +1,25 @@
 <!-- app/plants/templates/plants/myplants_remove.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Remove Plant from your Garden?{% endblock %}
+{% block title %}
+  <title>My Plant | Remove</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-  <!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">Removing: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} from My Garden</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<!-- Remove Plant from My Plants -->
-<body>
+{% block content %}
+  <!-- AR: convert to modal -->
+  <!-- Remove Plant from My Plants -->
   <div class="w3-container" style="margin-top:140px;">
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
@@ -24,11 +30,8 @@
       </p>
     </form>
   </div>
-</body>
+{% endblock content %}
 
-<!-- Footer -->
-<footer class="w3-container w3-green w3-margin-top">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

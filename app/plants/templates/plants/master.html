@@ -12,32 +12,19 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="{% static 'plants/css/style.css' %}">
 
-  <style>
-    .mySlides {display:none}
-    .w3-left, .w3-right, .w3-badge {cursor:pointer}
-    .w3-badge {height:13px;width:13px;padding:0}
-    .header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      color: white;
-      text-align: left;
-    }
-    .footer {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      color: white;
-      text-align: center;
-    }
-  </style>
+  {% block css %}
+    <!-- Insert css from template here -->
+  {% endblock css %}
 
   <!-- Added for Quill -->
   {{ form.media }}
 
-  <title>Gateway Gardens</title>
+  {% block title %}
+    <!-- Insert template title here -->}
+  {% endblock title %}
+
 </head>
+
 <header>
   <!-- Navigation Bar -->
   <div class="w3-top">
@@ -73,9 +60,23 @@
         </div>
       </div>
     </div>
-  <!-- Header is completed on each page -->
+    {% block header-completion %}
+    <!-- Header is completed on each page -->
+    {% endblock header-completion %}
+  </header>
 
-  {% block content %}
-  {% endblock %}
+  <body>
+    {% block content %}
+    {% endblock content %}
+
+    {% block js %}
+      <!-- Insert template Javascript here -->
+    {% endblock js %}
+  </body>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-green w3-margin-top">
+    <h4 class="w3-center">Footer - Under Construction</h4>
+  </footer>
 
 </html>

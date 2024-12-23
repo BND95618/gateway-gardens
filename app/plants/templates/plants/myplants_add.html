@@ -1,21 +1,26 @@
 <!-- app/plants/templates/plants/myplants_add.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Add Plant to My Plants{% endblock %}
+{% block title %}
+  <title>My Plants | Add</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-  <!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">
         Adding: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} to My Garden
       </h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<!-- Add Plant to My Plants -->
-<body>
+{% block content %}
+  <!-- Add Plant to My Plants -->
   <div class="w3-container" style="margin-top:140px;">
     <!-- Required for django_flatpickr -->
     {{ form.media }}
@@ -26,11 +31,8 @@
       <button type="reset" >Reset</button>
     </form>
   </div>
-</body>
+{% endblock content %}
 
-<!-- Footer -->
-<footer class="w3-container w3-green w3-margin-top">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

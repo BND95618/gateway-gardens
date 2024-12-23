@@ -1,22 +1,26 @@
 <!-- /app/plants/templates/plants/myplants_summary.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}My Plants{% endblock %}
+{% block title %}
+  <title>My Plants | Summary</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-<!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">My Plants</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<!-- My Plants -->
-<body onload="sortTable(0)">
+{% block content %}
   <!-- My Plant Table -->
   <div class="w3-container" id="main" style="margin-top:150px;">
-    <table class="w3-table-all w3-hoverable">
+    <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
         <tr class="w3-light-grey">
           <th style="cursor:pointer" onclick="sortTable(0)">Common Name   </th>
@@ -52,6 +56,10 @@
       {% endfor %}
     </table>
   </div>
+{% endblock content %}
+
+{% block js %}
+  <!-- Insert template Javascript here -->
   <!-- AR: Move script to separate  file -->
   <script>
     function sortTable(n) {
@@ -104,11 +112,7 @@
       }
     }
   </script>
-</body>
-
-<!-- Footer -->
-<footer class="w3-container w3-green" style="margin-top:20px;">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+  <script>
+    window.onload = sortTable(0);
+  </script>
+{% endblock js %}

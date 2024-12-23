@@ -429,6 +429,7 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	soil_type = forms.MultipleChoiceField(
 		label="Soil Type",
+		initial='tbd',
 		choices = SOIL_TYPE_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
 		required=False,

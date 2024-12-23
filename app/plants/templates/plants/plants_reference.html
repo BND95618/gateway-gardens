@@ -1,19 +1,24 @@
 <!-- /app/plants/templates/plants/plants_reference.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Plant Reference{% endblock %}
+{% block title %}
+  <title>Reference</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-<!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">Reference</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<!-- Reference -->
-<body>
+{% block content %}
+  <!-- Reference -->
   <div class="w3-container" style="margin-top:140px;">
 
     <h4><a href="https://plants.ces.ncsu.edu/" target="_blank">North Carolina Extension Gardener Plant Toolbox</a></h4>
@@ -49,11 +54,8 @@
     <p class="w3-margin-left">summary here!</p>
 
   </div>
-</body>
+{% endblock content %}
 
-<!-- Footer -->
-<footer class="w3-container w3-green">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

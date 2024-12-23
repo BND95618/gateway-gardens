@@ -1,19 +1,24 @@
 <!-- /plants/templates/gardens_add.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Add Garden{% endblock %}
+{% block title %}
+  <title>My Garden | Add</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-<!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">Add Garden</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
+{% block content %}
 <!-- Garden add form -->
-<body>
   <div class="w3-container" style="margin-top:140px;">
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -22,10 +27,8 @@
       <button type="reset" >Reset</button>
     </form>
   </div>
-</body>
+{% endblock content %}
 
-<!-- Footer -->
-<footer class="w3-container w3-green w3-margin-top">
-  <p>Footer</p>
-</footer>
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

@@ -1,19 +1,24 @@
 <!-- /app/plants/templates/plants/plants_glossary.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Plant Glossary{% endblock %}
+{% block title %}
+  <title>Glossary</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-  <!-- complete the header from master.html -->
+{% block header-completion %}
+    <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-     <h1 class="w3-bar-item">Glossary</h1>
+      <h1 class="w3-bar-item">Glossary</h1>
     </div>
   </div>
-</header>
+{% endblock header-completion %}
 
-<!-- Glossary -->
-<body>
+{% block content %}
+  <!-- Glossary -->
   <div class="w3-container" style="margin-top:140px;">
     <h3>Cultivar</h3>
     <p class="w3-margin-left">
@@ -35,11 +40,8 @@
     <p class="w3-margin-left">A naturally occurring variation within a plant species, often arising from genetic mutations or environmental factors</p>
 
   </div>
-</body>
+{% endblock content%}
 
-<!-- Footer -->
-<footer class="w3-container w3-green">
-  <p>Footer</p>
-</footer>
-
-{% endblock %}
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

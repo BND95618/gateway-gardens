@@ -1,11 +1,16 @@
 <!-- /app/plants/templates/plants/plants_search.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Plants - Search{% endblock %}
+{% block title %}
+  <title>Plant | Search</title>
+{% endblock title %}
 
-{% block content %}
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
 
-<!-- complete the header from master.html -->
+{% block header-completion %}
+  <!-- complete the header from master.html -->
   <div class="w3-bar w3-green">
     <div class="w3-dropdown-hover">
       <button class="w3-button w3-green">Menu</button>
@@ -17,10 +22,9 @@
     </div>
     <h1 class="w3-bar-item">Plants</h1>
   </div>
-</header>
+{% endblock header-completion %}
 
-<body onload="sortTable(0)">  <!-- pre-sort table by Common Name -->
-
+{% block content %}
   <!-- Search Bar -->
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" style="display:none" id="mySidebar">
     <div class="w3-row">
@@ -150,7 +154,6 @@
   </div>
 
 <!-- Plant Table -->
-<!-- AR: Remove single quotes around several displayed values -->
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
@@ -181,7 +184,7 @@
             <td>{{ plant.bloom_season|cut:"["|cut:"]" }}</td>
             <td>{{ plant.pollinators |cut:"["|cut:"]" }}</td>
             <td>{{ plant.species                      }}</td>
-            <td class="w3-center">{{ plant.ca_native   }}</td>
+            <td class="w3-center">{{ plant.ca_native  }}</td>
             <!-- Plant Details Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
@@ -213,7 +216,7 @@
             <!-- Plant Delete Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
-                <a href="#">
+                <a href="{% url 'plants:plants_delete' plant.id %}">
                   <i class="material-icons">
                     delete
                   </i>
@@ -251,7 +254,11 @@
       {% endfor %}
     </table>
   </div>
-<!-- AR: Move script to separate  file -->
+{% endblock content %}
+
+{% block js %}
+  <!-- Insert template Javascript here -->
+   <!-- AR: Move script to separate  file -->
   <script>
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -303,25 +310,22 @@
       }
     }
   </script>
-</body>
 
-<!-- Footer -->
-<footer class="w3-container w3-green w3-margin-top">
-  <p>Footer</p>
-</footer>
-
-<script>
-  function w3_open() {
-    document.getElementById("main").style.marginLeft = "15%";
-    document.getElementById("mySidebar").style.width = "15%";
-    document.getElementById("mySidebar").style.display = "block";
-    document.getElementById("openNav").style.display = 'none';
-  }
-  function w3_close() {
-    document.getElementById("main").style.marginLeft = "0%";
-    document.getElementById("mySidebar").style.display = "none";
-    document.getElementById("openNav").style.display = "inline-block";
-  }
-</script>
-
-{% endblock %}
+  <script>
+    function w3_open() {
+      document.getElementById("main").style.marginLeft = "15%";
+      document.getElementById("mySidebar").style.width = "15%";
+      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("openNav").style.display = 'none';
+    }
+    function w3_close() {
+      document.getElementById("main").style.marginLeft = "0%";
+      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("openNav").style.display = "inline-block";
+    }
+  </script>
+  <!-- Sort table alphabetically by Common Name -->
+  <script>
+    window.onload = sortTable(0);
+  </script>
+{% endblock js %}

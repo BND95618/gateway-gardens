@@ -1,8 +1,11 @@
 <!-- app/plants/templates/plants/plants_delete.html -->
 {% extends "plants/master.html" %}
 
-{% block title %}Delete Plant?{% endblock %}
+{% block title %}
+  <title>Plant | Delete</title>
+{% endblock title %}
 
+<!-- AR: Convert to modal -->
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
@@ -12,4 +15,9 @@
     <a href="{% url 'plants:plants_search' %}"><button type="button">No</button></a>
   </p>
 </form>
-{% endblock %}
+{% endblock content %}
+
+
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}
