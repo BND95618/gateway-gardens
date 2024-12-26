@@ -313,6 +313,7 @@ class MyPlantAddUpdateForm(forms.Form):
 	)
 	location = forms.CharField(
 		label='Location', 
+		initial='tbd',      	
 		max_length=64, 
 		required=False,
 		)

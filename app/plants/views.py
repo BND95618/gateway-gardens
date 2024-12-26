@@ -259,6 +259,18 @@ def myplants_update(request, id):
         context = { 'form' : form }
         return render(request, 'plants/myplants_update.html', context)
 
+def myplants_delete(request, id):
+    """ Delete selected plant from the MyPlants database table """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    myplant = MyPlant.objects.get(id=id)
+    if request.POST:
+        myplant.delete()
+        return HttpResponseRedirect(reverse('plants:myplants_summary')) 
+    else:
+        context = {'myplant': myplant}
+        return render(request, 'plants/myplants_delete_modal.html', context)
+
 def myplants_remove(request, id):
     """ Remove selected plant from the MyPlants database  """
     if not request.user.is_authenticated:
@@ -694,7 +706,7 @@ def plant2garden(request, id):
     return HttpResponseRedirect(reverse('plants:plants_search'))
 
 def plants_delete(request, id):
-    """ Delete selected plant from the database  """
+    """ Delete selected plant from the Plant database table """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)

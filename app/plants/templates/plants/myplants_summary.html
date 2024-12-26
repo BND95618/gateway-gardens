@@ -18,6 +18,10 @@
 {% endblock header-completion %}
 
 {% block content %}
+  <!-- MyPlant Delete modal - html to be inserted by Javascript -->
+  <div id="myplants_delete_modal" class="w3-modal">
+    <p> MyPlant delete form HTML to be Inserted Here! </p>
+  </div>
   <!-- My Plant Table -->
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
@@ -29,10 +33,12 @@
           <th style="cursor:pointer" onclick="sortTable(3)">Type          </th>
           <th style="cursor:pointer" onclick="sortTable(5)">Location      </th>
           <th style="cursor:pointer" onclick="sortTable(6)">Sun Exposure  </th>
-          <th style="cursor:pointer" onclick="sortTable(7)">pH            </th>
-          <th style="cursor:pointer" onclick="sortTable(8)">Soil Type     </th>
+          <th style="cursor:pointer" onclick="sortTable(7)">Soil Type     </th>
+          <th style="cursor:pointer" onclick="sortTable(8)">pH            </th>
           <th class="w3-center">Happy?        </th>
-          <th class="w3-center">Plant Details </th>
+          <th class="w3-center"></th>
+          <th class="w3-center"></th>
+          <th class="w3-center"></th>
         </tr>
       </thead>
       {% for my_plant in my_plants %}  
@@ -43,14 +49,51 @@
           <td>{{ my_plant.plant.type_x     }}</td>
           <td>{{ my_plant.location         }}</td>
           <td>{{ my_plant.sun_exposure     }}</td>
-          <td>{{ my_plant.pH               }}</td>
           <td>{{ my_plant.soil_type        }}</td>
+          <td>{{ my_plant.pH               }}</td>
           <!-- AR: Implement Happy function -->
           <td class="w3-center">TBD          </td>
+          <!-- MyPlant Details Icon/Link -->
           <td class="w3-center">
-            <a href="{% url 'plants:myplants_details' my_plant.id %}">
-              <i class="material-icons">library_books</i>
-            </a>
+            <div class="w3-tooltip">
+              <a href="{% url 'plants:myplants_details' my_plant.id %}">
+                <i class="material-icons">
+                  library_books
+                </i>
+                <span style="position:absolute; left:0; bottom:34px;" 
+                      class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                      Details
+                </span>
+              </a>
+            </div>
+          </td>
+          <!-- MyPlant Update Icon/Link -->
+          <td class="w3-center">
+            <div class="w3-tooltip">
+              <a href="{% url 'plants:myplants_update' my_plant.id %}">
+                <i class="material-icons">
+                  edit
+                </i>
+                <span style="position:absolute; left:0; bottom:34px;" 
+                class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                  Edit
+                </span>
+              </a>
+            </div>
+          </td>
+          <!-- MyPlant Delete Icon/Link -->
+          <td class="w3-center">
+            <div class="w3-tooltip">
+              <button onclick="myplants_delete({{ my_plant.id }})" class="w3-transparent w3-border-0">
+                <i class="material-icons">
+                  delete
+                </i>
+                <span style="position:absolute; left:0; bottom:34px;" 
+                      class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                  Delete
+                </span>
+              </button>
+            </div>
           </td>
         </tr>
       {% endfor %}
@@ -112,6 +155,23 @@
       }
     }
   </script>
+  <!-- Delete My Plant Modal Script -->
+  <script>
+    function myplants_delete(id) {
+      console.log("DEBUG: Got to myplants_delete script.  MyPlant ID= ", id)
+      // Get the MyPlant delete modal
+      const myplants_delete_modal  = document.getElementById('myplants_delete_modal')
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      url = "/myplants_delete/" + id
+      console.log("DEBUG: url = ", url)
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {myplants_delete_modal.innerHTML = html;})
+      // Display the plant delete modal
+      myplants_delete_modal.style.display='block'
+    }
+  </script>
+  <!-- Sort My Plants table by Common Name upon page load -->
   <script>
     window.onload = sortTable(0);
   </script>
