@@ -699,10 +699,11 @@ def plants_delete(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
-      plant.delete()
-      return HttpResponseRedirect(reverse('plants:plants_search')) 
-    context = {'plant': plant}
-    return render(request, 'plants/plants_delete.html', context)
+        plant.delete()
+        return HttpResponseRedirect(reverse('plants:plants_search')) 
+    else:
+        context = {'plant': plant}
+        return render(request, 'plants/plants_delete_modal.html', context)
 
 def plants_glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
@@ -753,7 +754,7 @@ def user_update(request):
     user = request.user
     if request.POST:
         form = UserUpdateForm(request.POST)
-        # AR: Add second password entry for comparison to frst password entry
+        # AR: Add second password entry into html for js comparison to frst password entry
         if form.is_valid():
             new_username   = form.cleaned_data.get('new_username')
             new_password   = form.cleaned_data.get('new_password')
@@ -764,7 +765,9 @@ def user_update(request):
             # AR: Handle case where password is unuseable
             # AR: Handle case where email is unuseable 
             user.username   = new_username
-            user.password   = new_password
+            # Check to see if a new password has been entered
+            if new_password:
+                user.password   = new_password
             user.email      = new_email
             user.first_name = new_first_name
             user.last_name  = new_last_name
@@ -772,7 +775,7 @@ def user_update(request):
         return render(request, 'plants/index.html')
     else:
         form = UserUpdateForm(initial={'new_username'   : user.username,
-                                       'new_password'   : '********',
+                                       'new_password'   : user.password,
                                        'new_email'      : user.email,
                                        'new_first_name' : user.first_name,
                                        'new_last_name'  : user.last_name,

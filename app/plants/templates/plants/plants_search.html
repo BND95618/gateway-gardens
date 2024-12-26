@@ -152,8 +152,11 @@
       <a href="{% url 'plants:plants_search' %}" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">Reset</a>
     </form>
   </div>
-
-<!-- Plant Table -->
+  <!-- Plant Delete modal - html to be inserted by Javascript -->
+  <div id="plants_delete_modal" class="w3-modal">
+    <p> Plant delete form HTML to be Inserted Here! </p>
+  </div>
+  <!-- Plant Table -->
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
@@ -216,15 +219,15 @@
             <!-- Plant Delete Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
-                <a href="{% url 'plants:plants_delete' plant.id %}">
+                <button onclick="plants_delete({{ plant.id }})" class="w3-transparent w3-border-0">
                   <i class="material-icons">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
                     Delete
                   </span>
-                </a>
+                </button>
               </div>
             </td>
             <!-- Add plant to My Plants Icon/Link -->
@@ -254,11 +257,12 @@
       {% endfor %}
     </table>
   </div>
+
 {% endblock content %}
 
 {% block js %}
   <!-- Insert template Javascript here -->
-   <!-- AR: Move script to separate  file -->
+  <!-- AR: Move script to separate  file -->
   <script>
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -324,8 +328,27 @@
       document.getElementById("openNav").style.display = "inline-block";
     }
   </script>
-  <!-- Sort table alphabetically by Common Name -->
+
+  <!-- Delete Plant Modal Script -->
   <script>
+    function plants_delete(id) {
+      console.log("DEBUG: Got to plants_delete script.  Plant ID= ", id)
+      // Get the plant delete modal
+      const plants_delete_modal  = document.getElementById('plants_delete_modal')
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      url = "/plants_delete/" + id
+      console.log("DEBUG: url = ", url)
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {plants_delete_modal.innerHTML = html;})
+      // Display the plant delete modal
+      plants_delete_modal.style.display='block'
+    }
+  </script>
+
+  <!-- On page load, sort table alphabetically by Common Name -->
+  <script>
+    console.log("DEBUG: Page reloaded");
     window.onload = sortTable(0);
   </script>
 {% endblock js %}

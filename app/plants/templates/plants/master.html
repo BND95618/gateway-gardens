@@ -66,12 +66,103 @@
   </header>
 
   <body>
+    <!-- User Sign Up modal - html to be inserted by Javascript -->
+    <div id="signup_modal" class="w3-modal">
+      <p> Sign Up form HTML to be Inserted Here! </p>
+    </div>
+    <!-- User Login modal - html to be inserted by Javascript -->
+    <div id="login_modal" class="w3-modal">
+      <p> Login form HTML to be Inserted Here! </p>
+    </div>
+    <!-- User Update modal - html to be inserted by Javascript -->
+    <div id="update_modal" class="w3-modal">
+      <p> Update form HTML to be Inserted Here! </p>
+    </div>
+    <!-- User Recovery modal - html to be inserted by Javascript -->
+    <div id="recovery_modal" class="w3-modal">
+      <p> Recovery form HTML to be Inserted Here! </p>
+    </div>
+  
     {% block content %}
+      <!-- Insert template HTML here -->
     {% endblock content %}
 
     {% block js %}
       <!-- Insert template Javascript here -->
     {% endblock js %}
+
+    <!-- User Signup Modal Script -->
+    <!-- Do not load the signup script if the user is already logged in -->
+    <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
+    {% if not user.is_authenticated %}
+    <script>
+      // The signup button is in the "account" drop-down menu
+      const signup_button = document.getElementById('signup_button')
+      // There is a <dialog></dialog> at top of HTML body
+      const signup_modal  = document.getElementById('signup_modal')
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+      fetch("{% url 'plants:user_signup' %}") 
+        .then(response => response.text())
+        .then(html => {signup_modal.innerHTML = html;})
+      // enable the model display upon clicking of the "signup" menu item
+      signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
+    </script>
+    {% endif %}
+
+    <!-- User Login Modal Script -->
+    <!-- Do not load the login script if the user is already logged in -->
+    <!-- Otherwise an error will occur since the addEventListener will not find the "login" menu item -->
+    {% if not user.is_authenticated %}
+      <script>
+        // The login button is in the "account" drop-down menu
+        const login_button = document.getElementById("login_button")
+        // There is a <dialog></dialog> at top of HTML body
+        const login_modal  = document.getElementById('login_modal')
+        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+        fetch("{% url 'plants:user_login' %}") 
+          .then(response => response.text())
+          .then(html => {login_modal.innerHTML = html;})
+        // enable the model display upon clicking of the "login" menu item
+        login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
+      </script>
+    {% endif %}
+
+    <!-- User Update Modal Script -->
+    <!-- Do not load the update script if the user is not logged in -->
+    <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
+    {% if user.is_authenticated %}
+      <script>
+        // The signup button is in the "account" drop-down menu
+        const update_button = document.getElementById('update_button')
+        // There is a <dialog></dialog> at top of HTML body
+        const update_modal  = document.getElementById('update_modal')
+        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+        fetch("{% url 'plants:user_update' %}") 
+          .then(response => response.text())
+          .then(html => {update_modal.innerHTML = html;})
+        // enable the model display upon clicking of the "signup" menu item
+        update_button.addEventListener("click", (event) => { update_modal.style.display='block' })
+      </script>
+    {% endif %}
+
+    <!-- User Recovery Modal Script -->
+    <!-- Do not load the recovery script if the user is already logged in -->
+    <!-- Otherwise an error will occur since the addEventListener will not find the "recovery" menu item -->
+    {% if not user.is_authenticated %}
+      <script>
+        // The recovery button is in the "account" drop-down menu
+        const recovery_button = document.getElementById("recovery_button")
+        // There is a <dialog></dialog> at top of HTML body
+        const recovery_modal  = document.getElementById('recovery_modal')
+        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses. 
+        fetch("{% url 'plants:user_recovery' %}") 
+          .then(response => response.text())
+          .then(html => {recovery_modal.innerHTML = html;})
+        // enable the model display upon clicking of the "recovery" menu item
+        recovery_button.addEventListener("click", (event) => { recovery_modal.style.display='block' })
+      </script>
+    {% endif %}
+
   </body>
 
   <!-- Footer -->
