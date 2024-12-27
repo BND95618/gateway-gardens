@@ -865,3 +865,9 @@ def fiddle(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/fiddle.html')
+
+def debug(request):
+    """ Render the Debug Page for debugging of new functions """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    return render(request, 'plants/debug.html')

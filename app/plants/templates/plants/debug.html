@@ -1,0 +1,30 @@
+<!-- /app/plants/templates/plants/plants_about.html -->
+{% extends "plants/master.html" %}
+
+{% block title %}
+  <title>Gateway Gardens | Debug</title>
+{% endblock title %}
+
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
+
+{% block header-completion %}
+    <!-- complete the header from master.html -->
+    <div class="w3-bar w3-green">
+      <h1 class="w3-bar-item">Debug</h1>
+    </div>
+  </div>
+{% endblock header-completion %}
+
+{% block content %}
+  <!-- Debug -->
+  <div class="w3-container" style="margin-top:140px;">
+    <h4>Current user permissions:</h4>
+    <p style="color: black;">DEBUG: {{ perms.plants }}</p>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}
