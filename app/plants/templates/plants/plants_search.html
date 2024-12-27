@@ -16,7 +16,9 @@
       <button class="w3-button w3-green">Menu</button>
       <div class="w3-dropdown-content w3-bar-block w3-card-4">
         <button id="openNav" class="w3-bar-item w3-button" onclick="w3_open()"  >Search</button>
-        <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button"  >Add Plant </a>
+        {% if perms.plants.add_plant %}
+          <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button"  >Add Plant </a>
+        {% endif %}
         <a href="{% url 'plants:gardens_add' %}" class="w3-bar-item w3-button"  >Add Garden</a>
       </div>
     </div>
@@ -158,6 +160,7 @@
   </div>
   <!-- Plant Table -->
   <div class="w3-container" id="main" style="margin-top:150px;">
+    <p style="color: black;">DEBUG: {{ perms.plants }}</p>
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
         <tr class="w3-light-grey">
@@ -170,9 +173,17 @@
           <th style="cursor:pointer" onclick="sortTable(6)">Pollinators  </th>
           <th style="cursor:pointer" onclick="sortTable(7)">Species      </th>
           <th style="cursor:pointer" onclick="sortTable(8)" class="w3-center">CA Native    </th>
+          <!-- Plant Detail header placeholder -->
           <th class="w3-center"></th>
-          <th class="w3-center"></th>
-          <th class="w3-center"></th>
+          <!-- Plant Update header placeholder -->
+          {% if perms.plants.change_plant %}
+            <th class="w3-center"></th>
+          {% endif %}
+          <!-- Plant Delete header placeholder -->
+          {% if perms.plants.delete_plant %}
+            <th class="w3-center"></th>
+          {% endif %}
+          <!-- My plant add/remove header placeholder -->
           <th class="w3-center"></th>
         </tr>
       </thead>
@@ -203,6 +214,7 @@
               </div>
             </td>
             <!-- Plant Update Icon/Link -->
+            {% if perms.plants.change_plant %}
             <td class="w3-center">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:plants_update' plant.id %}">
@@ -216,7 +228,9 @@
                 </a>
               </div>
             </td>
+            {% endif %}
             <!-- Plant Delete Icon/Link -->
+            {% if perms.plants.delete_plant %}
             <td class="w3-center">
               <div class="w3-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="w3-transparent w3-border-0">
@@ -230,6 +244,7 @@
                 </button>
               </div>
             </td>
+            {% endif %}
             <!-- Add plant to My Plants Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
