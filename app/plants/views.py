@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 #
-from django.contrib.auth.models import User                        # User signup
+from django.contrib.auth.models import User, Group                 # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
@@ -753,6 +753,9 @@ def user_signup(request):
             user.first_name = first_name
             user.last_name  = last_name
             user.save()
+            # Add the user to the "Gardener" group - default
+            group = Group.objects.get(name='Gardener')
+            group.user_set.add(user)
         return render(request, 'plants/index.html')
     else:
         form = UserSignupForm()
