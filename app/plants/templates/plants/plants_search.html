@@ -17,7 +17,7 @@
       <div class="w3-dropdown-content w3-bar-block w3-card-4">
         <button id="openNav" class="w3-bar-item w3-button" onclick="w3_open()"  >Search</button>
         {% if perms.plants.add_plant %}
-          <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button"  >Add Plant </a>
+          <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant </a>
         {% endif %}
         <a href="{% url 'plants:gardens_add' %}" class="w3-bar-item w3-button"  >Add Garden</a>
       </div>
@@ -28,19 +28,7 @@
 
 {% block content %}
   <!-- Search Bar -->
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" style="display:none" id="mySidebar">
-    <div class="w3-row">
-      <div class="w3-third w3-center">
-        <h5>Search  </h5>
-      </div>
-      <div class="w3-third w3-center">
-        <h3></h3>
-      </div>
-      <div class="w3-third w3-right">
-        <button class="w3-button w3-large" onclick="w3_close()">&times;</button>
-      </div>
-    </div>
-    
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" style="display:none; height:80%;" id="mySidebar">
     <form method="POST" action="{% url 'plants:plants_search' %}" class="w3-container w3-card-4 w3-light-grey">
       {% csrf_token %}
       <label for="id_type_x_option">Type:</label><br>
@@ -150,8 +138,9 @@
           {% endif %}
         </select>
         <br>
-      <input type="submit" value="Submit" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">
+      <input type="submit" value="Submit" class="w3-button w3-border w3-green w3-round-large w3-margin-bottom">
       <a href="{% url 'plants:plants_search' %}" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">Reset</a>
+      <button class="w3-button w3-border w3-red w3-round-large w3-margin-bottom" onclick="w3_close()">Cancel</button>
     </form>
   </div>
   <!-- Plant Delete modal - html to be inserted by Javascript -->
@@ -165,13 +154,13 @@
         <tr class="w3-light-grey">
           <th style="cursor:pointer" onclick="sortTable(0)">Common Name  </th>
           <th style="cursor:pointer" onclick="sortTable(1)">Type         </th>
-          <th style="cursor:pointer" onclick="sortTable(2)">Sun Exposure </th>
-          <th style="cursor:pointer" onclick="sortTable(3)">Water Rqmts  </th>
           <th style="cursor:pointer" onclick="sortTable(4)">Bloom Color  </th>
           <th style="cursor:pointer" onclick="sortTable(5)">Bloom Season </th>
           <th style="cursor:pointer" onclick="sortTable(6)">Pollinators  </th>
-          <th style="cursor:pointer" onclick="sortTable(7)">Species      </th>
-          <th style="cursor:pointer" onclick="sortTable(8)" class="w3-center">CA Native    </th>
+          <th style="cursor:pointer" onclick="sortTable(2)">Sun Exposure </th>
+          <th style="cursor:pointer" onclick="sortTable(3)">Water Rqmts  </th>
+          <th style="cursor:pointer" onclick="sortTable(8)" class="w3-center">CA Native</th>
+          <th style="cursor:pointer" onclick="sortTable(7)">Genus/Species</th>
           <!-- Plant Detail header placeholder -->
           <th class="w3-center"></th>
           <!-- Plant Update header placeholder -->
@@ -191,13 +180,13 @@
           <tr class="w3-hover-green">
             <td>{{ plant.commonName                   }}</td>
             <td>{{ plant.type_x                       }}</td>
-            <td>{{ plant.sun_exposure|cut:"["|cut:"]" }}</td>
-            <td>{{ plant.water_rqmts                  }}</td>
             <td>{{ plant.bloom_color |cut:"["|cut:"]" }}</td>
             <td>{{ plant.bloom_season|cut:"["|cut:"]" }}</td>
             <td>{{ plant.pollinators |cut:"["|cut:"]" }}</td>
-            <td>{{ plant.species                      }}</td>
+            <td>{{ plant.sun_exposure|cut:"["|cut:"]" }}</td>
+            <td>{{ plant.water_rqmts                  }}</td>
             <td class="w3-center">{{ plant.ca_native  }}</td>
+            <td>{{ plant.genus }} {{ plant.species}}    </td>
             <!-- Plant Details Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
@@ -275,9 +264,9 @@
 {% endblock content %}
 
 {% block js %}
-  <!-- Insert template Javascript here -->
-  <!-- AR: Move script to separate  file -->
+  <!-- Insert template Javascript here --> 
   <script>
+    // Table sort script - alphetically - toggle between ascending and descending
     function sortTable(n) {
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("plantTable");
@@ -327,11 +316,10 @@
         }
       }
     }
-  </script>
-
-  <script>
+ 
+    // Search menu - sidebar navigation scripts
     function w3_open() {
-      document.getElementById("main").style.marginLeft = "15%";
+      document.getElementById("main").style.marginLeft = "16%";
       document.getElementById("mySidebar").style.width = "15%";
       document.getElementById("mySidebar").style.display = "block";
       document.getElementById("openNav").style.display = 'none';
@@ -341,10 +329,8 @@
       document.getElementById("mySidebar").style.display = "none";
       document.getElementById("openNav").style.display = "inline-block";
     }
-  </script>
 
-  <!-- Delete Plant Modal Script -->
-  <script>
+    // Delete Plant Modal Script
     function plants_delete(id) {
       console.log("DEBUG: Got to plants_delete script.  Plant ID= ", id)
       // Get the plant delete modal
@@ -358,10 +344,8 @@
       // Display the plant delete modal
       plants_delete_modal.style.display='block'
     }
-  </script>
 
-  <!-- On page load, sort table alphabetically by Common Name -->
-  <script>
+    // On page load, sort table alphabetically by Common Name
     console.log("DEBUG: Page reloaded");
     window.onload = sortTable(0);
   </script>

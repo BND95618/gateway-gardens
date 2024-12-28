@@ -1,388 +1,146 @@
-<!-- /app/plants/templates/plants/plants_about.html -->
-{% load static %}
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta description="Plant Database">
-  
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="{% static 'plants/css/style.css' %}">
+<!-- /app/plants/templates/plants/fiddle.html -->
+{% extends "plants/master.html" %}
 
-  <!-- Audio recorder CSS here -->
+{% block title %}
+  <title>Fiddle</title>
+{% endblock title %}
+
+{% block css %}
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-    }
-
     body {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 0.8rem;
+      overflow-x: hidden;
     }
 
-    .wrapper {
-       height: 100%;
-       display: flex;
-       flex-direction: column;
+    #sidebar {
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      z-index: 1000;
+      padding-top: 3.5rem;
+      overflow-y: auto;
+      background-color: #343a40;
+      color: #fff;
+      transition: left 0.3s;
     }
 
-    h1, h2 {
-      font-size: 2rem;
-      text-align: center;
-      font-weight: normal;
-      padding: 0.5rem 0 0 0;
-    }
-
-    .main-controls {
-      padding: 0.5rem 0;
-    }
-
-    canvas {
+    #sidebar a {
+      padding: 15px 20px;
       display: block;
-      margin-bottom: 0.5rem;
+      color: #fff;
+      text-decoration: none;
     }
 
-    #buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+    #sidebar a:hover {
+      background-color: #495057;
     }
 
-    #buttons button {
-      font-size: 1rem;
-      padding: 1rem;
-      width: calc(50% - 0.25rem);
+    #sidebar .sidebar-heading {
+      padding: 1.5rem 1rem;
+      font-size: 1.2rem;
     }
 
-    button {
-      font-size: 1rem;
-      background: #0088cc;
-      text-align: center;
-      color: white;
-      border: none;
-      transition: all 0.2s;
-      padding: 0.5rem;
+    .navbar-brand,
+    #menu-toggle {
+      background-color: #343a40;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      color: #fff;
     }
 
-    button:hover, button:focus {
-      box-shadow: inset 0px 0px 10px rgba(255, 255, 255, 1);
-      background: #0ae;
-    }
-
-    button:active {
-      box-shadow: inset 0px 0px 20px rgba(0, 0, 0, 0.5);
-      transform: translateY(2px);
-    }
-
-    /* Make the clips use as much space as possible, and
-     * also show a scrollbar when there are too many clips to show
-     * in the available space */
-    .sound-clips {
-      flex: 1;
-      overflow: auto;
-    }
-
-    section, article {
-      display: block;
-    }
-
-    .clip {
-      padding-bottom: 1rem;
-    }
-
-    audio {
-      width: 100%;
-      display: block;
-      margin: 1rem auto 0.5rem;
-    }
-
-    .clip p {
-      display: inline-block;
-      font-size: 1rem;
-    }
-
-    .clip button {
-      font-size: 1rem;
-      float: right;
-    }
-
-    button.delete {
-      background: #f00;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8rem;
-    }
-
-    /* Checkbox hack to control information box display */
-
-    label {
-    font-size: 3rem;
-    position: absolute;
-    top: 2px;
-    right: 3px;
-    z-index: 5;
-    cursor: pointer;
-    background-color: black;
-    border-radius: 10px;
-    }
-
-    input[type="checkbox"] {
-    position: absolute;
-    top: -100px;
-    }
-
-    aside {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(100%);
-    transition: 0.3s all ease-out;
-    background-color: #efefef;
-    padding: 1rem;
-    }
-
-    aside p {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    }
-
-    aside a {
-    color: #666;
-    }
-
-    /* Toggled State of information box */
-    input[type="checkbox"]:checked ~ aside {
-    transform: translateX(0);
-    }
-
-    /* Cursor when clip name is clicked over */
-
-    .clip p {
-    cursor: pointer;
-    }
-
-    /* Adjustments for wider screens */
-    @media all and (min-width: 800px) {
-      /* Don't take all the space as readability is lost when line length
-          goes past a certain size */
-      .wrapper {
-        width: 90%;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
+    .content {
+      margin-left: 0;
+      padding: 15px;
+      transition: margin-left 0.3s;
     }
   </style>
+{% endblock css %}
 
-  <title>Fiddle</title>
-</head>
+{% block header-completion %}
+    <!-- complete the header from master.html -->
+    <div class="w3-bar w3-green">
+      <h1 class="w3-bar-item">About</h1>
+    </div>
+  </div>
+{% endblock header-completion %}
 
 {% block content %}
+  <div id="sidebar" style="margin-top:50px;">
+		<a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+    <a href="#"><i class="bi bi-house-door"></i> Home</a>
+		<a href="#"><i class="bi bi-person"></i> Contact</a>
+		<a href="#"><i class="bi bi-gear"></i> Settings</a>
+		<a href="#"><i class="bi bi-envelope"></i> Email</a>
+		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
+	</div>
 
-  <!-- Audio recorder HTML here -->
-  <div class="w3-container">
-    <h2>Audio Recording - Scientific Name</h1>
-  </div>
+	<div class="content" style="margin-top:120px;">
+		<button id="menu-toggle" class="btn">
+			<i class="bi bi-list"></i>
+		</button>
+		<h2>GeeksforGeeks</h2>
+		<p>This is the Geeks portal.</p>
+	</div>
+{% endblock content %}
 
-  <div class="wrapper">
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		document.getElementById('menu-toggle').addEventListener('click', function () {
+			const sidebar = document.getElementById('sidebar');
+			const content = document.querySelector('.content');
+			const menuToggle = document.getElementById('menu-toggle');
 
-    <section class="main-controls">
-      <canvas class="visualizer" height="60px"></canvas>
-      <div id="buttons">
-        <button class="record">Record</button>
-        <button class="stop">Stop</button>
-      </div>
-    </section>
-
-    <section class="sound-clips">
-      <!-- Javascript will insert sound clips here -->
-    </section>
-
-  </div>
-
-  <label for="toggle">❔</label>
-  <input type="checkbox" id="toggle">
-
-  <!-- Audio recorder Javascript here -->
-  <script>
-    // Set up basic variables for app
-    const record = document.querySelector(".record");
-    const stop = document.querySelector(".stop");
-    const soundClips = document.querySelector(".sound-clips");
-    const canvas = document.querySelector(".visualizer");
-    const mainSection = document.querySelector(".main-controls");
-
-    // Disable stop button while not recording
-    stop.disabled = true;
-
-    // Visualiser setup - create web audio api context and canvas
-    let audioCtx;
-    const canvasCtx = canvas.getContext("2d");
-
-    // Main block for doing the audio recording
-    if (navigator.mediaDevices.getUserMedia) {
-    console.log("The mediaDevices.getUserMedia() method is supported.");
-
-    const constraints = { audio: true };
-    let chunks = [];
-
-    let onSuccess = function (stream) {
-        const mediaRecorder = new MediaRecorder(stream);
-
-        visualize(stream);
-
-        record.onclick = function () {
-        mediaRecorder.start();
-        console.log(mediaRecorder.state);
-        console.log("Recorder started.");
-        record.style.background = "red";
-
-        stop.disabled = false;
-        record.disabled = true;
-        };
-
-        stop.onclick = function () {
-        mediaRecorder.stop();
-        console.log(mediaRecorder.state);
-        console.log("Recorder stopped.");
-        record.style.background = "";
-        record.style.color = "";
-
-        stop.disabled = true;
-        record.disabled = false;
-        };
-
-        mediaRecorder.onstop = function (e) {
-        console.log("Last data to read (after MediaRecorder.stop() called).");
-
-        const clipName = prompt(
-            "Enter a name for your sound clip?",
-            "My unnamed clip"
-        );
-
-        const clipContainer = document.createElement("article");
-        const clipLabel = document.createElement("p");
-        const audio = document.createElement("audio");
-        const deleteButton = document.createElement("button");
-
-        clipContainer.classList.add("clip");
-        audio.setAttribute("controls", "");
-        deleteButton.textContent = "Delete";
-        deleteButton.className = "delete";
-
-        if (clipName === null) {
-            clipLabel.textContent = "My unnamed clip";
-        } else {
-            clipLabel.textContent = clipName;
-        }
-
-        clipContainer.appendChild(audio);
-        clipContainer.appendChild(clipLabel);
-        clipContainer.appendChild(deleteButton);
-        soundClips.appendChild(clipContainer);
-
-        audio.controls = true;
-        const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
-        chunks = [];
-        const audioURL = window.URL.createObjectURL(blob);
-        audio.src = audioURL;
-        console.log("recorder stopped");
-
-        deleteButton.onclick = function (e) {
-            e.target.closest(".clip").remove();
-        };
-
-        clipLabel.onclick = function () {
-            const existingName = clipLabel.textContent;
-            const newClipName = prompt("Enter a new name for your sound clip?");
-            if (newClipName === null) {
-            clipLabel.textContent = existingName;
-            } else {
-            clipLabel.textContent = newClipName;
-            }
-        };
-        };
-
-        mediaRecorder.ondataavailable = function (e) {
-        chunks.push(e.data);
-        };
-    };
-
-    let onError = function (err) {
-        console.log("The following error occured: " + err);
-    };
-
-    navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
-    } else {
-    console.log("MediaDevices.getUserMedia() not supported on your browser!");
-    }
-
-    function visualize(stream) {
-    if (!audioCtx) {
-        audioCtx = new AudioContext();
-    }
-
-    const source = audioCtx.createMediaStreamSource(stream);
-
-    const bufferLength = 2048;
-    const analyser = audioCtx.createAnalyser();
-    analyser.fftSize = bufferLength;
-    const dataArray = new Uint8Array(bufferLength);
-
-    source.connect(analyser);
-
-    draw();
-
-    function draw() {
-        const WIDTH = canvas.width;
-        const HEIGHT = canvas.height;
-
-        requestAnimationFrame(draw);
-
-        analyser.getByteTimeDomainData(dataArray);
-
-        canvasCtx.fillStyle = "rgb(200, 200, 200)";
-        canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        canvasCtx.lineWidth = 2;
-        canvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-        canvasCtx.beginPath();
-
-        let sliceWidth = (WIDTH * 1.0) / bufferLength;
-        let x = 0;
-
-        for (let i = 0; i < bufferLength; i++) {
-        let v = dataArray[i] / 128.0;
-        let y = (v * HEIGHT) / 2;
-
-        if (i === 0) {
-            canvasCtx.moveTo(x, y);
-        } else {
-            canvasCtx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-        }
-
-        canvasCtx.lineTo(canvas.width, canvas.height / 2);
-        canvasCtx.stroke();
-    }
-    }
-
-    window.onresize = function () {
-    canvas.width = mainSection.offsetWidth;
-    };
-
-    window.onresize();
-  </script>
-
-{% endblock %}
+			if (sidebar.style.left === '-250px') {
+				sidebar.style.left = '0';
+				content.style.marginLeft = '250px';
+			
+				// Change to  when sidebar is open
+				menuToggle.innerHTML = '<i class="bi bi-x"></i>'; 
+			} else {
+				sidebar.style.left = '-250px';
+				content.style.marginLeft = '0';
+				
+				// Change back to ☰ when sidebar is closed
+				menuToggle.innerHTML = '<i class="bi bi-list"></i>'; 
+			}
+		});
+	</script>
+{% endblock js %}
