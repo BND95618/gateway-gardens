@@ -28,14 +28,13 @@
       <thead>
         <tr class="w3-light-grey">
           <th style="cursor:pointer" onclick="sortTable(0)">Common Name   </th>
-          <th style="cursor:pointer" onclick="sortTable(1)">Genus         </th>
-          <th style="cursor:pointer" onclick="sortTable(2)">Species       </th>
+          <th style="cursor:pointer" onclick="sortTable(1)">Genus/Species </th>
           <th style="cursor:pointer" onclick="sortTable(3)">Type          </th>
           <th style="cursor:pointer" onclick="sortTable(5)">Location      </th>
           <th style="cursor:pointer" onclick="sortTable(6)">Sun Exposure  </th>
           <th style="cursor:pointer" onclick="sortTable(7)">Soil Type     </th>
           <th style="cursor:pointer" onclick="sortTable(8)">pH            </th>
-          <th class="w3-center">Happy?        </th>
+          <th class="w3-center">Happy?</th>
           <th class="w3-center"></th>
           <th class="w3-center"></th>
           <th class="w3-center"></th>
@@ -44,13 +43,12 @@
       {% for my_plant in my_plants %}  
         <tr class="w3-hover-green">
           <td>{{ my_plant.plant.commonName }}</td>
-          <td style="font-style: italic;">{{ my_plant.plant.genus    }}</td>
-          <td style="font-style: italic;">{{ my_plant.plant.species  }}</td>
-          <td>{{ my_plant.plant.type_x     }}</td>
-          <td>{{ my_plant.location         }}</td>
-          <td>{{ my_plant.sun_exposure     }}</td>
-          <td>{{ my_plant.soil_type        }}</td>
-          <td>{{ my_plant.pH               }}</td>
+          <td style="font-style: italic;">{{ my_plant.plant.genus }} {{ my_plant.plant.species }}</td>
+          <td>{{ my_plant.plant.type_x }}</td>
+          <td>{{ my_plant.location     }}</td>
+          <td>{{ my_plant.sun_exposure }}</td>
+          <td>{{ my_plant.soil_type    }}</td>
+          <td>{{ my_plant.pH           }}</td>
           <!-- AR: Implement Happy function -->
           <td class="w3-center">TBD          </td>
           <!-- MyPlant Details Icon/Link -->

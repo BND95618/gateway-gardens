@@ -1,5 +1,6 @@
 <!-- /app/plants/templates/plants/index.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Gateway Gardens | Home</title>
@@ -22,11 +23,118 @@
 {% block content %}
 <!-- Home/Index Page -->
   <div class="w3-container" style="margin-top:150px;">
-    <p>Check out all our <a href="{% url 'plants:plants_search' %}">plants</a></p>
+    <h3>Overview</h3>
+    <p>
+      This webpage has been created to assist gardeners with their gardens in Sunset's Zone 14 
+      with a particular focus on Davis, California.
+      <br/>
+      <li>
+        Plant database for plants appropriate for Zone 14
+      </li>
+      <li>
+        "My Garden" page to allow members a place to showcase photos of the garden.  
+        Fellow gardeners may comment the posted photos
+      </li>
+    </p>
+
+    <section>
+      <h3>Sunset Climate Zone 14 Focus</h3>
+      <p>
+        <img src="{% static 'plants/img/sunset-zone-14-map.png' %}" 
+              alt="No sunset map found" 
+              onclick="onClick(this)" 
+              class="w3-hover-opacity"
+              style="width:500px; height:auto; float:right; margin-left:15px;">
+        The plant database focuses on plants that are suitable for the Sunset Zone 14 climate zone.  
+        Marine air moderates parts of Zone 14 that otherwise would be colder in winter and hotter in summer. 
+        The opening in Northern California’s Coast Ranges created by San Francisco and San Pablo bays allows 
+        marine air to spill much farther inland. 
+        The same thing happens, but the penetration is not as deep, in the Salinas Valley. 
+        Zone 14 includes the cold-winter valley floors, canyons, and land troughs in the Coast Ranges 
+        from Santa Barbara County to Humboldt County.
+        <br/><br/>
+        The milder-winter, marine-influenced areas in Zone 14 and the cold-winter inland valley within 
+        Zone 14 differ in humidity. For example, lowland parts of Contra Coasta County are more humid than Sacramento.
+        <br/><br/>
+        Fruits that need winter chill do well here, as do shrubs needing summer heat (oleander, gardenia). 
+        Over a 20-year period, this area had lows ranging from 26 to 16º F (–3 to –9ºC). Weather records 
+        show all-time lows from 20 down to 11ºF (–7 to –12º C).
+      </p> 
+    </section>
+
+    <section>
+    <h3>Davis Climate (Temperature)</h3>
+      <p>
+        <img src="{% static 'plants/img/davis_temperature_history_2024.png' %}" 
+        alt="Temperature Chart" 
+        onclick="onClick(this)" 
+        class="w3-hover-opacity"
+        style="width:500px; height:auto; float:left; margin-margin:15px;">
+        The hot season lasts for 3.7 months, from June 3 to September 26, with an 
+        average daily high temperature above 86°F. The hottest month of the year 
+        in Davis is July, with an average high of 93°F and low of 59°F.
+        Daily high temperatures reach 110°F.
+        <br/><br/>
+        The cool season lasts for 2.9 months, from November 21 to February 19, 
+        with an average daily high temperature below 62°F. The coldest month of 
+        the year in Davis is December, with an average low of 40°F and high of 56°F.
+        There are very few days where the low temperature will be below freezing.
+      </p>
+    </section>
+
+    <section>
+    <h3>Davis Climate (Average Rainfall)</h3>
+      <p>
+        <img src="{% static 'plants/img/davis_average_monthly_rainfall.png' %}" 
+        alt="Temperature Chart" 
+        onclick="onClick(this)" 
+        class="w3-hover-opacity"
+        style="width:500px; height:auto; float:right; margin-left:15px;">
+        Davis experiences extreme seasonal variation in monthly rainfall.
+        <br/><br/>
+        The rainy period of the year lasts for 7.8 months, from September 29 to May 22, 
+        with a sliding 31-day rainfall of at least 0.5 inches. The month with the most 
+        rain in Davis is February, with an average rainfall of 4.1 inches.
+        <br/>
+        The rainless period of the year lasts for 4.2 months, from May 22 to September 29. 
+        The month with the least rain in Davis is August, with no measurable rainfall.
+      </p>
+    </section>
+
+    <section>
+    <h3>Davis Climate (Daylight Hours)</h3>
+      <p>
+        <img src="{% static 'plants/img/davis_daylight_hours_2024.png' %}" 
+        alt="Temperature Chart" 
+        onclick="onClick(this)" 
+        class="w3-hover-opacity"
+        style="width:500px; height:auto; float:left; margin-right:15px;">
+        The length of the day in Davis varies significantly over the course of the year. 
+        In 2024, the shortest day is December 21, with 9 hours, 28 minutes of daylight; 
+        the longest day is June 20, with 14 hours, 52 minutes of daylight.
+      </p>
+    </section>
+
+  </div>
+
+  <!-- Plant images: modal -->
+  <!-- AR: Reduce the size of the modal to fit on a laptop screen -->
+  <div id="image_modal" class="w3-modal" onclick="this.style.display='none'">
+    <div class="w3-modal-content w3-animate-zoom">
+      <img id="image" style="width:100%"
+      style="width:250px; height:250px; float:right; margin-left:15px;">
+    </div>
   </div>
 
 {% endblock content %}
 
 {% block js %}
   <!-- Insert template Javascript here -->
+  <!-- Expand image via modal -->
+  <script>
+    function onClick(element) {
+      document.getElementById("image").src = element.src;
+      document.getElementById("image_modal").style.display = "block";
+    }
+  </script>
 {% endblock js %}

@@ -13,6 +13,10 @@ body {
     font-family: chalkboard, verdana, sans-serif;
 }
 h1 { 
-    color: linen; 
+    color: white; 
     font-family: chalkboard, verdana, sans-serif;
+}
+p {
+    font-family: chalkboard, verdana, sans-serif;
+    font-size: large;
 }
