@@ -137,6 +137,20 @@ USDA_ZONE_CHOICES = (
 	("13a (60F to 65F)",  "13a (60F to 65F)"), 
 	("13b (65F to 70F)",  "13b (65F to 70F)"),
 )
+COLUMN_CHOICES = (
+	("Common Name",   "Common Name"),
+	("Type",          "Type"),
+	("Height",        "Height"),
+	("Width", 		  "Width"),
+	("Bloom Color",   "Bloom Color"),
+	("Bloom Season",  "Bloom Season"),
+	("Pollinators",   "Pollinators"),
+	("Sun Exposure",  "Sun Exposure"),
+	("Water Rqmts",   "Water Rqmts"),
+	("CA Native",     "CA Native"),
+	("UCD All-Star",  "UCD All-Star"),
+	("Genus/Species", "Genus/Species"),
+)
 
 class UserSignupForm(forms.Form):
 	signup_username = forms.CharField(
@@ -225,6 +239,15 @@ class UserRecoveryForm(forms.Form):
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	
+class ColumnChooserForm(forms.Form):
+	column_selection = forms.MultipleChoiceField(
+		label="",
+		initial='',
+		choices = COLUMN_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=True,
+		)
+
 class GardenAddUpdateForm(forms.Form):
 	name = forms.CharField(
 		label="Garden Name", 

@@ -9,13 +9,14 @@ from django.contrib.auth.models import User, Group                 # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
-from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
+from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
 import math
 import os
 
+# AR: Test for errors immediately after a new user sign-up
 # Define attribute select options
 plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
@@ -411,6 +412,11 @@ def plants_search(request):
     else:                                                       # Executed when search page is initialized
         plants   = Plant.objects.all()
         my_plants = MyPlant.objects.filter(owner = request.user.username)
+        # my_garden = Garden.objects.filter(owner = request.user.username)
+        gardens = Garden.objects.all()
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                column_selection_list  = string2list(garden.column_selection) 
         # set search field defaults
         type_x_value       = "Any"
         sun_exposure_value = "Any"
@@ -456,6 +462,8 @@ def plants_search(request):
                     'ucd_all_star_value' : ucd_all_star_value,
                     'ca_native_value'    : ca_native_value,
                     'garden_value'       : garden_value,
+                    # table column selection
+                    'column_selection'   : column_selection_list,
               }
     return HttpResponse(template.render(context, request))
 
@@ -845,6 +853,40 @@ def user_logout(request):
     logout(request)
     return render(request, 'plants/index.html')
 
+def column_chooser(request):
+    """ Capture the columns that the user wants to display in the plant table """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    gardens = Garden.objects.all()
+    if request.POST:
+        form = ColumnChooserForm(request.POST)
+        if form.is_valid():
+            column_selection = form.cleaned_data.get('column_selection')
+            print("DEBUG: Plant Column Selection - from modal: ", column_selection)
+            # Associate the column selection to the user's garden
+            for garden in gardens:
+                print("DEBUG: ", garden.owner, request.user.username)
+                if (garden.owner == request.user.username):
+                    print("DEBUG: Got to column_selection save")
+                    print("DEBUG: garden.column_selection = ", garden.column_selection)
+                    garden.column_selection = column_selection
+                    garden.save()
+                    print("DEBUG: garden.column_selection = ", garden.column_selection)
+        else:
+            return HttpResponseRedirect(reverse('plants:search')) 
+        return HttpResponseRedirect(reverse('plants:plants_search'))
+    else:
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                column_selection = garden.column_selection
+        print("DEBUG: Column Selection - from db: ", column_selection)
+        # convert string-based list (retrieved from db) to true Python lists
+        column_selection_list  = string2list(garden.column_selection)
+        print("DEBUG: Column Selection List: ", column_selection_list)
+        form = ColumnChooserForm(initial = {'column_selection' : column_selection_list})
+        context = {'form' : form }
+        return render(request, 'plants/column_chooser_modal.html', context)
+
 def string2list(string):
     """ Utility: convert list in string form to a list """
     # print('string: ', string)
@@ -853,7 +895,7 @@ def string2list(string):
     temp = temp.replace("'", "")
     temp = temp.replace("]", "")
     temp = temp.split(", ")
-    # print('list: ', temp)
+    print('DEBUG: list: ', temp)
     return(temp)
 
 def string_display(string):

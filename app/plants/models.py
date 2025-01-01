@@ -10,33 +10,36 @@ from django.urls import reverse
 from django_quill.fields import QuillField
 
 class Garden(models.Model):
-    """ My Garden description table """
-    name         = models.CharField(max_length=64, default="tbd", blank=True)
-    city         = models.CharField(max_length=32, default="tbd", blank=True)
-    state        = models.CharField(max_length=16, default="tbd", blank=True)
-    owner        = models.CharField(max_length=64, default="tbd", blank=True)
-    usda_zone    = models.CharField(max_length=16, default="tbd", blank=True)
-    sunset_zone  = models.CharField(max_length=32, default="tbd", blank=True)
-    question     = models.CharField(max_length=8,  default="No",  blank=True)
+    """ My Garden description table - linked to one particular user """
+    name          = models.CharField(max_length=64, default="tbd", blank=True)
+    city          = models.CharField(max_length=32, default="tbd", blank=True)
+    state         = models.CharField(max_length=16, default="tbd", blank=True)
+    owner         = models.CharField(max_length=64, default="tbd", blank=True)
+    usda_zone     = models.CharField(max_length=16, default="tbd", blank=True)
+    sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True)
+    question      = models.CharField(max_length=8,  default="No",  blank=True)
     # Images
-    image_1      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_1    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_2    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_3    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_4    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_5      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_5    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_6      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_6    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_7      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_7    = models.CharField(max_length=64, default="tbd", blank=True)
-    image_8      = models.ImageField(upload_to='images/', blank=True, null=True)
-    caption_8    = models.CharField(max_length=64, default="tbd", blank=True)
+    image_1       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_2       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_3       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_4       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_5       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_6       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_7       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
+    image_8       = models.ImageField(upload_to='images/', blank=True, null=True)
+    caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
-    slug         = models.SlugField(default="tbd", null=False, blank=True)
+    column_selection = models.CharField(max_length=256,  blank=True,
+                       default=["Common Name", "Type", "Height", "Width", 
+                                "Bloom Color", "Bloom Season", "Pollinators"],)
+    slug          = models.SlugField(default="tbd", null=False, blank=True)
         
     def __str__(self):
         return self.name
