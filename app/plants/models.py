@@ -45,28 +45,28 @@ class Garden(models.Model):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("plants_search")
+        return reverse("plants_summary")
 
 class Plant(models.Model):
     """ Plant description table """
     commonName    = models.CharField(max_length=255)
     # Attributes
-    type_x        = models.CharField(max_length=32,  default="tbd", blank=True)
-    bloom_color   = models.CharField(max_length=128, default="tbd", blank=True)
-    bloom_season  = models.CharField(max_length=64,  default="tbd", blank=True)
-    height_feet   = models.IntegerField(default=0, blank=True, null=True)
-    height_inch   = models.IntegerField(default=0, blank=True, null=True)
-    width_feet    = models.IntegerField(default=0, blank=True, null=True)
-    width_inch    = models.IntegerField(default=0, blank=True, null=True)
-    sun_exposure  = models.CharField(max_length=128, default="tbd", blank=True)
-    water_rqmts   = models.CharField(max_length=64,  default="tbd", blank=True)
-    pH_min        = models.CharField(max_length=16,  default="tbd", blank=True)
-    pH_max        = models.CharField(max_length=16,  default="tbd", blank=True)
-    soil_type     = models.CharField(max_length=64,  default="tbd", blank=True)
-    pollinators   = models.CharField(max_length=72,  default="tbd", blank=True)
-    ucd_all_star  = models.CharField(max_length=8,   default="tbd", blank=True)
-    ca_native     = models.CharField(max_length=8,   default="tbd", blank=True)
-    usda_zone_min = models.CharField(max_length=32,  default="tbd", blank=True)
+    type_x            = models.CharField(max_length=32,  default="tbd", blank=True)
+    height_feet       = models.IntegerField(default=0, blank=True, null=True)
+    height_inch       = models.IntegerField(default=0, blank=True, null=True)
+    width_feet        = models.IntegerField(default=0, blank=True, null=True)
+    width_inch        = models.IntegerField(default=0, blank=True, null=True)
+    bloom_color       = models.CharField(max_length=128, default="tbd", blank=True)
+    bloom_season      = models.CharField(max_length=64,  default="tbd", blank=True)
+    pollinators       = models.CharField(max_length=72,  default="tbd", blank=True)
+    ca_native         = models.CharField(max_length=8,   default="tbd", blank=True)
+    ucd_all_star      = models.CharField(max_length=8,   default="tbd", blank=True)
+    sun_exposure      = models.CharField(max_length=128, default="tbd", blank=True)
+    water_rqmts       = models.CharField(max_length=64,  default="tbd", blank=True)
+    pH_min            = models.CharField(max_length=16,  default="tbd", blank=True)
+    pH_max            = models.CharField(max_length=16,  default="tbd", blank=True)
+    soil_type         = models.CharField(max_length=64,  default="tbd", blank=True)
+    usda_zone_min     = models.CharField(max_length=32,  default="tbd", blank=True)
     usda_zone_max     = models.CharField(max_length=32,  default="tbd", blank=True)
     sunset_zones      = models.CharField(max_length=32,  default="tbd", blank=True)
     # Text boxes
@@ -109,7 +109,7 @@ class Plant(models.Model):
         return self.commonName
     
     def get_absolute_url(self):
-        return reverse("plants_search")
+        return reverse("plants_summary")
 
 class Comment(models.Model):
     """ Plant comments """
@@ -128,7 +128,7 @@ class Comment(models.Model):
         return self.author
     
     def get_absolute_url(self):
-        return reverse("plants_search")
+        return reverse("plants_summary")
      
 class MyPlant(models.Model):
     """ Plants that are in My Garden """
@@ -153,7 +153,7 @@ class MyPlant(models.Model):
         return self.location
     
     def get_absolute_url(self):
-        return reverse("plants_search")
+        return reverse("plants_summary")
 
 class MyPlantComment(models.Model):
     """ My Plant comments """

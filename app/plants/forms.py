@@ -43,6 +43,16 @@ POLLINATORS_CHOICES = (
 	("Hummingbirds", "Hummingbirds"),
 	("None",         "None"),
 )
+CA_NATIVE_CHOICES = (
+	("tbd", "tbd"),
+	("Yes", "Yes"),
+	("No",  "No"),
+)
+UCD_ALL_STAR_CHOICES = (
+	("tbd", "tbd"),
+	("Yes", "Yes"),
+	("No",  "No"),
+)
 SUN_EXPOSURE_CHOICES = (
 	("tbd",           "tbd"),
 	("Full Sun",      "Full Sun"),
@@ -57,12 +67,6 @@ WATER_RQMTS_CHOICES = (
 	("Medium",    "Medium"),
 	("High",      "High"),
 	("Very High", "Very High"),
-)
-SOIL_TYPE_CHOICES = (
-	("tbd",    "tbd"),
-	("Sandy",  "Sandy"),
-	("loamy",  "Loamy"),
-	("Clay",   "Clay"),
 )
 PH_CHOICES = (
 	("tbd", "tbd"),
@@ -98,15 +102,11 @@ PH_CHOICES = (
 	("7.9", "7.9"),
 	("8.0", "8.0"),
 )
-UCD_ALL_STAR_CHOICES = (
-	("tbd", "tbd"),
-	("Yes", "Yes"),
-	("No",  "No"),
-)
-CA_NATIVE_CHOICES = (
-	("tbd", "tbd"),
-	("Yes", "Yes"),
-	("No",  "No"),
+SOIL_TYPE_CHOICES = (
+	("tbd",    "tbd"),
+	("Sandy",  "Sandy"),
+	("Loamy",  "Loamy"),
+	("Clay",   "Clay"),
 )
 USDA_ZONE_CHOICES = (
 	("tbd",               "tbd"),
@@ -139,17 +139,23 @@ USDA_ZONE_CHOICES = (
 )
 COLUMN_CHOICES = (
 	("Common Name",   "Common Name"),
+	("Genus/Species", "Genus/Species"),
+	# Attributes
 	("Type",          "Type"),
 	("Height",        "Height"),
 	("Width", 		  "Width"),
 	("Bloom Color",   "Bloom Color"),
 	("Bloom Season",  "Bloom Season"),
 	("Pollinators",   "Pollinators"),
-	("Sun Exposure",  "Sun Exposure"),
-	("Water Rqmts",   "Water Rqmts"),
 	("CA Native",     "CA Native"),
 	("UCD All-Star",  "UCD All-Star"),
-	("Genus/Species", "Genus/Species"),
+	# Environmental Rqmts
+	("Sun Exposure",  "Sun Exposure"),
+	("Water Rqmts",   "Water Rqmts"),
+	("pH Range",      "pH Range"),
+	("Soil Type",     "Soil Type"),
+	("USDA Zones",    "USDA Zones"),
+	("Sunset Zones",  "Sunset Zones"), 
 )
 
 class UserSignupForm(forms.Form):
@@ -434,6 +440,20 @@ class PlantAddUpdateForm(forms.Form):
 		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
+	ca_native = forms.ChoiceField(
+		label="California Native",
+		initial = 'tbd',
+		choices = CA_NATIVE_CHOICES, 
+		widget=forms.RadioSelect,
+		required=False,
+		)
+	ucd_all_star = forms.ChoiceField(
+		label="UCD All-Star",
+		initial = 'tbd',
+		choices = UCD_ALL_STAR_CHOICES, 
+		widget=forms.RadioSelect,
+		required=False,
+		)
 	sun_exposure = forms.MultipleChoiceField(
 		label="Sun Exposure",
 		initial='tbd',
@@ -461,20 +481,6 @@ class PlantAddUpdateForm(forms.Form):
 		initial='tbd',
 		choices = SOIL_TYPE_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
-		required=False,
-		)
-	ucd_all_star = forms.ChoiceField(
-		label="UCD All-Star",
-		initial = 'tbd',
-		choices = UCD_ALL_STAR_CHOICES, 
-		widget=forms.RadioSelect,
-		required=False,
-		)
-	ca_native = forms.ChoiceField(
-		label="California Native",
-		initial = 'tbd',
-		choices = CA_NATIVE_CHOICES, 
-		widget=forms.RadioSelect,
 		required=False,
 		)
 	usda_zone_min = forms.ChoiceField(

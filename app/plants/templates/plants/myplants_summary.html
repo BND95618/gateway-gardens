@@ -156,12 +156,10 @@
   <!-- Delete My Plant Modal Script -->
   <script>
     function myplants_delete(id) {
-      console.log("DEBUG: Got to myplants_delete script.  MyPlant ID= ", id)
       // Get the MyPlant delete modal
       const myplants_delete_modal  = document.getElementById('myplants_delete_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
       url = "/myplants_delete/" + id
-      console.log("DEBUG: url = ", url)
       fetch(url)
         .then(response => response.text())
         .then(html => {myplants_delete_modal.innerHTML = html;})

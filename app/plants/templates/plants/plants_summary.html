@@ -1,4 +1,4 @@
-<!-- /app/plants/templates/plants/plants_search.html -->
+<!-- /app/plants/templates/plants/plants_summary.html -->
 {% extends "plants/master.html" %}
 
 {% block title %}
@@ -15,22 +15,25 @@
     <div class="w3-dropdown-hover">
       <button class="w3-button w3-green">Menu</button>
       <div class="w3-dropdown-content w3-bar-block w3-card-4">
-        <button onclick="w3_open()"        class="w3-bar-item w3-button" id="openNav" >Plant Search</button>
-        <button onclick="column_chooser()" class="w3-bar-item w3-button"              >Column Chooser</button>
+        <button onclick="w3_open()"        class="w3-bar-item w3-button">Plant Search</button>
+        <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
         {% if perms.plants.add_plant %}
           <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant </a>
         {% endif %}
-        <a href="{% url 'plants:gardens_add' %}" class="w3-bar-item w3-button"  >Add Garden</a>
-      </div>
+     </div>
     </div>
     <h1 class="w3-bar-item">Plants</h1>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
-  <!-- Search Bar -->
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" style="display:none; height:80%;" id="mySidebar">
-    <form method="POST" action="{% url 'plants:plants_search' %}" class="w3-container w3-card-4 w3-light-grey">
+  <!------------------------->
+  <!-- Vertical Search Bar -->
+  <!------------------------->
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" 
+       style="display:none; height:80%;" 
+       id="mySidebar">
+    <form method="POST" action="{% url 'plants:plants_summary' %}" class="w3-container w3-card-4 w3-light-grey">
       {% csrf_token %}
       <label for="id_type_x_option">Type:</label><br>
       <select id="id_type_x_option" name="type_x_option" class="w3-select w3-margin-bottom">
@@ -44,31 +47,7 @@
         {% endfor %}
       </select>
       <br>
-      <label for="id_sun_exposure_option">Sun Exposure:</label><br>
-      <select id="id_sun_exposure_option" name="sun_exposure_option" class="w3-select w3-margin-bottom">
-        <option value="Any" >Any</option>
-        {% for x in sun_exposure_opt %}
-          {% if x == sun_exposure_value %}
-            <option value="{{ x }}" selected>{{ x }}</option>
-          {% elif x != "tbd" %}
-            <option value="{{ x }}"         >{{ x }}</option>
-          {% endif %}
-        {% endfor %}
-        </select>
-        <br>
-        <label for="id_water_rqmts_option">Water Requirements:</label><br>
-        <select id="id_water_rqmts_option" name="water_rqmts_option" class="w3-select w3-margin-bottom">
-          <option value="Any" >Any</option>
-          {% for x in water_rqmts_opt %}
-            {% if x == water_rqmts_value %}
-              <option value="{{ x }}" selected>{{ x }}</option>
-            {% elif x != "tbd" %}
-              <option value="{{ x }}"         >{{ x }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-        <br>
-        <label for="id_bloom_color_option">Bloom Color:</label><br>
+      <label for="id_bloom_color_option">Bloom Color:</label><br>
         <select id="id_bloom_color_option" name="bloom_color_option" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in bloom_color_opt %}
@@ -104,6 +83,18 @@
           {% endfor %}
         </select>
         <br>
+        <label for="id_ca_native_option">California Native:</label><br>
+        <select id="id_ca_native_option" name="ca_native_option" class="w3-select w3-margin-bottom">
+          <option value="Any" >Any</option>
+          {% for x in ca_native_opt %}
+            {% if x == ca_native_value %}
+              <option value="{{ x }}" selected>{{ x }}</option>
+            {% elif x != "tbd" %}
+              <option value="{{ x }}"         >{{ x }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <br>
         <label for="id_ucd_all_star_option">UCD All-Star:</label><br>
         <select id="id_ucd_all_star_option" name="ucd_all_star_option" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
@@ -116,11 +107,35 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_ca_native_option">California Native:</label><br>
-        <select id="id_ca_native_option" name="ca_native_option" class="w3-select w3-margin-bottom">
+        <label for="id_sun_exposure_option">Sun Exposure:</label><br>
+        <select id="id_sun_exposure_option" name="sun_exposure_option" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
-          {% for x in ca_native_opt %}
-            {% if x == ca_native_value %}
+          {% for x in sun_exposure_opt %}
+            {% if x == sun_exposure_value %}
+              <option value="{{ x }}" selected>{{ x }}</option>
+            {% elif x != "tbd" %}
+              <option value="{{ x }}"         >{{ x }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <br>
+        <label for="id_water_rqmts_option">Water Requirements:</label><br>
+        <select id="id_water_rqmts_option" name="water_rqmts_option" class="w3-select w3-margin-bottom">
+          <option value="Any" >Any</option>
+          {% for x in water_rqmts_opt %}
+            {% if x == water_rqmts_value %}
+              <option value="{{ x }}" selected>{{ x }}</option>
+            {% elif x != "tbd" %}
+              <option value="{{ x }}"         >{{ x }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <br>
+        <label for="id_soil_type_option">Soil Requirements:</label><br>
+        <select id="id_soil_type_option" name="soil_type_option" class="w3-select w3-margin-bottom">
+          <option value="Any" >Any</option>
+          {% for x in soil_type_opt %}
+            {% if x == soil_type_value %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -140,7 +155,7 @@
         </select>
         <br>
       <input type="submit" value="Submit" class="w3-button w3-border w3-green w3-round-large w3-margin-bottom">
-      <a href="{% url 'plants:plants_search' %}" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">Reset</a>
+      <a href="{% url 'plants:plants_summary' %}" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">Reset</a>
       <button class="w3-button w3-border w3-red w3-round-large w3-margin-bottom" onclick="w3_close()">Cancel</button>
     </form>
   </div>
@@ -158,33 +173,24 @@
   <!-- Plant Table -->
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
-      <colgroup>
-        <col span="1"> <!-- Common Name -->
-        <col span="1"> <!-- Type -->
-        <col span="1"> <!-- Height -->
-        <col span="1"> <!-- Width -->
-        <col span="1"> <!-- Bloom Color -->
-        <col span="1"> <!-- Bloom Season -->
-        <col span="1"> <!-- Pollinators -->
-        <col span="1"> <!-- Sun Exposure -->
-        <col span="1"> <!-- Water Rqmts -->
-        <col span="1"> <!-- CA Native -->
-        <col span="1"> <!-- Genus/Species -->
-      </colgroup>
       <thead>
         <tr class="w3-light-grey">
-          <th style="cursor:pointer"               onclick="sortTable(0)">Common Name  </th>
-          <th style="cursor:pointer"               onclick="sortTable(1)">Type         </th>
-          <th style="cursor:pointer"               onclick="sortTable(2)">Height       </th>
-          <th style="cursor:pointer"               onclick="sortTable(3)">Width        </th>
-          <th style="cursor:pointer"               onclick="sortTable(4)">Bloom Color  </th>
-          <th style="cursor:pointer"               onclick="sortTable(5)">Bloom Season </th>
-          <th style="cursor:pointer"               onclick="sortTable(6)">Pollinators  </th>
-          <th style="cursor:pointer"               onclick="sortTable(7)">Sun Exposure </th>
-          <th style="cursor:pointer"               onclick="sortTable(8)">Water Rqmts  </th>
-          <th style="cursor:pointer"               onclick="sortTable(9)"  class="w3-center">CA Native</th>
-          <th style="cursor:pointer"               onclick="sortTable(10)" class="w3-center">UCD All-Star</th>
-          <th style="cursor:pointer; display:none" onclick="sortTable(11)">Genus/Species</th>
+          <th style="cursor:pointer" onclick="sortTable(0)" >Common Name  </th>
+          <th style="cursor:pointer" onclick="sortTable(1)" >Genus/Species</th>
+          <th style="cursor:pointer" onclick="sortTable(2)" >Type         </th>
+          <th style="cursor:pointer" onclick="sortTable(3)" >Height       </th>
+          <th style="cursor:pointer" onclick="sortTable(4)" >Width        </th>
+          <th style="cursor:pointer" onclick="sortTable(5)" >Bloom Color  </th>
+          <th style="cursor:pointer" onclick="sortTable(6)" >Bloom Season </th>
+          <th style="cursor:pointer" onclick="sortTable(7)" >Pollinators  </th>
+          <th style="cursor:pointer" onclick="sortTable(8)" class="w3-center">CA Native</th>
+          <th style="cursor:pointer" onclick="sortTable(9)" class="w3-center">UCD All-Star</th>
+          <th style="cursor:pointer" onclick="sortTable(10)" >Sun Exposure </th>
+          <th style="cursor:pointer" onclick="sortTable(11)" >Water Rqmts  </th>
+          <th style="cursor:pointer" onclick="sortTable(12)">pH Range      </th>
+          <th style="cursor:pointer" onclick="sortTable(13)">Soil Type     </th>
+          <th style="cursor:pointer" onclick="sortTable(14)">USDA Zones    </th>
+          <th style="cursor:pointer" onclick="sortTable(15)">Sunset Zones  </th>
           <!-- Plant Detail header placeholder -->
           <th class="w3-center"></th>
           <!-- Plant Update header placeholder -->
@@ -203,17 +209,21 @@
         {% if plant.plant_show == "yes" %}   
           <tr class="w3-hover-green">
             <td>{{ plant.commonName                     }}</td>
+            <td>{{ plant.genus }} {{ plant.species}}      </td>
             <td>{{ plant.type_x                         }}</td>
             <td>{{ plant.height_feet }} ft {{ plant.height_inch }} in</td>
             <td>{{ plant.width_feet  }} ft {{ plant.width_inch  }} in</td>
             <td>{{ plant.bloom_color |cut:"["|cut:"]"   }}</td>
             <td>{{ plant.bloom_season|cut:"["|cut:"]"   }}</td>
             <td>{{ plant.pollinators |cut:"["|cut:"]"   }}</td>
-            <td>{{ plant.sun_exposure|cut:"["|cut:"]"   }}</td>
-            <td>{{ plant.water_rqmts                    }}</td>
             <td class="w3-center">{{ plant.ca_native    }}</td>
             <td class="w3-center">{{ plant.ucd_all_star }}</td>
-            <td style="display:none">{{ plant.genus }} {{ plant.species}}    </td>
+            <td>{{ plant.sun_exposure|cut:"["|cut:"]"   }}</td>
+            <td>{{ plant.water_rqmts                    }}</td>
+            <td>{{ plant.pH_min }} to {{ plant.pH_max }}              </td>
+            <td>{{ plant.soil_type                                  }}</td>
+            <td>{{ plant.usda_zone_min }} to {{ plant.usda_zone_max }}</td>
+            <td>{{ plant.sunset_zones }}                              </td>
             <!-- Plant Details Icon/Link -->
             <td class="w3-center">
               <div class="w3-tooltip">
@@ -288,11 +298,6 @@
     </table>
   </div>
 
-  <p>DEBUG: Column Selection: {{ column_selection }}</p>
-  <p>JS DEBUG</p>
-  <p id="DEBUG"></p>
-  <p id="DEBUG"></p>
-
 {% endblock content %}
 
 {% block js %}
@@ -350,56 +355,47 @@
     }
  
     function column_selector(){
-      console.log("DEBUG: Got to column_selection script");
       const table = document.getElementById("plantTable");
       // 
-      var column_options = ['Common Name', 'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season',
-                            'Pollinators', 'Sun Exposure', 'Water Rqmts', 'CA Native', 'UCD All-Star',
-                            'Genus/Species',
+      const column_options = ['Common Name', 'Genus/Species',
+                              'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season',
+                              'Pollinators', 'CA Native', 'UCD All-Star', 
+                              'Sun Exposure', 'Water Rqmts', 'pH Range', 'Soil Type',
+                              'USDA Zones', 'Sunset Zones',
       ]
-      var column_index = 0;
-      // AR: Handle for a new user for there initial table configuration
+      let column_index = 0;
       // Get the list of columns to display
-      var column_selection = {{ column_selection|safe }};
+      let column_selection = {{ column_selection|safe }};
+      // determine the array index for each column
       // walk through the list of columns to either display or hide
+      // AR: streamine the code via column_options.forEach()?
       let i, len;
       for (i = 0, len = column_options.length; i < len; i++) {
-        if      (column_options[i] == "Common Name")  { column_index = 0; } 
-        else if (column_options[i] == "Type")         { column_index = 1; } 
-        else if (column_options[i] == "Height")       { column_index = 2; } 
-        else if (column_options[i] == "Width")        { column_index = 3; } 
-        else if (column_options[i] == "Bloom Color")  { column_index = 4; } 
-        else if (column_options[i] == "Bloom Season") { column_index = 5; } 
-        else if (column_options[i] == "Pollinators") {
-          column_index = 6;
-          console.log("DEBUG: Got to case #6");
-        } else if (column_options[i] == "Sun Exposure") {
-          column_index = 7;
-          console.log("DEBUG: Got to case #7");
-        } else if (column_options[i] == "Water Rqmts") {
-          column_index = 8;
-          console.log("DEBUG: Got to case #8");
-        } else if (column_options[i] == "CA Native") {
-          column_index = 9;
-          console.log("DEBUG: Got to case #9");
-        } else if (column_options[i] == "UCD All-Star") {
-          column_index = 10;
-          console.log("DEBUG: Got to case #10");
-        } else if (column_options[i] == "Genus/Species") {
-          column_index = 11;
-          console.log("DEBUG: Got to case #11");
-        } else {
-          console.log("DEBUG: column_index not set!");
-        }
-        console.log("DEBUG: Interation: ",         i);
-        console.log("DEBUG: column_options[i] = ", column_options[i]);
-        console.log("DEBUG: column_index = ",      column_index);
+        if      (column_options[i] == "Common Name")   { column_index =  0; } 
+        else if (column_options[i] == "Genus/Species") { column_index =  1; }
+        else if (column_options[i] == "Type")          { column_index =  2; } 
+        else if (column_options[i] == "Height")        { column_index =  3; } 
+        else if (column_options[i] == "Width")         { column_index =  4; } 
+        else if (column_options[i] == "Bloom Color")   { column_index =  5; } 
+        else if (column_options[i] == "Bloom Season")  { column_index =  6; } 
+        else if (column_options[i] == "Pollinators")   { column_index =  7; }
+        else if (column_options[i] == "CA Native")     { column_index =  8; } 
+        else if (column_options[i] == "UCD All-Star")  { column_index =  9; }
+        else if (column_options[i] == "Sun Exposure")  { column_index = 10; } 
+        else if (column_options[i] == "Water Rqmts")   { column_index = 11; } 
+        else if (column_options[i] == "pH Range")      { column_index = 12; }
+        else if (column_options[i] == "Soil Type")     { column_index = 13; }
+        else if (column_options[i] == "USDA Zones")    { column_index = 14; }
+        else if (column_options[i] == "Sunset Zones")  { column_index = 15; }
+        else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection.includes(column_options[i])){
+          // display the column
           for (let i = 0; i < table.rows.length; i++) {
             table.rows[i].cells[column_index].style.display = "";
           }
         } else {
+          // hide the column
           for (let i = 0; i < table.rows.length; i++) {
             table.rows[i].cells[column_index].style.display = "none";
           }
@@ -412,17 +408,16 @@
       document.getElementById("main").style.marginLeft = "16%";
       document.getElementById("mySidebar").style.width = "15%";
       document.getElementById("mySidebar").style.display = "block";
-      document.getElementById("openNav").style.display = 'none';
+      // document.getElementById("openNav").style.display = 'none';
     }
     function w3_close() {
       document.getElementById("main").style.marginLeft = "0%";
       document.getElementById("mySidebar").style.display = "none";
-      document.getElementById("openNav").style.display = "inline-block";
+      // document.getElementById("openNav").style.display = "inline-block";
     }
 
     // Plant Table Column Chooser Script
     function column_chooser() {
-      console.log("DEBUG: Got to column chooser script")
       // Get the column chooser modal
       const column_chooser_modal = document.getElementById('column_chooser_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
@@ -435,12 +430,10 @@
 
     // Delete Plant Modal Script
     function plants_delete(id) {
-      console.log("DEBUG: Got to plants_delete script.  Plant ID= ", id)
       // Get the plant delete modal
       const plants_delete_modal  = document.getElementById('plants_delete_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
       url = "/plants_delete/" + id
-      console.log("DEBUG: url = ", url)
       fetch(url)
         .then(response => response.text())
         .then(html => {plants_delete_modal.innerHTML = html;})
@@ -448,8 +441,6 @@
       plants_delete_modal.style.display='block'
     }
 
-    // On page load, sort table alphabetically by Common Name
-    console.log("DEBUG: Page reloaded");
     // On page load, sort table alphabetically by Common Name
     window.onload = sortTable(0);
     // On page load, show colmuns as defined by ;column_selection
