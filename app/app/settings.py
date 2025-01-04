@@ -163,7 +163,7 @@ else:
     MEDIA_ROOT   = '/app/media/'
 
 # Directs user to login page when login is required
-# AR: needs to be fixed
+# AR: should be fixed
 LOGIN_REDIRECT_URL  = "/plants/index"
 LOGOUT_REDIRECT_URL = "/plants/index"
 

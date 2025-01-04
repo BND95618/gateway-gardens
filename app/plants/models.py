@@ -100,9 +100,12 @@ class Plant(models.Model):
     creator           = models.CharField(max_length=64, default="tbd", blank=True)
     creation_date     = models.DateField(auto_now_add=True)
     creator_notes     = QuillField(blank=True, null=True)
+    # Tags a plant for display/hidden in a summary table
     plant_show        = models.CharField(max_length=8,  default="no", blank=True)
+    # Indicates if a user has indicated that a particular plant is in their garden
+    # during the plant filtering process
     plant_mine        = models.CharField(max_length=8,  default="no", blank=True)
-    gardens           = models.ManyToManyField(Garden, blank=True)
+    gardens           = models.ManyToManyField(Garden, related_name="plants")
     slug              = models.SlugField(default="", null=False, blank=True)
 
     def __str__(self):

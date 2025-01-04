@@ -47,7 +47,7 @@ def gardens_summary(request):
     gardens = Garden.objects.all()
     template = loader.get_template("plants/gardens_summary.html")
     context = {}
-    # AR: If  user has > 1 garden then add garden selection code 
+    # AR: Only allow a user to have one garden defined
     my_gardens = 0
     all_gardens = 0
     for garden in gardens:
@@ -342,12 +342,16 @@ def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    # Get the user's column selection list
-    # AR: my_garden = Garden.objects.filter(owner = request.user.username)
+    # Get the user's column selection list and convert to a python list
+    # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
+    # column_selection = Garden.objects.filter(owner = request.user.username)
+    # column_selection_list = string2list(column_selection)
     gardens = Garden.objects.all()
     for garden in gardens:
         if (garden.owner == request.user.username):
             column_selection_list  = string2list(garden.column_selection)
+    # Obtain the plants that the current user has claimed for their garden - needed to populate the table
+    my_plants = MyPlant.objects.filter(owner = request.user.username) 
     # Executed when search request is initiated
     if request.method == 'POST':
         template = loader.get_template("plants/plants_summary.html")
@@ -373,10 +377,9 @@ def plants_summary(request):
         water_rqmts_value    = water_rqmts_option
         soil_type_value      = soil_type_option
         garden_value         = garden_option
-        # Plant query -> 'all' or those in the garden owned by the current user
-        # AR: My plants filter not working
-        if garden_option == "Mine":
-            plants = Plant.objects.filter(gardens__owner=request.user.username)
+        # Plant query -> Plants claimed by the current user or all plants in the database
+        if garden_value == "Mine":
+            plants = Plant.objects.filter(myplants__owner = request.user.username) 
         else:
             plants = Plant.objects.all()
         # Run through the search criteria to select the plants to show
@@ -391,14 +394,19 @@ def plants_summary(request):
                 ((water_rqmts_option  == plant.water_rqmts)  or (water_rqmts_option  == "Any") or (plant.water_rqmts  == "tbd")) and \
                 ((soil_type_option    in plant.soil_type)    or (soil_type_option    == "Any") or (plant.soil_type    == "tbd")):
                 # format multiselect attributes to remove [, ', and ]
-                plant.sun_exposure = string_display(plant.sun_exposure)
                 plant.bloom_color  = string_display(plant.bloom_color)
                 plant.bloom_season = string_display(plant.bloom_season)
                 plant.pollinators  = string_display(plant.pollinators)
+                plant.sun_exposure = string_display(plant.sun_exposure)
                 plant.water_rqmts  = string_display(plant.water_rqmts)
                 plant.soil_type    = string_display(plant.soil_type)
                 # show selected plant
                 plant.plant_show = "yes"
+                # check to determine if the current user has claimed the plant
+                plant.plant_mine = "no"
+                for my_plant in my_plants:
+                    if my_plant.plant == plant:
+                        plant.plant_mine = "yes"
             else:
                 plant.plant_show = "no"
         context = { "plants"             : plants,
@@ -427,7 +435,7 @@ def plants_summary(request):
                     'column_selection'   : column_selection_list,
                   }
         return render(request, "plants/plants_summary.html", context)
-    else: # Executed when [plants summary page is initialized
+    else: # Executed when plants summary page is initialized
         plants   = Plant.objects.all()
         my_plants = MyPlant.objects.filter(owner = request.user.username) 
         # set search field defaults

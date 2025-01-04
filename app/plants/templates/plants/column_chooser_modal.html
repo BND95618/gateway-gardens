@@ -5,6 +5,7 @@
       <h3>Column Chooser</h3>
     </div>
     <!-- Upon 'submit' return to the 'column_chooser' view to save selection into the db -->
+     <!-- AR: Move sumbit button in line with cancel button -->
     <form class="w3-container" action="{% url 'plants:column_chooser' %}" method="post">
       {% csrf_token %}
       <div class="w3-section">
