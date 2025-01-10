@@ -36,10 +36,22 @@ class Garden(models.Model):
     image_8       = models.ImageField(upload_to='images/', blank=True, null=True)
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
+    # Save the user's selection for plant search criteria
+    type_x_search       = models.CharField(max_length=32, default="tbd", blank=True)
+    bloom_color_search  = models.CharField(max_length=32, default="tbd", blank=True)
+    bloom_season_search = models.CharField(max_length=32, default="tbd", blank=True)
+    pollinators_search  = models.CharField(max_length=32, default="tbd", blank=True)
+    ca_native_search    = models.CharField(max_length=32, default="tbd", blank=True)
+    ucd_all_star_search = models.CharField(max_length=32, default="tbd", blank=True)
+    sun_exposure_search = models.CharField(max_length=32, default="tbd", blank=True)
+    water_rqmts_search  = models.CharField(max_length=32, default="tbd", blank=True)
+    soil_type_search    = models.CharField(max_length=32, default="tbd", blank=True)
+    garden_search       = models.CharField(max_length=32, default="tbd", blank=True)
+    # Save the user's selection for the plant column chooser
     column_selection = models.CharField(max_length=256,  blank=True,
                        default=["Common Name", "Type", "Height", "Width", 
                                 "Bloom Color", "Bloom Season", "Pollinators"],)
-    slug          = models.SlugField(default="tbd", null=False, blank=True)
+    slug             = models.SlugField(default="tbd", null=False, blank=True)
         
     def __str__(self):
         return self.name

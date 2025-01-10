@@ -35,11 +35,11 @@
        id="mySidebar">
     <form method="POST" action="{% url 'plants:plants_summary' %}" class="w3-container w3-card-4 w3-light-grey">
       {% csrf_token %}
-      <label for="id_type_x_option">Type:</label><br>
-      <select id="id_type_x_option" name="type_x_option" class="w3-select w3-margin-bottom">
+      <label for="id_type_x_search">Type:</label><br>
+      <select id="id_type_x_search" name="type_x_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
         {% for plant_type in plant_types %}
-          {% if plant_type == type_x_value %}
+          {% if plant_type == type_x_search %}
             <option value="{{ plant_type }}" selected>{{ plant_type }}</option>
           {% elif plant_type != "tbd" %}
             <option value="{{ plant_type }}"         >{{ plant_type }}</option>
@@ -47,11 +47,11 @@
         {% endfor %}
       </select>
       <br>
-      <label for="id_bloom_color_option">Bloom Color:</label><br>
-        <select id="id_bloom_color_option" name="bloom_color_option" class="w3-select w3-margin-bottom">
+      <label for="id_bloom_color_search">Bloom Color:</label><br>
+        <select id="id_bloom_color_search" name="bloom_color_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in bloom_color_opt %}
-            {% if x == bloom_color_value %}
+            {% if x == bloom_color_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -59,11 +59,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_bloom_season_option">Bloom Season:</label><br>
-        <select id="id_bloom_season_option" name="bloom_season_option" class="w3-select w3-margin-bottom">
+        <label for="id_bloom_season_search">Bloom Season:</label><br>
+        <select id="id_bloom_season_search" name="bloom_season_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in bloom_season_opt %}
-            {% if x == bloom_season_value %}
+            {% if x == bloom_season_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -71,11 +71,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_pollinators_option">Pollinators:</label><br>
-        <select id="id_pollinators_option" name="pollinators_option" class="w3-select w3-margin-bottom">
+        <label for="id_pollinators_search">Pollinators:</label><br>
+        <select id="id_pollinators_search" name="pollinators_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in pollinators_opt %}
-            {% if x == pollinators_value %}
+            {% if x == pollinators_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -83,11 +83,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_ca_native_option">California Native:</label><br>
-        <select id="id_ca_native_option" name="ca_native_option" class="w3-select w3-margin-bottom">
+        <label for="id_ca_native_search">California Native:</label><br>
+        <select id="id_ca_native_search" name="ca_native_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in ca_native_opt %}
-            {% if x == ca_native_value %}
+            {% if x == ca_native_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -95,11 +95,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_ucd_all_star_option">UCD All-Star:</label><br>
-        <select id="id_ucd_all_star_option" name="ucd_all_star_option" class="w3-select w3-margin-bottom">
+        <label for="id_ucd_all_star_search">UCD All-Star:</label><br>
+        <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in ucd_all_star_opt %}
-            {% if x == ucd_all_star_value %}
+            {% if x == ucd_all_star_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -107,11 +107,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_sun_exposure_option">Sun Exposure:</label><br>
-        <select id="id_sun_exposure_option" name="sun_exposure_option" class="w3-select w3-margin-bottom">
+        <label for="id_sun_exposure_search">Sun Exposure:</label><br>
+        <select id="id_sun_exposure_search" name="sun_exposure_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in sun_exposure_opt %}
-            {% if x == sun_exposure_value %}
+            {% if x == sun_exposure_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -119,11 +119,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_water_rqmts_option">Water Requirements:</label><br>
-        <select id="id_water_rqmts_option" name="water_rqmts_option" class="w3-select w3-margin-bottom">
+        <label for="id_water_rqmts_search">Water Requirements:</label><br>
+        <select id="id_water_rqmts_search" name="water_rqmts_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in water_rqmts_opt %}
-            {% if x == water_rqmts_value %}
+            {% if x == water_rqmts_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -131,11 +131,11 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_soil_type_option">Soil Requirements:</label><br>
-        <select id="id_soil_type_option" name="soil_type_option" class="w3-select w3-margin-bottom">
+        <label for="id_soil_type_search">Soil Requirements:</label><br>
+        <select id="id_soil_type_search" name="soil_type_search" class="w3-select w3-margin-bottom">
           <option value="Any" >Any</option>
           {% for x in soil_type_opt %}
-            {% if x == soil_type_value %}
+            {% if x == soil_type_search %}
               <option value="{{ x }}" selected>{{ x }}</option>
             {% elif x != "tbd" %}
               <option value="{{ x }}"         >{{ x }}</option>
@@ -143,9 +143,9 @@
           {% endfor %}
         </select>
         <br>
-        <label for="id_garden_option">All plants / My plants</label><br>
-        <select id="id_garden_option" name="garden_option" class="w3-select w3-margin-bottom">
-          {% if garden_value == "Any" %}
+        <label for="id_garden_search">All plants / My plants</label><br>
+        <select id="id_garden_search" name="garden_search" class="w3-select w3-margin-bottom">
+          {% if garden_search == "Any" %}
             <option value="Any"  selected>Any </option>
             <option value="Mine"         >Mine</option>
           {% else %}
@@ -443,9 +443,11 @@
       plants_delete_modal.style.display='block'
     }
 
+    // On page load, open the verticle search bar
+    window.onload = w3_open();
     // On page load, sort table alphabetically by Common Name
     window.onload = sortTable(0);
-    // On page load, show colmuns as defined by ;column_selection
+    // On page load, show colmuns as defined by column_selection
     window.onload = column_selector();
   </script>
 {% endblock js %}

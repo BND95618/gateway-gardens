@@ -342,57 +342,72 @@ def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    # Get the user's column selection list and convert to a python list
-    # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
-    # column_selection = Garden.objects.filter(owner = request.user.username)
-    # column_selection_list = string2list(column_selection)
-    gardens = Garden.objects.all()
-    for garden in gardens:
-        if (garden.owner == request.user.username):
-            column_selection_list  = string2list(garden.column_selection)
-    # Obtain the plants that the current user has claimed for their garden - needed to populate the table
-    my_plants = MyPlant.objects.filter(owner = request.user.username) 
-    # Executed when search request is initiated
+    
+    # Executed when search request is submitted
     if request.method == 'POST':
+ 
+        # Get the user's column selection list
+        # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
+        #     column_selection = Garden.objects.filter(owner = request.user.username)
+        #     column_selection_list = string2list(column_selection)
+        gardens = Garden.objects.all()
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                # Get the user's previously stored column display sections
+                column_selection_list  = string2list(garden.column_selection)
+
+        # Obtain the plants that the current user has claimed for their garden - needed to populate the table
+        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+
         template = loader.get_template("plants/plants_summary.html")
-        # Get the search criteria
-        type_x_option        = request.POST["type_x_option"]
-        bloom_color_option   = request.POST["bloom_color_option"]
-        bloom_season_option  = request.POST["bloom_season_option"]
-        pollinators_option   = request.POST["pollinators_option"]
-        ca_native_option     = request.POST["ca_native_option"]
-        ucd_all_star_option  = request.POST["ucd_all_star_option"]
-        sun_exposure_option  = request.POST["sun_exposure_option"]
-        water_rqmts_option   = request.POST["water_rqmts_option"]
-        soil_type_option     = request.POST["soil_type_option"]
-        garden_option        = request.POST["garden_option"]
-        # Save the search criteria - will be used to make the fields "sticky"
-        type_x_value         = type_x_option
-        bloom_color_value    = bloom_color_option
-        bloom_season_value   = bloom_season_option
-        pollinators_value    = pollinators_option
-        ca_native_value      = ca_native_option
-        ucd_all_star_value   = ucd_all_star_option
-        sun_exposure_value   = sun_exposure_option
-        water_rqmts_value    = water_rqmts_option
-        soil_type_value      = soil_type_option
-        garden_value         = garden_option
+        # Get the search criteria from the "http request"
+        type_x_search        = request.POST["type_x_search"]
+        bloom_color_search   = request.POST["bloom_color_search"]
+        bloom_season_search  = request.POST["bloom_season_search"]
+        pollinators_search   = request.POST["pollinators_search"]
+        ca_native_search     = request.POST["ca_native_search"]
+        ucd_all_star_search  = request.POST["ucd_all_star_search"]
+        sun_exposure_search  = request.POST["sun_exposure_search"]
+        water_rqmts_search   = request.POST["water_rqmts_search"]
+        soil_type_search     = request.POST["soil_type_search"]
+        garden_search        = request.POST["garden_search"]
+
+        # Store the search criteria in the user's garden db table
+        # AR: change if statement to a db look-up via user filter
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                garden.type_x_search       = type_x_search
+                garden.bloom_color_search  = bloom_color_search
+                garden.bloom_season_search = bloom_season_search
+                garden.pollinators_search  = pollinators_search
+                garden.ca_native_search    = ca_native_search
+                garden.ucd_all_star_search = ucd_all_star_search
+                garden.sun_exposure_search = sun_exposure_search
+                garden.water_rqmts_search  = water_rqmts_search
+                garden.soil_type_search    = soil_type_search
+                garden.garden_search       = soil_type_search
+                garden.save()
+
+        print("DEBUG: Type search criteria (post) = ", type_x_search)
+
         # Plant query -> Plants claimed by the current user or all plants in the database
-        if garden_value == "Mine":
+        # AR: Convert to db query
+        if garden_search == "Mine":
             plants = Plant.objects.filter(myplants__owner = request.user.username) 
         else:
             plants = Plant.objects.all()
+
         # Run through the search criteria to select the plants to show
         for plant in plants:
-            if  ((type_x_option       == plant.type_x)       or (type_x_option       == "Any") or (plant.type_x       == "tbd")) and \
-                ((bloom_color_option  in plant.bloom_color)  or (bloom_color_option  == "Any") or (plant.bloom_color  == "tbd")) and \
-                ((bloom_season_option in plant.bloom_season) or (bloom_season_option == "Any") or (plant.bloom_season == "tbd")) and \
-                ((pollinators_option  in plant.pollinators)  or (pollinators_option  == "Any") or (plant.pollinators  == "tbd")) and \
-                ((ca_native_option    == plant.ca_native)    or (ca_native_option    == "Any") or (plant.ca_native    == "tbd")) and \
-                ((ucd_all_star_option == plant.ucd_all_star) or (ucd_all_star_option == "Any") or (plant.ucd_all_star == "tbd")) and \
-                ((sun_exposure_option in plant.sun_exposure) or (sun_exposure_option == "Any") or (plant.sun_exposure == "tbd")) and \
-                ((water_rqmts_option  == plant.water_rqmts)  or (water_rqmts_option  == "Any") or (plant.water_rqmts  == "tbd")) and \
-                ((soil_type_option    in plant.soil_type)    or (soil_type_option    == "Any") or (plant.soil_type    == "tbd")):
+            if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
+                ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
+                ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
+                ((pollinators_search  in plant.pollinators)  or (pollinators_search  == "Any") or (plant.pollinators  == "tbd")) and \
+                ((ca_native_search    == plant.ca_native)    or (ca_native_search    == "Any") or (plant.ca_native    == "tbd")) and \
+                ((ucd_all_star_search == plant.ucd_all_star) or (ucd_all_star_search == "Any") or (plant.ucd_all_star == "tbd")) and \
+                ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
+                ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
+                ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")):
                 # format multiselect attributes to remove [, ', and ]
                 plant.bloom_color  = string_display(plant.bloom_color)
                 plant.bloom_season = string_display(plant.bloom_season)
@@ -403,12 +418,14 @@ def plants_summary(request):
                 # show selected plant
                 plant.plant_show = "yes"
                 # check to determine if the current user has claimed the plant
-                plant.plant_mine = "no"
                 for my_plant in my_plants:
                     if my_plant.plant == plant:
                         plant.plant_mine = "yes"
+                    else:
+                        plant.plant_mine = "no"
             else:
                 plant.plant_show = "no"
+        # Send selected plant details to template
         context = { "plants"             : plants,
                     # Search attributes
                     'plant_types'        : plant_types,
@@ -421,35 +438,51 @@ def plants_summary(request):
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
                     # Search option values from previous search if applicable else default of "Any"
-                    "type_x_value"       : type_x_value,
-                    "bloom_color_value"  : bloom_color_value,
-                    "bloom_season_value" : bloom_season_value,
-                    'pollinators_value'  : pollinators_value,
-                    'ca_native_value'    : ca_native_value,
-                    'ucd_all_star_value' : ucd_all_star_value,
-                    "sun_exposure_value" : sun_exposure_value,
-                    "water_rqmts_value"  : water_rqmts_value,
-                    "soil_type_value"    : soil_type_value,
-                    'garden_value'       : garden_value,
+                    "type_x_search"       : type_x_search,
+                    "bloom_color_search"  : bloom_color_search,
+                    "bloom_season_search" : bloom_season_search,
+                    'pollinators_search'  : pollinators_search,
+                    'ca_native_search'    : ca_native_search,
+                    'ucd_all_star_search' : ucd_all_star_search,
+                    "sun_exposure_search" : sun_exposure_search,
+                    "water_rqmts_search"  : water_rqmts_search,
+                    "soil_type_search"    : soil_type_search,
+                    'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
                   }
         return render(request, "plants/plants_summary.html", context)
-    else: # Executed when plants summary page is initialized
-        plants   = Plant.objects.all()
-        my_plants = MyPlant.objects.filter(owner = request.user.username) 
-        # set search field defaults
-        type_x_value       = "Any"
-        bloom_color_value  = "Any"
-        bloom_season_value = "Any"
-        pollinators_value  = "Any"
-        ca_native_value    = "Any"
-        ucd_all_star_value = "Any"
-        sun_exposure_value = "Any"
-        water_rqmts_value  = "Any"
-        soil_type_value    = "Any"
-        garden_value       = "Any"
+    # Executed when plants summary page is initialized
+    else:
+ 
+        # Get the user's column selection list and convert to a python list
+        # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
+        #     column_selection = Garden.objects.filter(owner = request.user.username)
+        #     column_selection_list = string2list(column_selection)
+        gardens = Garden.objects.all()
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                # Get the user's previously stored column display sections
+                column_selection_list  = string2list(garden.column_selection)
+                # Get the user's previously stored search criteria
+                type_x_search         = garden.type_x_search
+                bloom_color_search    = garden.bloom_color_search
+                bloom_season_search   = garden.bloom_season_search
+                pollinators_search    = garden.pollinators_search
+                ca_native_search      = garden.ca_native_search
+                ucd_all_star_search   = garden.ucd_all_star_search
+                sun_exposure_search   = garden.sun_exposure_search
+                water_rqmts_search    = garden.water_rqmts_search
+                soil_type_search      = garden.soil_type_search
+                garden_search         = garden.garden_search
 
+        print("DEBUG: Type search criteria (else) = ", type_x_search)
+
+        # Obtain the plants that the current user has claimed for their garden
+        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+
+        # Execute the search
+        plants   = Plant.objects.all()
         for plant in plants:
             # format multiselect attributes to remove [, ', and ]
             plant.bloom_color  = string_display(plant.bloom_color)
@@ -458,13 +491,27 @@ def plants_summary(request):
             plant.sun_exposure = string_display(plant.sun_exposure)
             plant.water_rqmts  = string_display(plant.water_rqmts)
             plant.soil_type    = string_display(plant.soil_type)
-            # show all plants on initial rendering
-            plant.plant_show = "yes"
-            # check to determine if the current user has already claimed the plant
-            plant.plant_mine = "no"
+            # Run through the search criteria to select the plants to show
+            if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
+                ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
+                ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
+                ((pollinators_search  in plant.pollinators)  or (pollinators_search  == "Any") or (plant.pollinators  == "tbd")) and \
+                ((ca_native_search    == plant.ca_native)    or (ca_native_search    == "Any") or (plant.ca_native    == "tbd")) and \
+                ((ucd_all_star_search == plant.ucd_all_star) or (ucd_all_star_search == "Any") or (plant.ucd_all_star == "tbd")) and \
+                ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
+                ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
+                ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")):
+                # show selected plant
+                plant.plant_show = "yes"
+            else:
+                plant.plant_show = "no"
+            # Check to see the current user has claimed the plant
             for my_plant in my_plants:
                 if my_plant.plant == plant:
                     plant.plant_mine = "yes"
+                else:
+                    plant.plant_mine = "no"
+        # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
         context = { "plants"             : plants,
                     "my_plants"          : my_plants,
@@ -479,14 +526,14 @@ def plants_summary(request):
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
                     # search field defaults
-                    "type_x_value"       : type_x_value,
-                    "pollinators_value"  : pollinators_value,
-                    'ca_native_value'    : ca_native_value,
-                    'ucd_all_star_value' : ucd_all_star_value,
-                    "sun_exposure_value" : sun_exposure_value,
-                    "water_rqmts_value"  : water_rqmts_value,
-                    "soil_type_value"    : soil_type_value,
-                    'garden_value'       : garden_value,
+                    "type_x_search"       : type_x_search,
+                    "pollinators_search"  : pollinators_search,
+                    'ca_native_search'    : ca_native_search,
+                    'ucd_all_star_search' : ucd_all_star_search,
+                    "sun_exposure_search" : sun_exposure_search,
+                    "water_rqmts_search"  : water_rqmts_search,
+                    "soil_type_vsearch"   : soil_type_search,
+                    'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
               }
@@ -888,12 +935,13 @@ def column_chooser(request):
         if form.is_valid():
             column_selection = form.cleaned_data.get('column_selection')
             # Associate the column selection to the user's garden
+            # AR: change if statement to a db look-up via user filter
             for garden in gardens:
                 if (garden.owner == request.user.username):
                     garden.column_selection = column_selection
                     garden.save()
         else:
-            return HttpResponseRedirect(reverse('plants:search')) 
+            return HttpResponseRedirect(reverse('plants:summary')) 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         for garden in gardens:
