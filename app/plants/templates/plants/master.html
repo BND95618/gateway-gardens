@@ -54,8 +54,8 @@
               </form>
             {% else %}
               <!-- AR -->
-              <button id="login_button"    class="w3-bar-item w3-button">Login    </button>
-              <button id="signup_button"   class="w3-bar-item w3-button">Sign Up  </button>
+              <button id="login_button_1"  class="w3-bar-item w3-button">Login    </button>
+              <button id="signup_button_1" class="w3-bar-item w3-button">Sign Up  </button>
               <button id="recovery_button" class="w3-bar-item w3-button">Recovery </button>
             {% endif %}
           </div>
@@ -96,8 +96,6 @@
     <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
     {% if not user.is_authenticated %}
     <script>
-      // The signup button is in the "account" drop-down menu
-      const signup_button = document.getElementById('signup_button')
       // There is a <dialog></dialog> at top of HTML body
       const signup_modal  = document.getElementById('signup_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
@@ -105,7 +103,8 @@
         .then(response => response.text())
         .then(html => {signup_modal.innerHTML = html;})
       // enable the model display upon clicking of the "signup" menu item
-      signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
+      signup_button_1.addEventListener("click", (event) => { signup_modal.style.display='block' })
+      signup_button_2.addEventListener("click", (event) => { signup_modal.style.display='block' })
     </script>
     {% endif %}
 
@@ -114,8 +113,6 @@
     <!-- Otherwise an error will occur since the addEventListener will not find the "login" menu item -->
     {% if not user.is_authenticated %}
       <script>
-        // The login button is in the "account" drop-down menu
-        const login_button = document.getElementById("login_button")
         // There is a <dialog></dialog> at top of HTML body
         const login_modal  = document.getElementById('login_modal')
         // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
@@ -123,7 +120,8 @@
           .then(response => response.text())
           .then(html => {login_modal.innerHTML = html;})
         // enable the model display upon clicking of the "login" menu item
-        login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
+        login_button_1.addEventListener("click", (event) => { login_modal.style.display='block' })
+        login_button_2.addEventListener("click", (event) => { login_modal.style.display='block' })
       </script>
     {% endif %}
 
@@ -132,8 +130,6 @@
     <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
     {% if user.is_authenticated %}
       <script>
-        // The signup button is in the "account" drop-down menu
-        const update_button = document.getElementById('update_button')
         // There is a <dialog></dialog> at top of HTML body
         const update_modal  = document.getElementById('update_modal')
         // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
@@ -161,6 +157,17 @@
         // enable the model display upon clicking of the "recovery" menu item
         recovery_button.addEventListener("click", (event) => { recovery_modal.style.display='block' })
       </script>
+      // Switch from login modal to sign-up modal
+      <script>
+        function login2SignUp() {
+          login_modal.style.display='none';
+          signup_modal.style.display='block';
+        }
+        {% if signup_username_error == "duplicate" %}
+          window.onload = login2SignUp()
+        {% endif %}
+      </script>
+
     {% endif %}
 
     <!-- Footer -->

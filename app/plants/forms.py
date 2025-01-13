@@ -262,12 +262,14 @@ class GardenAddUpdateForm(forms.Form):
 		)
 	city = forms.CharField(
 		label="City", 
-		max_length=64,
+		max_length=64, 
+		required=False,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	state = forms.CharField(
 		label="State", 
-		max_length=64,
+		max_length=64, 
+		required=False,
 		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
 		)
 	usda_zone = forms.ChoiceField(

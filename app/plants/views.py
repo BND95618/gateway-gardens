@@ -460,6 +460,7 @@ def plants_summary(request):
         #     column_selection = Garden.objects.filter(owner = request.user.username)
         #     column_selection_list = string2list(column_selection)
         gardens = Garden.objects.all()
+        user_garden_found = False
         for garden in gardens:
             if (garden.owner == request.user.username):
                 # Get the user's previously stored column display sections
@@ -475,6 +476,11 @@ def plants_summary(request):
                 water_rqmts_search    = garden.water_rqmts_search
                 soil_type_search      = garden.soil_type_search
                 garden_search         = garden.garden_search
+                user_garden_found     = True
+                break # once the user's garden is found exit the loop
+        # the current user needs to have a registered garden
+        if (user_garden_found == False):
+            return HttpResponseRedirect(reverse('plants:gardens_add'))
 
         print("DEBUG: Type search criteria (else) = ", type_x_search)
 
@@ -827,16 +833,38 @@ def user_signup(request):
             email           = form.cleaned_data.get('email')
             first_name      = form.cleaned_data.get('first_name')
             last_name       = form.cleaned_data.get('last_name')
-            # AR: Check validity of username (unique, characters) and handle appropriately
+            # AR: Check username uniqueness and handle appropriately
+            if User.objects.filter(username=signup_username).exists():
+                print("username already taken!")
+                signup_username_error = "duplicate"
+                messages.error(request, "username has already been taken")
+                context = { 'signup_username_error' : signup_username_error }
+                return render(request, 'plants/index.html', context)
+            # AR: Check username characters and handle appropriately
             # AR: Handle case where password is unuseable
-            # AR: Handle case where email is unuseable 
-            user = User.objects.create_user(signup_username, email, signup_password)
-            user.first_name = first_name
-            user.last_name  = last_name
-            user.save()
-            # Add the user to the "Gardener" group - default
-            group = Group.objects.get(name='Gardener')
-            group.user_set.add(user)
+            # AR: Handle case where email is unuseable
+            else:
+                user = User.objects.create_user(signup_username, email, signup_password)
+                user.first_name = first_name
+                user.last_name  = last_name
+                user.save()
+                # Add the user to the "Gardener" group - default
+                group = Group.objects.get(name='Gardener')
+                group.user_set.add(user)
+                # Create a Garden object for the user
+                garden = Garden()
+                garden.owner = signup_username
+                garden.name  = signup_username + "'s Garden"
+                garden.save()
+                # Authenticate the user
+                user = authenticate(request, username=signup_username, password=signup_password)
+                # Login the user if they have been authenticated else indicate login failure
+                if user is not None:
+                    login(request, user)
+                    return render(request, 'plants/index.html')
+                else:
+                    # AR: Indicate on password input form that the username and/or password was invalid
+                    return render(request, 'plants/index.html')
         return render(request, 'plants/index.html')
     else:
         form = UserSignupForm()

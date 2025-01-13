@@ -2,18 +2,24 @@
 
   <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
     <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
-      <h3>User Sign Up</h3>
+      <h3>User Sign-Up</h3>
+      {% if messages %}
+        {% for message in messages %}
+          <p class="w3-text-red">Error: {{ message }}</p>
+        {% endfor %}
+      {% endif %}
     </div>
     <form class="w3-container" action="{% url 'plants:user_signup' %}" method="post">
       {% csrf_token %}
       <div class="w3-section">
         {{ form.as_p }}
-        <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Signup</button>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button class="w3-button w3-green" type="submit">Signup</button>
+        <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
+        <button onclick="document.getElementById('signup_modal').style.display='none'"
+                type="button" class="w3-button w3-red">Cancel</button>
       </div>
     </form>
-    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-      <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
-      <button onclick="document.getElementById('signup_modal').style.display='none'"
-              type="button" class="w3-button w3-red">Cancel</button>
-    </div>
+
   </div>

@@ -49,47 +49,58 @@
 {% block content %}
 <!-- main content -->
   <div class="w3-container" style="margin-top:150px; margin-bottom:32px;">
-    <div class="w3-content w3-display-container" style="max-width:900px">
-      <!-- Load the images -->
-      {% if garden.image_1 %}
-        <img src="{{ garden.image_1.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_2 %}
-        <img src="{{ garden.image_2.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_3 %}
-        <img src="{{ garden.image_3.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_4 %}
-        <img src="{{ garden.image_4.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_5 %}
-        <img src="{{ garden.image_5.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_6 %}
-        <img src="{{ garden.image_6.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_7 %}
-        <img src="{{ garden.image_7.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      {% if garden.image_8 %}
-        <img src="{{ garden.image_8.url }}" alt="No garden image found" class="mySlides" style="width:100%">
-      {% endif %}
-      <!-- Slide show -->
-      <!-- AR: Display captions -->
-      <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
-        <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-        <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(4)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(5)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(6)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(7)"></span>
-        <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(8)"></span>
+    <!-- Check to see it there are any images to display -->
+    {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
+      <h3>
+        No garden photos to display
+        <br>
+        Please select 'Menu -> Update' to add photos of your garden
+        <br>
+      </h3>
+    {% else %}
+      <!-- Load images for display -->
+      <div class="w3-content w3-display-container" style="max-width:900px">
+        <!-- Load the images -->
+        {% if garden.image_1 %}
+          <img src="{{ garden.image_1.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_2 %}
+          <img src="{{ garden.image_2.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_3 %}
+          <img src="{{ garden.image_3.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_4 %}
+          <img src="{{ garden.image_4.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_5 %}
+          <img src="{{ garden.image_5.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_6 %}
+          <img src="{{ garden.image_6.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_7 %}
+          <img src="{{ garden.image_7.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        {% if garden.image_8 %}
+          <img src="{{ garden.image_8.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+        {% endif %}
+        <!-- Slide show -->
+        <!-- AR: Display captions -->
+        <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
+          <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+          <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(4)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(5)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(6)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(7)"></span>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(8)"></span>
+        </div>
       </div>
-    </div>
+    {% endif %}
   </div>
 {% endblock content%}
 

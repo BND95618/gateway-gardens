@@ -11,13 +11,13 @@ from django_quill.fields import QuillField
 
 class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
-    name          = models.CharField(max_length=64, default="tbd", blank=True)
-    city          = models.CharField(max_length=32, default="tbd", blank=True)
-    state         = models.CharField(max_length=16, default="tbd", blank=True)
-    owner         = models.CharField(max_length=64, default="tbd", blank=True)
-    usda_zone     = models.CharField(max_length=16, default="tbd", blank=True)
-    sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True)
-    question      = models.CharField(max_length=8,  default="No",  blank=True)
+    name          = models.CharField(max_length=64, default="tbd", blank=True, null=True)
+    city          = models.CharField(max_length=32, default="tbd", blank=True, null=True)
+    state         = models.CharField(max_length=16, default="tbd", blank=True, null=True)
+    owner         = models.CharField(max_length=64, default="tbd", blank=True, null=True)
+    usda_zone     = models.CharField(max_length=16, default="tbd", blank=True, null=True)
+    sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
+    question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
     image_1       = models.ImageField(upload_to='images/', blank=True, null=True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -37,16 +37,16 @@ class Garden(models.Model):
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     # Save the user's selection for plant search criteria
-    type_x_search       = models.CharField(max_length=32, default="tbd", blank=True)
-    bloom_color_search  = models.CharField(max_length=32, default="tbd", blank=True)
-    bloom_season_search = models.CharField(max_length=32, default="tbd", blank=True)
-    pollinators_search  = models.CharField(max_length=32, default="tbd", blank=True)
-    ca_native_search    = models.CharField(max_length=32, default="tbd", blank=True)
-    ucd_all_star_search = models.CharField(max_length=32, default="tbd", blank=True)
-    sun_exposure_search = models.CharField(max_length=32, default="tbd", blank=True)
-    water_rqmts_search  = models.CharField(max_length=32, default="tbd", blank=True)
-    soil_type_search    = models.CharField(max_length=32, default="tbd", blank=True)
-    garden_search       = models.CharField(max_length=32, default="tbd", blank=True)
+    type_x_search       = models.CharField(max_length=32, default="Any", blank=True)
+    bloom_color_search  = models.CharField(max_length=32, default="Any", blank=True)
+    bloom_season_search = models.CharField(max_length=32, default="Any", blank=True)
+    pollinators_search  = models.CharField(max_length=32, default="Any", blank=True)
+    ca_native_search    = models.CharField(max_length=32, default="Any", blank=True)
+    ucd_all_star_search = models.CharField(max_length=32, default="Any", blank=True)
+    sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
+    water_rqmts_search  = models.CharField(max_length=32, default="Any", blank=True)
+    soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
+    garden_search       = models.CharField(max_length=32, default="Any", blank=True)
     # Save the user's selection for the plant column chooser
     column_selection = models.CharField(max_length=256,  blank=True,
                        default=["Common Name", "Type", "Height", "Width", 
