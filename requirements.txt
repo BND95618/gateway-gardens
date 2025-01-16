@@ -6,6 +6,7 @@ boto3==1.26.33
 pillow==10.4.0
 django-quill-editor==0.1.42
 django-flatpickr==2.0.3
+email-validator==2.2.0
 
 # #
 # Django==5.1.1

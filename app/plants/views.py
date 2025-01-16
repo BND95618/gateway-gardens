@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group                 # User signup
 from django.contrib.auth        import authenticate, login, logout # User login/logout
 
+from email_validator import validate_email
+
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
@@ -371,7 +373,6 @@ def plants_summary(request):
         water_rqmts_search   = request.POST["water_rqmts_search"]
         soil_type_search     = request.POST["soil_type_search"]
         garden_search        = request.POST["garden_search"]
-
         # Store the search criteria in the user's garden db table
         # AR: change if statement to a db look-up via user filter
         for garden in gardens:
@@ -387,9 +388,6 @@ def plants_summary(request):
                 garden.soil_type_search    = soil_type_search
                 garden.garden_search       = soil_type_search
                 garden.save()
-
-        print("DEBUG: Type search criteria (post) = ", type_x_search)
-
         # Plant query -> Plants claimed by the current user or all plants in the database
         # AR: Convert to db query
         if garden_search == "Mine":
@@ -481,12 +479,8 @@ def plants_summary(request):
         # the current user needs to have a registered garden
         if (user_garden_found == False):
             return HttpResponseRedirect(reverse('plants:gardens_add'))
-
-        print("DEBUG: Type search criteria (else) = ", type_x_search)
-
         # Obtain the plants that the current user has claimed for their garden
         my_plants = MyPlant.objects.filter(owner = request.user.username) 
-
         # Execute the search
         plants   = Plant.objects.all()
         for plant in plants:
@@ -830,19 +824,59 @@ def user_signup(request):
         if form.is_valid():
             signup_username = form.cleaned_data.get('signup_username')
             signup_password = form.cleaned_data.get('signup_password')
+            signup_password_2 = form.cleaned_data.get('signup_password_2')
             email           = form.cleaned_data.get('email')
             first_name      = form.cleaned_data.get('first_name')
             last_name       = form.cleaned_data.get('last_name')
-            # AR: Check username uniqueness and handle appropriately
+            signup_input_error = "no"
+            # Input Validation: username uniqueness
             if User.objects.filter(username=signup_username).exists():
-                print("username already taken!")
-                signup_username_error = "duplicate"
+                signup_input_error = "yes"
                 messages.error(request, "username has already been taken")
-                context = { 'signup_username_error' : signup_username_error }
+            # Input Validation: username must be at least 4 characters long
+            elif (len(signup_username) < 4):
+                signup_input_error = "yes"
+                messages.error(request, "username must be at least 4 characters long")
+            # Input Validation: passwords do not match
+            elif (signup_password != signup_password_2):
+                signup_input_error = "yes"
+                messages.error(request, "passwords do not match")
+            # Input Validation: password must be at least 8 characters long
+            elif (len(signup_password) < 8):
+                signup_input_error = "yes"
+                messages.error(request, "password must be at least 8 characters long")
+            # Input Validation: password must contain at least one uppercase letter
+            elif not any(char.isupper() for char in signup_password):
+                signup_input_error = "yes"
+                messages.error(request, "password requires at least one uppercase letter")
+            # Input Validation: password must contain at least one lowecaser letter
+            elif not any(char.islower() for char in signup_password):
+                signup_input_error = "yes"
+                messages.error(request, "password requires at least one lowercase letter")
+            # Input Validation: password must contain at least one number
+            elif not any(char.isdigit() for char in signup_password):
+                signup_input_error = "yes"
+                messages.error(request, "password requires at least one number")
+            # Input Validation: password must contain at least one special character
+            elif not any(char in "!@#$%^&*()(_+)" for char in signup_password):
+                signup_input_error = "yes"
+                messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
+            # Input Validation: duplicate e-mail
+            elif User.objects.filter(email=email).exists():
+                signup_input_error = "yes"
+                messages.error(request, "email has already been taken")
+            # Input Validation: e-mail format
+            else:
+                try:
+                    emailinfo = validate_email(email, check_deliverability=False)
+                    email= emailinfo.normalized
+                except:
+                    signup_input_error = "yes"
+                    messages.error(request, "invalid e-mail address'")
+            if (signup_input_error == "yes"):
+                # AR: Prepopulate fields
+                context = { 'signup_input_error' : signup_input_error }
                 return render(request, 'plants/index.html', context)
-            # AR: Check username characters and handle appropriately
-            # AR: Handle case where password is unuseable
-            # AR: Handle case where email is unuseable
             else:
                 user = User.objects.create_user(signup_username, email, signup_password)
                 user.first_name = first_name

@@ -169,7 +169,12 @@ class UserSignupForm(forms.Form):
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class' : 'w3-input w3-border'}),
 		)
-	email = forms.EmailField(
+	signup_password_2 = forms.CharField(
+		label="Password (reconfirm)", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class' : 'w3-input w3-border'}),
+		)
+	email = forms.CharField(
 		label="e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 

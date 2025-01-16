@@ -163,7 +163,7 @@
           login_modal.style.display='none';
           signup_modal.style.display='block';
         }
-        {% if signup_username_error == "duplicate" %}
+        {% if signup_input_error == "yes" %}
           window.onload = login2SignUp()
         {% endif %}
       </script>
