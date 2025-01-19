@@ -5,17 +5,21 @@
       <h3>Column Chooser</h3>
     </div>
     <!-- Upon 'submit' return to the 'column_chooser' view to save selection into the db -->
-     <!-- AR: Move sumbit button in line with cancel button -->
-    <form class="w3-container" action="{% url 'plants:column_chooser' %}" method="post">
+    <form action="{% url 'plants:column_chooser' %}" method="post">
       {% csrf_token %}
-      <div class="w3-section">
+      <div class="w3-container">
         {{ form.as_p }}
-        <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Confirm</button>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button type="submit" class="w3-button w3-round-large w3-green">
+          Confirm
+        </button>
+        <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
+        <button onclick="document.getElementById('column_chooser_modal').style.display='none'"
+                type="button" 
+                class="w3-button w3-round-large w3-red">
+          Cancel
+        </button>
       </div>
     </form>
-    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-      <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
-      <button onclick="document.getElementById('column_chooser_modal').style.display='none'"
-              type="button" class="w3-button w3-red">Cancel</button>
-    </div>
   </div>

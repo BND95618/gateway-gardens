@@ -4,17 +4,21 @@
   <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
     <h3>User Login</h3>
   </div>
-  <form class="w3-container" action="{% url 'plants:user_login' %}" method="post">
+  <form action="{% url 'plants:user_login' %}" method="post">
     {% csrf_token %}
-    <div class="w3-section">
+    <div class="w3-container">
       {{ form.as_p }}
-      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-        <button                              type="submit" class="w3-button w3-round-large w3-green" >Login</button>
-        <!-- Sign-up modal -->
-        <button onclick="login2SignUp()"     type="button" class="w3-button w3-round-large w3-grey"  >Sign-up</button>
-        <!-- AR: Go to reset password page -->
-        <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
-      </div>
+    </div>
+    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+      <button                          type="submit" class="w3-button w3-round-large w3-green" >
+        Login
+      </button>
+      <!-- Sign-up modal -->
+      <button onclick="login2SignUp()" type="button" class="w3-button w3-round-large w3-grey"  >
+        Sign-up
+      </button>
+      <!-- AR: Go to reset password page -->
+      <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
     </div>
   </form>
 </div>

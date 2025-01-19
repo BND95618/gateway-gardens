@@ -54,8 +54,8 @@
               </form>
             {% else %}
               <!-- AR -->
-              <button id="login_button_1"  class="w3-bar-item w3-button">Login    </button>
-              <button id="signup_button_1" class="w3-bar-item w3-button">Sign Up  </button>
+              <button id="login_button"  class="w3-bar-item w3-button">Login    </button>
+              <button id="signup_button" class="w3-bar-item w3-button">Sign Up  </button>
               <button id="recovery_button" class="w3-bar-item w3-button">Recovery </button>
             {% endif %}
           </div>
@@ -91,44 +91,8 @@
       <!-- Insert template Javascript here -->
     {% endblock js %}
 
-    <!-- User Signup Modal Script -->
-    <!-- Do not load the signup script if the user is already logged in -->
-    <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
-    {% if not user.is_authenticated %}
-    <script>
-      // There is a <dialog></dialog> at top of HTML body
-      const signup_modal  = document.getElementById('signup_modal')
-      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
-      fetch("{% url 'plants:user_signup' %}") 
-        .then(response => response.text())
-        .then(html => {signup_modal.innerHTML = html;})
-      // enable the model display upon clicking of the "signup" menu item
-      signup_button_1.addEventListener("click", (event) => { signup_modal.style.display='block' })
-      signup_button_2.addEventListener("click", (event) => { signup_modal.style.display='block' })
-    </script>
-    {% endif %}
-
-    <!-- User Login Modal Script -->
-    <!-- Do not load the login script if the user is already logged in -->
-    <!-- Otherwise an error will occur since the addEventListener will not find the "login" menu item -->
-    {% if not user.is_authenticated %}
-      <script>
-        // There is a <dialog></dialog> at top of HTML body
-        const login_modal  = document.getElementById('login_modal')
-        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
-        fetch("{% url 'plants:user_login' %}") 
-          .then(response => response.text())
-          .then(html => {login_modal.innerHTML = html;})
-        // enable the model display upon clicking of the "login" menu item
-        login_button_1.addEventListener("click", (event) => { login_modal.style.display='block' })
-        login_button_2.addEventListener("click", (event) => { login_modal.style.display='block' })
-      </script>
-    {% endif %}
-
-    <!-- User Update Modal Script -->
-    <!-- Do not load the update script if the user is not logged in -->
-    <!-- Otherwise an error will occur since the addEventListener will not find the "signup" menu item -->
     {% if user.is_authenticated %}
+      <!-- User Update Modal Script -->
       <script>
         // There is a <dialog></dialog> at top of HTML body
         const update_modal  = document.getElementById('update_modal')
@@ -138,17 +102,43 @@
           .then(html => {update_modal.innerHTML = html;})
         // enable the model display upon clicking of the "signup" menu item
         update_button.addEventListener("click", (event) => { update_modal.style.display='block' })
+
+        // Show update modal if there as an input error on the user update form
+        function showUpdateModal() {
+          update_modal.style.display='block';
+        }
+        {% if update_input_error == "yes" %}
+          window.onload = showUpdateModal();
+        {% endif %}
       </script>
     {% endif %}
-
-    <!-- User Recovery Modal Script -->
-    <!-- Do not load the recovery script if the user is already logged in -->
-    <!-- Otherwise an error will occur since the addEventListener will not find the "recovery" menu item -->
+  
     {% if not user.is_authenticated %}
       <script>
+        // User Signup Modal Code
+        // There is a <div></div> for the modal at top of HTML body
+        const signup_modal  = document.getElementById('signup_modal')
+        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+        fetch("{% url 'plants:user_signup' %}") 
+          .then(response => response.text())
+          .then(html => {signup_modal.innerHTML = html;})
+        // enable the model display upon clicking of the "signup" menu item
+        signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
+
+        // User Login Modal Code
+        // There is a <div></div> for the modal at top of HTML body
+        const login_modal  = document.getElementById('login_modal')
+        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+        fetch("{% url 'plants:user_login' %}") 
+          .then(response => response.text())
+          .then(html => {login_modal.innerHTML = html;})
+        // enable the model display upon clicking of the "login" menu item
+        login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
+
+        // User Recovery Modal Code
         // The recovery button is in the "account" drop-down menu
         const recovery_button = document.getElementById("recovery_button")
-        // There is a <dialog></dialog> at top of HTML body
+        // There is a <div></div> for the modal at top of HTML body
         const recovery_modal  = document.getElementById('recovery_modal')
         // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses. 
         fetch("{% url 'plants:user_recovery' %}") 
@@ -156,20 +146,18 @@
           .then(html => {recovery_modal.innerHTML = html;})
         // enable the model display upon clicking of the "recovery" menu item
         recovery_button.addEventListener("click", (event) => { recovery_modal.style.display='block' })
-      </script>
-      // Switch from login modal to sign-up modal
-      <script>
+
+        // Switch from login modal to sign-up modal
         function login2SignUp() {
           login_modal.style.display='none';
           signup_modal.style.display='block';
         }
         {% if signup_input_error == "yes" %}
-          window.onload = login2SignUp()
+          window.onload = login2SignUp();
         {% endif %}
       </script>
-
     {% endif %}
-
+  
     <!-- Footer -->
     <footer class="w3-container w3-green w3-margin-top">
       <h4 class="w3-center">Footer - Under Construction</h4>

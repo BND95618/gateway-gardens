@@ -217,7 +217,13 @@ class UserUpdateForm(forms.Form):
 		required=False,
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)
-	new_email = forms.EmailField(
+	new_password_2 = forms.CharField(
+		label="New Password (reconfirm)", 
+		max_length=64,
+		required=False,
+		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		)
+	new_email = forms.CharField(
 		label="New e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 

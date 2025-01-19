@@ -154,9 +154,13 @@
           {% endif %}
         </select>
         <br>
-      <input type="submit" value="Submit" class="w3-button w3-border w3-green w3-round-large w3-margin-bottom">
-      <a href="{% url 'plants:plants_summary' %}" class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">Reset</a>
-      <button class="w3-button w3-border w3-red w3-round-large w3-margin-bottom" onclick="w3_close()">Cancel</button>
+      <input type="submit" 
+             value="Submit" 
+             class="w3-button w3-border w3-green w3-round-large w3-margin-bottom">
+      <a     href="{% url 'plants:plants_summary' %}" 
+             class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">
+        Reset
+      </a>
     </form>
   </div>
 
@@ -288,7 +292,7 @@
                     <i class="material-icons">add</i>
                     <span style="position:absolute; left:0; bottom:34px;" 
                           class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
-                      My Plant
+                      Add to My Plants
                     </span>
                   </a>
                 {% endif %}
@@ -356,6 +360,7 @@
       }
     }
  
+    // Column selector
     function column_selector(){
       const table = document.getElementById("plantTable");
       // 

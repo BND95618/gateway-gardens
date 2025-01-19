@@ -18,7 +18,6 @@ from .forms  import PlantAddUpdateForm, PlantCommentForm
 import math
 import os
 
-# AR: Test for errors immediately after a new user sign-up
 # Define attribute select options
 plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
 bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", "blue", "orange"]
@@ -452,7 +451,6 @@ def plants_summary(request):
         return render(request, "plants/plants_summary.html", context)
     # Executed when plants summary page is initialized
     else:
- 
         # Get the user's column selection list and convert to a python list
         # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
         #     column_selection = Garden.objects.filter(owner = request.user.username)
@@ -505,12 +503,18 @@ def plants_summary(request):
                 plant.plant_show = "yes"
             else:
                 plant.plant_show = "no"
-            # Check to see the current user has claimed the plant
+            # Check to see if the current user has claimed the plant
             for my_plant in my_plants:
                 if my_plant.plant == plant:
                     plant.plant_mine = "yes"
+                    print("DEBUG: claimed plant: ", plant.commonName)
                 else:
                     plant.plant_mine = "no"
+
+        for plant in plants:
+            if plant.plant_mine == "yes":
+                print("DEBUG: final claimed plant: ", plant.commonName)
+
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
         context = { "plants"             : plants,
@@ -551,6 +555,7 @@ def plants_details(request, id):
     plant.bloom_color  = string_display(plant.bloom_color)
     plant.bloom_season = string_display(plant.bloom_season)
     plant.pollinators  = string_display(plant.pollinators)
+    plant.soil_type    = string_display(plant.soil_type)
 
     if (plant.height_inch != 0):
         height_adj = plant.height_feet + (plant.height_inch / 12)
@@ -820,14 +825,13 @@ def user_signup(request):
     """ Render the User Signup Page for Gateway Gardens app """
     if request.POST:
         form = UserSignupForm(request.POST)
-        # AR: Add second password entry for comparison to frst password entry
         if form.is_valid():
-            signup_username = form.cleaned_data.get('signup_username')
-            signup_password = form.cleaned_data.get('signup_password')
+            signup_username   = form.cleaned_data.get('signup_username')
+            signup_password   = form.cleaned_data.get('signup_password')
             signup_password_2 = form.cleaned_data.get('signup_password_2')
-            email           = form.cleaned_data.get('email')
-            first_name      = form.cleaned_data.get('first_name')
-            last_name       = form.cleaned_data.get('last_name')
+            email             = form.cleaned_data.get('email')
+            first_name        = form.cleaned_data.get('first_name')
+            last_name         = form.cleaned_data.get('last_name')
             signup_input_error = "no"
             # Input Validation: username uniqueness
             if User.objects.filter(username=signup_username).exists():
@@ -874,9 +878,17 @@ def user_signup(request):
                     signup_input_error = "yes"
                     messages.error(request, "invalid e-mail address'")
             if (signup_input_error == "yes"):
-                # AR: Prepopulate fields
-                context = { 'signup_input_error' : signup_input_error }
+                # AR: Prepopulate fields - the initialization is not working correctly
+                form = UserSignupForm(initial={'signup_username'   : signup_username,
+                                               'signup_password'   : signup_password,
+                                               'email'      : email,
+                                               'first_name' : first_name,
+                                               'last_name'  : last_name,
+                                       })
+                context = { 'form'               : form,
+                            'signup_input_error' : signup_input_error }
                 return render(request, 'plants/index.html', context)
+                # return render(request, 'plants/user_signup_modal.html', context)
             else:
                 user = User.objects.create_user(signup_username, email, signup_password)
                 user.first_name = first_name
@@ -912,24 +924,86 @@ def user_update(request):
     user = request.user
     if request.POST:
         form = UserUpdateForm(request.POST)
-        # AR: Add second password entry into html for js comparison to frst password entry
         if form.is_valid():
             new_username   = form.cleaned_data.get('new_username')
             new_password   = form.cleaned_data.get('new_password')
+            new_password_2 = form.cleaned_data.get('new_password_2')
             new_email      = form.cleaned_data.get('new_email')
             new_first_name = form.cleaned_data.get('new_first_name')
             new_last_name  = form.cleaned_data.get('new_last_name')
-            # AR: Check validity of username (unique, characters) and handle appropriately
-            # AR: Handle case where password is unuseable
-            # AR: Handle case where email is unuseable 
-            user.username   = new_username
-            # Check to see if a new password has been entered
-            if new_password:
-                user.password   = new_password
-            user.email      = new_email
-            user.first_name = new_first_name
-            user.last_name  = new_last_name
-            user.save()
+            update_input_error = "no"
+            if (new_username != user.username):
+                # Input Validation: username uniqueness
+                if User.objects.filter(username=new_username).exists():
+                    update_input_error = "yes"
+                    messages.error(request, "username has already been taken")
+                # Input Validation: username must be at least 4 characters long
+                elif (len(new_username) < 4):
+                    update_input_error = "yes"
+                    messages.error(request, "username must be at least 4 characters long")
+            elif ((new_password != "") and (new_password_2 != "")):
+                # Input Validation: passwords do not match
+                if (new_password != new_password_2):
+                    update_input_error = "yes"
+                    messages.error(request, "passwords do not match")
+                # Input Validation: password must be at least 8 characters long
+                elif (len(new_password) < 8):
+                    update_input_error = "yes"
+                    messages.error(request, "password must be at least 8 characters long")
+                # Input Validation: password must contain at least one uppercase letter
+                elif not any(char.isupper() for char in new_password):
+                    update_input_error = "yes"
+                    messages.error(request, "password requires at least one uppercase letter")
+                # Input Validation: password must contain at least one lowecaser letter
+                elif not any(char.islower() for char in new_password):
+                    update_input_error = "yes"
+                    messages.error(request, "password requires at least one lowercase letter")
+                # Input Validation: password must contain at least one number
+                elif not any(char.isdigit() for char in new_password):
+                    update_input_error = "yes"
+                    messages.error(request, "password requires at least one number")
+                # Input Validation: password must contain at least one special character
+                elif not any(char in "!@#$%^&*()(_+)" for char in new_password):
+                    update_input_error = "yes"
+                    messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
+            elif (new_email != user.email):
+                # Input Validation: duplicate e-mail
+                if User.objects.filter(email=new_email).exists():
+                    update_input_error = "yes"
+                    messages.error(request, "email has already been taken")
+                # Input Validation: e-mail format
+                else:
+                    try:
+                        emailinfo = validate_email(new_email, check_deliverability=False)
+                        new_email= emailinfo.normalized
+                    except:
+                        update_input_error = "yes"
+                        messages.error(request, "invalid e-mail address")
+            if (update_input_error == "yes"):
+                # Prepopulate fields - the initialization is not working correctly
+                form = UserUpdateForm(initial={'new_username'   : new_username,
+                                               'new_password'   : new_password,
+                                               'new_email'      : new_email,
+                                               'new_first_name' : new_first_name,
+                                               'new_last_name'  : new_last_name,
+                                       })
+                context = { 'form'               : form,
+                            'update_input_error' : update_input_error }
+                return render(request, 'plants/index.html', context)
+            else:
+                user.username   = new_username
+                # Check to see if a new password has been entered
+                if new_password:
+                    user.set_password(new_password)
+                user.email      = new_email
+                user.first_name = new_first_name
+                user.last_name  = new_last_name
+                user.save()
+                # If the password has been updated, xplicitly logout the user so that login modal 
+                # will be displayed.  Django's default behavior is to require the user to log back 
+                # in after a password change
+                if new_password:
+                    logout(request)
         return render(request, 'plants/index.html')
     else:
         form = UserUpdateForm(initial={'new_username'   : user.username,
@@ -955,7 +1029,6 @@ def user_recovery(request):
                 login(request, user)
                 return render(request, 'plants/index.html')
             else:
-                # AR: Indicate on password input form that the username and/or password was invalid
                 return render(request, 'plants/index.html')
     else:
         form = UserRecoveryForm()

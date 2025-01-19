@@ -1,20 +1,29 @@
 <!-- /app/plants/templates/plants/user_update_modal.html -->
 
 <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
-  <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+  <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
     <h3>User Update</h3>
+    {% if messages %}
+      {% for message in messages %}
+        <p class="w3-text-red">Error: {{ message }}</p>
+      {% endfor %}
+    {% endif %}
   </div>
-  <form class="w3-container" action="{% url 'plants:user_update' %}" method="post">
+  <form action="{% url 'plants:user_update' %}" method="post">
     {% csrf_token %}
-    <div class="w3-section">
+    <div class="w3-container">
       {{ form.as_p }}
-      <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Update User</button>
+    </div>
+    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+      <button type="submit" class="w3-button w3-round-large w3-green" >
+        Update User
+      </button>
+      <!-- Cancel update - the page reload clears the modal and keeps the page from hanging -->
+      <button onclick="location.reload();" 
+              type="button" 
+              class="w3-button w3-round-large w3-red">
+        Cancel
+      </button>
     </div>
   </form>
-  <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-    <!-- Cancel update - the page reload clears the modal and keeps the page from hanging -->
-    <button onclick="location.reload();" type="button" class="w3-button w3-red">Cancel</button>
-    <!-- AR: Go to reset password page -->
-    <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
-  </div>
 </div>
