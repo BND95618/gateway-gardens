@@ -418,6 +418,7 @@ def plants_summary(request):
                 for my_plant in my_plants:
                     if my_plant.plant == plant:
                         plant.plant_mine = "yes"
+                        break # Found the plant in my plants
                     else:
                         plant.plant_mine = "no"
             else:
@@ -507,13 +508,9 @@ def plants_summary(request):
             for my_plant in my_plants:
                 if my_plant.plant == plant:
                     plant.plant_mine = "yes"
-                    print("DEBUG: claimed plant: ", plant.commonName)
+                    break # Found the plant in my plants
                 else:
                     plant.plant_mine = "no"
-
-        for plant in plants:
-            if plant.plant_mine == "yes":
-                print("DEBUG: final claimed plant: ", plant.commonName)
 
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
