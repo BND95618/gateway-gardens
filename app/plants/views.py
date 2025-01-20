@@ -424,6 +424,8 @@ def plants_summary(request):
             else:
                 plant.plant_show = "no"
         # Send selected plant details to template
+        print("DEBUG: Plant Type         = ", type_x_search)
+        print("DEBUG: Bloom Color Search = ", bloom_color_search)
         context = { "plants"             : plants,
                     # Search attributes
                     'plant_types'        : plant_types,
@@ -528,12 +530,14 @@ def plants_summary(request):
                     "soil_type_opt"      : soil_type_opt,
                     # search field defaults
                     "type_x_search"       : type_x_search,
+                    "bloom_color_search"  : bloom_color_search,
+                    "bloom_season_search" : bloom_season_search,
                     "pollinators_search"  : pollinators_search,
                     'ca_native_search'    : ca_native_search,
                     'ucd_all_star_search' : ucd_all_star_search,
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
-                    "soil_type_vsearch"   : soil_type_search,
+                    "soil_type_search"    : soil_type_search,
                     'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
