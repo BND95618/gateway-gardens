@@ -62,35 +62,83 @@
       <div class="w3-content w3-display-container" style="max-width:900px">
         <!-- Load the images -->
         {% if garden.image_1 %}
-          <img src="{{ garden.image_1.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_1.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_1 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_2 %}
-          <img src="{{ garden.image_2.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_2.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_2 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_3 %}
-          <img src="{{ garden.image_3.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_3.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_3 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_4 %}
-          <img src="{{ garden.image_4.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_4.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_4 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_5 %}
-          <img src="{{ garden.image_5.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_5.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_5 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_6 %}
-          <img src="{{ garden.image_6.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_6.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_6 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_7 %}
-          <img src="{{ garden.image_7.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_7.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_7 }}</h2>
+            </div>
+          </div>
         {% endif %}
         {% if garden.image_8 %}
-          <img src="{{ garden.image_8.url }}" alt="No garden image found" class="mySlides" style="width:100%">
+          <div class="mySlides">
+            <img src="{{ garden.image_8.url }}" alt="No garden image found" style="width:100%">
+            <div class="w3-container w3-display-topmiddle w3-padding-8 w3-white w3-round-xlarge" 
+                 style="border:4px solid green">
+              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_8 }}</h2>
+            </div>
+          </div>
         {% endif %}
         <!-- Slide show -->
         <!-- AR: Display captions -->
         <div class="w3-center w3-container w3-section w3-large w3-text-white w3-display-bottommiddle" style="width:100%">
-          <div class="w3-left w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-          <div class="w3-right w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
-          <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(1)"></span>
+          <div class="w3-left  w3-xxlarge w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+          <div class="w3-right w3-xxlarge w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+          <span class="w3-badge demo w3-border w3-transparent w3-hover-white " onclick="currentDiv(1)"></span>
           <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(2)"></span>
           <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
           <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(4)"></span>
@@ -107,6 +155,7 @@
 {% block js %}
 <!-- Insert template Javascript here -->
 <script>
+  // Slideshow Javascript code
   var slideIndex = 1;
   showDivs(slideIndex);
     

@@ -18,7 +18,7 @@ from .forms  import PlantAddUpdateForm, PlantCommentForm
 import math
 import os
 
-# Define attribute select options
+# Define attribute select option arrays
 plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
 bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", "blue", "orange"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
@@ -57,10 +57,12 @@ def gardens_summary(request):
              if (request.user.username == garden.owner):
                 context = { "garden" : garden }
                 my_gardens = my_gardens + 1
-        else:                                                   # no user has a garden in db
+        else:
+            # no user has a garden in db
             return HttpResponseRedirect(reverse('plants:gardens_add')) 
-    if my_gardens == 0:                                         # current user has no gardens in db
-        return HttpResponseRedirect(reverse('plants:gardens_add')) 
+    # current user has no gardens in db
+    if my_gardens == 0:
+        return HttpResponseRedirect(reverse('plants:gardens_add'))
     return HttpResponse(template.render(context, request))
 
 def gardens_add(request):
@@ -129,42 +131,42 @@ def gardens_update(request, id):
                 if (garden.image_1):
                     os.remove(garden.image_1.path)
                 garden.image_1   = request.FILES['image_1']
-                garden.caption_1 = form.cleaned_data.get('caption_1')
+            garden.caption_1 = form.cleaned_data.get('caption_1')
             if 'image_2' in request.FILES:
                 if (garden.image_2):
                     os.remove(garden.image_2.path)
                 garden.image_2   = request.FILES['image_2']
-                garden.caption_2 = form.cleaned_data.get('caption_2')
+            garden.caption_2 = form.cleaned_data.get('caption_2')
             if 'image_3' in request.FILES:
                 if (garden.image_3):
                     os.remove(garden.image_3.path)
                 garden.image_3   = request.FILES['image_3']
-                garden.caption_3 = form.cleaned_data.get('caption_3')
+            garden.caption_3 = form.cleaned_data.get('caption_3')
             if 'image_4' in request.FILES:
                 if (garden.image_4):
                     os.remove(garden.image_4.path)
                 garden.image_4   = request.FILES['image_4']
-                garden.caption_4 = form.cleaned_data.get('caption_4')
+            garden.caption_4 = form.cleaned_data.get('caption_4')
             if 'image_5' in request.FILES:
                 if (garden.image_5):
                     os.remove(garden.image_5.path)
                 garden.image_5   = request.FILES['image_5']
-                garden.caption_5 = form.cleaned_data.get('caption_5')
+            garden.caption_5 = form.cleaned_data.get('caption_5')
             if 'image_6' in request.FILES:
                 if (garden.image_6):
                     os.remove(garden.image_6.path)
                 garden.image_6   = request.FILES['image_6']
-                garden.caption_6 = form.cleaned_data.get('caption_6')
+            garden.caption_6 = form.cleaned_data.get('caption_6')
             if 'image_7' in request.FILES:
                 if (garden.image_7):
                     os.remove(garden.image_7.path)
                 garden.image_7   = request.FILES['image_7']
-                garden.caption_7 = form.cleaned_data.get('caption_7')
+            garden.caption_7 = form.cleaned_data.get('caption_7')
             if 'image_8' in request.FILES:
                 if (garden.image_8):
                     os.remove(garden.image_8.path)
                 garden.image_8   = request.FILES['image_8']
-                garden.caption_8 = form.cleaned_data.get('caption_8')
+            garden.caption_8 = form.cleaned_data.get('caption_8')
 
             garden.save()
         return HttpResponseRedirect(reverse('plants:gardens_summary'))
@@ -345,20 +347,7 @@ def plants_summary(request):
         return HttpResponseRedirect(reverse('plants:index'))
     
     # Executed when search request is submitted
-    if request.method == 'POST':
- 
-        # Get the user's column selection list
-        # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
-        #     column_selection = Garden.objects.filter(owner = request.user.username)
-        #     column_selection_list = string2list(column_selection)
-        gardens = Garden.objects.all()
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                # Get the user's previously stored column display sections
-                column_selection_list  = string2list(garden.column_selection)
-
-        # Obtain the plants that the current user has claimed for their garden - needed to populate the table
-        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+    if request.method == 'POST':   
 
         template = loader.get_template("plants/plants_summary.html")
         # Get the search criteria from the "http request"
@@ -372,9 +361,10 @@ def plants_summary(request):
         water_rqmts_search   = request.POST["water_rqmts_search"]
         soil_type_search     = request.POST["soil_type_search"]
         garden_search        = request.POST["garden_search"]
-        # Store the search criteria in the user's garden db table
-        # AR: change if statement to a db look-up via user filter
+        
+        gardens = Garden.objects.filter(owner = request.user.username)
         for garden in gardens:
+            # Store the search criteria in the user's garden db table
             if (garden.owner == request.user.username):
                 garden.type_x_search       = type_x_search
                 garden.bloom_color_search  = bloom_color_search
@@ -387,8 +377,13 @@ def plants_summary(request):
                 garden.soil_type_search    = soil_type_search
                 garden.garden_search       = soil_type_search
                 garden.save()
+            # Get the user's previously stored column display sections
+                column_selection_list  = string2list(garden.column_selection)
+
+        # Obtain the plants that the current user has claimed for their garden - needed to populate the table
+        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+
         # Plant query -> Plants claimed by the current user or all plants in the database
-        # AR: Convert to db query
         if garden_search == "Mine":
             plants = Plant.objects.filter(myplants__owner = request.user.username) 
         else:
@@ -424,8 +419,6 @@ def plants_summary(request):
             else:
                 plant.plant_show = "no"
         # Send selected plant details to template
-        print("DEBUG: Plant Type         = ", type_x_search)
-        print("DEBUG: Bloom Color Search = ", bloom_color_search)
         context = { "plants"             : plants,
                     # Search attributes
                     'plant_types'        : plant_types,
@@ -454,11 +447,7 @@ def plants_summary(request):
         return render(request, "plants/plants_summary.html", context)
     # Executed when plants summary page is initialized
     else:
-        # Get the user's column selection list and convert to a python list
-        # AR: Use a db filter instead of the for loop and if statement - collapses to 1 line
-        #     column_selection = Garden.objects.filter(owner = request.user.username)
-        #     column_selection_list = string2list(column_selection)
-        gardens = Garden.objects.all()
+        gardens = Garden.objects.filter(owner = request.user.username)
         user_garden_found = False
         for garden in gardens:
             if (garden.owner == request.user.username):
@@ -1065,13 +1054,13 @@ def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    gardens = Garden.objects.all()
+    
     if request.POST:
         form = ColumnChooserForm(request.POST)
         if form.is_valid():
             column_selection = form.cleaned_data.get('column_selection')
             # Associate the column selection to the user's garden
-            # AR: change if statement to a db look-up via user filter
+            gardens = Garden.objects.filter(owner = request.user.username)
             for garden in gardens:
                 if (garden.owner == request.user.username):
                     garden.column_selection = column_selection
@@ -1079,7 +1068,10 @@ def column_chooser(request):
         else:
             return HttpResponseRedirect(reverse('plants:summary')) 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
+    
     else:
+        gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column selection list
         for garden in gardens:
             if (garden.owner == request.user.username):
                 column_selection = garden.column_selection
