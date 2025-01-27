@@ -360,6 +360,7 @@ def plants_summary(request):
         sun_exposure_search  = request.POST["sun_exposure_search"]
         water_rqmts_search   = request.POST["water_rqmts_search"]
         soil_type_search     = request.POST["soil_type_search"]
+        usda_zone_search     = request.POST["usda_zone_search"]
         garden_search        = request.POST["garden_search"]
         
         gardens = Garden.objects.filter(owner = request.user.username)
@@ -375,7 +376,8 @@ def plants_summary(request):
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
                 garden.soil_type_search    = soil_type_search
-                garden.garden_search       = soil_type_search
+                garden.usda_zone_search    = usda_zone_search
+                garden.garden_search       = garden_search
                 garden.save()
             # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
@@ -391,6 +393,7 @@ def plants_summary(request):
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
+            usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -399,7 +402,18 @@ def plants_summary(request):
                 ((ucd_all_star_search == plant.ucd_all_star) or (ucd_all_star_search == "Any") or (plant.ucd_all_star == "tbd")) and \
                 ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
                 ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
-                ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")):
+                ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")) and \
+                (usda_zone_hit):
+                # AR: Insert USDA zone search
+
+                print("DEBUG: Plant: ", plant.commonName)
+                print("DEBUG: USDA Zone Target: ", usda_zone_search)
+                print("DEBUG: USDA Zone Lower Limit: ", plant.usda_zone_min)
+                print("DEBUG: USDA Zone Upper Limit: ", plant.usda_zone_max)
+
+                
+                print("DEBUG: usda_zone_hit: ", usda_zone_hit)
+
                 # format multiselect attributes to remove [, ', and ]
                 plant.bloom_color  = string_display(plant.bloom_color)
                 plant.bloom_season = string_display(plant.bloom_season)
@@ -430,6 +444,7 @@ def plants_summary(request):
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
+                    "usda_zones"         : usda_zones,
                     # Search option values from previous search if applicable else default of "Any"
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
@@ -440,6 +455,7 @@ def plants_summary(request):
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
                     "soil_type_search"    : soil_type_search,
+                    "usda_zone_search"    : usda_zone_search,
                     'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
@@ -463,6 +479,7 @@ def plants_summary(request):
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
                 soil_type_search      = garden.soil_type_search
+                usda_zone_search      = garden.usda_zone_search
                 garden_search         = garden.garden_search
                 user_garden_found     = True
                 break # once the user's garden is found exit the loop
@@ -491,6 +508,7 @@ def plants_summary(request):
                 ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
                 ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
                 ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")):
+                # AR: Insert USDA zone search
                 # show selected plant
                 plant.plant_show = "yes"
             else:
@@ -517,6 +535,7 @@ def plants_summary(request):
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
+                    "usda_zones"         : usda_zones,
                     # search field defaults
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
@@ -527,6 +546,7 @@ def plants_summary(request):
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
                     "soil_type_search"    : soil_type_search,
+                    "usda_zone_search"    : usda_zone_search,
                     'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
@@ -1098,6 +1118,43 @@ def string_display(string):
     temp = temp.replace("'", "")
     temp = temp.replace("]", "")
     return(temp)
+
+def usda_zone_check(target, lower_limit, upper_limit):
+    print("DEBUG: Got to usda_zone_check function")
+    print("DEBUG: Target: ",      target)
+    print("DEBUG: Lower Limit: ", lower_limit)
+    print("DEBUG: Upper Limit: ", upper_limit)
+
+    if target == "Any":
+        hit = True
+    elif (target.find("a") == 1 or target.find("b")== 1):
+        target_adj = "0" + target
+    else:
+        target_adj = target
+
+    if lower_limit == "tbd":
+        lower_limit_adj = "00a"
+    elif (lower_limit.find("a") == 1 or lower_limit.find("b")== 1):
+        lower_limit_adj = "0" + lower_limit[0:2]
+    else:
+        lower_limit_adj = lower_limit[0:3]
+    print("DEBUG: Adjusted lower_limit: ", lower_limit_adj)
+
+    if upper_limit == "tbd":
+        upper_limit_adj = "99b"
+    elif (upper_limit.find("a") == 1 or upper_limit.find("b")== 1):
+        upper_limit_adj = "0" + upper_limit[0:2]
+    else:
+        upper_limit_adj = upper_limit[0:3]
+    print("DEBUG: Adjusted upper_limit: ", upper_limit_adj)
+
+    if (target == "Any"):
+        hit = True
+    elif (target_adj >= lower_limit_adj) and (target_adj <= upper_limit_adj):
+        hit = True
+    else:
+        hit = False
+    return(hit)
 
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
