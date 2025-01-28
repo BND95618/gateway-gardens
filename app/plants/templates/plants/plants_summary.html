@@ -157,6 +157,19 @@
       </select>
       <br>
 
+      <label for="id_sunset_zone_search">Sunset Zone:</label><br>
+      <select id="id_sunset_zone_search" name="sunset_zone_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for x in sunset_zones %}
+          {% if x == sunset_zone_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+
       <label for="id_garden_search">All plants / My plants</label><br>
       <select id="id_garden_search" name="garden_search" class="w3-select w3-margin-bottom">
         {% if garden_search == "Any" %}

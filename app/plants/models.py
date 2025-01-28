@@ -47,6 +47,7 @@ class Garden(models.Model):
     water_rqmts_search  = models.CharField(max_length=32, default="Any", blank=True)
     soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
     usda_zone_search    = models.CharField(max_length=32, default="Any", blank=True)
+    sunset_zone_search  = models.CharField(max_length=32, default="Any", blank=True)
     garden_search       = models.CharField(max_length=32, default="Any", blank=True)
     # Save the user's selection for the plant column chooser
     column_selection = models.CharField(max_length=256,  blank=True,
