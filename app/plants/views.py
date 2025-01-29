@@ -34,12 +34,12 @@ ph_opt           = ["tbd",
                     "8.0"]
 soil_type_opt    = ["tbd", "Sandy", "Loamy", "Clay"]
 # AR: Complete USDA zone list
-usda_zones       = ["tbd", "1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b", "5a", "5b", "6a", "6b", "7a", "7b", 
-                    "8a", "8b", "9a", "9b", "10a", "10b"]
+usda_zones       = ["tbd", "1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b",  "5a",  "5b",
+                           "6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b", "10a", "10b"]
 # AR: Complete sunset zone list
-sunset_zones     = [ "4",  "5",  "6",  "7", "8",  "9",  "10", 
-                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
-                    "21", "23", "24"]
+sunset_zones     = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
+                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "23", "24",
+                    "A1", "A2", "A3", "H1", "H2"]
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
@@ -399,11 +399,11 @@ def plants_summary(request):
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
-            # print("DEBUG: >>>>>>>>>>>>>>>>")
-            # print("DEBUG: Plant: ", plant.commonName)
+            #  print("DEBUG: >>>>>>>>>>>>>>>>")
+            #  print("DEBUG: Plant: ", plant.commonName)
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -511,7 +511,7 @@ def plants_summary(request):
             plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -1172,12 +1172,16 @@ def usda_zone_check(target, lower_limit, upper_limit):
         hit = False
     return(hit)
 
-def sunset_zone_check(target, range):
-    # print("DEBUG: >>>>>>>>>>>>>>>>")
-    # print("DEBUG: Sunset zone target: ", target)
-    # print("DEBUG: Sunset zone range: ", range)
+def sunset_zone_check(target, range, options):
+    #  print("DEBUG: >>>>>>>>>>>>>>>>")
+    #  print("DEBUG: Sunset zone target:  ", target)
+    #  print("DEBUG: Sunset zone range:   ", range)
+    # print("DEBUG: Sunset zone options: ", options)
+    zone_list =[]
     if target == "Any" or range == "tbd":
         hit = True
+        #  print("DEBUG: target = 'Any' or range = 'tbd'")
+        #  print("DEBUG: Zone list: ", zone_list)
     else:
         # Convert range into a list of single zones or ranges of zones (form of x-y)
         temp_1 = range.strip()
@@ -1185,29 +1189,42 @@ def sunset_zone_check(target, range):
         range_adj = temp_2.split()
         # print("DEBUG: Sunset zone range adjusted: ", range_adj)
         # Convert the list into a list of single zones
-        zone_list =[]
         for x in range_adj:
             # print("DEBUG: Sub-range: ", x)
-            if x.isnumeric():
-                # print("DEBUG: Element is a single zone: ", x)
-                zone_list.append(int(x))
-            else:
-                # print("DEBUG: Element is a range of zones: ", x)
+            if "-" in x:
+                print ("DEBUG: Working on sub-range")
                 partition = x.partition("-")
-                zone_start = int(partition[0])
-                zone_end   = int(partition[2])
-                # print("DEBUG: Zone start: ", zone_start)
-                # print("DEBUG: Zone end:   ", zone_end)
-                while zone_start <= zone_end:
-                    zone_list.append(zone_start)
-                    zone_start = zone_start + 1
+                subrange_start = partition[0]
+                subrange_end   = partition[2]
+                # print("DEBUG: Zone start: ", subrange_start)
+                # print("DEBUG: Zone end:   ", subrange_end)
+                # Search for the subrange starting zone in the complete list of zones
+                # Once the subrange starting zone has been found, search for the subrange end zone
+                subrange_start_found = False
+                for zone in options:
+                    # print("DEBUG: Checking zone: ", zone)
+                    if (subrange_start_found == False) and (subrange_start == zone):
+                        # print("DEBUG: Case 1")
+                        zone_list.append(zone)
+                        subrange_start_found = True
+                    elif (subrange_start_found == True) and (subrange_end != zone):
+                        # print("DEBUG: Case 2")
+                        zone_list.append(zone)
+                    elif (subrange_start_found == True) and (subrange_end == zone):
+                        # print("DEBUG: Case 3")
+                        zone_list.append(zone)
+                        break
+            else:
+                print ("DEBUG: Element is a single zone")
+                zone_list.append(x)
         # Check to determine is target is contained in the list
-        # print("DEBUG: Zone list: ", zone_list)
-        if (int(target) in zone_list):
+        #  print("DEBUG: Zone list: ", zone_list)
+        if (target in zone_list):
             hit = True
         else:
             hit = False
-    # print("DEBUG: >>>>>>>>>>>>>>>>")
+        print(("DEBUG: Target in plant zones: ", hit))    
+        # print("DEBUG: >>>>>>>>>>>>>>>>")
     return(hit)
 
 def fiddle(request):
