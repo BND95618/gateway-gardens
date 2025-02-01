@@ -49,11 +49,15 @@ class Garden(models.Model):
     usda_zone_search    = models.CharField(max_length=32, default="Any", blank=True)
     sunset_zone_search  = models.CharField(max_length=32, default="Any", blank=True)
     garden_search       = models.CharField(max_length=32, default="Any", blank=True)
-    # Save the user's selection for the plant column chooser
-    column_selection = models.CharField(max_length=256,  blank=True,
-                       default=["Common Name", "Type", "Height", "Width", 
-                                "Bloom Color", "Bloom Season", "Pollinators"],)
-    slug             = models.SlugField(default="tbd", null=False, blank=True)
+    # Save the user's selection for the my plants column chooser
+    my_column_selection = models.CharField(max_length=256,  blank=True,
+                          default=["Common Name", "Genus/Species", "Variety", "Type", 
+                                   "Location", "Sun Exposure", "pH", "Happy?"],)
+    # Save the user's selection for the all plants column chooser
+    column_selection    = models.CharField(max_length=256,  blank=True,
+                          default=["Common Name", "Type", "Height", "Width", 
+                                   "Bloom Color", "Bloom Season", "Pollinators"],)
+    slug                = models.SlugField(default="tbd", null=False, blank=True)
         
     def __str__(self):
         return self.name
@@ -87,6 +91,7 @@ class Plant(models.Model):
     description       = QuillField(blank=True, null=True)
     pruning           = QuillField(blank=True, null=True)
     fertilization     = QuillField(blank=True, null=True)
+    pests_diseases    = QuillField(blank=True, null=True)
     # Plant taxonomy
     kingdom           = models.CharField(max_length=64, default="tbd", blank=True)
     subkingdom        = models.CharField(max_length=64, default="tbd", blank=True)

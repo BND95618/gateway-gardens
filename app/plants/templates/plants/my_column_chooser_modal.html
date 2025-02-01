@@ -1,0 +1,26 @@
+<!-- /app/plants/templates/plants/my_column_chooser_modal.html -->
+
+<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px">
+    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+      <h3>My Column Chooser</h3>
+    </div>
+    <!-- Upon 'submit' return to the 'my_column_chooser' view to save selection into the db -->
+    <form action="{% url 'plants:my_column_chooser' %}" method="post">
+      {% csrf_token %}
+      <div class="w3-container">
+        {{ form.as_p }}
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <button type="submit" 
+                class="w3-button w3-round-large w3-green">
+          Confirm
+        </button>
+        <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
+        <button type="button"
+                onclick="document.getElementById('my_column_chooser_modal').style.display='none'"
+                class="w3-button w3-round-large w3-red">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>

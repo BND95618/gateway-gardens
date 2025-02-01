@@ -11,7 +11,7 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 from email_validator import validate_email
 
 from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
-from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm
+from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 
@@ -33,10 +33,9 @@ ph_opt           = ["tbd",
                     "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
                     "8.0"]
 soil_type_opt    = ["tbd", "Sandy", "Loamy", "Clay"]
-# AR: Complete USDA zone list
-usda_zones       = ["tbd", "1a", "1b", "2a", "2b", "3a", "3b", "4a", "4b",  "5a",  "5b",
-                           "6a", "6b", "7a", "7b", "8a", "8b", "9a", "9b", "10a", "10b"]
-# AR: Complete sunset zone list
+usda_zones       = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
+                           "5a", "5b",  "6a",  "6b",  "7a",  "7b", "8a", "8b",
+                           "9a", "9b", "10a", "10b", "11a", "11b"]
 sunset_zones     = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
                     "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "23", "24",
                     "A1", "A2", "A3", "H1", "H2"]
@@ -212,7 +211,12 @@ def myplants_summary(request):
         # format multiselect attributes to remove [, ', and ]
         my_plant.sun_exposure = string_display(my_plant.sun_exposure)
         my_plant.soil_type    = string_display(my_plant.soil_type)
-    context = { 'my_plants' : my_plants }
+    gardens = Garden.objects.filter(owner = request.user.username)
+    # Get the user's previously stored column display sections
+    for garden in gardens:       
+        my_column_selection_list  = string2list(garden.my_column_selection)
+    context = { 'my_plants'           : my_plants,
+                'my_column_selection' : my_column_selection_list, }
     return HttpResponse(template.render(context, request))
 
 def myplants_add(request, id):
@@ -399,8 +403,6 @@ def plants_summary(request):
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
-            #  print("DEBUG: >>>>>>>>>>>>>>>>")
-            #  print("DEBUG: Plant: ", plant.commonName)
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones)
@@ -415,13 +417,6 @@ def plants_summary(request):
                 ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")) and \
                 (usda_zone_hit) and \
                 (sunset_zone_hit):
-
-                # print("DEBUG: USDA Zone Target: ", usda_zone_search)
-                # print("DEBUG: USDA Zone Lower Limit: ", plant.usda_zone_min)
-                # print("DEBUG: USDA Zone Upper Limit: ", plant.usda_zone_max)
-                # print("DEBUG: usda_zone_hit: ", usda_zone_hit)
-                # print("DEBUG: usda_zone_hit: ", sunset_zone_hit)
-
                 # format multiselect attributes to remove [, ', and ]
                 plant.bloom_color  = string_display(plant.bloom_color)
                 plant.bloom_season = string_display(plant.bloom_season)
@@ -638,9 +633,10 @@ def plants_add(request):
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             if 'audio_name' in request.FILES:
                 plant.audio_name    = request.FILES['audio_name']
-            plant.description   = form.cleaned_data.get('description')
-            plant.pruning       = form.cleaned_data.get('pruning')
-            plant.fertilization = form.cleaned_data.get('fertilization')
+            plant.description    = form.cleaned_data.get('description')
+            plant.pruning        = form.cleaned_data.get('pruning')
+            plant.fertilization  = form.cleaned_data.get('fertilization')
+            plant.pests_diseases = form.cleaned_data.get('pests_diseases')
             # Check to see if an image file has been specified
             if 'image_1' in request.FILES:
                 plant.image_1   = request.FILES['image_1']
@@ -704,9 +700,10 @@ def plants_update(request, id):
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             if 'audio_name' in request.FILES:
                 plant.audio_name    = request.FILES['audio_name']
-            plant.description   = form.cleaned_data.get('description')
-            plant.pruning       = form.cleaned_data.get('pruning')
-            plant.fertilization = form.cleaned_data.get('fertilization')
+            plant.description    = form.cleaned_data.get('description')
+            plant.pruning        = form.cleaned_data.get('pruning')
+            plant.fertilization  = form.cleaned_data.get('fertilization')
+            plant.pests_diseases = form.cleaned_data.get('pests_diseases')
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
                 if (plant.image_1):
@@ -761,6 +758,7 @@ def plants_update(request, id):
                                             'description'       : plant.description,
                                             'pruning'           : plant.pruning,
                                             'fertilization'     : plant.fertilization,
+                                            'pests_diseases'    : plant.pests_diseases,
                                             'kingdom'           : plant.kingdom,
                                             'subkingdom'        : plant.subkingdom,
                                             'superdivision'     : plant.superdivision, 
@@ -1086,6 +1084,37 @@ def user_logout(request):
     logout(request)
     return render(request, 'plants/index.html')
 
+def my_column_chooser(request):
+    """ Capture the columns that the user wants to display in the plant table """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    if request.POST:
+        form = MyColumnChooserForm(request.POST)
+        if form.is_valid():
+            my_column_selection = form.cleaned_data.get('my_column_selection')
+            # Associate the column selection to the user's garden
+            gardens = Garden.objects.filter(owner = request.user.username)
+            for garden in gardens:
+                if (garden.owner == request.user.username):
+                    garden.my_column_selection = my_column_selection
+                    garden.save()
+        else:
+            return HttpResponseRedirect(reverse('myplants:summary')) 
+        return HttpResponseRedirect(reverse('plants:myplants_summary'))
+    
+    else:
+        gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column selection list
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                my_column_selection = garden.my_column_selection
+        # convert string-based list (retrieved from db) to true Python lists
+        my_column_selection_list  = string2list(my_column_selection)
+        form = MyColumnChooserForm(initial = {'my_column_selection' : my_column_selection_list})
+        context = {'form' : form }
+        return render(request, 'plants/my_column_chooser_modal.html', context)
+
 def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     if not request.user.is_authenticated:
@@ -1136,11 +1165,6 @@ def string_display(string):
     return(temp)
 
 def usda_zone_check(target, lower_limit, upper_limit):
-    # print("DEBUG: Got to usda_zone_check function")
-    # print("DEBUG: Target: ",      target)
-    # print("DEBUG: Lower Limit: ", lower_limit)
-    # print("DEBUG: Upper Limit: ", upper_limit)
-
     if target == "Any":
         hit = True
     elif (target.find("a") == 1 or target.find("b")== 1):
@@ -1154,7 +1178,6 @@ def usda_zone_check(target, lower_limit, upper_limit):
         lower_limit_adj = "0" + lower_limit[0:2]
     else:
         lower_limit_adj = lower_limit[0:3]
-    # print("DEBUG: Adjusted lower_limit: ", lower_limit_adj)
 
     if upper_limit == "tbd":
         upper_limit_adj = "99b"
@@ -1162,7 +1185,6 @@ def usda_zone_check(target, lower_limit, upper_limit):
         upper_limit_adj = "0" + upper_limit[0:2]
     else:
         upper_limit_adj = upper_limit[0:3]
-    # print("DEBUG: Adjusted upper_limit: ", upper_limit_adj)
 
     if (target == "Any"):
         hit = True
@@ -1173,58 +1195,39 @@ def usda_zone_check(target, lower_limit, upper_limit):
     return(hit)
 
 def sunset_zone_check(target, range, options):
-    #  print("DEBUG: >>>>>>>>>>>>>>>>")
-    #  print("DEBUG: Sunset zone target:  ", target)
-    #  print("DEBUG: Sunset zone range:   ", range)
-    # print("DEBUG: Sunset zone options: ", options)
     zone_list =[]
     if target == "Any" or range == "tbd":
         hit = True
-        #  print("DEBUG: target = 'Any' or range = 'tbd'")
-        #  print("DEBUG: Zone list: ", zone_list)
     else:
         # Convert range into a list of single zones or ranges of zones (form of x-y)
         temp_1 = range.strip()
         temp_2 = temp_1.replace(",", "")
         range_adj = temp_2.split()
-        # print("DEBUG: Sunset zone range adjusted: ", range_adj)
         # Convert the list into a list of single zones
         for x in range_adj:
-            # print("DEBUG: Sub-range: ", x)
             if "-" in x:
-                print ("DEBUG: Working on sub-range")
                 partition = x.partition("-")
                 subrange_start = partition[0]
                 subrange_end   = partition[2]
-                # print("DEBUG: Zone start: ", subrange_start)
-                # print("DEBUG: Zone end:   ", subrange_end)
                 # Search for the subrange starting zone in the complete list of zones
                 # Once the subrange starting zone has been found, search for the subrange end zone
                 subrange_start_found = False
                 for zone in options:
-                    # print("DEBUG: Checking zone: ", zone)
                     if (subrange_start_found == False) and (subrange_start == zone):
-                        # print("DEBUG: Case 1")
                         zone_list.append(zone)
                         subrange_start_found = True
                     elif (subrange_start_found == True) and (subrange_end != zone):
-                        # print("DEBUG: Case 2")
                         zone_list.append(zone)
                     elif (subrange_start_found == True) and (subrange_end == zone):
-                        # print("DEBUG: Case 3")
                         zone_list.append(zone)
                         break
             else:
-                print ("DEBUG: Element is a single zone")
                 zone_list.append(x)
         # Check to determine is target is contained in the list
-        #  print("DEBUG: Zone list: ", zone_list)
         if (target in zone_list):
             hit = True
         else:
             hit = False
-        print(("DEBUG: Target in plant zones: ", hit))    
-        # print("DEBUG: >>>>>>>>>>>>>>>>")
     return(hit)
 
 def fiddle(request):

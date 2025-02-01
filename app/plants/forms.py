@@ -140,6 +140,7 @@ USDA_ZONE_CHOICES = (
 COLUMN_CHOICES = (
 	("Common Name",   "Common Name"),
 	("Genus/Species", "Genus/Species"),
+	("Variety",       "Variety"),
 	# Attributes
 	("Type",          "Type"),
 	("Height",        "Height"),
@@ -156,6 +157,19 @@ COLUMN_CHOICES = (
 	("Soil Type",     "Soil Type"),
 	("USDA Zones",    "USDA Zones"),
 	("Sunset Zones",  "Sunset Zones"), 
+)
+MY_COLUMN_CHOICES = (
+	("Common Name",   "Common Name"),
+	("Genus/Species", "Genus/Species"),
+	("Variety",       "Variety"),
+	# Attributes
+	("Type",          "Type"),
+	("Location",      "Location"),
+	# Environmental Rqmts
+	("Sun Exposure",  "Sun Exposure"),
+	("Soil Type",     "Soil Type"),
+	("pH",            "pH"),
+	("Happy?",        "Happy?"),
 )
 
 class UserSignupForm(forms.Form):
@@ -261,6 +275,15 @@ class ColumnChooserForm(forms.Form):
 		label="",
 		initial='',
 		choices = COLUMN_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=True,
+		)
+	
+class MyColumnChooserForm(forms.Form):
+	my_column_selection = forms.MultipleChoiceField(
+		label="",
+		initial='',
+		choices = MY_COLUMN_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
 		required=True,
 		)
@@ -525,6 +548,11 @@ class PlantAddUpdateForm(forms.Form):
 	)
 	fertilization = QuillFormField(
 		label="Fertilization Considerations",
+		initial="tbd",
+		required=False,
+	)
+	pests_diseases = QuillFormField(
+		label="Pest and Disease Considerations",
 		initial="tbd",
 		required=False,
 	)

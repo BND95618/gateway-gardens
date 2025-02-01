@@ -12,7 +12,11 @@
 {% block header-completion %}
     <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">Removing: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} from My Garden</h1>
+      <h1 class="w3-bar-item">Removing: 
+        {{ plant.commonName }} / 
+        {{ plant.genus }} {{ plant.species }} {{ plant.variety }} 
+        from My Garden
+      </h1>
     </div>
   </div>
 {% endblock header-completion %}

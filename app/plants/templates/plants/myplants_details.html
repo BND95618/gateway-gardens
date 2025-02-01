@@ -15,7 +15,7 @@
       <h1 class="w3-bar-item">
         {{ my_plant.plant.commonName }} 
         <span style="font-style: italic;">
-          ( {{ my_plant.plant.genus }} {{ my_plant.plant.species }} )
+          ( {{ my_plant.plant.genus }} {{ my_plant.plant.species }} {{ my_plant.plant.variety }} )
         </span>
       </h1>
       <a href="{% url 'plants:myplants_update' my_plant.id %}" class="w3-button">update</a>

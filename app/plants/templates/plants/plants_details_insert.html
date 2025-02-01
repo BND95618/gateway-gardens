@@ -53,7 +53,7 @@
   </div>
 </div>
 
-<!-- Plant Description/Pruning/Fertilization -->
+<!-- Plant Description/Pruning/Fertilization/Pests & Diseases -->
 <div class="w3-margin">
   <div class="w3-card-4 w3-margin-top">
     <header class="w3-container w3-green">
@@ -81,6 +81,16 @@
       {{ plant.fertilization.html|safe|escape }}
     </div>
   </div>
+
+  <div class="w3-card-4 w3-section">
+    <header class="w3-container w3-green">
+      <h3>Pests and Diseases</h3>
+    </header>
+    <div class="w3-container">
+      {{ plant.pests_diseases.html|safe|escape }}
+    </div>
+  </div>
+  
 </div>
 
 <!-- Plant images -->
