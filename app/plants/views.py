@@ -36,8 +36,9 @@ soil_type_opt    = ["tbd", "Sandy", "Loamy", "Clay"]
 usda_zones       = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
                            "5a", "5b",  "6a",  "6b",  "7a",  "7b", "8a", "8b",
                            "9a", "9b", "10a", "10b", "11a", "11b"]
-sunset_zones     = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
-                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "23", "24",
+sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
+                    "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
+                    "21", "22", "23", "24",
                     "A1", "A2", "A3", "H1", "H2"]
 
 def index(request):
@@ -405,7 +406,7 @@ def plants_summary(request):
         for plant in plants:
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -448,7 +449,7 @@ def plants_summary(request):
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones"         : usda_zones,
-                    "sunset_zones"       : sunset_zones,
+                    "sunset_zones_opt"   : sunset_zones_opt,
                     # Search option values from previous search if applicable else default of "Any"
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
@@ -506,7 +507,7 @@ def plants_summary(request):
             plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -545,7 +546,7 @@ def plants_summary(request):
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones"         : usda_zones,
-                    "sunset_zones"       : sunset_zones,
+                    "sunset_zones_opt"   : sunset_zones_opt,
                     # search field defaults
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
@@ -656,7 +657,8 @@ def plants_add(request):
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         form = PlantAddUpdateForm()
-        context = { 'form' : form }
+        context = { 'form'             : form,
+                    'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_add.html', context)
 
 def plants_update(request, id):
@@ -778,7 +780,9 @@ def plants_update(request, id):
                                             'image_4'           : plant.image_4,
                                             'creator_notes'     : plant.creator_notes,
                                         })
-        context = { 'plant' : plant, 'form' : form }
+        context = { 'plant'            : plant, 
+                    'form'             : form,
+                    'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_update.html', context)
 
 def plants_comment(request, id):

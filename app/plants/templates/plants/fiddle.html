@@ -1,146 +1,33 @@
-<!-- /app/plants/templates/plants/fiddle.html -->
-{% extends "plants/master.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-  <title>Fiddle</title>
-{% endblock title %}
-
-{% block css %}
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-  <style>
-    body {
-      overflow-x: hidden;
-    }
-
-    #sidebar {
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: -250px;
-      z-index: 1000;
-      padding-top: 3.5rem;
-      overflow-y: auto;
-      background-color: #343a40;
-      color: #fff;
-      transition: left 0.3s;
-    }
-
-    #sidebar a {
-      padding: 15px 20px;
-      display: block;
-      color: #fff;
-      text-decoration: none;
-    }
-
-    #sidebar a:hover {
-      background-color: #495057;
-    }
-
-    #sidebar .sidebar-heading {
-      padding: 1.5rem 1rem;
-      font-size: 1.2rem;
-    }
-
-    .navbar-brand,
-    #menu-toggle {
-      background-color: #343a40;
-      padding: 0.75rem 1rem;
-      text-decoration: none;
-      color: #fff;
-    }
-
-    .content {
-      margin-left: 0;
-      padding: 15px;
-      transition: margin-left 0.3s;
-    }
-  </style>
-{% endblock css %}
-
-{% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">About</h1>
-    </div>
-  </div>
-{% endblock header-completion %}
-
-{% block content %}
-  <div id="sidebar" style="margin-top:50px;">
-		<a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-    <a href="#"><i class="bi bi-house-door"></i> Home</a>
-		<a href="#"><i class="bi bi-person"></i> Contact</a>
-		<a href="#"><i class="bi bi-gear"></i> Settings</a>
-		<a href="#"><i class="bi bi-envelope"></i> Email</a>
-		<a href="#"><i class="bi bi-file-text"></i> Explore</a>
-	</div>
-
-	<div class="content" style="margin-top:120px;">
-		<button id="menu-toggle" class="btn">
-			<i class="bi bi-list"></i>
-		</button>
-		<h2>GeeksforGeeks</h2>
-		<p>This is the Geeks portal.</p>
-	</div>
-{% endblock content %}
-
-{% block js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-	<script>
-		document.getElementById('menu-toggle').addEventListener('click', function () {
-			const sidebar = document.getElementById('sidebar');
-			const content = document.querySelector('.content');
-			const menuToggle = document.getElementById('menu-toggle');
-
-			if (sidebar.style.left === '-250px') {
-				sidebar.style.left = '0';
-				content.style.marginLeft = '250px';
-			
-				// Change to  when sidebar is open
-				menuToggle.innerHTML = '<i class="bi bi-x"></i>'; 
+<body>
+	<select id="multiSelect" multiple>
+		<option value="1">Option 1</option>
+		<option value="2">Option 2</option>
+		<option value="3">Option 3</option>
+		<option value="4">Option 4</option>
+	  </select>
+	  
+	  <button id="getValues">Get Selected Values</button>
+	  
+	  <!-- Include jQuery -->
+	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	  <script>
+		$(document).ready(function() {
+		  $('#getValues').click(function() {
+			// Get selected values
+			const selectedValues = $('#multiSelect').val();
+			if (selectedValues) {
+			  console.log('Selected values:', selectedValues);
+			  alert('Selected values: ' + selectedValues.join(', '));
 			} else {
-				sidebar.style.left = '-250px';
-				content.style.marginLeft = '0';
-				
-				// Change back to ☰ when sidebar is closed
-				menuToggle.innerHTML = '<i class="bi bi-list"></i>'; 
+			  console.log('No options selected');
+			  alert('No options selected');
 			}
+		  });
 		});
-	</script>
-{% endblock js %}
+	  </script>
+</body>
+
+</html>

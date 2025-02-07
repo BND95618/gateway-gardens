@@ -160,7 +160,7 @@
       <label for="id_sunset_zone_search">Sunset Zone:</label><br>
       <select id="id_sunset_zone_search" name="sunset_zone_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
-        {% for x in sunset_zones %}
+        {% for x in sunset_zones_opt %}
           {% if x == sunset_zone_search %}
             <option value="{{ x }}" selected>{{ x }}</option>
           {% elif x != "tbd" %}

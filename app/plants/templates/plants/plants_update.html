@@ -25,7 +25,11 @@
 {% block content %}
 <!-- Main Content -->
   <div class="w3-container" style="margin-top:150px;">
-    <form action="" method="post" enctype="multipart/form-data">
+    <form name="plantForm"
+          action="" 
+          onsubmit="return validatePlantForm()"
+          method="post" 
+          enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
       <button type="submit" class="w3-button w3-green w3-round">Submit</button>
@@ -40,5 +44,173 @@
 {% endblock content%}
 
 {% block js %}
-  <!-- Insert template Javascript here -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Form Validation Javascript
+  // AR: Move to common JS file
+  function validatePlantForm() 
+  {
+
+    clean_input = true;
+    // Bloom Color check 
+    tbdCheck("bloom_color");
+
+    // Bloom Season check 
+    tbdCheck("bloom_season");
+  
+    // Pollinators check
+    tbdCheck("pollinators");
+
+    // Sun Exposure check
+    tbdCheck("sun_exposure");
+
+    // Soil Type check
+    tbdCheck("soil_type");
+
+    // Check height (feet) for > 0 value
+    let height_feet = document.forms["plantForm"]["height_feet"].value;
+    // console.log("DEBUG: Height (feet): ", height_feet);
+    if (height_feet < 0)
+    {
+      alert("ERROR: Height (feet) is negative: " + height_feet);
+      return false;
+    }
+
+    // Check height (inches) for > 0 value
+    let height_inch = document.forms["plantForm"]["height_inch"].value;
+    // console.log("DEBUG: Height (inch): ", height_inch);
+    if (height_inch < 0)
+    {
+      alert("ERROR: Height (inches) is negative: " + height_inch);
+      return false;
+    }
+
+    // Check width (feet) for > 0 value
+    let width_feet = document.forms["plantForm"]["width_feet"].value;
+    // console.log("DEBUG: Width (feet): ", width_feet);
+    if (width_feet < 0)
+    {
+      alert("ERROR: Width (feet) is negative: " + width_feet);
+      return false;
+    }
+
+    // Check width (inches) for > 0 value
+    let width_inch = document.forms["plantForm"]["width_inch"].value;
+    // console.log("DEBUG: Width (inch): ", width_inch);
+    if (width_inch < 0)
+    {
+      alert("ERROR: Width (inch) is negative: " + width_inch);
+      return false;
+    }
+
+    // Check USDA Zone values (min <= max)
+    let usda_zone_min = document.forms["plantForm"]["usda_zone_min"].value;
+    let usda_zone_max = document.forms["plantForm"]["usda_zone_max"].value;
+    if (usda_zone_min > usda_zone_max) {
+      alert("ERROR: USDA Zone Min > USDA Zone Max");
+      return false;
+    }
+
+    // Check Sunset Zone values and range format
+    // AR: Handle the case where the Sunset Zones are 'tbd'
+    let sunset_zones = document.forms["plantForm"]["sunset_zones"].value;
+    // console.log("DEBUG: sunset_zones = ", sunset_zones);
+    // alert("DEBUG: Pause");
+    // Get the list of valid sunset zones and put into JS array
+    let sunset_zones_opt = {{ sunset_zones_opt|safe }};
+
+    // Clean up the input
+    const tmp_1 = sunset_zones.replaceAll(' ', '');
+    // console.log("DEBUG: input w/o spaces: ", tmp_1)
+    const ranges = tmp_1.split(',');
+
+    // Check for casee where the Sunset Zones are not tbd
+    if (tmp_1 != 'tbd')
+    {
+      ranges.forEach(function(range) 
+      {
+        if (range.includes('-')) 
+        {
+          // check case for a range of zones (zones exist and start comes before end)
+          // console.log("DEBUG: multi-zone range: ", range);
+          x = range.split('-');
+          zone_start = x[0];
+          zone_end   = x[1]; 
+          // console.log("DEBUG: zone_start :", zone_start);
+          // console.log("DEBUG: zone_end :",   zone_end);
+          if (sunset_zones_opt.includes(zone_start)) 
+          {
+            // console.log("DEBUG: ", zone_start, " is in sunset_zones_opt");
+          } 
+          else 
+          {
+            alert("ERROR: Invalid Sunset Zone: " + zone_start);
+            clean_input = false;
+          }
+          if (sunset_zones_opt.includes(zone_end))
+          {
+            // console.log("DEBUG: ", zone_end, " is in sunset_zones_opt");
+          } 
+          else 
+          {
+            alert("ERROR: Invalid Sunset Zone: " + zone_end);
+            clean_input = false;
+          }
+          zone_start_index = sunset_zones_opt.indexOf(zone_start);
+          zone_end_index   = sunset_zones_opt.indexOf(zone_end);
+          // console.log("DEBUG: zone_start_index :", zone_start_index);
+          // console.log("DEBUG: zone_end_index :", zone_end_index);
+          if (zone_start_index > zone_end_index)
+          {
+            alert("ERROR: Starting Sunset Zone (" + zone_start + ") > ending zone (" + zone_end + ")");
+            clean_input = false;
+          }
+        } 
+        else 
+        {
+          // check case for an individual zone (zone exists)
+          // console.log("DEBUG: single-zone range: ", range);
+          if (sunset_zones_opt.includes(range)) 
+          {
+            // console.log("DEBUG: ", range, " is in sunset_zones_opt");
+          } 
+          else 
+          {
+            // console.log("DEBUG: ", range, " is not in sunset_zones_opt");
+            alert("ERROR: Invalid Sunset Zone: " + range);
+            clean_input = false;
+          }
+        }
+      });
+    }
+    // console.log("DEBUG: Clean input?: ", clean_input);
+    if (!clean_input) 
+    {
+      return false;
+    } 
+    else 
+    {
+     return true;
+    }
+  }
+
+  // Checkbox checker
+  // - if a selection is made then tbd is unchecked
+  // - if no selection is made then set tbd to checked
+  function tbdCheck(checkbox_name) 
+  {
+    // console.log("DEBUG: Got to tbdCheck for: ", checkbox_name);
+    const boxes = document.getElementsByName(checkbox_name);
+    boxes[0].checked = true;
+    for (let i = 1; i < boxes.length; i++)
+    {
+      if (boxes[i].checked) 
+      {
+        boxes[0].checked = false;
+      }
+    }
+    return;
+  }
+
+</script>
 {% endblock js %}
