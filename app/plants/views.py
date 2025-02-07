@@ -404,27 +404,27 @@ def plants_summary(request):
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
+            # format multiselect attributes to remove [, ', and ]
+            plant.bloom_color  = string_display(plant.bloom_color)
+            plant.bloom_season = string_display(plant.bloom_season)
+            plant.pollinators  = string_display(plant.pollinators)
+            plant.sun_exposure = string_display(plant.sun_exposure)
+            plant.water_rqmts  = string_display(plant.water_rqmts)
+            plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
-            if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
-                ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
-                ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
-                ((pollinators_search  in plant.pollinators)  or (pollinators_search  == "Any") or (plant.pollinators  == "tbd")) and \
-                ((ca_native_search    == plant.ca_native)    or (ca_native_search    == "Any") or (plant.ca_native    == "tbd")) and \
-                ((ucd_all_star_search == plant.ucd_all_star) or (ucd_all_star_search == "Any") or (plant.ucd_all_star == "tbd")) and \
-                ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
-                ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
-                ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")) and \
-                (usda_zone_hit) and \
-                (sunset_zone_hit):
-                # format multiselect attributes to remove [, ', and ]
-                plant.bloom_color  = string_display(plant.bloom_color)
-                plant.bloom_season = string_display(plant.bloom_season)
-                plant.pollinators  = string_display(plant.pollinators)
-                plant.sun_exposure = string_display(plant.sun_exposure)
-                plant.water_rqmts  = string_display(plant.water_rqmts)
-                plant.soil_type    = string_display(plant.soil_type)
+            if ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
+               ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
+               ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
+               ((pollinators_search  in plant.pollinators)  or (pollinators_search  == "Any") or (plant.pollinators  == "tbd")) and \
+               ((ca_native_search    == plant.ca_native)    or (ca_native_search    == "Any") or (plant.ca_native    == "tbd")) and \
+               ((ucd_all_star_search == plant.ucd_all_star) or (ucd_all_star_search == "Any") or (plant.ucd_all_star == "tbd")) and \
+               ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
+               ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
+               ((soil_type_search in plant.soil_type) or (soil_type_search == "Any") or (plant.soil_type  == "tbd")) and \
+               (usda_zone_hit) and \
+               (sunset_zone_hit):
                 # show selected plant
                 plant.plant_show = "yes"
                 # check to determine if the current user has claimed the plant
