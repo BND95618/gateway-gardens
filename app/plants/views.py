@@ -235,6 +235,9 @@ def myplants_add(request, id):
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
             my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
+            my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
+            my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.plant        = plant                                 # link my_plant to the specific plant
             my_plant.save()
@@ -257,6 +260,9 @@ def myplants_update(request, id):
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
             my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
+            my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
+            my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
@@ -269,6 +275,9 @@ def myplants_update(request, id):
                                               'sun_exposure' : sun_exposure_list,
                                               'pH'           : my_plant.pH,
                                               'soil_type'    : my_plant.soil_type,
+                                              'bloom_color'  : my_plant.bloom_color,
+                                              'bloom_start'  : my_plant.bloom_start,
+                                              'bloom_end'    : my_plant.bloom_end,
                                               'notes'        : my_plant.notes,
                                             })
         context = { 'form' : form }

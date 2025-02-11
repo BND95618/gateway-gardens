@@ -137,6 +137,21 @@ USDA_ZONE_CHOICES = (
 	("13a (60F to 65F)",  "13a (60F to 65F)"), 
 	("13b (65F to 70F)",  "13b (65F to 70F)"),
 )
+MONTH_CHOICES = (
+	("tbd", "tbd"),
+	("Jan", "Jan"),
+	("Feb", "Feb"),
+	("Mar", "Mar"),
+	("Apr", "Apr"),
+	("May", "May"),
+	("Jun", "Jun"),
+	("Jul", "Jul"),
+	("Aug", "Aug"),
+	("Sep", "Sep"),
+	("Oct", "Oct"),
+	("Nov", "Nov"),
+	("Dec", "Dec"),
+)
 COLUMN_CHOICES = (
 	("Common Name",   "Common Name"),
 	("Genus/Species", "Genus/Species"),
@@ -169,6 +184,8 @@ MY_COLUMN_CHOICES = (
 	("Sun Exposure",  "Sun Exposure"),
 	("Soil Type",     "Soil Type"),
 	("pH",            "pH"),
+	("Bloom Color",   "Bloom Color"),
+	("Bloom Start-End",   "Bloom Start-End"),
 	("Happy?",        "Happy?"),
 )
 
@@ -404,6 +421,24 @@ class MyPlantAddUpdateForm(forms.Form):
 		initial='tbd',
 		choices = SOIL_TYPE_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	bloom_color = forms.ChoiceField(
+		label="Bloom Color",
+		initial='tbd',
+		choices = BLOOM_COLOR_CHOICES, 
+		required=False,
+		)
+	bloom_start = forms.ChoiceField(
+		label="Bloom Start",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
+		required=False,
+		)
+	bloom_end = forms.ChoiceField(
+		label="Bloom End",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
 		required=False,
 		)
 	notes = QuillFormField(
