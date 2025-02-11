@@ -10,20 +10,23 @@
 {% endblock css %}
 
 {% block header-completion %}
-  <!-- complete the header from master.html -->
-  <div class="w3-bar w3-green">
-    <div class="w3-dropdown-hover">
-      <button class="w3-button w3-green">Menu</button>
-      <div class="w3-dropdown-content w3-bar-block w3-card-4">
-        <button onclick="w3_open()"        class="w3-bar-item w3-button">Plant Search</button>
-        <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
-        {% if perms.plants.add_plant %}
-          <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant </a>
-        {% endif %}
-     </div>
-    </div>
-    <h1 class="w3-bar-item">Plants</h1>
+<div class="w3-bar w3-green">
+  <h1 class="w3-bar-item">Plant Finder</h1>
+  <div class="w3-bar-item w3-dropdown-hover">
+    <button class="w3-button w3-green" style="z-index:21">
+      <i class="material-icons">
+        menu
+      </i>
+    </button>
+    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+      <button onclick="w3_open()"        class="w3-bar-item w3-button">Plant Search</button>
+      <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
+      {% if perms.plants.add_plant %}
+        <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant</a>
+      {% endif %}
+   </div>
   </div>
+</div> 
 {% endblock header-completion %}
 
 {% block content %}
@@ -194,9 +197,18 @@
               class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">
         Reset
       </button>
+      <!-- Button to hide the search menu -->
+      <button type="button" 
+              onclick="w3_close()"
+              value="Hide" 
+              class="w3-button w3-border w3-red w3-round-large w3-margin-bottom">
+        Hide
+      </button>
     </form>
   </div>
-
+  <!------------------------->
+  <!--        Modals       -->
+  <!------------------------->
   <!-- Plant Delete modal - html to be inserted by Javascript -->
   <div id="plants_delete_modal" class="w3-modal">
     <p> Plant delete form HTML to be Inserted Here! </p>
@@ -266,7 +278,8 @@
             <td>{{ plant.usda_zone_min }} to {{ plant.usda_zone_max }}</td>
             <td>{{ plant.sunset_zones }}                              </td>
             <!-- Plant Details Icon/Link -->
-            <td class="w3-center">
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:plants_details' plant.id %}">
                   <i class="material-icons">
@@ -281,7 +294,8 @@
             </td>
             <!-- Plant Update Icon/Link -->
             {% if perms.plants.change_plant %}
-            <td class="w3-center">
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:plants_update' plant.id %}">
                   <i class="material-icons">
@@ -297,10 +311,11 @@
             {% endif %}
             <!-- Plant Delete Icon/Link -->
             {% if perms.plants.delete_plant %}
-            <td class="w3-center">
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="w3-transparent w3-border-0">
-                  <i class="material-icons">
+                  <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
@@ -312,7 +327,8 @@
             </td>
             {% endif %}
             <!-- Add plant to My Plants Icon/Link -->
-            <td class="w3-center">
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
                 {% if plant.plant_mine == "yes" %}
                   <a href="{% url 'plants:myplants_remove' plant.id %}">
@@ -448,7 +464,7 @@
     }
 
     // On page load, open the verticle search bar
-    window.onload = w3_open();
+    // window.onload = w3_open();
     // On page load, sort table alphabetically by Common Name
     window.onload = sortTable(0);
     // On page load, show columns as defined by column_selection

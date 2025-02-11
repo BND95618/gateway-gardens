@@ -711,24 +711,31 @@ def plants_update(request, id):
                 if (plant.image_1):
                     os.remove(plant.image_1.path)
                 plant.image_1 = request.FILES['image_1']
-                plant.caption_1 = form.cleaned_data.get('caption_1')
+            plant.caption_1 = form.cleaned_data.get('caption_1')
+            
             if 'image_2' in request.FILES:
                 if (plant.image_2):
                     os.remove(plant.image_2.path)
                 plant.image_2 = request.FILES['image_2']
-                plant.caption_2 = form.cleaned_data.get('caption_2')
+            plant.caption_2 = form.cleaned_data.get('caption_2')
+
             if 'image_3' in request.FILES:
                 if (plant.image_3):
                     os.remove(plant.image_3.path)
                 plant.image_3 = request.FILES['image_3']
-                plant.caption_3 = form.cleaned_data.get('caption_3')   
+            plant.caption_3 = form.cleaned_data.get('caption_3') 
+
             if 'image_4' in request.FILES:
                 if (plant.image_4):
                     os.remove(plant.image_4.path)
                 plant.image_4 = request.FILES['image_4']
-                plant.caption_4 = form.cleaned_data.get('caption_4') 
+            plant.caption_4 = form.cleaned_data.get('caption_4') 
+
             plant.creator_notes = form.cleaned_data.get('creator_notes')     
             plant.save()
+
+            print("DEBUG: Caption 1 (if): ", plant.caption_1)
+
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         # convert string-based lists (retrieved from db) to true Python lists
@@ -775,11 +782,17 @@ def plants_update(request, id):
                                             'phonetic_spelling' : plant.phonetic_spelling,
                                             'audio_name'        : plant.audio_name,
                                             'image_1'           : plant.image_1,
+                                            'caption_1'         : plant.caption_1,
                                             'image_2'           : plant.image_2,
+                                            'caption_2'         : plant.caption_2,
                                             'image_3'           : plant.image_3,
+                                            'caption_3'         : plant.caption_3,
                                             'image_4'           : plant.image_4,
+                                            'caption_4'         : plant.caption_4,
                                             'creator_notes'     : plant.creator_notes,
                                         })
+        print("DEBUG: Caption 1 (else): ", plant.image_1)
+        print("DEBUG: Caption 1 (else): ", plant.caption_1)
         context = { 'plant'            : plant, 
                     'form'             : form,
                     'sunset_zones_opt' : sunset_zones_opt }
