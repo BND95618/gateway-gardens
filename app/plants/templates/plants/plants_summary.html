@@ -150,7 +150,7 @@
       <label for="id_usda_zone_search">USDA Zone:</label><br>
       <select id="id_usda_zone_search" name="usda_zone_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
-        {% for x in usda_zones %}
+        {% for x in usda_zones_opt %}
           {% if x == usda_zone_search %}
             <option value="{{ x }}" selected>{{ x }}</option>
           {% elif x != "tbd" %}

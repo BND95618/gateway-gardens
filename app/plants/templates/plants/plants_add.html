@@ -211,9 +211,20 @@
     }
 
     // Check USDA Zone values (min <= max)
+    // Get the list of valid usda zones and put into JS array
+    let usda_zones_opt = {{ usda_zones_opt|safe }};
+    // Get the usda min and max zones
     let usda_zone_min = document.forms["plantForm"]["usda_zone_min"].value;
     let usda_zone_max = document.forms["plantForm"]["usda_zone_max"].value;
-    if (usda_zone_min > usda_zone_max) {
+
+    let usda_zone_min_array = usda_zone_min.split(" ");
+    let usda_zone_max_array = usda_zone_max.split(" ");
+ 
+    let usda_zone_min_index = usda_zones_opt.indexOf(usda_zone_min_array[0]);
+    let usda_zone_max_index = usda_zones_opt.indexOf(usda_zone_max_array[0]);
+
+    if (usda_zone_min_index > usda_zone_max_index)
+    {
       alert("ERROR: USDA Zone Min > USDA Zone Max");
       return false;
     }

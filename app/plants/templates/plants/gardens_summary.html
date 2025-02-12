@@ -31,19 +31,21 @@
 
 {% block header-completion %}
 <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <div class="w3-dropdown-hover">
-        <button class="w3-button w3-green">Menu</button>
-        <div class="w3-dropdown-content w3-bar-block w3-card-4">
-          <a href="{% url 'plants:gardens_update' garden.id %}" class="w3-bar-item w3-button">Update</a> 
-          <!-- AR: Add update functionality -->
-          <!-- AR: Add delete functionality -->
-          <a href="#" class="w3-bar-item w3-button">Delete</a>
-        </div>
-      </div>
-      <h1 class="w3-bar-item">{{ garden.name }}</h1>
+<div class="w3-bar w3-green">
+  <h1 class="w3-bar-item">My Garden: {{ garden.name }}</h1>
+  <div class="w3-dropdown-hover">
+    <button class="w3-button w3-green">
+      <i class="material-icons">
+        menu
+      </i>
+    </button>
+    <div class="w3-dropdown-content w3-bar-block w3-card-4">
+      <a href="{% url 'plants:gardens_update' garden.id %}" class="w3-bar-item w3-button">Update</a> 
+      <!-- AR: Add delete functionality -->
+      <a href="#" class="w3-bar-item w3-button">Delete</a>
     </div>
   </div>
+</div> 
 {% endblock header-completion %}
 
 {% block content %}

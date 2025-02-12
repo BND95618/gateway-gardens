@@ -33,7 +33,7 @@ ph_opt           = ["tbd",
                     "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
                     "8.0"]
 soil_type_opt    = ["tbd", "Sandy", "Loamy", "Clay"]
-usda_zones       = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
+usda_zones_opt   = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
                            "5a", "5b",  "6a",  "6b",  "7a",  "7b", "8a", "8b",
                            "9a", "9b", "10a", "10b", "11a", "11b"]
 sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
@@ -457,7 +457,7 @@ def plants_summary(request):
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
-                    "usda_zones"         : usda_zones,
+                    "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
                     # Search option values from previous search if applicable else default of "Any"
                     "type_x_search"       : type_x_search,
@@ -554,7 +554,7 @@ def plants_summary(request):
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "soil_type_opt"      : soil_type_opt,
-                    "usda_zones"         : usda_zones,
+                    "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
                     # search field defaults
                     "type_x_search"       : type_x_search,
@@ -667,6 +667,7 @@ def plants_add(request):
     else:
         form = PlantAddUpdateForm()
         context = { 'form'             : form,
+                    'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_add.html', context)
 
@@ -804,6 +805,7 @@ def plants_update(request, id):
         print("DEBUG: Caption 1 (else): ", plant.caption_1)
         context = { 'plant'            : plant, 
                     'form'             : form,
+                    'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_update.html', context)
 
