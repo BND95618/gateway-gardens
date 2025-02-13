@@ -6,24 +6,22 @@
 {% endblock title %}
 
 {% block css %}
+  <!-- ----------------------- -->
   <!-- Audio recorder CSS here -->
+  <!-- ----------------------- -->
   <style>
-
     .wrapper {
        height: 100%;
        display: flex;
        flex-direction: column;
     }
-  
     .main-controls {
       padding: 0.5rem 0;
     }
-  
     canvas {
       display: block;
       margin-bottom: 0.5rem;
     }
-  
     /* Make the clips use as much space as possible, and
      * also show a scrollbar when there are too many clips to show
      * in the available space */
@@ -31,31 +29,25 @@
       flex: 1;
       overflow: auto;
     }
-  
     section, article {
       display: block;
     }
-  
     .clip {
       padding-bottom: 1rem;
     }
-  
     audio {
       width: 100%;
       display: block;
       margin: 1rem auto 0.5rem;
     }
-  
     .clip p {
       display: inline-block;
       font-size: 1rem;
     }
-  
     .clip button {
       font-size: 1rem;
       float: right;
     }
-  
     aside {
     position: fixed;
     top: 0;
@@ -67,27 +59,21 @@
     background-color: #efefef;
     padding: 1rem;
     }
-  
     aside p {
     font-size: 1.2rem;
     margin: 0.5rem 0;
     }
-  
     aside a {
     color: #666;
     }
-  
     /* Toggled State of information box */
     input[type="checkbox"]:checked ~ aside {
     transform: translateX(0);
     }
-  
     /* Cursor when clip name is clicked over */
-  
     .clip p {
     cursor: pointer;
     }
-  
     /* Adjustments for wider screens */
     @media all and (min-width: 800px) {
       /* Don't take all the space as readability is lost when line length
@@ -98,7 +84,8 @@
         margin: 0 auto;
       }
     }
-  </style>  
+  </style> 
+  <!-- ----------------------- -->
 {% endblock css %}
 
 {% block header-completion %}
@@ -123,7 +110,6 @@
       <!-- ------------------------ -->
       <h5>Audio Recording - Scientific Name</h5>
       <div class="wrapper">
-
         <!-- HTML section for graphical display -->
         <section class="main-controls">
           <canvas class="visualizer" height="80px"></canvas>
