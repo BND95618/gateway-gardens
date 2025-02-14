@@ -27,7 +27,7 @@ ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
-ph_opt           = ["tbd", 
+pH_opt           = ["tbd", 
                     "5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", 
                     "6.0", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "6.9",
                     "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
@@ -377,6 +377,7 @@ def plants_summary(request):
         ucd_all_star_search  = request.POST["ucd_all_star_search"]
         sun_exposure_search  = request.POST["sun_exposure_search"]
         water_rqmts_search   = request.POST["water_rqmts_search"]
+        pH_search            = request.POST["pH_search"]
         soil_type_search     = request.POST["soil_type_search"]
         usda_zone_search     = request.POST["usda_zone_search"]
         sunset_zone_search   = request.POST["sunset_zone_search"]
@@ -394,6 +395,7 @@ def plants_summary(request):
                 garden.ucd_all_star_search = ucd_all_star_search
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
+                garden.pH_search           = pH_search
                 garden.soil_type_search    = soil_type_search
                 garden.usda_zone_search    = usda_zone_search
                 garden.sunset_zone_search  = sunset_zone_search
@@ -421,6 +423,7 @@ def plants_summary(request):
             plant.water_rqmts  = string_display(plant.water_rqmts)
             plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
+            pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             if ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
@@ -432,6 +435,7 @@ def plants_summary(request):
                ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
                ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
                ((soil_type_search in plant.soil_type) or (soil_type_search == "Any") or (plant.soil_type  == "tbd")) and \
+               (pH_hit) and \
                (usda_zone_hit) and \
                (sunset_zone_hit):
                 # show selected plant
@@ -456,6 +460,7 @@ def plants_summary(request):
                     "ca_native_opt"      : ca_native_opt,
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
+                    "pH_opt"             : pH_opt,
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
@@ -468,6 +473,7 @@ def plants_summary(request):
                     'ucd_all_star_search' : ucd_all_star_search,
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
+                    "pH_search"           : pH_search,
                     "soil_type_search"    : soil_type_search,
                     "usda_zone_search"    : usda_zone_search,
                     "sunset_zone_search"  : sunset_zone_search,
@@ -493,6 +499,7 @@ def plants_summary(request):
                 ucd_all_star_search   = garden.ucd_all_star_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
+                pH_search             = garden.pH_search
                 soil_type_search      = garden.soil_type_search
                 usda_zone_search      = garden.usda_zone_search
                 sunset_zone_search    = garden.sunset_zone_search
@@ -515,6 +522,7 @@ def plants_summary(request):
             plant.water_rqmts  = string_display(plant.water_rqmts)
             plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
+            pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
@@ -526,6 +534,7 @@ def plants_summary(request):
                 ((sun_exposure_search in plant.sun_exposure) or (sun_exposure_search == "Any") or (plant.sun_exposure == "tbd")) and \
                 ((water_rqmts_search  == plant.water_rqmts)  or (water_rqmts_search  == "Any") or (plant.water_rqmts  == "tbd")) and \
                 ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")) and \
+                (pH_hit) and \
                 (usda_zone_hit) and \
                 (sunset_zone_hit):
                 # show selected plant
@@ -553,6 +562,7 @@ def plants_summary(request):
                     "ucd_all_star_opt"   : ucd_all_star_opt,
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
+                    "pH_opt"             : pH_opt,
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
@@ -565,6 +575,7 @@ def plants_summary(request):
                     'ucd_all_star_search' : ucd_all_star_search,
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
+                    "pH_search"           : pH_search,
                     "soil_type_search"    : soil_type_search,
                     "usda_zone_search"    : usda_zone_search,
                     "sunset_zone_search"  : sunset_zone_search,
@@ -1191,6 +1202,15 @@ def string_display(string):
     temp = temp.replace("'", "")
     temp = temp.replace("]", "")
     return(temp)
+
+def pH_check(target, lower_limit, upper_limit):
+    if target == "Any":
+        hit = True
+    elif (target >= lower_limit and target <= upper_limit):
+        hit = True
+    else:
+        hit = False
+    return(hit)
 
 def usda_zone_check(target, lower_limit, upper_limit):
     if target == "Any":

@@ -45,6 +45,7 @@ class Garden(models.Model):
     ucd_all_star_search = models.CharField(max_length=32, default="Any", blank=True)
     sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
     water_rqmts_search  = models.CharField(max_length=32, default="Any", blank=True)
+    pH_search           = models.CharField(max_length=32, default="Any", blank=True)
     soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
     usda_zone_search    = models.CharField(max_length=32, default="Any", blank=True)
     sunset_zone_search  = models.CharField(max_length=32, default="Any", blank=True)

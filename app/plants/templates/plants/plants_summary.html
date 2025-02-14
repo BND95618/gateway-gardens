@@ -134,6 +134,18 @@
         {% endfor %}
       </select>
       <br>
+      <label for="id_pH_search">pH:</label><br>
+      <select id="id_pH_search" name="pH_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for x in pH_opt %}
+          {% if x == pH_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
       <label for="id_soil_type_search">Soil Requirements:</label><br>
       <select id="id_soil_type_search" name="soil_type_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
@@ -146,7 +158,6 @@
         {% endfor %}
       </select>
       <br>
-      
       <label for="id_usda_zone_search">USDA Zone:</label><br>
       <select id="id_usda_zone_search" name="usda_zone_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
@@ -159,7 +170,6 @@
         {% endfor %}
       </select>
       <br>
-
       <label for="id_sunset_zone_search">Sunset Zone:</label><br>
       <select id="id_sunset_zone_search" name="sunset_zone_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
@@ -172,7 +182,6 @@
         {% endfor %}
       </select>
       <br>
-
       <label for="id_garden_search">All plants / My plants</label><br>
       <select id="id_garden_search" name="garden_search" class="w3-select w3-margin-bottom">
         {% if garden_search == "Any" %}
@@ -433,6 +442,7 @@
       document.getElementById("id_ucd_all_star_search").value = "Any";
       document.getElementById("id_sun_exposure_search").value = "Any";
       document.getElementById("id_water_rqmts_search" ).value = "Any";
+      document.getElementById("id_pH_search"          ).value = "Any";
       document.getElementById("id_soil_type_search"   ).value = "Any";
       document.getElementById("id_usda_zone_search"   ).value = "Any";
       document.getElementById("id_garden_search"      ).value = "Any";

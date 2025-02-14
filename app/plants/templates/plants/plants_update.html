@@ -130,11 +130,16 @@
           <!-- Javascript will insert sound clips here -->
         </section>
       </div>
+      <p>
+        Note: Use 'Download' dropdown command to save audio file 
+        then 'Choose' audio file to upload to server
+      </p>
       <!-- What does this do? -->
       <label for="toggle">❔</label>
       <input type="checkbox" id="toggle">
       <!-- ------------------------ -->
 
+      <hr>
       <button type="submit" class="w3-button w3-green w3-round">Submit</button>
       <button type="reset"  class="w3-button w3-gray  w3-round">Reset</button>
       <a href="{% url 'plants:plants_summary' %}">
