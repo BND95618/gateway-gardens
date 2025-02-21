@@ -725,8 +725,9 @@ def plants_update(request, id):
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             if 'blob' in request.FILES:
-                audio_name = request.FILES['blob']
-                plant.audio_name = audio_name
+                if (plant.audio_name):
+                    os.remove(plant.audio_name.path)
+                plant.audio_name = request.FILES['blob']
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
