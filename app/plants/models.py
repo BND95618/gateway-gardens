@@ -199,3 +199,7 @@ class MyPlantComment(models.Model):
     
     def get_absolute_url(self):
         return reverse("myplants_details")
+    
+class Fiddle(models.Model):
+    audio_name = models.CharField(max_length=64, default="tbd", blank=True)
+    audio_file = models.FileField(upload_to='audio/', blank=True, null=True)

@@ -1,91 +1,15 @@
 <!-- app/plants/templates/plants/plants_update.html -->
 {% extends "plants/master.html" %}
 
+<!-- Required in order to load static files -->
+{% load static %}
+
 {% block title %}
   <title>Plant | Update</title>
 {% endblock title %}
 
 {% block css %}
-  <!-- ----------------------- -->
-  <!-- Audio recorder CSS here -->
-  <!-- ----------------------- -->
-  <style>
-    .wrapper {
-       height: 100%;
-       display: flex;
-       flex-direction: column;
-    }
-    .main-controls {
-      padding: 0.5rem 0;
-    }
-    canvas {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    /* Make the clips use as much space as possible, and
-     * also show a scrollbar when there are too many clips to show
-     * in the available space */
-    .sound-clips {
-      flex: 1;
-      overflow: auto;
-    }
-    section, article {
-      display: block;
-    }
-    .clip {
-      padding-bottom: 1rem;
-    }
-    audio {
-      width: 100%;
-      display: block;
-      margin: 1rem auto 0.5rem;
-    }
-    .clip p {
-      display: inline-block;
-      font-size: 1rem;
-    }
-    .clip button {
-      font-size: 1rem;
-      float: right;
-    }
-    aside {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(100%);
-    transition: 0.3s all ease-out;
-    background-color: #efefef;
-    padding: 1rem;
-    }
-    aside p {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    }
-    aside a {
-    color: #666;
-    }
-    /* Toggled State of information box */
-    input[type="checkbox"]:checked ~ aside {
-    transform: translateX(0);
-    }
-    /* Cursor when clip name is clicked over */
-    .clip p {
-    cursor: pointer;
-    }
-    /* Adjustments for wider screens */
-    @media all and (min-width: 800px) {
-      /* Don't take all the space as readability is lost when line length
-          goes past a certain size */
-      .wrapper {
-        width: 90%;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-    }
-  </style> 
-  <!-- ----------------------- -->>
+  <link rel="stylesheet" href="{% static 'plants/css/audio_recorder.css' %}">
 {% endblock css %}
 
 {% block header-completion %}
@@ -102,51 +26,43 @@
 {% endblock header-completion %}
 
 {% block content %}
-<!-- Main Content -->
+
+  <!-- Main content-->
   <div class="w3-container" style="margin-top:150px;">
-    <form name="plantForm"
-          action="" 
-          onsubmit="return validatePlantForm()"
-          method="post" 
-          enctype="multipart/form-data">
+    <form name     = "audioForm"
+          id       = "id_audioForm"
+          action   = "" 
+          method   = "post" 
+          enctype  = "multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-
       <!-- ------------------------ -->
       <!-- Audio recorder HTML here -->
       <!-- ------------------------ -->
-      <h5>Audio Recording - Scientific Name</h5>
+      <h5>
+        Audio Recording - Scientific Name &nbsp;
+        <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
+        <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
+          <i class="material-icons">volume_up</i>
+        </span> 
+      </h5> 
+      <hr>
       <div class="wrapper">
         <!-- HTML section for graphical display -->
         <section class="main-controls">
           <canvas class="visualizer" height="80px"></canvas>
           <div id="buttons">
-            <button class="record w3-button w3-green">Record</button>
-            <button class="stop   w3-button w3-red"  >Stop</button>
+            <button class="record w3-button w3-round-large w3-grey">Record</button>
+            <button class="stop   w3-button w3-round-large w3-grey"  >Stop</button>
           </div>
         </section>
-        <!-- HTML section for individual sound clips -->
-        <section class="sound-clips">
-          <!-- Javascript will insert sound clips here -->
-        </section>
+        <!-- HTML section for sound clip player -->
+        <!-- Javascript will insert sound clips here -->
+        <section class="sound-clips"></section>
       </div>
-      <p>
-        Note: Use 'Download' dropdown command to save audio file 
-        then 'Choose' audio file to upload to server
-      </p>
-      <!-- What does this do? -->
-      <label for="toggle">❔</label>
-      <input type="checkbox" id="toggle">
-      <!-- ------------------------ -->
-
       <hr>
       <button type="submit" class="w3-button w3-green w3-round">Submit</button>
       <button type="reset"  class="w3-button w3-gray  w3-round">Reset</button>
-      <a href="{% url 'plants:plants_summary' %}">
-        <button type="button" class="w3-button w3-red w3-round">
-          Cancel
-        </button>
-      </a>
     </form>
   </div>
 {% endblock content%}
@@ -339,23 +255,24 @@
 <!-- Audio recorder Javascript    -->
 <!-- ---------------------------- -->
 <script>
+  // --------------------------------------------------
   // Set up basic variables for app
-  // - mainSection contains thw audio visualizer & record/stop buttons
-  // - soundClips contain the player for the recorded audio
+  // > mainSection contains thw audio visualizer & record/stop buttons
+  // > soundClips contain the player for the recorded audio
+  // --------------------------------------------------
   const mainSection = document.querySelector(".main-controls");
   const canvas      = document.querySelector(".visualizer");
   const record      = document.querySelector(".record");
   const stop        = document.querySelector(".stop");
   const soundClips  = document.querySelector(".sound-clips");
-  
   // Disable stop button while not recording
   stop.disabled = true;
-
   // Visualiser setup - create web audio api context and canvas
   let audioCtx;
   const canvasCtx = canvas.getContext("2d");
-
+  // -------------------------------------------------- 
   // Main block for doing the audio recording
+  // -------------------------------------------------- 
   if (navigator.mediaDevices.getUserMedia) 
   {
     console.log("DEBUG: The mediaDevices.getUserMedia() method is supported.");
@@ -369,7 +286,9 @@
 
       // start to display the audio stream (live or recorded) 
       visualize(stream);
-
+      // -------------------------------------------------- 
+      // Audio Recording action after recording started
+      // -------------------------------------------------- 
       record.onclick = function () 
       {
         mediaRecorder.start();
@@ -392,8 +311,9 @@
         stop.disabled   = true;
         record.disabled = false;
       };
-
-      // Audio Recording action after 'stop'
+      // -------------------------------------------------- 
+      // Audio Recording action after recording stopped
+      // -------------------------------------------------- 
       mediaRecorder.onstop = function (e) 
       {
         console.log("DEBUG: processing audio");
@@ -409,6 +329,13 @@
 
         clipContainer.appendChild(audio);
         clipContainer.appendChild(clipLabel);
+        // Remove any prevously recorded soundclips in this session before adding new soundclip
+        if (soundClips.hasChildNodes()) 
+        {
+          console.log("DEBUG: Got to previous soundClips removal");
+          console.log("DEBUG: soundClips.hasChildNodes(): ", soundClips.hasChildNodes());
+          soundClips.removeChild(soundClips.children[0]);
+        }
         soundClips.appendChild(clipContainer);
 
         audio.controls = true;
@@ -418,9 +345,50 @@
         audio.src = audioURL;
         console.log("DEBUG: audio processing complete");
         console.log("DEBUG: audio.src: ", audio.src)
-      };
+        // -------------------------------------------------- 
+        // Use fetch to upload the audio to the server when the form is submitted
+        // --------------------------------------------------
+        id_audioForm.onsubmit = async (event) => {
+          event.preventDefault();
+          //
+          console.log("DEBUG: Uploading audio to server - Take 1");
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          // Get the form plus the audio recording data entered by the user
+          let formData  = new FormData(id_audioForm);
+          formData.append('blob', blob, 'audio_file');
+          // Send the form plus the audio recording data entered by the user
+          // NOTE: The url  must be set for add versus update
+          const postURL = window.location.pathname;
+          console.log("DEBUG: postURL:", postURL);
 
+          // Make the POST request and return a promise
+          fetch(postURL, 
+          {
+            method: "POST",
+            headers: 
+            {
+                'X-CSRFToken' : csrfToken
+            },
+            body: formData
+          })
+          .then(response => response.json())
+          .then(result => console.log('POST was a success: ${result}'))
+          .catch(error => console.error('An error occurred: ${error}'))
+          console.log("DEBUG: Completed post");
+          // AR: Go to plant details page for plant
+          console.log("DEBUG: window.location.hreg:", window.location.href)
+          console.log("DEBUG: window.location.hostname:", window.location.hostname)
+          console.log("DEBUG: window.location.pathname:", window.location.pathname)
+
+          // let returnURL = window.location.pathname;
+          let returnURL = "{% url 'plants:plants_summary' %}";
+          // alert("DEBUG: Pause");
+          window.location.href = returnURL;
+        };
+      };
+      // --------------------------------------------------
       // As recording progresses, collect the audio data
+      // --------------------------------------------------
       mediaRecorder.ondataavailable = function (e) 
       {
         chunks.push(e.data);
@@ -439,17 +407,16 @@
   {
     console.log("MediaDevices.getUserMedia() not supported on your browser!");
   }
-
+  // --------------------------------------------------  
   // Display the audio stream (live or recorded)
+  // -------------------------------------------------- 
   function visualize(stream) 
   {
     if (!audioCtx) 
     {
       audioCtx = new AudioContext();
     }
-
     const source = audioCtx.createMediaStreamSource(stream);
-
     const bufferLength = 2048;
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = bufferLength;
@@ -498,13 +465,14 @@
       canvasCtx.stroke();
     }
   }
-
+  // --------------------------------------------------
   window.onresize = function () 
   {
     canvas.width = mainSection.offsetWidth;
   };
 
   window.onresize();
-</script>
+
+  </script>
 <!-- ---------------------------- -->
 {% endblock js %}

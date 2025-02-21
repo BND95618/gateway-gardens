@@ -36,5 +36,7 @@ urlpatterns = [
     path('column_chooser',            views.column_chooser,     name='column_chooser'),
     # views for debug and testing purposes
     path('debug',                     views.debug,              name='debug'),
-    path('fiddle',                    views.fiddle,             name='fiddle'),
+    # path('fiddle',                  views.fiddle,             name='fiddle'),
+    path('fiddleAdd',                 views.fiddleAdd,          name='fiddleAdd'),
+    path('fiddleUpdate',              views.fiddleUpdate,       name='fiddleUpdate'),
 ]

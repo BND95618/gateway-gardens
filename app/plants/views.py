@@ -10,7 +10,7 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 
 from email_validator import validate_email
 
-from .models import Garden, MyPlant, Plant, Comment, MyPlantComment 
+from .models import Garden, MyPlant, Plant, Comment, MyPlantComment, Fiddle
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
@@ -19,8 +19,10 @@ import math
 import os
 
 # Define attribute select option arrays
-plant_types      = ["tbd", "Annual", "Grass", "Groundcover", "Perennial", "Shrub", "Succulent", "Tree", "Vegetable", "Vine"]
-bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", "blue", "orange"]
+plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", 
+                    "Succulent", "Tree", "Vegetable", "Vine"]
+bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", 
+                    "blue", "orange"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterfiles", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
@@ -652,8 +654,9 @@ def plants_add(request):
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
-            if 'audio_name' in request.FILES:
-                plant.audio_name    = request.FILES['audio_name']
+            if 'blob' in request.FILES:
+                audio_name = request.FILES['blob']
+                plant.audio_name = audio_name
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
@@ -721,8 +724,9 @@ def plants_update(request, id):
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
-            if 'audio_name' in request.FILES:
-                plant.audio_name    = request.FILES['audio_name']
+            if 'blob' in request.FILES:
+                audio_name = request.FILES['blob']
+                plant.audio_name = audio_name
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
@@ -1204,9 +1208,11 @@ def string_display(string):
     return(temp)
 
 def pH_check(target, lower_limit, upper_limit):
-    if target == "Any":
+    if (target == "Any"):
         hit = True
-    elif (target >= lower_limit and target <= upper_limit):
+    elif ((lower_limit == 'tbd') or (upper_limit == 'tbd')):
+        hit = True
+    elif ((target >= lower_limit) and (target <= upper_limit)):
         hit = True
     else:
         hit = False
@@ -1278,11 +1284,81 @@ def sunset_zone_check(target, range, options):
             hit = False
     return(hit)
 
-def fiddle(request):
+# def fiddle(request):
+#     """ Render the Fiddle Page for testing of new functions """
+#     if not request.user.is_authenticated:
+#         return HttpResponseRedirect(reverse('plants:index'))
+#     print("DEBUG: Got to Fiddle")
+#     print("DEBUG: Request: ", request)
+#     if request.method == 'POST' and request.FILES['blob']:
+#         fiddle = Fiddle()
+#         print("DEBUG: Got to fiddle via POST") 
+#         # audio_name = 'fiddle'
+#         audio_name = request.POST['audio_name']
+#         audio_file = request.FILES['blob']
+#         fiddle.audio_name = audio_name
+#         fiddle.audio_file = audio_file
+#         print("DEBUG: audio name = ", fiddle.audio_name)
+#         print("DEBUG: audio file = ", fiddle.audio_file)
+#         fiddle.save()
+#         return render(request, 'plants/fiddle.html')
+#     else:
+#         print("DEBUG: Got to fiddle without POST")
+#         fiddle = Fiddle.objects.get(audio_name='audio_name_2')
+#         context = { 'fiddle' : fiddle }
+#         return render(request, 'plants/fiddle.html', context)
+    
+def fiddleAdd(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    return render(request, 'plants/fiddle.html')
+    print("DEBUG: Got to FiddledAdd")
+    print("DEBUG: FiddleAdd Request: ", request)
+    if request.POST:
+        print("DEBUG: Got to fiddleAdd via POST")
+        fiddle = Fiddle() 
+        audio_name = request.POST['audio_name']
+        fiddle.audio_name = audio_name
+        if 'blob' in request.FILES:
+            audio_file = request.FILES['blob']
+            fiddle.audio_file = audio_file
+        print("DEBUG: FiddleAdd audio name = ", fiddle.audio_name)
+        print("DEBUG: FiddleAdd audio file = ", fiddle.audio_file)
+        fiddle.save()
+        print("DEBUG: Got to fiddleAdd via POST - upload end")
+        return render(request, 'plants/index.html')
+    else:
+        print("DEBUG: Got to fiddleAdd without POST")
+        return render(request, 'plants/fiddleAdd.html')
+    
+def fiddleUpdate(request):
+    """ Render the Fiddle Page for testing of new functions """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    print("DEBUG: Got to Fiddle")
+    print("DEBUG: Request: ", request)
+    fiddle = Fiddle.objects.get(audio_name='audio test 2 new') # manually select fiddle entry
+    if request.POST:
+        print("DEBUG: Got to fiddleUpdate via POST")
+        audio_name = request.POST['audio_name']
+        fiddle.audio_name = audio_name
+
+        # audio_file = request.FILES['blob']
+        if 'blob' in request.FILES:
+            if (fiddle.audio_file):
+                os.remove(fiddle.audio_file.path)
+            audio_file = request.FILES['blob']
+            fiddle.audio_file = audio_file
+
+        print("DEBUG: FiddleUpdate audio name = ", fiddle.audio_name)
+        print("DEBUG: FiddleUpdate audio file = ", fiddle.audio_file)
+        fiddle.save()
+        print("DEBUG: Got to FiddleUpdate via POST - upload end")
+        return render(request, 'plants/index.html')
+    else:
+        print("DEBUG: Got to fiddleUpdate without POST")
+        context = { 'fiddle' : fiddle }
+        return render(request, 'plants/fiddleUpdate.html', context)
 
 def debug(request):
     """ Render the Debug Page for debugging of new functions """

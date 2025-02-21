@@ -1,97 +1,21 @@
-<!-- app/plants/templates/plants_add.html -->
+<!-- app/plants/templates/plants/fiddleUpdate.html -->
 {% extends "plants/master.html" %}
 
+<!-- Required in order to load static files -->
+{% load static %}
+
 {% block title %}
-  <title>Fiddle</title>
+  <title>Fiddle Update</title>
 {% endblock title %}
 
 {% block css %}
-  <!-- ----------------------- -->
-  <!-- Audio recorder CSS here -->
-  <!-- ----------------------- -->
-  <style>
-    .wrapper {
-       height: 100%;
-       display: flex;
-       flex-direction: column;
-    }
-    .main-controls {
-      padding: 0.5rem 0;
-    }
-    canvas {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    /* Make the clips use as much space as possible, and
-     * also show a scrollbar when there are too many clips to show
-     * in the available space */
-    .sound-clips {
-      flex: 1;
-      overflow: auto;
-    }
-    section, article {
-      display: block;
-    }
-    .clip {
-      padding-bottom: 1rem;
-    }
-    audio {
-      width: 100%;
-      display: block;
-      margin: 1rem auto 0.5rem;
-    }
-    .clip p {
-      display: inline-block;
-      font-size: 1rem;
-    }
-    .clip button {
-      font-size: 1rem;
-      float: right;
-    }
-    aside {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transform: translateX(100%);
-    transition: 0.3s all ease-out;
-    background-color: #efefef;
-    padding: 1rem;
-    }
-    aside p {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    }
-    aside a {
-    color: #666;
-    }
-    /* Toggled State of information box */
-    input[type="checkbox"]:checked ~ aside {
-    transform: translateX(0);
-    }
-    /* Cursor when clip name is clicked over */
-    .clip p {
-    cursor: pointer;
-    }
-    /* Adjustments for wider screens */
-    @media all and (min-width: 800px) {
-      /* Don't take all the space as readability is lost when line length
-          goes past a certain size */
-      .wrapper {
-        width: 90%;
-        max-width: 1000px;
-        margin: 0 auto;
-      }
-    }
-  </style> 
-  <!-- ----------------------- -->
-{% endblock css %}
+<link rel="stylesheet" href="{% static 'plants/css/audio_recorder.css' %}">
+{% endblock css%}
 
 {% block header-completion %}
     <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">Fiddle</h1>
+      <h1 class="w3-bar-item">Fiddle - Play/Update Audio</h1>
     </div>
   </div>
 {% endblock header-completion %}
@@ -99,11 +23,11 @@
 {% block content %}
   <!-- Main content-->
   <div class="w3-container" style="margin-top:150px;">
-    <form name="audioForm"
-          action="" 
-          onsubmit="return validatePlantForm()"
-          method="post" 
-          enctype="multipart/form-data">
+    <form name    = "audioForm"
+          id      = "id_audioForm"
+          action  = "" 
+          method  = "post" 
+          enctype = "multipart/form-data">
       {% csrf_token %}
       <!-- ------------------------ -->
       <!-- Audio recorder HTML here -->
@@ -115,7 +39,10 @@
       <audio id="player-2" src="{{ fiddle.audio_file.url }}"></audio>
       <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
         <i class="material-icons w3-green">volume_up</i>
-      </span>
+      </span>   
+      <hr>
+      <label for="id_audio_name">Audio name:</label>
+      <input type="text" id="id_audio_name" name="audio_name">
       <hr>
       <div class="wrapper">
         <!-- HTML section for graphical display -->
@@ -127,9 +54,8 @@
           </div>
         </section>
         <!-- HTML section for sound clip player -->
-        <section class="sound-clips">
-          <!-- Javascript will insert sound clips here -->
-        </section>
+        <!-- Javascript will insert sound clips here -->
+        <section class="sound-clips"></section>
       </div>
   
       <hr>
@@ -144,9 +70,11 @@
 <!-- Audio recorder Javascript    -->
 <!-- ---------------------------- -->
 <script>
+  // --------------------------------------------------
   // Set up basic variables for app
-  // - mainSection contains thw audio visualizer & record/stop buttons
-  // - soundClips contain the player for the recorded audio
+  // > mainSection contains thw audio visualizer & record/stop buttons
+  // > soundClips contain the player for the recorded audio
+  // --------------------------------------------------
   const mainSection = document.querySelector(".main-controls");
   const canvas      = document.querySelector(".visualizer");
   const record      = document.querySelector(".record");
@@ -173,7 +101,9 @@
 
       // start to display the audio stream (live or recorded) 
       visualize(stream);
-
+      // -------------------------------------------------- 
+      // Audio Recording action after recording started
+      // -------------------------------------------------- 
       record.onclick = function () 
       {
         mediaRecorder.start();
@@ -197,7 +127,7 @@
         record.disabled = false;
       };
       // -------------------------------------------------- 
-      // Audio Recording action after 'stop'
+      // Audio Recording action after recording stopped
       // -------------------------------------------------- 
       mediaRecorder.onstop = function (e) 
       {
@@ -214,6 +144,13 @@
 
         clipContainer.appendChild(audio);
         clipContainer.appendChild(clipLabel);
+        // Remove any prevously recorded soundclips in this session before adding new soundclip
+        if (soundClips.hasChildNodes()) 
+        {
+          console.log("DEBUG: Got to previous soundClips removal");
+          console.log("DEBUG: soundClips.hasChildNodes(): ", soundClips.hasChildNodes());
+          soundClips.removeChild(soundClips.children[0]);
+        }
         soundClips.appendChild(clipContainer);
 
         audio.controls = true;
@@ -223,11 +160,61 @@
         audio.src = audioURL;
         console.log("DEBUG: audio processing complete");
         console.log("DEBUG: audio.src: ", audio.src)
-        // Upload the blob to the server
-        uploadBlob(blob);
-      };
+        // -------------------------------------------------- 
+        // Use fetch to upload the audio to the server when the form is submitted
+        // --------------------------------------------------
+        id_audioForm.onsubmit = async (event) => {
+          event.preventDefault();
+          //
+          console.log("DEBUG: Uploading audio to server - Take 1");
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          // Get the form plus the audio recording data entered by the user
+          let formData  = new FormData(id_audioForm);
+          formData.append('blob', blob, 'audio_file');
+          // Send the form plus the audio recording data entered by the user
+          // NOTE: The url  must be set for add versus update
 
+
+          const currentURL = window.location.pathname;
+          let postURL = "";
+          console.log("DEBUG: currentURL:", currentURL);
+          if (currentURL == '/fiddleAdd')
+          {
+            postURL = "{% url 'plants:fiddleAdd' %}";
+            console.log("DEBUG: postURL 1 =", postURL);
+          }
+          else
+          {
+            postURL = "{% url 'plants:fiddleUpdate' %}";
+            console.log("DEBUG: postURL 1 =", postURL);
+          }
+          
+
+          // postURL = "{% url 'plants:fiddleAdd' %}";
+          console.log("DEBUG: postURL 2 =", postURL);
+          alert("DEBUG: Pause");
+
+
+          // Make the POST request and return a promise
+          fetch(postURL, 
+          {
+            method: "POST",
+            headers: 
+            {
+                'X-CSRFToken' : csrfToken
+            },
+            body: formData
+          })
+          .then(response => response.json())
+          .then(result => console.log('POST was a success: ${result}'))
+          .catch(error => console.error('An error occurred: ${error}'))
+          // AR: Go to plant details page for plant
+          window.location.href="{% url 'plants:plants_summary' %}";
+        };
+      };
+      // --------------------------------------------------
       // As recording progresses, collect the audio data
+      // --------------------------------------------------
       mediaRecorder.ondataavailable = function (e) 
       {
         chunks.push(e.data);
@@ -255,9 +242,7 @@
     {
       audioCtx = new AudioContext();
     }
-
     const source = audioCtx.createMediaStreamSource(stream);
-
     const bufferLength = 2048;
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = bufferLength;
@@ -314,44 +299,6 @@
 
   window.onresize();
 
-  // -------------------------------------------------- 
-  // Use fetch to upload the audio to the server
-  // --------------------------------------------------
-  function uploadBlob(blob) {
-    console.log("DEBUG: Uploading audio to server - 4");
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const formData  = new FormData();
-    //
-    formData.append('audio_name', 'audio_name_2');
-    formData.append('blob', blob, 'audio_file');
-
-    fetch("{% url 'plants:fiddle' %}",
-    {
-      method: "POST",
-      headers: 
-      {
-        'X-CSRFToken' : csrfToken
-      },
-      body: formData
-    })
-    //
-    .then(response => console.log('DEBUG: Blob Uploaded successfully!'))
-    //
-    .catch(error => alert(error));
-  }
   </script>
-  <script>
-  window.onload = function ()
-  {
-    console.log("DEBUG: set audio source")
-    // console.log("DEBUG: fiddle.audio_file.url: ", {{ fiddle.audio_file.url }})
-    // const audioURL = window.URL.createObjectURL( {{ fiddle.audio_file.url }} );
-    // audio.src = audioURL;
-    // audio.load(); // Important to load the new source
-    // audio.play(); // Optional: play immediately
-    console.log("DEBUG: audio source set")
-  };
-  ////////////////////////////////////////////////////////
-</script>
 <!-- ---------------------------- -->
 {% endblock js %}

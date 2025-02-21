@@ -7,6 +7,7 @@ from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimeP
 TYPE_CHOICES = (
 	("tbd",         "tbd"),
 	("Annual",      "Annual"),
+	("Fern",        "Fern"),
 	("Grass",       "Grass"),
 	("Groundcover", "Groundcover"),
 	("Perennial",   "Perennial"),
@@ -664,8 +665,6 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=32, 
 		required=False
 		)
-	# plant scientific name pronunciation
-	audio_name = forms.FileField(required=False)
 	# plant images
 	image_1   = forms.ImageField(required=False)
 	caption_1 = forms.CharField(
