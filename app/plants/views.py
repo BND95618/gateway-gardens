@@ -10,7 +10,7 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 
 from email_validator import validate_email
 
-from .models import Garden, MyPlant, Plant, Comment, MyPlantComment, Fiddle
+from .models import Garden, MyPlant, Plant, Comment, MyPlantComment
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
@@ -208,19 +208,384 @@ def gardens_update(request, id):
 def myplants_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    my_plants = MyPlant.objects.filter(owner = request.user.username)
-    template = loader.get_template('plants/myplants_summary.html')
-    for my_plant in my_plants:
-        # format multiselect attributes to remove [, ', and ]
-        my_plant.sun_exposure = string_display(my_plant.sun_exposure)
-        my_plant.soil_type    = string_display(my_plant.soil_type)
-    gardens = Garden.objects.filter(owner = request.user.username)
-    # Get the user's previously stored column display sections
-    for garden in gardens:       
-        my_column_selection_list  = string2list(garden.my_column_selection)
-    context = { 'my_plants'           : my_plants,
-                'my_column_selection' : my_column_selection_list, }
-    return HttpResponse(template.render(context, request))
+    
+    # AR: Determine if this is really necessary
+    template = loader.get_template("plants/myplants_summary.html")
+
+    # Executed when search request is submitted
+    if request.method == 'POST':
+    
+        # Get the search criteria from the "http request"
+        # Plant Characteristics
+        type_x_search           = request.POST["type_x_search"]
+        bloom_color_search      = request.POST["bloom_color_search"]
+        bloom_season_search     = request.POST["bloom_season_search"]
+        pollinators_search      = request.POST["pollinators_search"]
+        ca_native_search        = request.POST["ca_native_search"]
+        ucd_all_star_search     = request.POST["ucd_all_star_search"]
+        # Plant Requirements
+        sun_exposure_search     = request.POST["sun_exposure_search"]
+        water_rqmts_search      = request.POST["water_rqmts_search"]
+        soil_type_search        = request.POST["soil_type_search"]
+        pH_search               = request.POST["pH_search"]
+        usda_zone_search        = request.POST["usda_zone_search"]
+        sunset_zone_search      = request.POST["sunset_zone_search"]
+        # Garden Environment
+        my_sun_exposure_search  = request.POST["my_sun_exposure_search"]
+        my_water_level_search   = request.POST["my_water_level_search"]
+        my_soil_type_search     = request.POST["my_soil_type_search"]
+
+        # Store the search criteria and get the previously stored column selections for the user
+        gardens = Garden.objects.filter(owner = request.user.username)
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                # Store the search criteria in the user's garden db table
+                garden.type_x_search       = type_x_search
+                garden.bloom_color_search  = bloom_color_search
+                garden.bloom_season_search = bloom_season_search
+                garden.pollinators_search  = pollinators_search
+                garden.ca_native_search    = ca_native_search
+                garden.ucd_all_star_search = ucd_all_star_search
+                garden.sun_exposure_search = sun_exposure_search
+                garden.water_rqmts_search  = water_rqmts_search
+                garden.pH_search           = pH_search
+                garden.soil_type_search    = soil_type_search
+                garden.usda_zone_search    = usda_zone_search
+                garden.sunset_zone_search  = sunset_zone_search
+                #
+                garden.my_sun_exposure_search = my_sun_exposure_search
+                garden.my_water_level_search  = my_water_level_search
+                garden.my_soil_type_search    = my_soil_type_search
+                #
+                garden.save()
+                # Get the user's previously stored column display sections
+                my_column_selection_list  = string2list(garden.column_selection)
+
+        # Obtain the plants that the current user has claimed for their garden
+        my_plants = MyPlant.objects.filter(owner = request.user.username)
+
+        # Execute the search
+        for my_plant in my_plants:
+            # format multiselect attributes to remove [, ', and ]
+            my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
+            my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
+            my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
+            my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
+            my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
+            my_plant.plant.soil_type    = string_display(my_plant.plant.soil_type)
+            # clean up the list display
+            my_plant.sun_exposure = string_display(my_plant.sun_exposure)
+            my_plant.water_level  = string_display(my_plant.water_level)
+            my_plant.soil_type    = string_display(my_plant.soil_type)
+            # Run through the search criteria to select the plants to show
+            pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
+            usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
+            if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
+                    (type_x_search               == "Any")                       or \
+                    (my_plant.plant.type_x       == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (bloom_color_search          in my_plant.plant.bloom_color)  or \
+                    (bloom_color_search          == "Any")                       or \
+                    (my_plant.plant.bloom_color  == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (bloom_season_search         in my_plant.plant.bloom_season) or \
+                    (bloom_season_search         == "Any")                       or \
+                    (my_plant.plant.bloom_season == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (pollinators_search          in my_plant.plant.pollinators)  or \
+                    (pollinators_search          == "Any")                       or \
+                    (my_plant.plant.pollinators  == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (ca_native_search             == my_plant.plant.ca_native)   or \
+                    (ca_native_search             == "Any")                      or \
+                    (my_plant.plant.ca_native     == "tbd")                         \
+                   )                                                                \
+                  and                                                               \
+                  ( (ucd_all_star_search         == my_plant.plant.ucd_all_star) or \
+                    (ucd_all_star_search         == "Any")                       or \
+                    (my_plant.plant.ucd_all_star == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (sun_exposure_search         in my_plant.plant.sun_exposure) or \
+                    (sun_exposure_search         == "Any")                       or \
+                    (my_plant.plant.sun_exposure == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (water_rqmts_search         in my_plant.plant.water_rqmts)   or \
+                    (water_rqmts_search         == "Any")                        or \
+                    (my_plant.plant.water_rqmts == "tbd")                           \
+                  )                                                                 \
+                  and                                                               \
+                  ( (soil_type_search            in my_plant.plant.soil_type)    or \
+                    (soil_type_search            == "Any")                       or \
+                    (my_plant.plant.soil_type    == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( pH_hit )                                                        \
+                  and                                                               \
+                  (usda_zone_hit)                                                   \
+                  and                                                               \
+                  (sunset_zone_hit)                                                 \
+                  and                                                               \
+                  ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
+                    (my_sun_exposure_search      == "Any")                       or \
+                    (my_plant.sun_exposure       == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_water_level_search      == my_plant.water_level)         or \
+                    (my_water_level_search      == "Any")                        or \
+                    (my_plant.water_level       == "tbd")                           \
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_soil_type_search         == my_plant.soil_type)          or \
+                    (my_soil_type_search         == "Any")                       or \
+                    (my_plant.soil_type          == "tbd")                          \
+                  )    
+                ):
+                my_plant.show = "yes"
+            else:
+                my_plant.show = "no"
+
+            gardens = Garden.objects.filter(owner = request.user.username)
+            # Get the user's previously stored column display sections
+            user_garden_found = False
+            for garden in gardens:     
+                # Get the user's previously stored column display sections  
+                my_column_selection_list  = string2list(garden.my_column_selection)
+                # Get the user's previously stored search criteria
+                type_x_search         = garden.type_x_search
+                bloom_color_search    = garden.bloom_color_search
+                bloom_season_search   = garden.bloom_season_search
+                pollinators_search    = garden.pollinators_search
+                ca_native_search      = garden.ca_native_search
+                ucd_all_star_search   = garden.ucd_all_star_search
+                sun_exposure_search   = garden.sun_exposure_search
+                water_rqmts_search    = garden.water_rqmts_search
+                pH_search             = garden.pH_search
+                soil_type_search      = garden.soil_type_search
+                usda_zone_search      = garden.usda_zone_search
+                sunset_zone_search    = garden.sunset_zone_search
+                #
+                my_sun_exposure_search   = garden.my_sun_exposure_search
+                my_water_level_search    = garden.my_water_level_search
+                my_soil_type_search      = garden.my_soil_type_search
+                #
+                user_garden_found     = True
+                break # once the user's garden is found exit the loop
+
+            # the current user needs to have a registered garden
+            if (user_garden_found == False):
+                return HttpResponseRedirect(reverse('plants:gardens_add'))
+
+            context = { "my_plants"        : my_plants,
+                        # search field options - plant attributes
+                        "plant_types"      : plant_types,
+                        "bloom_color_opt"  : bloom_color_opt,
+                        "bloom_season_opt" : bloom_season_opt,
+                        "pollinators_opt"  : pollinators_opt,
+                        "ucd_all_star_opt" : ucd_all_star_opt,
+                        "ca_native_opt"    : ca_native_opt,
+                        # search field options - plant requirements & garden environment
+                        "sun_exposure_opt" : sun_exposure_opt,
+                        "water_rqmts_opt"  : water_rqmts_opt,
+                        "soil_type_opt"    : soil_type_opt,
+                        "pH_opt"           : pH_opt,
+                        "usda_zones_opt"   : usda_zones_opt,
+                        "sunset_zones_opt" : sunset_zones_opt,
+                        
+                        # search field defaults - plant attributes
+                        "type_x_search"       : type_x_search,
+                        "bloom_color_search"  : bloom_color_search,
+                        "bloom_season_search" : bloom_season_search,
+                        "pollinators_search"  : pollinators_search,
+                        'ca_native_search'    : ca_native_search,
+                        'ucd_all_star_search' : ucd_all_star_search,
+                        # search field defaults - plant requirements
+                        "sun_exposure_search" : sun_exposure_search,
+                        "water_rqmts_search"  : water_rqmts_search,
+                        "soil_type_search"    : soil_type_search,
+                        "pH_search"           : pH_search,
+                        "usda_zone_search"    : usda_zone_search,
+                        "sunset_zone_search"  : sunset_zone_search,
+                        # search field defaults - my plant conditions 
+                        "my_sun_exposure_search" : my_sun_exposure_search,
+                        "my_water_level_search"  : my_water_level_search,
+                        "my_soil_type_search"    : my_soil_type_search,
+                        # table column selection
+                        "my_column_selection" : my_column_selection_list, 
+                      }
+            
+        return render(request, "plants/myplants_summary.html", context)
+
+    # Executed when plants summary page is initialized
+    else:
+        gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column display sections
+        user_garden_found = False
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                # Get the user's previously stored column display sections
+                column_selection_list  = string2list(garden.column_selection)
+                # Get the user's previously stored search criteria
+                type_x_search         = garden.type_x_search
+                bloom_color_search    = garden.bloom_color_search
+                bloom_season_search   = garden.bloom_season_search
+                pollinators_search    = garden.pollinators_search
+                ca_native_search      = garden.ca_native_search
+                ucd_all_star_search   = garden.ucd_all_star_search
+                sun_exposure_search   = garden.sun_exposure_search
+                water_rqmts_search    = garden.water_rqmts_search
+                pH_search             = garden.pH_search
+                soil_type_search      = garden.soil_type_search
+                usda_zone_search      = garden.usda_zone_search
+                sunset_zone_search    = garden.sunset_zone_search
+
+                my_sun_exposure_search   = garden.my_sun_exposure_search
+                my_water_level_search    = garden.my_water_level_search
+                my_soil_type_search      = garden.my_soil_type_search
+
+                user_garden_found     = True
+                break # once the user's garden is found exit the loop
+
+        # the current user needs to have a registered garden
+        if (user_garden_found == False):
+            return HttpResponseRedirect(reverse('plants:gardens_add'))
+
+        # Obtain the plants that the current user has claimed for their garden
+        my_plants = MyPlant.objects.filter(owner = request.user.username)
+
+        # Execute the search
+        for my_plant in my_plants:
+            # format multiselect attributes to remove [, ', and ]
+            my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
+            my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
+            my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
+            my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
+            my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
+            my_plant.plant.soil_type    = string_display(my_plant.plant.soil_type)
+            # clean up the list display
+            my_plant.sun_exposure = string_display(my_plant.sun_exposure)
+            my_plant.water_level  = string_display(my_plant.water_level)
+            my_plant.soil_type    = string_display(my_plant.soil_type)
+            # Run through the search criteria to select the plants to show
+            pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
+            usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
+            if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
+                    (type_x_search               == "Any")                       or \
+                    (my_plant.plant.type_x       == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (bloom_color_search          in my_plant.plant.bloom_color)  or \
+                    (bloom_color_search          == "Any")                       or \
+                    (my_plant.plant.bloom_color  == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (bloom_season_search         in my_plant.plant.bloom_season) or \
+                    (bloom_season_search         == "Any")                       or \
+                    (my_plant.plant.bloom_season == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (pollinators_search          in my_plant.plant.pollinators)  or \
+                    (pollinators_search          == "Any")                       or \
+                    (my_plant.plant.pollinators  == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (ca_native_search             == my_plant.plant.ca_native)   or \
+                    (ca_native_search             == "Any")                      or \
+                    (my_plant.plant.ca_native     == "tbd")                         \
+                   )                                                                \
+                  and                                                               \
+                  ( (ucd_all_star_search         == my_plant.plant.ucd_all_star) or \
+                    (ucd_all_star_search         == "Any")                       or \
+                    (my_plant.plant.ucd_all_star == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (sun_exposure_search         in my_plant.plant.sun_exposure) or \
+                    (sun_exposure_search         == "Any")                       or \
+                    (my_plant.plant.sun_exposure == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (water_rqmts_search         in my_plant.plant.water_rqmts)   or \
+                    (water_rqmts_search         == "Any")                        or \
+                    (my_plant.plant.water_rqmts == "tbd")                           \
+                  )                                                                 \
+                  and                                                               \
+                  ( (soil_type_search            in my_plant.plant.soil_type)    or \
+                    (soil_type_search            == "Any")                       or \
+                    (my_plant.plant.soil_type    == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( pH_hit )                                                        \
+                  and                                                               \
+                  (usda_zone_hit)                                                   \
+                  and                                                               \
+                  (sunset_zone_hit)                                                 \
+                  and                                                               \
+                  ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
+                    (my_sun_exposure_search      == "Any")                       or \
+                    (my_plant.sun_exposure       == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_water_level_search      == my_plant.water_level)         or \
+                    (my_water_level_search      == "Any")                        or \
+                    (my_plant.water_level       == "tbd")                           \
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_soil_type_search         == my_plant.soil_type)          or \
+                    (my_soil_type_search         == "Any")                       or \
+                    (my_plant.soil_type          == "tbd")                          \
+                  )    
+                ):
+                my_plant.show = "yes"
+            else:
+                my_plant.show = "no"
+
+        gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column display sections
+        for garden in gardens:       
+            my_column_selection_list  = string2list(garden.my_column_selection)
+        context = { 'my_plants'           : my_plants,
+                    # search field options - plant attributes
+                    "plant_types"      : plant_types,
+                    "bloom_color_opt"  : bloom_color_opt,
+                    "bloom_season_opt" : bloom_season_opt,
+                    "pollinators_opt"  : pollinators_opt,
+                    "ucd_all_star_opt" : ucd_all_star_opt,
+                    "ca_native_opt"    : ca_native_opt,
+                    # search field options - plant requirements & garden environment
+                    "sun_exposure_opt" : sun_exposure_opt,
+                    "water_rqmts_opt"  : water_rqmts_opt,
+                    "soil_type_opt"    : soil_type_opt,
+                    "pH_opt"           : pH_opt,
+                    "usda_zones_opt"   : usda_zones_opt,
+                    "sunset_zones_opt" : sunset_zones_opt,
+                    # search field defaults - plant attributes
+                    "type_x_search"       : type_x_search,
+                    "bloom_color_search"  : bloom_color_search,
+                    "bloom_season_search" : bloom_season_search,
+                    "pollinators_search"  : pollinators_search,
+                    'ca_native_search'    : ca_native_search,
+                    'ucd_all_star_search' : ucd_all_star_search,
+                    # search field defaults - plant requirements
+                    "sun_exposure_search" : sun_exposure_search,
+                    "water_rqmts_search"  : water_rqmts_search,
+                    "soil_type_search"    : soil_type_search,
+                    "pH_search"           : pH_search,
+                    "usda_zone_search"    : usda_zone_search,
+                    "sunset_zone_search"  : sunset_zone_search,
+                    # search field defaults - my plant conditions
+                    "my_sun_exposure_search" : my_sun_exposure_search,
+                    "my_water_level_search"  : my_water_level_search,
+                    "my_soil_type_search"    : my_soil_type_search,
+                    # table column selection
+                    'my_column_selection' : my_column_selection_list, }
+        return HttpResponse(template.render(context, request))
 
 def myplants_add(request, id):
     """ Associate a 'plant' to 'my_plant' """
@@ -235,8 +600,9 @@ def myplants_add(request, id):
             my_plant.date_planted = form.cleaned_data.get("date_planted") #
             my_plant.location     = form.cleaned_data.get("location")     #
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
-            my_plant.pH           = form.cleaned_data.get("pH")           #
+            my_plant.water_level  = form.cleaned_data.get("water_level")  #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
             my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
@@ -260,8 +626,9 @@ def myplants_update(request, id):
             my_plant.date_planted = form.cleaned_data.get("date_planted") #
             my_plant.location     = form.cleaned_data.get("location")     #
             my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
-            my_plant.pH           = form.cleaned_data.get("pH")           #
+            my_plant.water_level  = form.cleaned_data.get("water_level")  #
             my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
+            my_plant.pH           = form.cleaned_data.get("pH")           #
             my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
             my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
@@ -271,12 +638,14 @@ def myplants_update(request, id):
     else:
         # convert string-based lists (retrieved from db) to true Python lists
         sun_exposure_list = string2list(my_plant.sun_exposure)
+        water_level_list = string2list(my_plant.water_level)
         # set the update form with the current db values
         form = MyPlantAddUpdateForm(initial={ 'date_planted' : my_plant.date_planted,
                                               'location'     : my_plant.location,
                                               'sun_exposure' : sun_exposure_list,
-                                              'pH'           : my_plant.pH,
+                                              'water_level'  : water_level_list,
                                               'soil_type'    : my_plant.soil_type,
+                                              'pH'           : my_plant.pH,
                                               'bloom_color'  : my_plant.bloom_color,
                                               'bloom_start'  : my_plant.bloom_start,
                                               'bloom_end'    : my_plant.bloom_end,
@@ -368,15 +737,17 @@ def plants_summary(request):
     
     # Executed when search request is submitted
     if request.method == 'POST':   
-
         template = loader.get_template("plants/plants_summary.html")
+
         # Get the search criteria from the "http request"
+        # Plant Characteristics
         type_x_search        = request.POST["type_x_search"]
         bloom_color_search   = request.POST["bloom_color_search"]
         bloom_season_search  = request.POST["bloom_season_search"]
         pollinators_search   = request.POST["pollinators_search"]
         ca_native_search     = request.POST["ca_native_search"]
         ucd_all_star_search  = request.POST["ucd_all_star_search"]
+        # Plant Requirements
         sun_exposure_search  = request.POST["sun_exposure_search"]
         water_rqmts_search   = request.POST["water_rqmts_search"]
         pH_search            = request.POST["pH_search"]
@@ -384,11 +755,12 @@ def plants_summary(request):
         usda_zone_search     = request.POST["usda_zone_search"]
         sunset_zone_search   = request.POST["sunset_zone_search"]
         garden_search        = request.POST["garden_search"]
-        
+
+        # Store the search criteria and get the previously stored column selections for the user
         gardens = Garden.objects.filter(owner = request.user.username)
         for garden in gardens:
-            # Store the search criteria in the user's garden db table
             if (garden.owner == request.user.username):
+                # Store the search criteria in the user's garden db table
                 garden.type_x_search       = type_x_search
                 garden.bloom_color_search  = bloom_color_search
                 garden.bloom_season_search = bloom_season_search
@@ -403,7 +775,7 @@ def plants_summary(request):
                 garden.sunset_zone_search  = sunset_zone_search
                 garden.garden_search       = garden_search
                 garden.save()
-            # Get the user's previously stored column display sections
+                # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
 
         # Obtain the plants that the current user has claimed for their garden - needed to populate the table
@@ -487,6 +859,7 @@ def plants_summary(request):
     # Executed when plants summary page is initialized
     else:
         gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column display sections
         user_garden_found = False
         for garden in gardens:
             if (garden.owner == request.user.username):
@@ -508,9 +881,11 @@ def plants_summary(request):
                 garden_search         = garden.garden_search
                 user_garden_found     = True
                 break # once the user's garden is found exit the loop
+
         # the current user needs to have a registered garden
         if (user_garden_found == False):
             return HttpResponseRedirect(reverse('plants:gardens_add'))
+        
         # Obtain the plants that the current user has claimed for their garden
         my_plants = MyPlant.objects.filter(owner = request.user.username) 
         # Execute the search
@@ -577,14 +952,15 @@ def plants_summary(request):
                     'ucd_all_star_search' : ucd_all_star_search,
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
-                    "pH_search"           : pH_search,
                     "soil_type_search"    : soil_type_search,
+                    "pH_search"           : pH_search,
                     "usda_zone_search"    : usda_zone_search,
                     "sunset_zone_search"  : sunset_zone_search,
                     'garden_search'       : garden_search,
                     # table column selection
                     'column_selection'   : column_selection_list,
               }
+        
     return HttpResponse(template.render(context, request))
 
 def plants_details(request, id):
@@ -1285,81 +1661,16 @@ def sunset_zone_check(target, range, options):
             hit = False
     return(hit)
 
-# def fiddle(request):
-#     """ Render the Fiddle Page for testing of new functions """
-#     if not request.user.is_authenticated:
-#         return HttpResponseRedirect(reverse('plants:index'))
-#     print("DEBUG: Got to Fiddle")
-#     print("DEBUG: Request: ", request)
-#     if request.method == 'POST' and request.FILES['blob']:
-#         fiddle = Fiddle()
-#         print("DEBUG: Got to fiddle via POST") 
-#         # audio_name = 'fiddle'
-#         audio_name = request.POST['audio_name']
-#         audio_file = request.FILES['blob']
-#         fiddle.audio_name = audio_name
-#         fiddle.audio_file = audio_file
-#         print("DEBUG: audio name = ", fiddle.audio_name)
-#         print("DEBUG: audio file = ", fiddle.audio_file)
-#         fiddle.save()
-#         return render(request, 'plants/fiddle.html')
-#     else:
-#         print("DEBUG: Got to fiddle without POST")
-#         fiddle = Fiddle.objects.get(audio_name='audio_name_2')
-#         context = { 'fiddle' : fiddle }
-#         return render(request, 'plants/fiddle.html', context)
-    
-def fiddleAdd(request):
+def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    print("DEBUG: Got to FiddledAdd")
-    print("DEBUG: FiddleAdd Request: ", request)
-    if request.POST:
-        print("DEBUG: Got to fiddleAdd via POST")
-        fiddle = Fiddle() 
-        audio_name = request.POST['audio_name']
-        fiddle.audio_name = audio_name
-        if 'blob' in request.FILES:
-            audio_file = request.FILES['blob']
-            fiddle.audio_file = audio_file
-        print("DEBUG: FiddleAdd audio name = ", fiddle.audio_name)
-        print("DEBUG: FiddleAdd audio file = ", fiddle.audio_file)
-        fiddle.save()
-        print("DEBUG: Got to fiddleAdd via POST - upload end")
-        return render(request, 'plants/index.html')
+    if request.method == 'POST':
+        print("DEBUG: Got to fiddle via POST") 
+        return render(request, 'plants/fiddle.html')
     else:
-        print("DEBUG: Got to fiddleAdd without POST")
-        return render(request, 'plants/fiddleAdd.html')
-    
-def fiddleUpdate(request):
-    """ Render the Fiddle Page for testing of new functions """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    print("DEBUG: Got to Fiddle")
-    print("DEBUG: Request: ", request)
-    fiddle = Fiddle.objects.get(audio_name='audio test 2 new') # manually select fiddle entry
-    if request.POST:
-        print("DEBUG: Got to fiddleUpdate via POST")
-        audio_name = request.POST['audio_name']
-        fiddle.audio_name = audio_name
-
-        # audio_file = request.FILES['blob']
-        if 'blob' in request.FILES:
-            if (fiddle.audio_file):
-                os.remove(fiddle.audio_file.path)
-            audio_file = request.FILES['blob']
-            fiddle.audio_file = audio_file
-
-        print("DEBUG: FiddleUpdate audio name = ", fiddle.audio_name)
-        print("DEBUG: FiddleUpdate audio file = ", fiddle.audio_file)
-        fiddle.save()
-        print("DEBUG: Got to FiddleUpdate via POST - upload end")
-        return render(request, 'plants/index.html')
-    else:
-        print("DEBUG: Got to fiddleUpdate without POST")
-        context = { 'fiddle' : fiddle }
-        return render(request, 'plants/fiddleUpdate.html', context)
+        print("DEBUG: Got to fiddle without POST")
+        return render(request, 'plants/fiddle.html')
 
 def debug(request):
     """ Render the Debug Page for debugging of new functions """

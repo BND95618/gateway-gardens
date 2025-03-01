@@ -135,7 +135,6 @@
     }
 
     // Check Sunset Zone values and range format
-    // AR: Handle the case where the Sunset Zones are 'tbd'
     let sunset_zones = document.forms["plantForm"]["sunset_zones"].value;
     // console.log("DEBUG: sunset_zones = ", sunset_zones);
     // alert("DEBUG: Pause");
@@ -362,7 +361,6 @@
           .then(result => console.log('POST was a success: ${result}'))
           .catch(error => console.error('An error occurred: ${error}'))
           console.log("DEBUG: Completed post");
-          // AR: Go to plant details page for plant
           let returnURL = "{% url 'plants:plants_summary' %}";
           
           alert("DEBUG: Pause");

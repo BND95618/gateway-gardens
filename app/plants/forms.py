@@ -157,7 +157,7 @@ COLUMN_CHOICES = (
 	("Common Name",   "Common Name"),
 	("Genus/Species", "Genus/Species"),
 	("Variety",       "Variety"),
-	# Attributes
+	# Plant Characteristics
 	("Type",          "Type"),
 	("Height",        "Height"),
 	("Width", 		  "Width"),
@@ -166,28 +166,44 @@ COLUMN_CHOICES = (
 	("Pollinators",   "Pollinators"),
 	("CA Native",     "CA Native"),
 	("UCD All-Star",  "UCD All-Star"),
-	# Environmental Rqmts
+	# Plant Requirements
 	("Sun Exposure",  "Sun Exposure"),
 	("Water Rqmts",   "Water Rqmts"),
-	("pH Range",      "pH Range"),
 	("Soil Type",     "Soil Type"),
+	("pH Range",      "pH Range"),
 	("USDA Zones",    "USDA Zones"),
 	("Sunset Zones",  "Sunset Zones"), 
 )
 MY_COLUMN_CHOICES = (
-	("Common Name",   "Common Name"),
-	("Genus/Species", "Genus/Species"),
-	("Variety",       "Variety"),
-	# Attributes
-	("Type",          "Type"),
-	("Location",      "Location"),
-	# Environmental Rqmts
-	("Sun Exposure",  "Sun Exposure"),
-	("Soil Type",     "Soil Type"),
-	("pH",            "pH"),
-	("Bloom Color",   "Bloom Color"),
-	("Bloom Start-End",   "Bloom Start-End"),
-	("Happy?",        "Happy?"),
+	("Common Name",     "Common Name"),
+	("Genus/Species",   "Genus/Species"),
+	("Variety",         "Variety"),
+	# Plant Characteristics
+	("Type",            "Type"),
+	("Height",          "Height"),
+	("Width", 		    "Width"),
+	("Bloom Color",     "Bloom Color"),
+	("Bloom Season",    "Bloom Season"),
+	("Pollinators",     "Pollinators"),
+	("CA Native",       "CA Native"),
+	("UCD All-Star",    "UCD All-Star"),
+	# Plant Requirements
+	("Sun Exposure",    "Sun Exposure"),
+	("Water Rqmts",     "Water Rqmts"),
+	("Soil Type",       "Soil Type"),
+	("pH Range",        "pH Range"),
+	("USDA Zones",      "USDA Zones"),
+	("Sunset Zones",    "Sunset Zones"), 
+	# Garden Environment
+	("My Location",        "My Location"),
+	("My Sun Exposure",    "My Sun Exposure"),
+	("My Water Level",     "My Water Level"),
+	("My Soil Type",       "My Soil Type"),
+	("My pH",              "My pH"),
+	("My Bloom Color",     "My Bloom Color"),
+	("My Bloom Start-End", "My Bloom Start-End"),
+	#
+	("Happy?",          "Happy?"),
 )
 
 class UserSignupForm(forms.Form):
@@ -412,9 +428,11 @@ class MyPlantAddUpdateForm(forms.Form):
 		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
-	pH = forms.ChoiceField(
-		label="pH",
-		choices = PH_CHOICES, 
+	water_level = forms.MultipleChoiceField(
+		label='Water Level',
+		initial='tbd',
+		choices = WATER_RQMTS_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
 	soil_type = forms.MultipleChoiceField(
@@ -422,6 +440,11 @@ class MyPlantAddUpdateForm(forms.Form):
 		initial='tbd',
 		choices = SOIL_TYPE_CHOICES, 
 		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	pH = forms.ChoiceField(
+		label="pH",
+		choices = PH_CHOICES, 
 		required=False,
 		)
 	bloom_color = forms.ChoiceField(

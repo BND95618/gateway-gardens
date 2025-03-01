@@ -50,6 +50,11 @@ class Garden(models.Model):
     usda_zone_search    = models.CharField(max_length=32, default="Any", blank=True)
     sunset_zone_search  = models.CharField(max_length=32, default="Any", blank=True)
     garden_search       = models.CharField(max_length=32, default="Any", blank=True)
+    # Save the user's selection for my plant search criteria
+    my_sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
+    my_water_level_search  = models.CharField(max_length=32, default="Any", blank=True)
+    my_soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
+
     # Save the user's selection for the my plants column chooser
     my_column_selection = models.CharField(max_length=256,  blank=True,
                           default=["Common Name", "Genus/Species", "Variety", "Type", 
@@ -169,9 +174,12 @@ class MyPlant(models.Model):
     bloom_end    = models.CharField(max_length=8,  default="tbd", blank=True)
     location     = models.CharField(max_length=64, default="tbd", blank=True)
     sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
-    pH           = models.CharField(max_length=16, default="tbd", blank=True)
+    water_level  = models.CharField(max_length=64, default="tbd", blank=True)
     soil_type    = models.CharField(max_length=64, default="tbd", blank=True)
+    pH           = models.CharField(max_length=16, default="tbd", blank=True)
     notes        = QuillField(blank=True, null=True)
+    # Tags a plant for display/hidden in a summary table
+    show         = models.CharField(max_length=8,  default="no", blank=True)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 
@@ -200,6 +208,4 @@ class MyPlantComment(models.Model):
     def get_absolute_url(self):
         return reverse("myplants_details")
     
-class Fiddle(models.Model):
-    audio_name = models.CharField(max_length=64, default="tbd", blank=True)
-    audio_file = models.FileField(upload_to='audio/', blank=True, null=True)
+# class Fiddle(models.Model):
