@@ -789,13 +789,6 @@ def plants_summary(request):
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
-            # format multiselect attributes to remove [, ', and ]
-            plant.bloom_color  = string_display(plant.bloom_color)
-            plant.bloom_season = string_display(plant.bloom_season)
-            plant.pollinators  = string_display(plant.pollinators)
-            plant.sun_exposure = string_display(plant.sun_exposure)
-            plant.water_rqmts  = string_display(plant.water_rqmts)
-            plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
@@ -814,6 +807,15 @@ def plants_summary(request):
                (sunset_zone_hit):
                 # show selected plant
                 plant.plant_show = "yes"
+                # Save the plant show flag to the database
+                plant.save()
+                # format multiselect attributes to remove [, ', and ]
+                plant.bloom_color  = string_display(plant.bloom_color)
+                plant.bloom_season = string_display(plant.bloom_season)
+                plant.pollinators  = string_display(plant.pollinators)
+                plant.sun_exposure = string_display(plant.sun_exposure)
+                plant.water_rqmts  = string_display(plant.water_rqmts)
+                plant.soil_type    = string_display(plant.soil_type)
                 # check to determine if the current user has claimed the plant
                 for my_plant in my_plants:
                     if my_plant.plant == plant:
@@ -891,13 +893,6 @@ def plants_summary(request):
         # Execute the search
         plants   = Plant.objects.all()
         for plant in plants:
-            # format multiselect attributes to remove [, ', and ]
-            plant.bloom_color  = string_display(plant.bloom_color)
-            plant.bloom_season = string_display(plant.bloom_season)
-            plant.pollinators  = string_display(plant.pollinators)
-            plant.sun_exposure = string_display(plant.sun_exposure)
-            plant.water_rqmts  = string_display(plant.water_rqmts)
-            plant.soil_type    = string_display(plant.soil_type)
             # Run through the search criteria to select the plants to show
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
@@ -918,6 +913,15 @@ def plants_summary(request):
                 plant.plant_show = "yes"
             else:
                 plant.plant_show = "no"
+            # Save the plant show flag to the database
+            plant.save()
+            # format multiselect attributes to remove [, ', and ]
+            plant.bloom_color  = string_display(plant.bloom_color)
+            plant.bloom_season = string_display(plant.bloom_season)
+            plant.pollinators  = string_display(plant.pollinators)
+            plant.sun_exposure = string_display(plant.sun_exposure)
+            plant.water_rqmts  = string_display(plant.water_rqmts)
+            plant.soil_type    = string_display(plant.soil_type)
             # Check to see if the current user has claimed the plant
             for my_plant in my_plants:
                 if my_plant.plant == plant:
@@ -962,6 +966,14 @@ def plants_summary(request):
               }
         
     return HttpResponse(template.render(context, request))
+
+def plants_chart(request):
+    """ Create a table for the selected plants on a month-by-month basis """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    plants = Plant.objects.all()
+    context = { 'plants' : plants }
+    return render(request, 'plants/plants_chart_modal.html', context)
 
 def plants_details(request, id):
     """ Show a detailed view of a specific plant """

@@ -1,0 +1,116 @@
+<!-- /app/plants/templates/plants/chart_modal.html -->
+<div class="w3-modal-content w3-animate-zoom" >
+  
+  <header class="w3-container w3-green"> 
+    <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
+      class="w3-button w3-display-topright">&times;</span>
+    <h2>Plant Chart - Blooms</h2>
+  </header>
+
+  <table class="w3-table-all w3-hoverable" id="plantChart">
+    <thead>
+      <tr class="w3-light-grey">
+        <!-- Plant Common Name -->
+        <th>Common Name</th>
+        <!-- Months -->
+        <th class="w3-center">Jan</th>
+        <th class="w3-center">Feb</th>
+        <th class="w3-center">Mar</th>
+        <th class="w3-center">Apr</th>
+        <th class="w3-center">May</th>
+        <th class="w3-center">Jun</th>
+        <th class="w3-center">Jul</th>
+        <th class="w3-center">Aug</th>
+        <th class="w3-center">Sep</th>
+        <th class="w3-center">Oct</th>
+        <th class="w3-center">Nov</th>
+        <th class="w3-center">Dec</th>
+      </tr>
+    </thead>
+    {% for plant in plants %}
+      {% if plant.plant_show == "yes" %}   
+        <tr class="w3-hover-green">
+          <!-- Plant Attributes -->
+          <td>{{ plant.commonName }}</td>
+          <!-- Jan -->
+          {% if "Winter" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Feb -->
+          {% if "Winter" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Mar -->
+          {% if "Spring" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Apr -->
+          {% if "Spring" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- May -->
+          {% if "Spring" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Jun -->
+          {% if "Summer" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Jul -->
+          {% if "Summer" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Aug -->
+          {% if "Summer" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Sep -->
+          {% if "Fall" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Oct -->
+          {% if "Fall" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Nov -->
+          {% if "Fall" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+          <!-- Dec -->
+          {% if "Winter" in plant.bloom_season %}
+            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+          {% else %}
+            <td class="w3-center">-</td>
+          {% endif %}
+        </tr>
+      {% endif %}
+    {% endfor %}
+  </table>
+
+  <footer class="w3-container w3-green">
+    <p>Modal Footer</p>
+  </footer>
+    
+</div>
