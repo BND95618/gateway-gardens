@@ -40,7 +40,7 @@ BLOOM_SEASON_CHOICES = (
 POLLINATORS_CHOICES = (
 	("tbd",          "tbd"),
 	("Bees",         "Bees"),
-	("Butterfiles",  "Butterfiles"),
+	("Butterflies",  "Butterflies"),
 	("Hummingbirds", "Hummingbirds"),
 	("None",         "None"),
 )

@@ -24,7 +24,7 @@ plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial"
 bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", 
                     "blue", "orange"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
-pollinators_opt  = ["tbd", "Bees", "Butterfiles", "Hummingbirds", "None"]
+pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
@@ -807,24 +807,26 @@ def plants_summary(request):
                (sunset_zone_hit):
                 # show selected plant
                 plant.plant_show = "yes"
-                # Save the plant show flag to the database
-                plant.save()
-                # format multiselect attributes to remove [, ', and ]
-                plant.bloom_color  = string_display(plant.bloom_color)
-                plant.bloom_season = string_display(plant.bloom_season)
-                plant.pollinators  = string_display(plant.pollinators)
-                plant.sun_exposure = string_display(plant.sun_exposure)
-                plant.water_rqmts  = string_display(plant.water_rqmts)
-                plant.soil_type    = string_display(plant.soil_type)
-                # check to determine if the current user has claimed the plant
-                for my_plant in my_plants:
-                    if my_plant.plant == plant:
-                        plant.plant_mine = "yes"
-                        break # Found the plant in my plants
-                    else:
-                        plant.plant_mine = "no"
             else:
                 plant.plant_show = "no"
+
+            # Save the plant show flag to the database
+            plant.save()
+            # format multiselect attributes to remove [, ', and ]
+            plant.bloom_color  = string_display(plant.bloom_color)
+            plant.bloom_season = string_display(plant.bloom_season)
+            plant.pollinators  = string_display(plant.pollinators)
+            plant.sun_exposure = string_display(plant.sun_exposure)
+            plant.water_rqmts  = string_display(plant.water_rqmts)
+            plant.soil_type    = string_display(plant.soil_type)
+            # check to determine if the current user has claimed the plant
+            for my_plant in my_plants:
+                if my_plant.plant == plant:
+                    plant.plant_mine = "yes"
+                    break # Found the plant in my plants
+                else:
+                    plant.plant_mine = "no"
+
         # Send selected plant details to template
         context = { "plants"             : plants,
                     # Search attributes
@@ -913,6 +915,7 @@ def plants_summary(request):
                 plant.plant_show = "yes"
             else:
                 plant.plant_show = "no"
+
             # Save the plant show flag to the database
             plant.save()
             # format multiselect attributes to remove [, ', and ]

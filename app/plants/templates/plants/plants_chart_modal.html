@@ -2,115 +2,202 @@
 <div class="w3-modal-content w3-animate-zoom" >
   
   <header class="w3-container w3-green"> 
+    <!-- Close the chart modal -->
     <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
       class="w3-button w3-display-topright">&times;</span>
-    <h2>Plant Chart - Blooms</h2>
+    <h2>Plant Chart - Blooms by Month</h2>
   </header>
 
-  <table class="w3-table-all w3-hoverable" id="plantChart">
-    <thead>
-      <tr class="w3-light-grey">
-        <!-- Plant Common Name -->
-        <th>Common Name</th>
-        <!-- Months -->
-        <th class="w3-center">Jan</th>
-        <th class="w3-center">Feb</th>
-        <th class="w3-center">Mar</th>
-        <th class="w3-center">Apr</th>
-        <th class="w3-center">May</th>
-        <th class="w3-center">Jun</th>
-        <th class="w3-center">Jul</th>
-        <th class="w3-center">Aug</th>
-        <th class="w3-center">Sep</th>
-        <th class="w3-center">Oct</th>
-        <th class="w3-center">Nov</th>
-        <th class="w3-center">Dec</th>
-      </tr>
-    </thead>
-    {% for plant in plants %}
-      {% if plant.plant_show == "yes" %}   
-        <tr class="w3-hover-green">
-          <!-- Plant Attributes -->
-          <td>{{ plant.commonName }}</td>
-          <!-- Jan -->
-          {% if "Winter" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Feb -->
-          {% if "Winter" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Mar -->
-          {% if "Spring" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Apr -->
-          {% if "Spring" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- May -->
-          {% if "Spring" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Jun -->
-          {% if "Summer" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Jul -->
-          {% if "Summer" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Aug -->
-          {% if "Summer" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Sep -->
-          {% if "Fall" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Oct -->
-          {% if "Fall" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Nov -->
-          {% if "Fall" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
-          <!-- Dec -->
-          {% if "Winter" in plant.bloom_season %}
-            <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
-          {% else %}
-            <td class="w3-center">-</td>
-          {% endif %}
+  <!-- Create the modal tabs -->
+  <div class="w3-bar w3-border-bottom">
+    <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'blooms_tab_content')"      >Blooms       </button>
+    <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'bees_tab_content')"        >Bees         </button>
+    <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'butterflies_tab_content')" >Butterflies  </button>
+    <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'hummingbirds_tab_content')">Hummingbirds</button>
+  </div>
+
+  <div id="blooms_tab_content" class="chart">
+    <table class="w3-table-all w3-hoverable" id="plantChart">
+      <thead>
+        <tr class="w3-light-grey">
+          <!-- Plant Common Name -->
+          <th>Common Name</th>
+          <!-- Months -->
+          <th class="w3-center">Jan</th>
+          <th class="w3-center">Feb</th>
+          <th class="w3-center">Mar</th>
+          <th class="w3-center">Apr</th>
+          <th class="w3-center">May</th>
+          <th class="w3-center">Jun</th>
+          <th class="w3-center">Jul</th>
+          <th class="w3-center">Aug</th>
+          <th class="w3-center">Sep</th>
+          <th class="w3-center">Oct</th>
+          <th class="w3-center">Nov</th>
+          <th class="w3-center">Dec</th>
         </tr>
-      {% endif %}
-    {% endfor %}
-  </table>
+      </thead>
+      {% for plant in plants %}
+        {% if plant.plant_show == "yes" and "None" not in plant.bloom_season and "tbd" not in plant.bloom_season %} 
+          <tr class="w3-hover-green">
+            <!-- Plant Attributes -->
+            <td>{{ plant.commonName }}</td>
+            <!-- Jan -->
+            {% if "Winter" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Feb -->
+            {% if "Winter" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Mar -->
+            {% if "Spring" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Apr -->
+            {% if "Spring" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- May -->
+            {% if "Spring" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Jun -->
+            {% if "Summer" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Jul -->
+            {% if "Summer" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Aug -->
+            {% if "Summer" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Sep -->
+            {% if "Fall" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Oct -->
+            {% if "Fall" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Nov -->
+            {% if "Fall" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+            <!-- Dec -->
+            {% if "Winter" in plant.bloom_season %}
+              <td class="w3-center"><i class="material-icons">filter_vintage</i></td>
+            {% else %}
+              <td class="w3-center">-</td>
+            {% endif %}
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <div id="bees_tab_content" class="chart">
+    <table class="w3-table-all w3-hoverable" id="plantChart">
+      <thead>
+        <tr class="w3-light-grey">
+          <!-- Plant Common Name -->
+          <th>Common Name</th>
+          <!-- Months -->
+          <th class="w3-center">Jan</th>
+          <th class="w3-center">Feb</th>
+          <th class="w3-center">Mar</th>
+          <th class="w3-center">Apr</th>
+          <th class="w3-center">May</th>
+          <th class="w3-center">Jun</th>
+          <th class="w3-center">Jul</th>
+          <th class="w3-center">Aug</th>
+          <th class="w3-center">Sep</th>
+          <th class="w3-center">Oct</th>
+          <th class="w3-center">Nov</th>
+          <th class="w3-center">Dec</th>
+        </tr>
+      </thead>
+    </table>
+    <p>Bees</p>
+  </div>
+
+  <div id="butterflies_tab_content" class="chart">
+    <table class="w3-table-all w3-hoverable" id="plantChart">
+      <thead>
+        <tr class="w3-light-grey">
+          <!-- Plant Common Name -->
+          <th>Common Name</th>
+          <!-- Months -->
+          <th class="w3-center">Jan</th>
+          <th class="w3-center">Feb</th>
+          <th class="w3-center">Mar</th>
+          <th class="w3-center">Apr</th>
+          <th class="w3-center">May</th>
+          <th class="w3-center">Jun</th>
+          <th class="w3-center">Jul</th>
+          <th class="w3-center">Aug</th>
+          <th class="w3-center">Sep</th>
+          <th class="w3-center">Oct</th>
+          <th class="w3-center">Nov</th>
+          <th class="w3-center">Dec</th>
+        </tr>
+      </thead>
+    </table>
+    <p>Butterflies</p>
+  </div>
+
+  <div id="hummingbirds_tab_content" class="chart">
+    <table class="w3-table-all w3-hoverable" id="plantChart">
+      <thead>
+        <tr class="w3-light-grey">
+          <!-- Plant Common Name -->
+          <th>Common Name</th>
+          <!-- Months -->
+          <th class="w3-center">Jan</th>
+          <th class="w3-center">Feb</th>
+          <th class="w3-center">Mar</th>
+          <th class="w3-center">Apr</th>
+          <th class="w3-center">May</th>
+          <th class="w3-center">Jun</th>
+          <th class="w3-center">Jul</th>
+          <th class="w3-center">Aug</th>
+          <th class="w3-center">Sep</th>
+          <th class="w3-center">Oct</th>
+          <th class="w3-center">Nov</th>
+          <th class="w3-center">Dec</th>
+        </tr>
+      </thead>
+    </table>
+    <p>Hummingbirds</p>
+  </div>
 
   <footer class="w3-container w3-green">
     <p>Modal Footer</p>
   </footer>
     
 </div>
+<!-- Script is in main html -->
