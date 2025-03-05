@@ -42,6 +42,7 @@ sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7", 
                     "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
                     "21", "22", "23", "24",
                     "A1", "A2", "A3", "H1", "H2"]
+month_opt        = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
@@ -220,6 +221,7 @@ def myplants_summary(request):
         type_x_search           = request.POST["type_x_search"]
         bloom_color_search      = request.POST["bloom_color_search"]
         bloom_season_search     = request.POST["bloom_season_search"]
+        bloom_month_search      = request.POST["bloom_month_search"]
         pollinators_search      = request.POST["pollinators_search"]
         ca_native_search        = request.POST["ca_native_search"]
         ucd_all_star_search     = request.POST["ucd_all_star_search"]
@@ -243,6 +245,7 @@ def myplants_summary(request):
                 garden.type_x_search       = type_x_search
                 garden.bloom_color_search  = bloom_color_search
                 garden.bloom_season_search = bloom_season_search
+                garden.bloom_month_search  = bloom_month_search
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
@@ -278,9 +281,11 @@ def myplants_summary(request):
             my_plant.water_level  = string_display(my_plant.water_level)
             my_plant.soil_type    = string_display(my_plant.soil_type)
             # Run through the search criteria to select the plants to show
+            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.plant.bloom_start, my_plant.plant.bloom_end, month_opt)
             if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
                     (my_plant.plant.type_x       == "tbd")                          \
@@ -332,6 +337,8 @@ def myplants_summary(request):
                   and                                                               \
                   (sunset_zone_hit)                                                 \
                   and                                                               \
+                  (bloom_month_hit)                                                 \
+                  and                                                               \
                   ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
                     (my_sun_exposure_search      == "Any")                       or \
                     (my_plant.sun_exposure       == "tbd")                          \
@@ -361,6 +368,7 @@ def myplants_summary(request):
                 type_x_search         = garden.type_x_search
                 bloom_color_search    = garden.bloom_color_search
                 bloom_season_search   = garden.bloom_season_search
+                bloom_month_search    = garden.bloom_month_search
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
@@ -397,11 +405,13 @@ def myplants_summary(request):
                         "pH_opt"           : pH_opt,
                         "usda_zones_opt"   : usda_zones_opt,
                         "sunset_zones_opt" : sunset_zones_opt,
+                        "month_opt"        : month_opt,
                         
                         # search field defaults - plant attributes
                         "type_x_search"       : type_x_search,
                         "bloom_color_search"  : bloom_color_search,
                         "bloom_season_search" : bloom_season_search,
+                        "bloom_month_search"  : bloom_month_search,
                         "pollinators_search"  : pollinators_search,
                         'ca_native_search'    : ca_native_search,
                         'ucd_all_star_search' : ucd_all_star_search,
@@ -435,6 +445,7 @@ def myplants_summary(request):
                 type_x_search         = garden.type_x_search
                 bloom_color_search    = garden.bloom_color_search
                 bloom_season_search   = garden.bloom_season_search
+                bloom_month_search    = garden.bloom_month_search
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
@@ -473,9 +484,11 @@ def myplants_summary(request):
             my_plant.water_level  = string_display(my_plant.water_level)
             my_plant.soil_type    = string_display(my_plant.soil_type)
             # Run through the search criteria to select the plants to show
+            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.plant.bloom_start, my_plant.plant.bloom_end, month_opt)
             if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
                     (my_plant.plant.type_x       == "tbd")                          \
@@ -526,6 +539,8 @@ def myplants_summary(request):
                   (usda_zone_hit)                                                   \
                   and                                                               \
                   (sunset_zone_hit)                                                 \
+                  and                                                               \
+                  (bloom_month_hit)                                                 \
                   and                                                               \
                   ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
                     (my_sun_exposure_search      == "Any")                       or \
@@ -565,10 +580,12 @@ def myplants_summary(request):
                     "pH_opt"           : pH_opt,
                     "usda_zones_opt"   : usda_zones_opt,
                     "sunset_zones_opt" : sunset_zones_opt,
+                    "month_opt"        : month_opt,
                     # search field defaults - plant attributes
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
                     "bloom_season_search" : bloom_season_search,
+                    "bloom_month_search"  : bloom_month_search,
                     "pollinators_search"  : pollinators_search,
                     'ca_native_search'    : ca_native_search,
                     'ucd_all_star_search' : ucd_all_star_search,
@@ -744,6 +761,7 @@ def plants_summary(request):
         type_x_search        = request.POST["type_x_search"]
         bloom_color_search   = request.POST["bloom_color_search"]
         bloom_season_search  = request.POST["bloom_season_search"]
+        bloom_month_search   = request.POST["bloom_month_search"]
         pollinators_search   = request.POST["pollinators_search"]
         ca_native_search     = request.POST["ca_native_search"]
         ucd_all_star_search  = request.POST["ucd_all_star_search"]
@@ -764,6 +782,7 @@ def plants_summary(request):
                 garden.type_x_search       = type_x_search
                 garden.bloom_color_search  = bloom_color_search
                 garden.bloom_season_search = bloom_season_search
+                garden.bloom_month_search  = bloom_month_search
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
@@ -790,9 +809,11 @@ def plants_summary(request):
         # Run through the search criteria to select the plants to show
         for plant in plants:
             # Run through the search criteria to select the plants to show
+            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
             if ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -804,7 +825,8 @@ def plants_summary(request):
                ((soil_type_search in plant.soil_type) or (soil_type_search == "Any") or (plant.soil_type  == "tbd")) and \
                (pH_hit) and \
                (usda_zone_hit) and \
-               (sunset_zone_hit):
+               (sunset_zone_hit) and \
+               (bloom_month_hit):
                 # show selected plant
                 plant.plant_show = "yes"
             else:
@@ -826,7 +848,6 @@ def plants_summary(request):
                     break # Found the plant in my plants
                 else:
                     plant.plant_mine = "no"
-
         # Send selected plant details to template
         context = { "plants"             : plants,
                     # Search attributes
@@ -842,10 +863,12 @@ def plants_summary(request):
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
+                    "month_opt"          : month_opt,
                     # Search option values from previous search if applicable else default of "Any"
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
                     "bloom_season_search" : bloom_season_search,
+                    "bloom_month_search"  : bloom_month_search,
                     'pollinators_search'  : pollinators_search,
                     'ca_native_search'    : ca_native_search,
                     'ucd_all_star_search' : ucd_all_star_search,
@@ -873,6 +896,7 @@ def plants_summary(request):
                 type_x_search         = garden.type_x_search
                 bloom_color_search    = garden.bloom_color_search
                 bloom_season_search   = garden.bloom_season_search
+                bloom_month_search    = garden.bloom_month_search
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
@@ -896,9 +920,11 @@ def plants_summary(request):
         plants   = Plant.objects.all()
         for plant in plants:
             # Run through the search criteria to select the plants to show
+            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
             if  ((type_x_search       == plant.type_x)       or (type_x_search       == "Any") or (plant.type_x       == "tbd")) and \
                 ((bloom_color_search  in plant.bloom_color)  or (bloom_color_search  == "Any") or (plant.bloom_color  == "tbd")) and \
                 ((bloom_season_search in plant.bloom_season) or (bloom_season_search == "Any") or (plant.bloom_season == "tbd")) and \
@@ -910,7 +936,8 @@ def plants_summary(request):
                 ((soil_type_search    in plant.soil_type)    or (soil_type_search    == "Any") or (plant.soil_type    == "tbd")) and \
                 (pH_hit) and \
                 (usda_zone_hit) and \
-                (sunset_zone_hit):
+                (sunset_zone_hit) and \
+                (bloom_month_hit):
                 # show selected plant
                 plant.plant_show = "yes"
             else:
@@ -950,10 +977,12 @@ def plants_summary(request):
                     "soil_type_opt"      : soil_type_opt,
                     "usda_zones_opt"     : usda_zones_opt,
                     "sunset_zones_opt"   : sunset_zones_opt,
+                    "month_opt"          : month_opt,
                     # search field defaults
                     "type_x_search"       : type_x_search,
                     "bloom_color_search"  : bloom_color_search,
                     "bloom_season_search" : bloom_season_search,
+                    "bloom_month_search"  : bloom_month_search,
                     "pollinators_search"  : pollinators_search,
                     'ca_native_search'    : ca_native_search,
                     'ucd_all_star_search' : ucd_all_star_search,
@@ -1018,6 +1047,8 @@ def plants_add(request):
             plant.type_x        = form.cleaned_data.get('type_x')
             plant.bloom_color   = form.cleaned_data.get('bloom_color')
             plant.bloom_season  = form.cleaned_data.get('bloom_season')
+            plant.bloom_start   = form.cleaned_data.get('bloom_start')
+            plant.bloom_end     = form.cleaned_data.get('bloom_end')
             plant.pollinators   = form.cleaned_data.get('pollinators')
             plant.height_feet   = form.cleaned_data.get('height_feet')
             plant.height_inch   = form.cleaned_data.get('height_inch')
@@ -1088,6 +1119,8 @@ def plants_update(request, id):
             plant.type_x        = form.cleaned_data.get('type_x')
             plant.bloom_color   = form.cleaned_data.get('bloom_color')
             plant.bloom_season  = form.cleaned_data.get('bloom_season')
+            plant.bloom_start   = form.cleaned_data.get('bloom_start')
+            plant.bloom_end     = form.cleaned_data.get('bloom_end')
             plant.height_feet   = form.cleaned_data.get('height_feet')
             plant.height_inch   = form.cleaned_data.get('height_inch')
             plant.width_feet    = form.cleaned_data.get('width_feet')
@@ -1151,8 +1184,6 @@ def plants_update(request, id):
             plant.creator_notes = form.cleaned_data.get('creator_notes')     
             plant.save()
 
-            print("DEBUG: Caption 1 (if): ", plant.caption_1)
-
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         # convert string-based lists (retrieved from db) to true Python lists
@@ -1166,6 +1197,8 @@ def plants_update(request, id):
                                             'type_x'            : plant.type_x,
                                             'bloom_color'       : bloom_color_list,
                                             'bloom_season'      : bloom_season_list,
+                                            'bloom_start'       : plant.bloom_start,
+                                            'bloom_end'         : plant.bloom_end,
                                             'height_feet'       : plant.height_feet,
                                             'height_inch'       : plant.height_inch,
                                             'width_feet'        : plant.width_feet,
@@ -1208,8 +1241,6 @@ def plants_update(request, id):
                                             'caption_4'         : plant.caption_4,
                                             'creator_notes'     : plant.creator_notes,
                                         })
-        print("DEBUG: Caption 1 (else): ", plant.image_1)
-        print("DEBUG: Caption 1 (else): ", plant.caption_1)
         context = { 'plant'            : plant, 
                     'form'             : form,
                     'usda_zones_opt'   : usda_zones_opt,
@@ -1676,15 +1707,34 @@ def sunset_zone_check(target, range, options):
             hit = False
     return(hit)
 
+def bloom_month_check(target, start, end, options):
+    options_2x = options + options
+    if (target == "Any") or (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
+        hit = True
+    else:
+        begin = False
+        for option in options_2x:
+            if option == start:
+                begin = True
+                countdown = 12
+            if begin == True:
+                if target == option:
+                    hit = True
+                    return(hit)
+                else:
+                    countdown = countdown - 1
+                if option == end or countdown == 0:
+                    hit = False
+                    return(hit)
+    return(hit)
+
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     if request.method == 'POST':
-        print("DEBUG: Got to fiddle via POST") 
         return render(request, 'plants/fiddle.html')
     else:
-        print("DEBUG: Got to fiddle without POST")
         return render(request, 'plants/fiddle.html')
 
 def debug(request):

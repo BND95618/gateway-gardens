@@ -81,7 +81,6 @@
 
     // Check height (feet) for > 0 value
     let height_feet = document.forms["plantForm"]["height_feet"].value;
-    // console.log("DEBUG: Height (feet): ", height_feet);
     if (height_feet < 0)
     {
       alert("ERROR: Height (feet) is negative: " + height_feet);
@@ -90,7 +89,6 @@
 
     // Check height (inches) for > 0 value
     let height_inch = document.forms["plantForm"]["height_inch"].value;
-    // console.log("DEBUG: Height (inch): ", height_inch);
     if (height_inch < 0)
     {
       alert("ERROR: Height (inches) is negative: " + height_inch);
@@ -99,7 +97,6 @@
 
     // Check width (feet) for > 0 value
     let width_feet = document.forms["plantForm"]["width_feet"].value;
-    // console.log("DEBUG: Width (feet): ", width_feet);
     if (width_feet < 0)
     {
       alert("ERROR: Width (feet) is negative: " + width_feet);
@@ -108,7 +105,6 @@
 
     // Check width (inches) for > 0 value
     let width_inch = document.forms["plantForm"]["width_inch"].value;
-    // console.log("DEBUG: Width (inch): ", width_inch);
     if (width_inch < 0)
     {
       alert("ERROR: Width (inch) is negative: " + width_inch);
@@ -136,14 +132,11 @@
 
     // Check Sunset Zone values and range format
     let sunset_zones = document.forms["plantForm"]["sunset_zones"].value;
-    // console.log("DEBUG: sunset_zones = ", sunset_zones);
-    // alert("DEBUG: Pause");
     // Get the list of valid sunset zones and put into JS array
     let sunset_zones_opt = {{ sunset_zones_opt|safe }};
 
     // Clean up the input
     const tmp_1 = sunset_zones.replaceAll(' ', '');
-    // console.log("DEBUG: input w/o spaces: ", tmp_1)
     const ranges = tmp_1.split(',');
 
     // Check for casee where the Sunset Zones are not tbd
@@ -154,12 +147,9 @@
         if (range.includes('-')) 
         {
           // check case for a range of zones (zones exist and start comes before end)
-          // console.log("DEBUG: multi-zone range: ", range);
           x = range.split('-');
           zone_start = x[0];
           zone_end   = x[1]; 
-          // console.log("DEBUG: zone_start :", zone_start);
-          // console.log("DEBUG: zone_end :",   zone_end);
           if (sunset_zones_opt.includes(zone_start)) 
           {
             // console.log("DEBUG: ", zone_start, " is in sunset_zones_opt");
@@ -180,8 +170,6 @@
           }
           zone_start_index = sunset_zones_opt.indexOf(zone_start);
           zone_end_index   = sunset_zones_opt.indexOf(zone_end);
-          // console.log("DEBUG: zone_start_index :", zone_start_index);
-          // console.log("DEBUG: zone_end_index :", zone_end_index);
           if (zone_start_index > zone_end_index)
           {
             alert("ERROR: Starting Sunset Zone (" + zone_start + ") > ending zone (" + zone_end + ")");
@@ -191,21 +179,18 @@
         else 
         {
           // check case for an individual zone (zone exists)
-          // console.log("DEBUG: single-zone range: ", range);
           if (sunset_zones_opt.includes(range)) 
           {
             // console.log("DEBUG: ", range, " is in sunset_zones_opt");
           } 
           else 
           {
-            // console.log("DEBUG: ", range, " is not in sunset_zones_opt");
             alert("ERROR: Invalid Sunset Zone: " + range);
             clean_input = false;
           }
         }
       });
     }
-    // console.log("DEBUG: Clean input?: ", clean_input);
     if (!clean_input) 
     {
       return false;
@@ -224,7 +209,6 @@
   // if no selection is made then set tbd to checked
   function tbdCheck(checkbox_name) 
   {
-    // console.log("DEBUG: Got to tbdCheck for: ", checkbox_name);
     const boxes = document.getElementsByName(checkbox_name);
     boxes[0].checked = true;
     for (let i = 1; i < boxes.length; i++)
@@ -261,8 +245,6 @@
   // -------------------------------------------------- 
   if (navigator.mediaDevices.getUserMedia) 
   {
-    console.log("DEBUG: The mediaDevices.getUserMedia() method is supported.");
-
     const constraints = { audio: true };
     let chunks = [];
 
@@ -278,8 +260,6 @@
       record.onclick = function () 
       {
         mediaRecorder.start();
-        console.log("DEBUG: Recorder started");
-        console.log("DEBUG: Media Recorder state: ", mediaRecorder.state);
         record.style.background = "red";
 
         stop.disabled   = false;
@@ -289,8 +269,6 @@
       stop.onclick = function () 
       {
         mediaRecorder.stop();
-        console.log("DEBUG: Recorder stopped");
-        console.log("DEBUG: Media Recorder state: ", mediaRecorder.state);
         record.style.background = "";
         record.style.color = "";
 
@@ -302,8 +280,6 @@
       // -------------------------------------------------- 
       mediaRecorder.onstop = function (e) 
       {
-        console.log("DEBUG: processing audio");
-
         const clipContainer = document.createElement("article");
         const clipLabel     = document.createElement("p");
         const audio         = document.createElement("audio");
@@ -318,8 +294,6 @@
         // Remove any prevously recorded soundclips in this session before adding new soundclip
         if (soundClips.hasChildNodes()) 
         {
-          console.log("DEBUG: Got to previous soundClips removal");
-          console.log("DEBUG: soundClips.hasChildNodes(): ", soundClips.hasChildNodes());
           soundClips.removeChild(soundClips.children[0]);
         }
         soundClips.appendChild(clipContainer);
@@ -329,15 +303,12 @@
         chunks = [];
         const audioURL = window.URL.createObjectURL(blob);
         audio.src = audioURL;
-        console.log("DEBUG: audio processing complete");
-        console.log("DEBUG: audio.src: ", audio.src)
         // -------------------------------------------------- 
         // Use fetch to upload the audio to the server when the form is submitted
         // --------------------------------------------------
         id_audioForm.onsubmit = async (event) => {
           event.preventDefault();
           //
-          console.log("DEBUG: Uploading audio to server");
           const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
           // Get the form plus the audio recording data entered by the user
           let formData  = new FormData(id_audioForm);
@@ -345,7 +316,6 @@
           // Send the form plus the audio recording data entered by the user
           // NOTE: The url  must be set for add versus update
           const postURL = window.location.pathname;
-          console.log("DEBUG: postURL:", postURL);
 
           // Make the POST request and return a promise
           fetch(postURL, 
@@ -360,10 +330,7 @@
           .then(response => response.json())
           .then(result => console.log('POST was a success: ${result}'))
           .catch(error => console.error('An error occurred: ${error}'))
-          console.log("DEBUG: Completed post");
           let returnURL = "{% url 'plants:plants_summary' %}";
-          
-          alert("DEBUG: Pause");
           window.location.href = returnURL;
         };
       };
@@ -373,7 +340,6 @@
       mediaRecorder.ondataavailable = function (e) 
       {
         chunks.push(e.data);
-        console.log("DEBUG: audio chunk processed");
       };
     };
 

@@ -139,40 +139,42 @@ USDA_ZONE_CHOICES = (
 	("13b (65F to 70F)",  "13b (65F to 70F)"),
 )
 MONTH_CHOICES = (
-	("tbd", "tbd"),
-	("Jan", "Jan"),
-	("Feb", "Feb"),
-	("Mar", "Mar"),
-	("Apr", "Apr"),
-	("May", "May"),
-	("Jun", "Jun"),
-	("Jul", "Jul"),
-	("Aug", "Aug"),
-	("Sep", "Sep"),
-	("Oct", "Oct"),
-	("Nov", "Nov"),
-	("Dec", "Dec"),
+	("tbd",  "tbd"),
+	("Jan",  "Jan"),
+	("Feb",  "Feb"),
+	("Mar",  "Mar"),
+	("Apr",  "Apr"),
+	("May",  "May"),
+	("Jun",  "Jun"),
+	("Jul",  "Jul"),
+	("Aug",  "Aug"),
+	("Sep",  "Sep"),
+	("Oct",  "Oct"),
+	("Nov",  "Nov"),
+	("Dec",  "Dec"),
+	("None", "None")
 )
 COLUMN_CHOICES = (
-	("Common Name",   "Common Name"),
-	("Genus/Species", "Genus/Species"),
-	("Variety",       "Variety"),
+	("Common Name",     "Common Name"),
+	("Genus/Species",   "Genus/Species"),
+	("Variety",         "Variety"),
 	# Plant Characteristics
-	("Type",          "Type"),
-	("Height",        "Height"),
-	("Width", 		  "Width"),
-	("Bloom Color",   "Bloom Color"),
-	("Bloom Season",  "Bloom Season"),
-	("Pollinators",   "Pollinators"),
-	("CA Native",     "CA Native"),
-	("UCD All-Star",  "UCD All-Star"),
+	("Type",            "Type"),
+	("Height",          "Height"),
+	("Width", 		    "Width"),
+	("Bloom Color",     "Bloom Color"),
+	("Bloom Season",    "Bloom Season"),
+	("Bloom Range",     "Bloom Range"),
+	("Pollinators",     "Pollinators"),
+	("CA Native",       "CA Native"),
+	("UCD All-Star",    "UCD All-Star"),
 	# Plant Requirements
-	("Sun Exposure",  "Sun Exposure"),
-	("Water Rqmts",   "Water Rqmts"),
-	("Soil Type",     "Soil Type"),
-	("pH Range",      "pH Range"),
-	("USDA Zones",    "USDA Zones"),
-	("Sunset Zones",  "Sunset Zones"), 
+	("Sun Exposure",    "Sun Exposure"),
+	("Water Rqmts",     "Water Rqmts"),
+	("Soil Type",       "Soil Type"),
+	("pH Range",        "pH Range"),
+	("USDA Zones",      "USDA Zones"),
+	("Sunset Zones",    "Sunset Zones"), 
 )
 MY_COLUMN_CHOICES = (
 	("Common Name",     "Common Name"),
@@ -184,6 +186,7 @@ MY_COLUMN_CHOICES = (
 	("Width", 		    "Width"),
 	("Bloom Color",     "Bloom Color"),
 	("Bloom Season",    "Bloom Season"),
+	("Bloom Range",     "Bloom Range"),
 	("Pollinators",     "Pollinators"),
 	("CA Native",       "CA Native"),
 	("UCD All-Star",    "UCD All-Star"),
@@ -201,7 +204,7 @@ MY_COLUMN_CHOICES = (
 	("My Soil Type",       "My Soil Type"),
 	("My pH",              "My pH"),
 	("My Bloom Color",     "My Bloom Color"),
-	("My Bloom Start-End", "My Bloom Start-End"),
+	("My Bloom Range",     "My Bloom Range"),
 	#
 	("Happy?",          "Happy?"),
 )
@@ -506,6 +509,18 @@ class PlantAddUpdateForm(forms.Form):
 		initial='tbd',
 		choices = BLOOM_SEASON_CHOICES,
 		widget=forms.CheckboxSelectMultiple, 
+		required=False,
+		)
+	bloom_start = forms.ChoiceField(
+		label="Bloom Start",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
+		required=False,
+		)
+	bloom_end = forms.ChoiceField(
+		label="Bloom End",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
 		required=False,
 		)
 	height_feet = forms.IntegerField(

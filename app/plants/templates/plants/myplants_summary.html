@@ -78,6 +78,19 @@
       </select>
       <br>
 
+      <label for="id_bloom_month_search">Bloom Month:</label><br>
+      <select id="id_bloom_month_search" name="bloom_month_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for month in month_opt %}
+          {% if month == bloom_month_search %}
+            <option value="{{ month }}" selected>{{ month }}</option>
+          {% elif plant_type != "tbd" %}
+            <option value="{{ month }}"         >{{ month }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+
       <label for="id_pollinators_search">Pollinators:</label><br>
       <select id="id_pollinators_search" name="pollinators_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
@@ -290,25 +303,26 @@
           <th style="cursor:pointer" onclick="sortTable(5)" >Width          </th>
           <th style="cursor:pointer" onclick="sortTable(6)" >Bloom Color    </th>
           <th style="cursor:pointer" onclick="sortTable(7)" >Bloom Season   </th>
-          <th style="cursor:pointer" onclick="sortTable(8)" >Pollinators    </th>
-          <th style="cursor:pointer" onclick="sortTable(9)"  class="w3-center">CA Native   </th>
-          <th style="cursor:pointer" onclick="sortTable(10)" class="w3-center">UCD All-Star</th>
+          <th style="cursor:pointer" onclick="sortTable(8)" >Bloom Range    </th>
+          <th style="cursor:pointer" onclick="sortTable(9)" >Pollinators    </th>
+          <th style="cursor:pointer" onclick="sortTable(10)" class="w3-center">CA Native   </th>
+          <th style="cursor:pointer" onclick="sortTable(11)" class="w3-center">UCD All-Star</th>
           <!-- Plant Requirements -->
-          <th style="cursor:pointer" onclick="sortTable(11)">Sun Exposure   </th>
-          <th style="cursor:pointer" onclick="sortTable(12)">Water Rqmts    </th>
-          <th style="cursor:pointer" onclick="sortTable(13)">Soil Type      </th>
-          <th style="cursor:pointer" onclick="sortTable(14)">pH Range       </th>
-          <th style="cursor:pointer" onclick="sortTable(15)">USDA Zones     </th>
-          <th style="cursor:pointer" onclick="sortTable(16)">Sunset Zones   </th>
+          <th style="cursor:pointer" onclick="sortTable(12)">Sun Exposure   </th>
+          <th style="cursor:pointer" onclick="sortTable(13)">Water Rqmts    </th>
+          <th style="cursor:pointer" onclick="sortTable(14)">Soil Type      </th>
+          <th style="cursor:pointer" onclick="sortTable(15)">pH Range       </th>
+          <th style="cursor:pointer" onclick="sortTable(16)">USDA Zones     </th>
+          <th style="cursor:pointer" onclick="sortTable(17)">Sunset Zones   </th>
           <!-- Garden Environment -->
-          <th style="cursor:pointer" onclick="sortTable(17)">Location           </th>
-          <th style="cursor:pointer" onclick="sortTable(18)">My Sun Exposure    </th>
-          <th style="cursor:pointer" onclick="sortTable(18)">My Water Level     </th>
-          <th style="cursor:pointer" onclick="sortTable(19)">My Soil Type       </th>
-          <th style="cursor:pointer" onclick="sortTable(20)">My pH              </th>
-          <th style="cursor:pointer" onclick="sortTable(21)">My Bloom Color     </th>
-          <th style="cursor:pointer" onclick="sortTable(22)">My Bloom Start/End </th>
-          <th style="cursor:pointer" onclick="sortTable(23)" class="w3-center">Happy?</th>
+          <th style="cursor:pointer" onclick="sortTable(18)">Location           </th>
+          <th style="cursor:pointer" onclick="sortTable(19)">My Sun Exposure    </th>
+          <th style="cursor:pointer" onclick="sortTable(20)">My Water Level     </th>
+          <th style="cursor:pointer" onclick="sortTable(21)">My Soil Type       </th>
+          <th style="cursor:pointer" onclick="sortTable(22)">My pH              </th>
+          <th style="cursor:pointer" onclick="sortTable(23)">My Bloom Color     </th>
+          <th style="cursor:pointer" onclick="sortTable(24)">My Bloom Start/End </th>
+          <th style="cursor:pointer" onclick="sortTable(25)" class="w3-center">Happy?</th>
           <!-- Button Placeholders -->
           <th class="w3-center"></th>
           <th class="w3-center"></th>
@@ -321,19 +335,20 @@
             <!-- Plant Attributes -->
             <td>{{ my_plant.plant.commonName }}</td>
             <td style="font-style: italic;">{{ my_plant.plant.genus }} {{ my_plant.plant.species }}</td>
-            <td>{{ my_plant.plant.variety }}                                   </td>
-            <td>{{ my_plant.plant.type_x }}                                    </td>
-            <td>{{ my_plant.plant.height_feet }} ft {{ plant.height_inch }} in </td>
-            <td>{{ my_plant.plant.width_feet  }} ft {{ plant.width_inch  }} in </td>
-            <td>{{ my_plant.plant.bloom_color |cut:"["|cut:"]"   }}            </td>
-            <td>{{ my_plant.plant.bloom_season|cut:"["|cut:"]"   }}            </td>
-            <td>{{ my_plant.plant.pollinators |cut:"["|cut:"]"   }}            </td>
-            <td class="w3-center">{{ plant.ca_native    }}                     </td>
-            <td class="w3-center">{{ plant.ucd_all_star }}                     </td>
+            <td>{{ my_plant.plant.variety }}                                    </td>
+            <td>{{ my_plant.plant.type_x }}                                     </td>
+            <td>{{ my_plant.plant.height_feet }} ft {{ plant.height_inch }} in  </td>
+            <td>{{ my_plant.plant.width_feet  }} ft {{ plant.width_inch  }} in  </td>
+            <td>{{ my_plant.plant.bloom_color |cut:"["|cut:"]"   }}             </td>
+            <td>{{ my_plant.plant.bloom_season|cut:"["|cut:"]"   }}             </td>
+            <td>{{ my_plant.plant.bloom_start }}-{{ my_plant.plant.bloom_end }} </td>
+            <td>{{ my_plant.plant.pollinators |cut:"["|cut:"]"   }}             </td>
+            <td class="w3-center">{{ plant.ca_native    }}                      </td>
+            <td class="w3-center">{{ plant.ucd_all_star }}                      </td>
             <!-- Plant Requirements -->
-            <td>{{ my_plant.plant.sun_exposure|cut:"["|cut:"]"               }}</td>
-            <td>{{ my_plant.plant.water_rqmts                                }}</td>
-            <td>{{ my_plant.plant.soil_type                                  }}</td>
+            <td>{{ my_plant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
+            <td>{{ my_plant.plant.water_rqmts                                 }}</td>
+            <td>{{ my_plant.plant.soil_type                                   }}</td>
             <td>{{ my_plant.plant.pH_min }} to {{ my_plant.plant.pH_max }}              </td>
             <td>{{ my_plant.plant.usda_zone_min }} to {{ my_plant.plant.usda_zone_max }}</td>
             <td>{{ my_plant.plant.sunset_zones }}                              </td>
@@ -406,12 +421,12 @@
       const table = document.getElementById("plantTable");
       // 
       const column_options = ['Common Name', 'Genus/Species', 'Variety',
-                              'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season',
+                              'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season', 'Bloom Range',
                               'Pollinators', 'CA Native', 'UCD All-Star', 
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
                               'USDA Zones', 'Sunset Zones',
                               'My Location', 'My Sun Exposure', 'My Water Level', 'My Soil Type', 'My pH', 
-                              'My Bloom Color', 'My Bloom Start-End', 'Happy?',
+                              'My Bloom Color', 'My Bloom Range', 'Happy?',
                              ];
                          
       let column_index = 0;
@@ -429,26 +444,27 @@
         else if (column_options[i] == "Height")          { column_index =  4; } 
         else if (column_options[i] == "Width")           { column_index =  5; } 
         else if (column_options[i] == "Bloom Color")     { column_index =  6; } 
-        else if (column_options[i] == "Bloom Season")    { column_index =  7; } 
-        else if (column_options[i] == "Pollinators")     { column_index =  8; }
-        else if (column_options[i] == "CA Native")       { column_index =  9; } 
-        else if (column_options[i] == "UCD All-Star")    { column_index = 10; }
+        else if (column_options[i] == "Bloom Season")    { column_index =  7; }
+        else if (column_options[i] == "Bloom Range")     { column_index =  8; }
+        else if (column_options[i] == "Pollinators")     { column_index =  9; }
+        else if (column_options[i] == "CA Native")       { column_index = 10; } 
+        else if (column_options[i] == "UCD All-Star")    { column_index = 11; }
 
-        else if (column_options[i] == "Sun Exposure")    { column_index = 11; } 
-        else if (column_options[i] == "Water Rqmts")     { column_index = 12; } 
-        else if (column_options[i] == "Soil Type")       { column_index = 13; }
-        else if (column_options[i] == "pH Range")        { column_index = 14; }
-        else if (column_options[i] == "USDA Zones")      { column_index = 15; }
-        else if (column_options[i] == "Sunset Zones")    { column_index = 16; }
+        else if (column_options[i] == "Sun Exposure")    { column_index = 12; } 
+        else if (column_options[i] == "Water Rqmts")     { column_index = 13; } 
+        else if (column_options[i] == "Soil Type")       { column_index = 14; }
+        else if (column_options[i] == "pH Range")        { column_index = 15; }
+        else if (column_options[i] == "USDA Zones")      { column_index = 16; }
+        else if (column_options[i] == "Sunset Zones")    { column_index = 17; }
 
-        else if (column_options[i] == "My Location")        { column_index = 17; } 
-        else if (column_options[i] == "My Sun Exposure")    { column_index = 18; } 
-        else if (column_options[i] == "My Water Level")     { column_index = 19; } 
-        else if (column_options[i] == "My Soil Type")       { column_index = 20; }
-        else if (column_options[i] == "My pH")              { column_index = 21; }
-        else if (column_options[i] == "My Bloom Color")     { column_index = 22; }
-        else if (column_options[i] == "My Bloom Start-End") { column_index = 23; }
-        else if (column_options[i] == "Happy?")             { column_index = 24; }
+        else if (column_options[i] == "My Location")        { column_index = 18; } 
+        else if (column_options[i] == "My Sun Exposure")    { column_index = 19; } 
+        else if (column_options[i] == "My Water Level")     { column_index = 20; } 
+        else if (column_options[i] == "My Soil Type")       { column_index = 21; }
+        else if (column_options[i] == "My pH")              { column_index = 22; }
+        else if (column_options[i] == "My Bloom Color")     { column_index = 23; }
+        else if (column_options[i] == "My Bloom Range")     { column_index = 24; }
+        else if (column_options[i] == "Happy?")             { column_index = 25; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection.includes(column_options[i])){
@@ -481,6 +497,7 @@
       document.getElementById("id_type_x_search"         ).value = "Any";
       document.getElementById("id_bloom_color_search"    ).value = "Any";
       document.getElementById("id_bloom_season_search"   ).value = "Any";
+      document.getElementById("id_bloom_month_search"    ).value = "Any";
       document.getElementById("id_pollinators_search"    ).value = "Any";
       document.getElementById("id_ca_native_search"      ).value = "Any";
       document.getElementById("id_ucd_all_star_search"   ).value = "Any";
