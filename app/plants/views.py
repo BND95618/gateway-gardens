@@ -945,9 +945,11 @@ def plants_summary(request):
 
             # Save the plant show flag to the database
             plant.save()
+
             # format multiselect attributes to remove [, ', and ]
             plant.bloom_color  = string_display(plant.bloom_color)
             plant.bloom_season = string_display(plant.bloom_season)
+            plant.bloom_months = string_display(plant.bloom_months)
             plant.pollinators  = string_display(plant.pollinators)
             plant.sun_exposure = string_display(plant.sun_exposure)
             plant.water_rqmts  = string_display(plant.water_rqmts)
@@ -1098,6 +1100,16 @@ def plants_add(request):
                 plant.caption_4 = form.cleaned_data.get('caption_4')
             plant.creator       = request.user.username
             plant.creator_notes = form.cleaned_data.get('creator_notes')
+
+
+            # Build list of bloom months
+            print("DEBUG: Common Name:", plant.commonName)
+            print("DEBUG: Bloom start:", plant.bloom_start)
+            print("DEBUG: Bloom end   ", plant.bloom_end)
+            plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
+            print("DEBUG: bloom_months", plant.bloom_months)    
+
+
             plant.save()
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
@@ -1181,8 +1193,17 @@ def plants_update(request, id):
                 plant.image_4 = request.FILES['image_4']
             plant.caption_4 = form.cleaned_data.get('caption_4') 
 
-            plant.creator_notes = form.cleaned_data.get('creator_notes')     
+            plant.creator_notes = form.cleaned_data.get('creator_notes') 
+
+
+            # Build list of bloom months
+            print("DEBUG: Common Name:", plant.commonName)
+            print("DEBUG: Bloom start:", plant.bloom_start)
+            print("DEBUG: Bloom end   ", plant.bloom_end)
+            plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
+            print("DEBUG: bloom_months", plant.bloom_months)    
             plant.save()
+
 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
@@ -1727,6 +1748,23 @@ def bloom_month_check(target, start, end, options):
                     hit = False
                     return(hit)
     return(hit)
+
+def bloom_month_list(start, end, options):
+    print("DEBUG: got to function")
+    options_2x = options + options
+    list = []
+    if (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
+       print("DEBUG: point 1")
+       return(list)
+    begin = False
+    for option in options_2x:
+        print("DEBUG: month =", option)
+        if option == start:
+            begin = True
+        if begin:
+            list.append(option)
+        if begin and option == end:
+            return(list)
 
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """

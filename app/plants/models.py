@@ -85,6 +85,7 @@ class Plant(models.Model):
     bloom_season      = models.CharField(max_length=64,  default="tbd", blank=True)
     bloom_start       = models.CharField(max_length=8,   default="tbd", blank=True)
     bloom_end         = models.CharField(max_length=8,   default="tbd", blank=True)
+    bloom_months      = models.CharField(max_length=128, default="tbd", blank=True)
     pollinators       = models.CharField(max_length=72,  default="tbd", blank=True)
     ca_native         = models.CharField(max_length=8,   default="tbd", blank=True)
     ucd_all_star      = models.CharField(max_length=8,   default="tbd", blank=True)
