@@ -9,33 +9,38 @@
 <!-- Insert template css here -->
 {% endblock css %}
 
+<!---------------------------->
+<!-- Page Header Completion -->
+<!---------------------------->
+
 {% block header-completion %}
-<div class="w3-bar w3-green">
-  <h1 class="w3-bar-item">Plant Finder</h1>
-  <div class="w3-bar-item w3-dropdown-hover">
-    <button class="w3-button w3-green" style="z-index:21">
-      <i class="material-icons">
-        menu
-      </i>
-    </button>
-    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-      <button onclick="w3_open()"        class="w3-bar-item w3-button">Plant Search  </button>
-      <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
-      <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
-              class="w3-bar-item w3-button">Bloom Charts
+  <div class="w3-bar w3-green">
+    <h1 class="w3-bar-item">Plant Finder</h1>
+    <div class="w3-bar-item w3-dropdown-hover">
+      <button class="w3-button w3-green" style="z-index:21">
+        <i class="material-icons">
+          menu
+        </i>
       </button>
-      {% if perms.plants.add_plant %}
-        <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant</a>
-      {% endif %}
-   </div>
-  </div>
-</div> 
+      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+        <button onclick="w3_open()"        class="w3-bar-item w3-button">Plant Search  </button>
+        <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
+        <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
+                class="w3-bar-item w3-button">Bloom Charts
+        </button>
+        {% if perms.plants.add_plant %}
+          <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant</a>
+        {% endif %}
+    </div>
+    </div>
+  </div> 
 {% endblock header-completion %}
 
 {% block content %}
   <!------------------------->
   <!-- Vertical Search Bar -->
   <!------------------------->
+
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" 
        style="display:none; height:80%;" 
        id="mySidebar">
@@ -252,18 +257,22 @@
       </button>
     </form>
   </div>
+  
   <!------------------------->
   <!--        Modals       -->
   <!------------------------->
+  
   <!-- Plant Delete modal - html to be inserted by Javascript -->
   <div id="plants_delete_modal" class="w3-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
   </div>
+  
   <!-- Column Chooser modal - html to be inserted by Javascript -->
   <div id="column_chooser_modal" class="w3-modal">
     <p>Column Chooser HTML to be Inserted Here!</p>
   </div>
-  <!-- Plant Chart modal - html to be inserted by Javascript -->
+  
+  <!-- Plant Chart modal -->
   <div id="plants_chart_modal" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom" >
       
@@ -287,7 +296,7 @@
         <table class="w3-table-all w3-hoverable">
           {% include "plants/plants_chart_modal_head.html" %}
           {% for plant in plants %}
-            {% if plant.plant_show == "yes" and "None" not in plant.bloom_months and "tbd" not in plant.bloom_months %} 
+            {% if plant.plant_show == "yes" and plant.bloom_months != '' %} 
               {% include "plants/plants_chart_modal_rows.html" %}
             {% endif %}
           {% endfor %}
@@ -302,8 +311,8 @@
         <table class="w3-table-all w3-hoverable">
           {% include "plants/plants_chart_modal_head.html" %}
           {% for plant in plants %}
-            {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and "None" not in plant.bloom_season and "tbd" not in plant.bloom_season %} 
-            {% include "plants/plants_chart_modal_rows.html" %}
+            {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and plant.bloom_months != '' %} 
+              {% include "plants/plants_chart_modal_rows.html" %}
             {% endif %}
           {% endfor %}
         </table>
@@ -317,7 +326,7 @@
         <table class="w3-table-all w3-hoverable">
           {% include "plants/plants_chart_modal_head.html" %}
           {% for plant in plants %}
-            {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and "None" not in plant.bloom_season and "tbd" not in plant.bloom_season %} 
+            {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
               {% include "plants/plants_chart_modal_rows.html" %}
             {% endif %}
           {% endfor %}
@@ -332,7 +341,7 @@
         <table class="w3-table-all w3-hoverable">
           {% include "plants/plants_chart_modal_head.html" %}
           {% for plant in plants %}
-            {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and "None" not in plant.bloom_season and "tbd" not in plant.bloom_season %} 
+            {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and plant.bloom_months != '' %} 
               {% include "plants/plants_chart_modal_rows.html" %}
             {% endif %}
           {% endfor %}
@@ -348,6 +357,7 @@
   <!------------------------->
   <!--     Plant Table     -->
   <!------------------------->
+
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
@@ -492,7 +502,6 @@
 {% block js %}
   <!-- Column selector -->
   <script>
-    // Column selector
     function column_selector(){
       const table = document.getElementById("plantTable");
       // 
@@ -543,8 +552,10 @@
         }
       }
     }
+  </script>
 
-    // Search menu - sidebar navigation scripts
+  <!-- Search menu - sidebar navigation scripts -->
+  <script>
     function w3_open() {
       document.getElementById("main").style.marginLeft = "16%";
       document.getElementById("mySidebar").style.width = "15%";
@@ -556,7 +567,10 @@
       document.getElementById("mySidebar").style.display = "none";
       // document.getElementById("openNav").style.display = "inline-block";
     }
-    // Reset all search criteria to 'Any'
+  </script>
+
+  <!-- Reset all search criteria to 'Any' -->    
+  <script>
     function searchReset() {
       document.getElementById("id_type_x_search"      ).value = "Any";
       document.getElementById("id_bloom_color_search" ).value = "Any";
@@ -573,8 +587,10 @@
       document.getElementById("id_sunset_zone_search" ).value = "Any";
       document.getElementById("id_garden_search"      ).value = "Any";
     }
+  </script>
 
-    // Plant Table Column Chooser Script
+  <!-- Plant Table Column Chooser Script -->   
+  <script>
     function column_chooser() {
       // Get the column chooser modal
       const column_chooser_modal = document.getElementById('column_chooser_modal')
@@ -585,8 +601,10 @@
       // Display the plant column chooser modal
       column_chooser_modal.style.display='block'
     }
+  </script>
 
-    // Delete Plant Modal Script
+  <!-- Delete Plant Modal Script --> 
+  <script>
     function plants_delete(id) {
       // Get the plant delete modal
       const plants_delete_modal  = document.getElementById('plants_delete_modal')
@@ -603,6 +621,7 @@
     // Select the first tab
     document.getElementsByClassName("tablink")[0].click();
   </script>
+
   <!-- Plant Chart Modal Script -->
   <script>
     // Select the first tab
@@ -624,26 +643,8 @@
       document.getElementById(chartName).style.display = "block";
       evt.currentTarget.classList.add("w3-light-green");
     }
-
-    // // Plant Chart Modal Script
-    // function plants_chart()
-    // {
-    //   // Get the plant chart modal
-    //   const plants_chart_modal = document.getElementById('plants_chart_modal');
-    
-    //   // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-    //   fetch("{% url 'plants:plants_chart' %}")
-    //     .then(response => response.text())
-    //     .then(html => {plants_chart_modal.innerHTML = html;})
-    //   // Display the plant chart modal
-    //   plants_chart_modal.style.display='block'
-    //   //
-    //   const blooms_tab_content = document.getElementById('blooms_tab_content');
-    //   const bees_tab_content   = document.getElementById('bees_tab_content');
-    //   blooms_tab_content.style.display='block'
-    //   bees_tab_content.style.display='none'
-    // }
   </script>
+
   <!-- On Page load functions -->
   <script>
     // Sort table alphabetically by Common Name

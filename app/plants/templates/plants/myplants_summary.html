@@ -9,8 +9,11 @@
 <!-- Insert template css here -->
 {% endblock css %}
 
+<!---------------------------->
+<!-- Page Header Completion -->
+<!---------------------------->
+
 {% block header-completion %}
-  <!-- complete the header from master.html -->
   <div class="w3-bar w3-green">
     <h1 class="w3-bar-item">My Plants</h1>
     <div class="w3-bar-item w3-dropdown-hover">
@@ -22,6 +25,8 @@
       <div class="w3-dropdown-content w3-bar-block w3-card-4">
         <button onclick="w3_open()" class="w3-bar-item w3-button">Search</button>
         <button onclick="my_column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
+        <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
+                class="w3-bar-item w3-button">Bloom Charts
       </div>
     </div>
   </div> 
@@ -276,7 +281,11 @@
       </button>
     </form>
   </div>
-
+  
+  <!------------------------->
+  <!--        Modals       -->
+  <!------------------------->
+ 
   <!-- MyPlant Delete modal - html to be inserted by Javascript -->
   <div id="myplants_delete_modal" class="w3-modal">
     <p> MyPlant delete form HTML to be Inserted Here! </p>
@@ -287,9 +296,93 @@
     <p> My Column Chooser HTML to be Inserted Here! </p>
   </div>
 
+  <!-- Plant Chart modal -->
+  <!-- AR: Use My Plant bloom months if they have been entered -->
+   <div id="plants_chart_modal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" >
+      
+      <header class="w3-container w3-green"> 
+        <!-- Close the chart modal -->
+        <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
+          class="w3-button w3-display-topright">&times;</span>
+          <h2>Bloom Chart - Blooms by Month</h2>
+      </header>
+
+      <!-- Create the modal tabs -->
+      <div class="w3-bar w3-border-bottom">
+        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'blooms_tab_content')"      >Blooms       </button>
+        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'bees_tab_content')"        >Bees         </button>
+        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'butterflies_tab_content')" >Butterflies  </button>
+        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'hummingbirds_tab_content')">Hummingbirds</button>
+      </div>
+    
+      <!-- Create the modal chart - Blooms -->
+      <div id="blooms_tab_content" class="chart">
+        <table class="w3-table-all w3-hoverable">
+          {% include "plants/myplants_chart_modal_head.html" %}
+          {% for my_plant in my_plants %}
+            {% if my_plant.plant.plant_show == "yes" and my_plant.plant.bloom_months != '' %} 
+              {% include "plants/myplants_chart_modal_rows.html" %}
+            {% endif %}
+          {% endfor %}
+        </table>
+        <footer class="w3-container w3-green">
+          <p class="w3-center">Garden Blooms</p>
+        </footer>
+      </div>
+    
+      <!-- Create the modal chart - Bees -->
+      <div id="bees_tab_content" class="chart">
+        <table class="w3-table-all w3-hoverable">
+          {% include "plants/myplants_chart_modal_head.html" %}
+          {% for my_plant in my_plants %}
+            {% if my_plant.plant.plant_show == "yes" and "Bees" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+              {% include "plants/myplants_chart_modal_rows.html" %}
+            {% endif %}
+          {% endfor %}
+        </table>
+        <footer class="w3-container w3-green">
+          <p class="w3-center">Blooms attracting Bees</p>
+        </footer>
+      </div>
+    
+      <!-- Create the modal chart - Butterflies -->
+      <div id="butterflies_tab_content" class="chart">
+        <table class="w3-table-all w3-hoverable">
+          {% include "plants/myplants_chart_modal_head.html" %}
+          {% for my_plant in my_plants %}
+            {% if my_plant.plant.plant_show == "yes" and "Butterflies" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+              {% include "plants/myplants_chart_modal_rows.html" %}
+            {% endif %}
+          {% endfor %}
+        </table>
+        <footer class="w3-container w3-green">
+          <p class="w3-center">Blooms attracting Butterflies</p>
+        </footer>
+      </div>
+    
+      <!-- Create the modal chart - Hummingbirds -->
+      <div id="hummingbirds_tab_content" class="chart">
+        <table class="w3-table-all w3-hoverable">
+          {% include "plants/myplants_chart_modal_head.html" %}
+          {% for my_plant in my_plants %}
+            {% if my_plant.plant.plant_show == "yes" and "Hummingbirds" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+              {% include "plants/myplants_chart_modal_rows.html" %}
+            {% endif %}
+          {% endfor %}
+        </table>
+        <footer class="w3-container w3-green">
+          <p class="w3-center">Blooms attracting Hummingbirds</p>
+        </footer>
+      </div>
+    
+    </div>
+  </div>
+
   <!------------------------->
   <!--   My Plant Table    -->
   <!------------------------->
+
   <div class="w3-container" id="main" style="margin-top:150px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
@@ -415,8 +508,8 @@
 {% endblock content %}
 
 {% block js %}
+<!-- Column selector -->
   <script>
-    // Column selector
     function column_selector(){
       const table = document.getElementById("plantTable");
       // 
@@ -480,8 +573,10 @@
         }
       }
     }
+  </script>
 
-    // Search menu - sidebar navigation scripts
+  <!-- Search menu - sidebar navigation scripts -->
+  <script>
     function w3_open() {
       document.getElementById("main").style.marginLeft = "16%";
       document.getElementById("mySidebar").style.width = "15%";
@@ -491,8 +586,10 @@
       document.getElementById("main").style.marginLeft = "0%";
       document.getElementById("mySidebar").style.display = "none";
     }
+  </script>
 
-    // Reset all search criteria to 'Any'
+  <!-- Reset all search criteria to 'Any' -->
+  <script>
     function searchReset() {
       document.getElementById("id_type_x_search"         ).value = "Any";
       document.getElementById("id_bloom_color_search"    ).value = "Any";
@@ -511,8 +608,10 @@
       document.getElementById("id_my_water_level_search" ).value = "Any";
       document.getElementById("id_my_soil_type_search"   ).value = "Any";
     }
+  </script>
 
-    // My Plant Table Column Chooser Script
+  <!-- Plant Table Column Chooser Script -->
+  <script>
     function my_column_chooser() {
       // Get the column chooser modal
       const my_column_chooser_modal = document.getElementById('my_column_chooser_modal');
@@ -523,8 +622,10 @@
       // Display the plant column chooser modal
       my_column_chooser_modal.style.display='block';
     }
+  </script>
 
-    // Delete My Plant Modal Script
+  <!-- Delete Plant Modal Script -->
+  <script>
     function myplants_delete(id) {
       // Get the MyPlant delete modal
       const myplants_delete_modal  = document.getElementById('myplants_delete_modal')
@@ -536,10 +637,36 @@
       // Display the plant delete modal
       myplants_delete_modal.style.display='block'
     }
+  </script>
 
-    // Sort My Plants table by Common Name upon page load
+  <!-- Plant Chart Modal Script -->
+  <script>
+    // Select the first tab
+    document.getElementsByClassName("tablink")[0].click();
+    function openChart(evt, chartName) 
+    {
+      let i, x, tablinks;
+      // Hide all tab content
+      x = document.getElementsByClassName("chart");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      // Remove all tab highlighting
+      tablinks = document.getElementsByClassName("tablink");
+      for (i = 0; i < x.length; i++) {
+        tablinks[i].classList.remove("w3-light-green");
+      }
+      // Show contents of selected tab and turn tab to light green
+      document.getElementById(chartName).style.display = "block";
+      evt.currentTarget.classList.add("w3-light-green");
+    }
+  </script>
+
+  <!-- On Page load functions -->
+  <script>
+    // Sort My Plants table by Common Name
     window.onload = sortTable(0);
-    // On page load, show columns as defined by column_selection
+    // Show columns as defined by column_selection
     window.onload = column_selector();
   </script>
 {% endblock js %}
