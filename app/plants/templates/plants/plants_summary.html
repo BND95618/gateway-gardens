@@ -310,7 +310,7 @@
     
       <!-- Create the modal chart - Bees -->
       <div id="bees_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
+        {% with table_name="bees_table" %}
           <table id="bees_table" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
@@ -327,8 +327,8 @@
     
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflies_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
-          <table id="utterflies_table" class="w3-table-all w3-hoverable">
+        {% with table_name="butterflies_table" %}
+          <table id="butterflies_table" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
@@ -344,7 +344,7 @@
     
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirds_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
+        {% with table_name="hummingbirds_table" %}
           <table id="hummingbirds_table" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}

@@ -319,7 +319,7 @@
       <!-- Create the modal chart - Blooms -->
       <div id="blooms_tab_content" class="chart">
         {% with table_name="bloomsTable" %}
-          <table class="w3-table-all w3-hoverable">
+          <table id="bloomsTable" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for my_plant in my_plants %}
               {% if my_plant.plant.plant_show == "yes" and my_plant.plant.bloom_months != '' %} 
@@ -335,8 +335,8 @@
     
       <!-- Create the modal chart - Bees -->
       <div id="bees_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
-          <table class="w3-table-all w3-hoverable">
+        {% with table_name="bees_table" %}
+          <table id="bees_table" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for my_plant in my_plants %}
               {% if my_plant.plant.plant_show == "yes" and "Bees" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
@@ -352,8 +352,8 @@
     
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflies_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
-          <table class="w3-table-all w3-hoverable">
+        {% with table_name="butterflies_table" %}
+          <table id="butterflies_table" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for my_plant in my_plants %}
               {% if my_plant.plant.plant_show == "yes" and "Butterflies" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
@@ -369,8 +369,8 @@
     
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirds_tab_content" class="chart">
-        {% with table_name="blooms_table" %}
-          <table class="w3-table-all w3-hoverable">
+        {% with table_name="hummingbirds_table" %}
+          <table id="hummingbirds_table" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for my_plant in my_plants %}
               {% if my_plant.plant.plant_show == "yes" and "Hummingbirds" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 

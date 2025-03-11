@@ -28,6 +28,7 @@ BLOOM_COLOR_CHOICES = (
 	('green',     'green'), 
 	('blue',      'blue'), 
 	('orange',    'orange'), 
+	('none',      'none'),
 ) 
 BLOOM_SEASON_CHOICES = (
 	("tbd",    "tbd"),
