@@ -673,7 +673,8 @@
   <!-- On Page load functions -->
   <script>
     // Sort My Plants table by Common Name
-    window.onload = sortTable(0);
+    console.log("DEBUG: Got to sorting plant table on windows load");
+    window.onload = sortTable(0, 'plantTable');
     // Show columns as defined by column_selection
     window.onload = column_selector();
   </script>
