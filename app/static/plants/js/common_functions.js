@@ -1,9 +1,9 @@
 // app/plants/static/plants/js/common_functions.js
 
 // Table sort script - alphetically - toggle between ascending and descending
-function sortTable(n) {
+function sortTable(n, tableID) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("plantTable");
+    table = document.getElementById(tableID);
     switching = true;
     // Set the sorting direction to ascending:
     dir = "asc";

@@ -1,6 +1,7 @@
 <tr class="w3-hover-green w3-text-{{ my_plant.bloom_color }}" >
     <!-- Plant Attributes -->
-    <td class="w3-text-black">{{ my_plant.plant.commonName }}</td>
+    <td class="w3-text-black">{{ my_plant.plant.commonName  }}</td>
+    <td class="w3-text-black">{{ my_plant.bloom_color }}</td>
     <!-- Jan -->
     {% if "Jan" in my_plant.plant.bloom_months %}
       <td class="w3-center"><i class="material-icons">filter_vintage</i></td>

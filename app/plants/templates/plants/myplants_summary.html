@@ -318,62 +318,70 @@
     
       <!-- Create the modal chart - Blooms -->
       <div id="blooms_tab_content" class="chart">
-        <table class="w3-table-all w3-hoverable">
-          {% include "plants/myplants_chart_modal_head.html" %}
-          {% for my_plant in my_plants %}
-            {% if my_plant.plant.plant_show == "yes" and my_plant.plant.bloom_months != '' %} 
-              {% include "plants/myplants_chart_modal_rows.html" %}
-            {% endif %}
-          {% endfor %}
-        </table>
-        <footer class="w3-container w3-green">
-          <p class="w3-center">Garden Blooms</p>
-        </footer>
+        {% with table_name="bloomsTable" %}
+          <table class="w3-table-all w3-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for my_plant in my_plants %}
+              {% if my_plant.plant.plant_show == "yes" and my_plant.plant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="w3-container w3-green">
+            <p class="w3-center">Garden Blooms</p>
+          </footer>
+        {% endwith %}
       </div>
     
       <!-- Create the modal chart - Bees -->
       <div id="bees_tab_content" class="chart">
-        <table class="w3-table-all w3-hoverable">
-          {% include "plants/myplants_chart_modal_head.html" %}
-          {% for my_plant in my_plants %}
-            {% if my_plant.plant.plant_show == "yes" and "Bees" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
-              {% include "plants/myplants_chart_modal_rows.html" %}
-            {% endif %}
-          {% endfor %}
-        </table>
-        <footer class="w3-container w3-green">
-          <p class="w3-center">Blooms attracting Bees</p>
-        </footer>
+        {% with table_name="blooms_table" %}
+          <table class="w3-table-all w3-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for my_plant in my_plants %}
+              {% if my_plant.plant.plant_show == "yes" and "Bees" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="w3-container w3-green">
+            <p class="w3-center">Blooms attracting Bees</p>
+          </footer>
+        {% endwith %}
       </div>
     
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflies_tab_content" class="chart">
-        <table class="w3-table-all w3-hoverable">
-          {% include "plants/myplants_chart_modal_head.html" %}
-          {% for my_plant in my_plants %}
-            {% if my_plant.plant.plant_show == "yes" and "Butterflies" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
-              {% include "plants/myplants_chart_modal_rows.html" %}
-            {% endif %}
-          {% endfor %}
-        </table>
-        <footer class="w3-container w3-green">
-          <p class="w3-center">Blooms attracting Butterflies</p>
-        </footer>
+        {% with table_name="blooms_table" %}
+          <table class="w3-table-all w3-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for my_plant in my_plants %}
+              {% if my_plant.plant.plant_show == "yes" and "Butterflies" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="w3-container w3-green">
+            <p class="w3-center">Blooms attracting Butterflies</p>
+          </footer>
+        {% endwith %}
       </div>
     
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirds_tab_content" class="chart">
-        <table class="w3-table-all w3-hoverable">
-          {% include "plants/myplants_chart_modal_head.html" %}
-          {% for my_plant in my_plants %}
-            {% if my_plant.plant.plant_show == "yes" and "Hummingbirds" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
-              {% include "plants/myplants_chart_modal_rows.html" %}
-            {% endif %}
-          {% endfor %}
-        </table>
-        <footer class="w3-container w3-green">
-          <p class="w3-center">Blooms attracting Hummingbirds</p>
-        </footer>
+        {% with table_name="blooms_table" %}
+          <table class="w3-table-all w3-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for my_plant in my_plants %}
+              {% if my_plant.plant.plant_show == "yes" and "Hummingbirds" in my_plant.plant.pollinators and my_plant.plant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="w3-container w3-green">
+            <p class="w3-center">Blooms attracting Hummingbirds</p>
+          </footer>
+        {% endwith %}
       </div>
     
     </div>
@@ -388,34 +396,34 @@
       <thead>
         <tr class="w3-light-grey">
           <!-- Plant Attributes -->
-          <th style="cursor:pointer" onclick="sortTable(0)" >Common Name    </th>
-          <th style="cursor:pointer" onclick="sortTable(1)" >Genus/Species  </th>
-          <th style="cursor:pointer" onclick="sortTable(2)" >Variety        </th>
-          <th style="cursor:pointer" onclick="sortTable(3)" >Type           </th>
-          <th style="cursor:pointer" onclick="sortTable(4)" >Height         </th>
-          <th style="cursor:pointer" onclick="sortTable(5)" >Width          </th>
-          <th style="cursor:pointer" onclick="sortTable(6)" >Bloom Color    </th>
-          <th style="cursor:pointer" onclick="sortTable(7)" >Bloom Season   </th>
-          <th style="cursor:pointer" onclick="sortTable(8)" >Bloom Range    </th>
-          <th style="cursor:pointer" onclick="sortTable(9)" >Pollinators    </th>
-          <th style="cursor:pointer" onclick="sortTable(10)" class="w3-center">CA Native   </th>
-          <th style="cursor:pointer" onclick="sortTable(11)" class="w3-center">UCD All-Star</th>
+          <th style="cursor:pointer" onclick="sortTable( 0, 'plantTable')" >Common Name   </th>
+          <th style="cursor:pointer" onclick="sortTable( 1, 'plantTable')" >Genus/Species </th>
+          <th style="cursor:pointer" onclick="sortTable( 2, 'plantTable')" >Variety       </th>
+          <th style="cursor:pointer" onclick="sortTable( 3, 'plantTable')" >Type          </th>
+          <th style="cursor:pointer" onclick="sortTable( 4, 'plantTable')" >Height        </th>
+          <th style="cursor:pointer" onclick="sortTable( 5, 'plantTable')" >Width         </th>
+          <th style="cursor:pointer" onclick="sortTable( 6, 'plantTable')" >Bloom Color   </th>
+          <th style="cursor:pointer" onclick="sortTable( 7, 'plantTable')" >Bloom Season  </th>
+          <th style="cursor:pointer" onclick="sortTable( 8, 'plantTable')" >Bloom Range   </th>
+          <th style="cursor:pointer" onclick="sortTable( 9, 'plantTable')" >Pollinators   </th>
+          <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="w3-center">CA Native   </th>
+          <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="w3-center">UCD All-Star</th>
           <!-- Plant Requirements -->
-          <th style="cursor:pointer" onclick="sortTable(12)">Sun Exposure   </th>
-          <th style="cursor:pointer" onclick="sortTable(13)">Water Rqmts    </th>
-          <th style="cursor:pointer" onclick="sortTable(14)">Soil Type      </th>
-          <th style="cursor:pointer" onclick="sortTable(15)">pH Range       </th>
-          <th style="cursor:pointer" onclick="sortTable(16)">USDA Zones     </th>
-          <th style="cursor:pointer" onclick="sortTable(17)">Sunset Zones   </th>
+          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')">Sun Exposure   </th>
+          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')">Water Rqmts    </th>
+          <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Soil Type      </th>
+          <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">pH Range       </th>
+          <th style="cursor:pointer" onclick="sortTable(16, 'plantTable')">USDA Zones     </th>
+          <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">Sunset Zones   </th>
           <!-- Garden Environment -->
-          <th style="cursor:pointer" onclick="sortTable(18)">Location           </th>
-          <th style="cursor:pointer" onclick="sortTable(19)">My Sun Exposure    </th>
-          <th style="cursor:pointer" onclick="sortTable(20)">My Water Level     </th>
-          <th style="cursor:pointer" onclick="sortTable(21)">My Soil Type       </th>
-          <th style="cursor:pointer" onclick="sortTable(22)">My pH              </th>
-          <th style="cursor:pointer" onclick="sortTable(23)">My Bloom Color     </th>
-          <th style="cursor:pointer" onclick="sortTable(24)">My Bloom Start/End </th>
-          <th style="cursor:pointer" onclick="sortTable(25)" class="w3-center">Happy?</th>
+          <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">Location           </th>
+          <th style="cursor:pointer" onclick="sortTable(19, 'plantTable')">My Sun Exposure    </th>
+          <th style="cursor:pointer" onclick="sortTable(20, 'plantTable')">My Water Level     </th>
+          <th style="cursor:pointer" onclick="sortTable(21, 'plantTable')">My Soil Type       </th>
+          <th style="cursor:pointer" onclick="sortTable(22, 'plantTable')">My pH              </th>
+          <th style="cursor:pointer" onclick="sortTable(23, 'plantTable')">My Bloom Color     </th>
+          <th style="cursor:pointer" onclick="sortTable(24, 'plantTable')">My Bloom Start/End </th>
+          <th style="cursor:pointer" onclick="sortTable(25, 'plantTable')" class="w3-center">Happy?</th>
           <!-- Button Placeholders -->
           <th class="w3-center"></th>
           <th class="w3-center"></th>
