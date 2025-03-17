@@ -273,6 +273,7 @@
   </div>
   
   <!-- Plant Chart modal -->
+  <!-- AR: Use My Plant bloom months if they have been entered -->
   <div id="plants_chart_modal" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom" >
       
@@ -283,18 +284,18 @@
           <h2>Bloom Chart - Blooms by Month</h2>
       </header>
 
-      <!-- Create the modal tabs -->
+      <!-- Create the modal tabs - each chart has a tab -->
       <div class="w3-bar w3-border-bottom">
-        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'blooms_tab_content')"      >Blooms       </button>
-        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'bees_tab_content')"        >Bees         </button>
-        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'butterflies_tab_content')" >Butterflies  </button>
-        <button class="tablink w3-bar-item w3-button" onclick="openChart(event, 'hummingbirds_tab_content')">Hummingbirds</button>
+        <button id="bloomTabButton"       class="tab w3-bar-item w3-button">Blooms      </button>
+        <button id="beeTabButton"         class="tab w3-bar-item w3-button">Bees        </button>
+        <button id="butterflyTabButton"   class="tab w3-bar-item w3-button">Butterflies </button>
+        <button id="hummingbirdTabButton" class="tab w3-bar-item w3-button">Hummingbirds</button>
       </div>
     
       <!-- Create the modal chart - Blooms -->
-      <div id="blooms_tab_content" class="chart">
-        {% with table_name="bloomsTable" %}
-          <table id="bloomsTable" class="w3-table-all w3-hoverable">
+      <div id="bloomTabContent" class="tabContent">
+        {% with table_name="bloomTable" %}
+          <table id="bloomTable" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and plant.bloom_months != '' %} 
@@ -309,9 +310,9 @@
       </div>
     
       <!-- Create the modal chart - Bees -->
-      <div id="bees_tab_content" class="chart">
-        {% with table_name="bees_table" %}
-          <table id="bees_table" class="w3-table-all w3-hoverable">
+      <div id="beeTabContent" class="tabContent">
+        {% with table_name="beeTable" %}
+          <table id="beeTable" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and plant.bloom_months != '' %} 
@@ -326,9 +327,9 @@
       </div>
     
       <!-- Create the modal chart - Butterflies -->
-      <div id="butterflies_tab_content" class="chart">
-        {% with table_name="butterflies_table" %}
-          <table id="butterflies_table" class="w3-table-all w3-hoverable">
+      <div id="butterflyTabContent" class="tabContent">
+        {% with table_name="butterflyTable" %}
+          <table id="butterflyTable" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
@@ -343,9 +344,9 @@
       </div>
     
       <!-- Create the modal chart - Hummingbirds -->
-      <div id="hummingbirds_tab_content" class="chart">
-        {% with table_name="hummingbirds_table" %}
-          <table id="hummingbirds_table" class="w3-table-all w3-hoverable">
+      <div id="hummingbirdTabContent" class="tabContent">
+        {% with table_name="hummingbirdTable" %}
+          <table id="hummingbirdTable" class="w3-table-all w3-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and plant.bloom_months != '' %} 
@@ -624,33 +625,56 @@
       // Display the plant delete modal
       plants_delete_modal.style.display='block'
     }
-
-    // Plant Chart Modal Tab Selection Function
-    // Select the first tab
-    document.getElementsByClassName("tablink")[0].click();
   </script>
 
   <!-- Plant Chart Modal Script -->
   <script>
-    // Select the first tab
-    document.getElementsByClassName("tablink")[0].click();
-    function openChart(evt, chartName) 
+    // Register bloom chart tab buttons
+    document.getElementById("bloomTabButton").addEventListener("click", function() 
     {
-      let i, x, tablinks;
-      // Hide all tab content
-      x = document.getElementsByClassName("chart");
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
+      openChart(event, 'bloomTabContent');
+    });
+    document.getElementById("beeTabButton").addEventListener("click", function() 
+    {
+      openChart(event, 'beeTabContent');
+    });
+    document.getElementById("butterflyTabButton").addEventListener("click", function() 
+    {
+      openChart(event, 'butterflyTabContent');
+    });
+    document.getElementById("hummingbirdTabButton").addEventListener("click", function() 
+    {
+      openChart(event, 'hummingbirdTabContent');
+    });
+    //
+    function openChart(event, selectedTabContent) 
+    {
+      let i, tabs, tabContents;
+      //
+      tabs        = document.getElementsByClassName("tab");
+      tabContents = document.getElementsByClassName("tabContent");
+      // Clear all tab highlighting and all tab content
+      for (i = 0; i < tabs.length; i++)
+      {
+        tabs[i].classList.remove("w3-light-green");
+        tabContents[i].style.display = "none";
       }
-      // Remove all tab highlighting
-      tablinks = document.getElementsByClassName("tablink");
-      for (i = 0; i < x.length; i++) {
-        tablinks[i].classList.remove("w3-light-green");
-      }
-      // Show contents of selected tab and turn tab to light green
-      document.getElementById(chartName).style.display = "block";
-      evt.currentTarget.classList.add("w3-light-green");
+      // Get selected tab
+      console.log("DEBUG: selectedTabContent", selectedTabContent);
+      selTabContent=document.getElementById(selectedTabContent);
+      // Highlight selected tab
+      event.currentTarget.classList.add("w3-light-green");
+      // Show tabcontents
+      selTabContent.style.display = "block";
+      // Sort table
+      table = selTabContent.firstElementChild;
+      console.log("DEBUG: table:", table.id);
+      sortTable(0, table.id);
     }
+    // Select the first tab and sort by Common Name
+    bloomTab = document.getElementsByClassName("tab")[0];
+    console.log("DEBUG: bloomTab:", bloomTab);
+    bloomTab.click();
   </script>
 
   <!-- On Page load functions -->

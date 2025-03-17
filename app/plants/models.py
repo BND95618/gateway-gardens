@@ -173,17 +173,18 @@ class MyPlant(models.Model):
     date         = models.DateField(auto_now_add=True)
     #
     date_planted = models.DateField(default="2000-01-01", null=True, blank=True)
-    bloom_color  = models.CharField(max_length=32, default="tbd", blank=True)
-    bloom_start  = models.CharField(max_length=8,  default="tbd", blank=True)
-    bloom_end    = models.CharField(max_length=8,  default="tbd", blank=True)
-    location     = models.CharField(max_length=64, default="tbd", blank=True)
-    sun_exposure = models.CharField(max_length=64, default="tbd", blank=True)
-    water_level  = models.CharField(max_length=64, default="tbd", blank=True)
-    soil_type    = models.CharField(max_length=64, default="tbd", blank=True)
-    pH           = models.CharField(max_length=16, default="tbd", blank=True)
+    bloom_color  = models.CharField(max_length=32,  default="tbd", blank=True)
+    bloom_start  = models.CharField(max_length=8,   default="tbd", blank=True)
+    bloom_end    = models.CharField(max_length=8,   default="tbd", blank=True)
+    bloom_months = models.CharField(max_length=128, default="tbd", blank=True)
+    location     = models.CharField(max_length=64,  default="tbd", blank=True)
+    sun_exposure = models.CharField(max_length=64,  default="tbd", blank=True)
+    water_level  = models.CharField(max_length=64,  default="tbd", blank=True)
+    soil_type    = models.CharField(max_length=64,  default="tbd", blank=True)
+    pH           = models.CharField(max_length=16,  default="tbd", blank=True)
     notes        = QuillField(blank=True, null=True)
     # Tags a plant for display/hidden in a summary table
-    show         = models.CharField(max_length=8,  default="no", blank=True)
+    show         = models.CharField(max_length=8,   default="no", blank=True)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 

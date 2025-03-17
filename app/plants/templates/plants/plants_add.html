@@ -23,8 +23,8 @@
 {% block content %}
   <!-- Main content-->
   <div class="w3-container" style="margin-top:150px;">
-    <form name     = "audioForm"
-          id       = "id_audioForm"
+    <form name     = "plantForm"
+          id       = "id_plantForm"
           action   = "" 
           method   = "post" 
           enctype  = "multipart/form-data">
@@ -49,8 +49,12 @@
         <section class="sound-clips"></section>
       </div>
       <hr>
-      <button type="submit" class="w3-button w3-green w3-round">Submit</button>
-      <button type="reset"  class="w3-button w3-gray  w3-round">Reset</button>
+      <button type="submit" class="w3-button w3-green  w3-round">Submit</button>
+      <button type="button" class="w3-button w3-yellow w3-round" onclick="validatePlantForm()">Check</button>
+      <button type="reset"  class="w3-button w3-gray   w3-round">Reset </button>
+      <a href="{% url 'plants:plants_summary' %}">
+        <button type="button" class="w3-button w3-red  w3-round">Cancel</button>
+      </a>
     </form>
   </div>
 {% endblock content %}
@@ -150,20 +154,12 @@
           x = range.split('-');
           zone_start = x[0];
           zone_end   = x[1]; 
-          if (sunset_zones_opt.includes(zone_start)) 
-          {
-            // console.log("DEBUG: ", zone_start, " is in sunset_zones_opt");
-          } 
-          else 
+          if (!sunset_zones_opt.includes(zone_start)) 
           {
             alert("ERROR: Invalid Sunset Zone: " + zone_start);
             clean_input = false;
           }
-          if (sunset_zones_opt.includes(zone_end))
-          {
-            // console.log("DEBUG: ", zone_end, " is in sunset_zones_opt");
-          } 
-          else 
+          if (!sunset_zones_opt.includes(zone_end))
           {
             alert("ERROR: Invalid Sunset Zone: " + zone_end);
             clean_input = false;
@@ -179,11 +175,7 @@
         else 
         {
           // check case for an individual zone (zone exists)
-          if (sunset_zones_opt.includes(range)) 
-          {
-            // console.log("DEBUG: ", range, " is in sunset_zones_opt");
-          } 
-          else 
+          if (!sunset_zones_opt.includes(range)) 
           {
             alert("ERROR: Invalid Sunset Zone: " + range);
             clean_input = false;
@@ -197,7 +189,7 @@
     } 
     else 
     {
-     return true;
+      return true;
     }
   }
 </script>
@@ -306,12 +298,12 @@
         // -------------------------------------------------- 
         // Use fetch to upload the audio to the server when the form is submitted
         // --------------------------------------------------
-        id_audioForm.onsubmit = async (event) => {
+        id_plantForm.onsubmit = async (event) => {
           event.preventDefault();
           //
           const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
           // Get the form plus the audio recording data entered by the user
-          let formData  = new FormData(id_audioForm);
+          let formData  = new FormData(id_plantForm);
           formData.append('blob', blob, 'audio_file');
           // Send the form plus the audio recording data entered by the user
           // NOTE: The url  must be set for add versus update

@@ -272,6 +272,7 @@ def myplants_summary(request):
             # format multiselect attributes to remove [, ', and ]
             my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
             my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
+            my_plant.bloom_months       = string_display(my_plant.bloom_months)
             my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
             my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
             my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
@@ -285,7 +286,7 @@ def myplants_summary(request):
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
-            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.plant.bloom_start, my_plant.plant.bloom_end, month_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.bloom_start, my_plant.bloom_end, month_opt)
             if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
                     (my_plant.plant.type_x       == "tbd")                          \
@@ -475,6 +476,7 @@ def myplants_summary(request):
             # format multiselect attributes to remove [, ', and ]
             my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
             my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
+            my_plant.bloom_months       = string_display(my_plant.plant.bloom_months)
             my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
             my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
             my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
@@ -488,7 +490,7 @@ def myplants_summary(request):
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
-            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.plant.bloom_start, my_plant.plant.bloom_end, month_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.bloom_start, my_plant.bloom_end, month_opt)
             if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
                     (my_plant.plant.type_x       == "tbd")                          \
@@ -625,6 +627,8 @@ def myplants_add(request, id):
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.plant        = plant                                 # link my_plant to the specific plant
+            # Build list of bloom months
+            my_plant.bloom_months = bloom_month_list(my_plant.bloom_start, my_plant.bloom_end, month_opt)   
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
@@ -650,6 +654,8 @@ def myplants_update(request, id):
             my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
+            # Build list of bloom months
+            my_plant.bloom_months = bloom_month_list(my_plant.bloom_start, my_plant.bloom_end, month_opt)   
             my_plant.save()
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
     else:
@@ -1100,16 +1106,8 @@ def plants_add(request):
                 plant.caption_4 = form.cleaned_data.get('caption_4')
             plant.creator       = request.user.username
             plant.creator_notes = form.cleaned_data.get('creator_notes')
-
-
             # Build list of bloom months
-            print("DEBUG: Common Name:", plant.commonName)
-            print("DEBUG: Bloom start:", plant.bloom_start)
-            print("DEBUG: Bloom end   ", plant.bloom_end)
             plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
-            print("DEBUG: bloom_months", plant.bloom_months)    
-
-
             plant.save()
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
@@ -1194,17 +1192,9 @@ def plants_update(request, id):
             plant.caption_4 = form.cleaned_data.get('caption_4') 
 
             plant.creator_notes = form.cleaned_data.get('creator_notes') 
-
-
             # Build list of bloom months
-            print("DEBUG: Common Name:", plant.commonName)
-            print("DEBUG: Bloom start:", plant.bloom_start)
-            print("DEBUG: Bloom end   ", plant.bloom_end)
-            plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
-            print("DEBUG: bloom_months", plant.bloom_months)    
+            plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt)   
             plant.save()
-
-
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         # convert string-based lists (retrieved from db) to true Python lists
@@ -1750,15 +1740,12 @@ def bloom_month_check(target, start, end, options):
     return(hit)
 
 def bloom_month_list(start, end, options):
-    print("DEBUG: got to function")
     options_2x = options + options
     list = []
     if (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
-       print("DEBUG: point 1")
        return(list)
     begin = False
     for option in options_2x:
-        print("DEBUG: month =", option)
         if option == start:
             begin = True
         if begin:

@@ -3,9 +3,6 @@
 // Table sort script - alphetically - toggle between ascending and descending
 function sortTable(n, tableID) 
 {
-    console.log("DEBUG: Got to sortTable");
-    console.log("DEBUG: Column:", n);
-    console.log("DEBUG: Table: ", tableID);
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
     table = document.getElementById(tableID);
     switching = true;
