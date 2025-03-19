@@ -139,6 +139,14 @@ USDA_ZONE_CHOICES = (
 	("13a (60F to 65F)",  "13a (60F to 65F)"), 
 	("13b (65F to 70F)",  "13b (65F to 70F)"),
 )
+HAPPINESS_CHOICES = (
+	("tbd",          "tbd"),
+	("Very Happy",   "Very Happy"),
+	("Happy",        "Happy"),
+	("Neutral",      "Neutral"),
+	("Unhappy",      "Unhappy"),
+	("Very Unhappy", "Very Unhappy"),
+)
 MONTH_CHOICES = (
 	("tbd",  "tbd"),
 	("Jan",  "Jan"),
@@ -467,6 +475,12 @@ class MyPlantAddUpdateForm(forms.Form):
 		label="Bloom End",
 		initial='tbd',
 		choices = MONTH_CHOICES, 
+		required=False,
+		)
+	happiness = forms.ChoiceField(
+		label="Happiness?",
+		initial='tbd',
+		choices = HAPPINESS_CHOICES, 
 		required=False,
 		)
 	notes = QuillFormField(

@@ -55,6 +55,7 @@ class Garden(models.Model):
     my_sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
     my_water_level_search  = models.CharField(max_length=32, default="Any", blank=True)
     my_soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
+    my_happiness_search    = models.CharField(max_length=32, default="Any", blank=True)
 
     # Save the user's selection for the my plants column chooser
     my_column_selection = models.CharField(max_length=256,  blank=True,
@@ -182,6 +183,7 @@ class MyPlant(models.Model):
     water_level  = models.CharField(max_length=64,  default="tbd", blank=True)
     soil_type    = models.CharField(max_length=64,  default="tbd", blank=True)
     pH           = models.CharField(max_length=16,  default="tbd", blank=True)
+    happiness    = models.CharField(max_length=32,  default="tbd", blank=True)
     notes        = QuillField(blank=True, null=True)
     # Tags a plant for display/hidden in a summary table
     show         = models.CharField(max_length=8,   default="no", blank=True)

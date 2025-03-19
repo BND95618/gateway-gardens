@@ -27,7 +27,8 @@
           id       = "id_plantForm"
           action   = "" 
           method   = "post" 
-          enctype  = "multipart/form-data">
+          enctype  = "multipart/form-data"
+          onsubmit = "validatePlantForm()">
       {% csrf_token %}
       {{ form.as_p }}
       <!-- ------------------------ -->
@@ -409,9 +410,22 @@
   {
     canvas.width = mainSection.offsetWidth;
   };
-
   window.onresize();
+  </script>
 
+  <!-- Scroll to top of page -->
+  <script>
+    function scrollToTop() 
+    {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+  </script>
+
+  <!-- On Page load functions -->
+  <script>
+    // Scroll to top of page
+    window.onload = scrollToTop();
   </script>
 <!-- ---------------------------- -->
 {% endblock js %}

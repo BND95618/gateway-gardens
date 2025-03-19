@@ -259,6 +259,19 @@
       </select>
       <br>
 
+      <label for="id_my_happiness_search">Happiness:</label><br>
+      <select id="id_my_happiness_search" name="my_happiness_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for x in happiness_opt %}
+          {% if x == my_happiness_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+
       <!-- Button to initiate the search based upon the input criteria -->
       <button type="submit" 
               value="Submit" 
@@ -461,8 +474,30 @@
             <td>{{ my_plant.pH               }}</td>
             <td>{{ my_plant.bloom_color      }}</td>
             <td>{{ my_plant.bloom_start }} - {{ my_plant.bloom_end }}</td>
-            <!-- AR: Implement Happy function -->
-            <td class="w3-center">TBD          </td>
+            <!-- Implement Happy function -->
+            {% if my_plant.happiness == "Very Happy" %}
+              <td class="w3-center">
+                <i class="material-icons">sentiment_very_satisfied</i>
+              </td>
+            {% elif my_plant.happiness == "Happy" %}
+              <td class="w3-center">
+                <i class="material-icons">sentiment_satisfied</i>
+              </td>
+            {% elif my_plant.happiness == "Neutral" %}
+              <td class="w3-center">
+                <i class="material-icons">sentiment_neutral</i>
+              </td>
+            {% elif my_plant.happiness == "Unhappy" %}
+              <td class="w3-center">
+                <i class="material-icons">sentiment_dissatisfied</i>
+              </td>
+            {% elif my_plant.happiness == "Very Unhappy" %}
+              <td class="w3-center">
+                <i class="material-icons">sentiment_very_dissatisfied</i>
+              </td>
+            {% else %}
+              <td class="w3-center">tbd</td>
+            {% endif %}
             <!-- MyPlant Details Icon/Link -->
             <td class="w3-center"
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
@@ -632,7 +667,7 @@
     }
   </script>
 
-  <!-- Delete Plant Modal Script -->
+  <!-- Delete My Plant Modal Script -->
   <script>
     function myplants_delete(id) {
       // Get the MyPlant delete modal

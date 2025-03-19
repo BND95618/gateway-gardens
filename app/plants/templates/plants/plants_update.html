@@ -430,6 +430,21 @@
 
   window.onresize();
 
-  </script>
+</script>
+
+<!-- Scroll to top of page -->
+<script>
+  function scrollToTop() 
+  {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+</script>
+
+<!-- On Page load functions -->
+<script>
+  // Scroll to top of page
+  window.onload = scrollToTop();
+</script>
 <!-- ---------------------------- -->
 {% endblock js %}

@@ -42,6 +42,7 @@ sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7", 
                     "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
                     "21", "22", "23", "24",
                     "A1", "A2", "A3", "H1", "H2"]
+happiness_opt    = ["tbd", "Very Happy", "Happy", "Neutral", "Unhappy", "Very Unhappy"]
 month_opt        = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 def index(request):
@@ -236,6 +237,7 @@ def myplants_summary(request):
         my_sun_exposure_search  = request.POST["my_sun_exposure_search"]
         my_water_level_search   = request.POST["my_water_level_search"]
         my_soil_type_search     = request.POST["my_soil_type_search"]
+        my_happiness_search     = request.POST["my_happiness_search"]
 
         # Store the search criteria and get the previously stored column selections for the user
         gardens = Garden.objects.filter(owner = request.user.username)
@@ -259,6 +261,7 @@ def myplants_summary(request):
                 garden.my_sun_exposure_search = my_sun_exposure_search
                 garden.my_water_level_search  = my_water_level_search
                 garden.my_soil_type_search    = my_soil_type_search
+                garden.my_happiness_search    = my_happiness_search
                 #
                 garden.save()
                 # Get the user's previously stored column display sections
@@ -282,7 +285,6 @@ def myplants_summary(request):
             my_plant.water_level  = string_display(my_plant.water_level)
             my_plant.soil_type    = string_display(my_plant.soil_type)
             # Run through the search criteria to select the plants to show
-            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
@@ -353,7 +355,12 @@ def myplants_summary(request):
                   ( (my_soil_type_search         == my_plant.soil_type)          or \
                     (my_soil_type_search         == "Any")                       or \
                     (my_plant.soil_type          == "tbd")                          \
-                  )    
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_happiness_search         == my_plant.happiness)          or \
+                    (my_happiness_search         == "Any")                       or \
+                    (my_plant.happiness          == "tbd")                          \
+                  )                                                                 \
                 ):
                 my_plant.show = "yes"
             else:
@@ -383,6 +390,7 @@ def myplants_summary(request):
                 my_sun_exposure_search   = garden.my_sun_exposure_search
                 my_water_level_search    = garden.my_water_level_search
                 my_soil_type_search      = garden.my_soil_type_search
+                my_happiness_search      = garden.my_happiness_search
                 #
                 user_garden_found     = True
                 break # once the user's garden is found exit the loop
@@ -406,6 +414,7 @@ def myplants_summary(request):
                         "pH_opt"           : pH_opt,
                         "usda_zones_opt"   : usda_zones_opt,
                         "sunset_zones_opt" : sunset_zones_opt,
+                        "happiness_opt"    : happiness_opt,
                         "month_opt"        : month_opt,
                         
                         # search field defaults - plant attributes
@@ -427,6 +436,7 @@ def myplants_summary(request):
                         "my_sun_exposure_search" : my_sun_exposure_search,
                         "my_water_level_search"  : my_water_level_search,
                         "my_soil_type_search"    : my_soil_type_search,
+                        "my_happiness_search"    : my_happiness_search,
                         # table column selection
                         "my_column_selection" : my_column_selection_list, 
                       }
@@ -460,6 +470,7 @@ def myplants_summary(request):
                 my_sun_exposure_search   = garden.my_sun_exposure_search
                 my_water_level_search    = garden.my_water_level_search
                 my_soil_type_search      = garden.my_soil_type_search
+                my_happiness_search      = garden.my_happiness_search
 
                 user_garden_found     = True
                 break # once the user's garden is found exit the loop
@@ -486,7 +497,6 @@ def myplants_summary(request):
             my_plant.water_level  = string_display(my_plant.water_level)
             my_plant.soil_type    = string_display(my_plant.soil_type)
             # Run through the search criteria to select the plants to show
-            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
@@ -557,7 +567,12 @@ def myplants_summary(request):
                   ( (my_soil_type_search         == my_plant.soil_type)          or \
                     (my_soil_type_search         == "Any")                       or \
                     (my_plant.soil_type          == "tbd")                          \
-                  )    
+                  )                                                                 \
+                  and                                                               \
+                  ( (my_happiness_search         == my_plant.happiness)          or \
+                    (my_happiness_search         == "Any")                       or \
+                    (my_plant.happiness          == "tbd")                          \
+                  )                                                                 \
                 ):
                 my_plant.show = "yes"
             else:
@@ -582,6 +597,7 @@ def myplants_summary(request):
                     "pH_opt"           : pH_opt,
                     "usda_zones_opt"   : usda_zones_opt,
                     "sunset_zones_opt" : sunset_zones_opt,
+                    "happiness_opt"    : happiness_opt,
                     "month_opt"        : month_opt,
                     # search field defaults - plant attributes
                     "type_x_search"       : type_x_search,
@@ -602,6 +618,7 @@ def myplants_summary(request):
                     "my_sun_exposure_search" : my_sun_exposure_search,
                     "my_water_level_search"  : my_water_level_search,
                     "my_soil_type_search"    : my_soil_type_search,
+                    "my_happiness_search"    : my_happiness_search,
                     # table column selection
                     'my_column_selection' : my_column_selection_list, }
         return HttpResponse(template.render(context, request))
@@ -625,6 +642,7 @@ def myplants_add(request, id):
             my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
             my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
+            my_plant.happiness    = form.cleaned_data.get("happiness")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
             my_plant.plant        = plant                                 # link my_plant to the specific plant
             # Build list of bloom months
@@ -653,6 +671,7 @@ def myplants_update(request, id):
             my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
             my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
             my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
+            my_plant.happiness    = form.cleaned_data.get("happiness")    #
             my_plant.notes        = form.cleaned_data.get("notes")        #
             # Build list of bloom months
             my_plant.bloom_months = bloom_month_list(my_plant.bloom_start, my_plant.bloom_end, month_opt)   
@@ -672,6 +691,7 @@ def myplants_update(request, id):
                                               'bloom_color'  : my_plant.bloom_color,
                                               'bloom_start'  : my_plant.bloom_start,
                                               'bloom_end'    : my_plant.bloom_end,
+                                              'happiness'    : my_plant.happiness,
                                               'notes'        : my_plant.notes,
                                             })
         context = { 'form' : form }
@@ -815,7 +835,6 @@ def plants_summary(request):
         # Run through the search criteria to select the plants to show
         for plant in plants:
             # Run through the search criteria to select the plants to show
-            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
@@ -926,7 +945,6 @@ def plants_summary(request):
         plants   = Plant.objects.all()
         for plant in plants:
             # Run through the search criteria to select the plants to show
-            # AR: Implement bloom month search
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
