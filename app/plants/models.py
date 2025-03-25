@@ -102,6 +102,7 @@ class Plant(models.Model):
     description       = QuillField(blank=True, null=True)
     pruning           = QuillField(blank=True, null=True)
     fertilization     = QuillField(blank=True, null=True)
+    propagation       = QuillField(blank=True, null=True)
     pests_diseases    = QuillField(blank=True, null=True)
     # Plant taxonomy
     kingdom           = models.CharField(max_length=64, default="tbd", blank=True)
@@ -214,5 +215,18 @@ class MyPlantComment(models.Model):
     
     def get_absolute_url(self):
         return reverse("myplants_details")
+
+class Pest(models.Model):
+    pest_name = models.CharField(max_length=32)
+    pest_type = models.CharField(max_length=32,  default="tbd", blank=True)
+    pest_url  = models.URLField(default="tbd", blank=True)
+    # Many-to-Many relationship - many different "pests" can be associated with many different "Plant" records
+    plants    = models.ManyToManyField(Plant)
+
+    def __str__(self):
+        return self.pest_name
     
+    def get_absolute_url(self):
+        return reverse("plants_summary")
+
 # class Fiddle(models.Model):

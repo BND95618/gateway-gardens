@@ -31,6 +31,17 @@
           onsubmit = "validatePlantForm()">
       {% csrf_token %}
       {{ form.as_p }}
+
+
+      <p>Pests:</p>
+      <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
+      <label for="id_tbd">tbd</label><br>
+      {% for pest in pests %}
+        <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+        <label for="id_{{ pest }}">{{ pest }}</label><br>
+      {% endfor %}
+
+
       <!-- ------------------------ -->
       <!-- Audio recorder HTML here -->
       <!-- ------------------------ -->

@@ -266,6 +266,11 @@
   <div id="plants_delete_modal" class="w3-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
   </div>
+
+  <!-- My Plant Remove modal - html to be inserted by Javascript -->
+  <div id="myplant_remove_modal" class="w3-modal">
+    <p>My Plant remove form HTML to be Inserted Here!</p>
+  </div>
   
   <!-- Column Chooser modal - html to be inserted by Javascript -->
   <div id="column_chooser_modal" class="w3-modal">
@@ -273,7 +278,6 @@
   </div>
   
   <!-- Plant Chart modal -->
-  <!-- AR: Use My Plant bloom months if they have been entered -->
   <div id="plants_chart_modal" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom" >
       
@@ -482,13 +486,19 @@
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
                 {% if plant.plant_mine == "yes" %}
-                  <a href="{% url 'plants:myplants_remove' plant.id %}">
+
+                  <!-- <a href="{% url 'plants:myplants_remove' plant.id %}"> -->
+                  <button onclick="myplant_remove({{ plant.id }})" class="w3-transparent w3-border-0">
+                    
                     <i class="material-icons">check</i>
                     <span style="position:absolute; left:0; bottom:34px;" 
                           class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
                       My Plant
                     </span>
-                  </a>
+
+                  </button>
+                  <!-- </a> -->
+
                 {% else %}
                   <a href="{% url 'plants:myplants_add' plant.id %}">
                     <i class="material-icons">add</i>
@@ -629,7 +639,18 @@
 
   <!-- Remove My Plant Modal Script -->
   <script>
-    
+    function myplant_remove(id)
+    {
+      // Get the my plant remove modal
+      const myplant_remove_modal  = document.getElementById('myplant_remove_modal')
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      url = "/myplants_remove/" + id
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {myplant_remove_modal.innerHTML = html;})
+      // Display the plant delete modal
+      myplant_remove_modal.style.display='block'
+    }
   </script>
 
   <!-- Plant Chart Modal Script -->

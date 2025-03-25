@@ -1,8 +1,9 @@
 # /plants/forms.py
 
 from django import forms 
-from django_quill.forms import QuillFormField
+from django_quill.forms       import QuillFormField
 from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
+from django.core.validators   import URLValidator
 
 TYPE_CHOICES = (
 	("tbd",         "tbd"),
@@ -216,6 +217,12 @@ MY_COLUMN_CHOICES = (
 	("My Bloom Range",     "My Bloom Range"),
 	#
 	("Happy?",          "Happy?"),
+)
+PEST_TYPE_CHOICES = (
+	("tbd",     "tbd"),
+	("Insect",  "Insect"),
+	("Disease", "Disease"),
+	("Weed",    "Weed"),
 )
 
 class UserSignupForm(forms.Form):
@@ -640,6 +647,11 @@ class PlantAddUpdateForm(forms.Form):
 		initial="tbd",
 		required=False,
 	)
+	propagation = QuillFormField(
+		label="Propagation Recommendations",
+		initial="tbd",
+		required=False,
+	)
 	pests_diseases = QuillFormField(
 		label="Pest and Disease Considerations",
 		initial="tbd",
@@ -750,6 +762,25 @@ class PlantAddUpdateForm(forms.Form):
 	creator_notes  = QuillFormField(
 		label="Creator Notes:",
 		required=False,
+	)
+
+class PestAddUpdateForm(forms.Form):
+	pest_name = forms.CharField(
+		label="Pest Name", 
+		max_length=255,
+		)
+	# Attributes
+	pest_type = forms.ChoiceField(
+		label="Pest Type",
+		initial='tbd',
+		choices = PEST_TYPE_CHOICES,
+		required=False,
+		)
+	# UC IPM URL
+	pest_url = forms.URLField(
+		label="UC IPM URL",
+		validators=[URLValidator()],
+		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
 	)
 	
 class PlantCommentForm(forms.Form):

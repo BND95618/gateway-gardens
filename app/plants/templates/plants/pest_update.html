@@ -1,0 +1,39 @@
+<!-- /plants/templates/plants/pest_update.html -->
+{% extends "plants/master.html" %}
+
+{% block title %}
+  <title>IPM | Update</title>
+{% endblock title %}
+
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
+
+{% block header-completion %}
+    <!-- complete the header from master.html -->
+    <div class="w3-bar w3-green">
+      <h1 class="w3-bar-item">Update Pest</h1>
+    </div>
+  </div>
+{% endblock header-completion %}
+
+{% block content %}
+<!-- Pest update form -->
+  <div class="w3-container" style="margin-top:140px;">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="w3-button w3-green w3-round">Submit</button>
+      <button type="reset"  class="w3-button w3-gray  w3-round">Reset</button>
+      <a href="{% url 'plants:pest_summary' %}">
+        <button type="button" class="w3-button w3-red w3-round">
+          Cancel
+        </button>
+      </a>
+    </form>
+  </div>
+{% endblock content %}
+
+{% block js %}
+  <!-- Insert template Javascript here -->
+{% endblock js %}

@@ -10,10 +10,11 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 
 from email_validator import validate_email
 
-from .models import Garden, MyPlant, Plant, Comment, MyPlantComment
+from .models import Garden, MyPlant, Plant, Comment, MyPlantComment, Pest
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
 from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
+from .forms  import PestAddUpdateForm
 
 import math
 import os
@@ -723,7 +724,7 @@ def myplants_remove(request, id):
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         context = { 'plant' : plant }
-        return render(request, 'plants/myplants_remove.html', context)
+        return render(request, 'plants/myplants_remove_modal.html', context)
 
 def myplants_details(request, id):
     """ Show a detailed view of a specific plant """
@@ -1056,7 +1057,10 @@ def plants_details(request, id):
         plant.width_feet = math.floor(width_adj)
         plant.width_inch = plant.width_inch%12
     template = loader.get_template("plants/plants_details.html")  # loads the plant_details.html template
+    # Get the pests associated with this plant & sort by pest name
+    pests = Pest.objects.filter(plants__id=plant.id).order_by('pest_name')
     context = { "plant"    : plant, 
+                "pests"    : pests,    
                 "comments" : comments, 
             }
     return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
@@ -1108,6 +1112,7 @@ def plants_add(request):
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
+            plant.propagation    = form.cleaned_data.get('propagation')
             plant.pests_diseases = form.cleaned_data.get('pests_diseases')
             # Check to see if an image file has been specified
             if 'image_1' in request.FILES:
@@ -1127,10 +1132,22 @@ def plants_add(request):
             # Build list of bloom months
             plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
             plant.save()
+
+            # Add the selected pests to the selected plant
+            pest_list = request.POST.getlist('pest_list')
+            pests = Pest.objects.all()
+            for pest_item in pest_list:
+                for pest in pests:
+                    if (pest.pest_name == pest_item):
+                        print("DEBUG: pest_name =", pest.pest_name)
+                        pest.plants.add(plant)
+
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         form = PlantAddUpdateForm()
+        pests = Pest.objects.all()
         context = { 'form'             : form,
+                    'pests'            : pests,
                     'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_add.html', context)
@@ -1183,6 +1200,7 @@ def plants_update(request, id):
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
+            plant.propagation    = form.cleaned_data.get('propagation')
             plant.pests_diseases = form.cleaned_data.get('pests_diseases')
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
@@ -1246,6 +1264,7 @@ def plants_update(request, id):
                                             'description'       : plant.description,
                                             'pruning'           : plant.pruning,
                                             'fertilization'     : plant.fertilization,
+                                            'propagation  '     : plant.propagation,
                                             'pests_diseases'    : plant.pests_diseases,
                                             'kingdom'           : plant.kingdom,
                                             'subkingdom'        : plant.subkingdom,
@@ -1339,6 +1358,70 @@ def plants_about(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_about.html')
+
+def pest_summary(request):
+    """ Render the page to show all pests for Gateway Gardens app """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    pests = Pest.objects.all()
+    template = loader.get_template("plants/pest_summary.html")
+    context = { 'pests' : pests }
+    return HttpResponse(template.render(context, request))
+
+def pest_add(request):
+    """ Render the page to add pests to the database for Gateway Gardens app """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    pest = Pest()
+    if request.POST:
+        print("DEBUG: Got to pest_add - if")
+        form = PestAddUpdateForm(request.POST)
+        if form.is_valid():
+            pest.pest_name = form.cleaned_data.get('pest_name')
+            pest.pest_type = form.cleaned_data.get('pest_type')
+            pest.pest_url  = form.cleaned_data.get('pest_url')
+            pest.save()
+        return HttpResponseRedirect(reverse('plants:pest_summary'))
+    else:
+        print("DEBUG: Got to pest_add - else")
+        form = PestAddUpdateForm()
+        context = { 'form' : form }
+        return render(request, 'plants/pest_add.html', context)
+    
+def pest_update(request, id):
+    """ Render the page to add pests to the database for Gateway Gardens app """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    pest = Pest.objects.get(id=id)
+    if request.POST:
+        print("DEBUG: Got to pest_update - if")
+        form = PestAddUpdateForm(request.POST)
+        if form.is_valid():
+            pest.pest_name = form.cleaned_data.get('pest_name')
+            pest.pest_type = form.cleaned_data.get('pest_type')
+            pest.pest_url  = form.cleaned_data.get('pest_url')
+            pest.save()
+        return HttpResponseRedirect(reverse('plants:pest_summary'))
+    else:
+        print("DEBUG: Got to pest_update - else")
+        form = PestAddUpdateForm(initial={ 'pest_name' : pest.pest_name,
+                                           'pest_type' : pest.pest_type,
+                                           'pest_url'  : pest.pest_url,
+                                            })
+        context = { 'form' : form }
+        return render(request, 'plants/pest_update.html', context)
+    
+def pest_delete(request, id):
+    """ Delete selected pest from the Pest database table """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    pest = Pest.objects.get(id=id)
+    if request.POST:
+        pest.delete()
+        return HttpResponseRedirect(reverse('plants:pest_summary')) 
+    else:
+        context = {'pest': pest}
+        return render(request, 'plants/pest_delete_modal.html', context)
 
 def user_signup(request):
     """ Render the User Signup Page for Gateway Gardens app """

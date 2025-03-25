@@ -1,0 +1,138 @@
+<!-- /app/plants/templates/plants/pest_summary.html -->
+{% extends "plants/master.html" %}
+
+{% block title %}
+  <title>Pest | Summary</title>
+{% endblock title %}
+
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
+
+<!---------------------------->
+<!-- Page Header Completion -->
+<!---------------------------->
+
+{% block header-completion %}
+  <div class="w3-bar w3-green">
+    <h1 class="w3-bar-item">Pest Summary</h1>
+    <div class="w3-bar-item w3-dropdown-hover">
+      <button class="w3-button w3-green" style="z-index:21">
+        <i class="material-icons">
+          menu
+        </i>
+      </button>
+      <div class="w3-dropdown-content w3-bar-block w3-card-4">
+        {% if perms.plants.add_plant %}
+          <a href="{% url 'plants:pest_add' %}"  class="w3-bar-item w3-button">Add Pest</a>
+        {% endif %}
+      </div> 
+    </div>
+  </div> 
+{% endblock header-completion %}
+
+{% block content %}
+ 
+  <!------------------------->
+  <!--        Modals       -->
+  <!------------------------->
+  
+  <!-- Pest Delete modal - html to be inserted by Javascript -->
+  <div id="pest_delete_modal" class="w3-modal">
+    <p>Pest delete form HTML to be Inserted Here!</p>
+  </div>
+
+  <!------------------------->
+  <!--     Pest Table     -->
+  <!------------------------->
+
+  <div class="w3-container" id="main" style="margin-top:150px;">
+    <table class="w3-table-all w3-hoverable" id="pestTable">
+      <thead>
+        <tr class="w3-light-grey">
+          <!-- Pest Attributes -->
+          <th style="cursor:pointer" onclick="sortTable(0, 'pestTable')" >Pest Name </th>
+          <th style="cursor:pointer" onclick="sortTable(1, 'pestTable')" >Pest Type </th>
+          <th style="cursor:pointer" onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
+          <!-- Pest Update header placeholder -->
+          {% if perms.plants.change_plant %}
+            <th class="w3-center"></th>
+          {% endif %}
+          <!-- Pest Delete header placeholder -->
+          {% if perms.plants.delete_plant %}
+            <th class="w3-center"></th>
+          {% endif %}
+        </tr>
+      </thead>
+      {% for pest in pests %} 
+        <tr class="w3-hover-green">
+          <!-- Pest Attributes -->
+          <td>{{ pest.pest_name     }}</td>
+          <td>{{ pest.pest_type     }}</td>
+          <td>
+            <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
+          </td>
+          <!-- Pest Update Icon/Link -->
+          {% if perms.plants.change_plant %}
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+              <div class="w3-tooltip">
+                <a href="{% url 'plants:pest_update' pest.id %}">
+                  <i class="material-icons">
+                    edit
+                  </i>
+                  <span style="position:absolute; left:0; bottom:34px;" 
+                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    Edit
+                  </span>
+                </a>
+              </div>
+            </td>
+          {% endif %}
+          <!-- Pest Delete Icon/Link -->
+          {% if perms.plants.delete_plant %}
+            <td class="w3-center" 
+              style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+              <div class="w3-tooltip">
+                <button onclick="pest_delete({{ pest.id }})" class="w3-transparent w3-border-0">
+                  <i class="material-icons" style="color:black;">
+                    delete
+                  </i>
+                  <span style="position:absolute; left:0; bottom:34px;" 
+                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    Delete
+                  </span>
+                </button>
+              </div>
+            </td>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+{% endblock content %}
+
+{% block js %}
+
+  <!-- Delete Pest Modal Script --> 
+  <script>
+    function pest_delete(id) {
+      // Get the pest delete modal
+      const pest_delete_modal  = document.getElementById('pest_delete_modal')
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      url = "/pest_delete/" + id
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {pest_delete_modal.innerHTML = html;})
+      // Display the = pest modal
+      pest_delete_modal.style.display='block'
+    }
+  </script>
+
+  <!-- On Page load functions -->
+  <script>
+    // Sort table alphabetically by Common Name
+    // window.onload = sortTable(0, 'plantTable');
+  </script>
+{% endblock js %}

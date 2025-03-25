@@ -54,7 +54,7 @@
   </div>
 </div>
 
-<!-- Plant Description/Pruning/Fertilization/Pests & Diseases -->
+<!-- Plant Description/Pruning/Fertilization/Propagation/Pests & Diseases -->
 <div class="w3-margin">
   <div class="w3-card-4 w3-margin-top">
     <header class="w3-container w3-green">
@@ -85,10 +85,26 @@
 
   <div class="w3-card-4 w3-section">
     <header class="w3-container w3-green">
+      <h3>Propagation</h3>
+    </header>
+    <div class="w3-container">
+      {{ plant.propagation.html|safe|escape }}
+    </div>
+  </div>
+
+  <div class="w3-card-4 w3-section">
+    <header class="w3-container w3-green">
       <h3>Pests and Diseases</h3>
     </header>
     <div class="w3-container">
       {{ plant.pests_diseases.html|safe|escape }}
+      <!-- Display the pests related to this plant -->
+       <hr>
+      {% for pest in pests %}
+        <p>
+          {{ pest }}: <a href="{{ pest.pest_url }}" target="_blank">UC IPM URL</a>
+        </p>
+      {% endfor %}
     </div>
   </div>
   
@@ -130,9 +146,8 @@
 </div>
 
 <!-- Plant images: modal -->
-<!-- AR: Reduce the size of the modal to fit on a laptop screen -->
 <div id="image_modal" class="w3-modal" onclick="this.style.display='none'">
-  <div class="w3-modal-content w3-animate-zoom">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:550px">
     <img id="image" style="width:100%; height:auto">
   </div>
 </div>
