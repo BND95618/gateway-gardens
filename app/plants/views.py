@@ -1231,6 +1231,16 @@ def plants_update(request, id):
             # Build list of bloom months
             plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt)   
             plant.save()
+
+            # Add the selected pests to the selected plant
+            pest_list = request.POST.getlist('pest_list')
+            pests = Pest.objects.all()
+            for pest_item in pest_list:
+                for pest in pests:
+                    if (pest.pest_name == pest_item):
+                        print("DEBUG: pest_name =", pest.pest_name)
+                        pest.plants.add(plant)
+
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     else:
         # convert string-based lists (retrieved from db) to true Python lists
@@ -1239,6 +1249,17 @@ def plants_update(request, id):
         pollinators_list  = string2list(plant.pollinators)
         sun_exposure_list = string2list(plant.sun_exposure)
         soil_type_list    = string2list(plant.soil_type)
+        # Get the full list of pests in the database
+        pests = Pest.objects.all()
+        # Get the pests currently associated with this particular plant
+        pests_current = Pest.objects.filter(plants__id=plant.id).order_by('pest_name')
+        pest_name_list = []
+        pest_tbd_checked = True
+        for pest in pests_current:
+            pest_name_list.append(pest.pest_name)
+        if pest_name_list:
+            pest_tbd_checked = False
+        print("DEBUG: pest_name_list:", pest_name_list)
         # set the update form with the current db values
         form = PlantAddUpdateForm(initial={ 'commonName'        : plant.commonName,
                                             'type_x'            : plant.type_x,
@@ -1290,6 +1311,9 @@ def plants_update(request, id):
                                             'creator_notes'     : plant.creator_notes,
                                         })
         context = { 'plant'            : plant, 
+                    'pests'            : pests,
+                    'pest_name_list'   : pest_name_list,
+                    'pest_tbd_checked' : pest_tbd_checked,
                     'form'             : form,
                     'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
