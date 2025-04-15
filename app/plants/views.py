@@ -1,4 +1,6 @@
-from django.http import HttpResponse, HttpResponseRedirect
+import json
+ 
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
 from django.template import loader
 from django.urls import reverse
@@ -208,6 +210,33 @@ def gardens_update(request, id):
                   }
         return render(request, 'plants/gardens_update.html', context)
  
+def gardens_plan(request):
+    """ Render the Garden Plan page """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    if request.method == 'POST':
+        print("DEBUG: request =", request)
+        # Parses the JSON data from the request body
+        shapes_JSON = json.loads(request.body)
+        print("DEBUG: if - shapes_JSON =", shapes_JSON)
+        # Save the garden design to db
+        gardens = Garden.objects.filter(owner = request.user.username)
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                garden.shapes_JSON = shapes_JSON
+                garden.save()
+            # AR: return without sending data back
+            shapes_JSON = json.dumps(garden.shapes_JSON)
+        return JsonResponse({'shapes_JSON' : shapes_JSON})
+    else:
+        gardens = Garden.objects.filter(owner = request.user.username)
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                shapes_JSON = json.dumps(garden.shapes_JSON)
+        print("DEBUG: else - shapes_JSON =", shapes_JSON)
+        context = { 'shapes_JSON' : shapes_JSON }
+        return render(request, 'plants/gardens_plan.html', context)
+
 def myplants_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -661,6 +690,7 @@ def myplants_update(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     my_plant = MyPlant.objects.get(id=id)
     if request.POST:
+        print("DEBUG: request =", request)
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             my_plant.date_planted = form.cleaned_data.get("date_planted") #

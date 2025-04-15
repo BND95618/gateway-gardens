@@ -1,13 +1,12 @@
-# from uuid import uuid4 - youtube tutorial used this for image uniqueness (1:36:00)
-from django.db import models
-
 # app/plants/models.py
 
-from django.conf import settings
 from django.db   import models
+from django.conf import settings
 from django.urls import reverse
 
 from django_quill.fields import QuillField
+
+# from uuid import uuid4 - youtube tutorial used this for image uniqueness (1:36:00)
 
 class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
@@ -65,6 +64,9 @@ class Garden(models.Model):
     column_selection    = models.CharField(max_length=256,  blank=True,
                           default=["Common Name", "Type", "Height", "Width", 
                                    "Bloom Color", "Bloom Season", "Pollinators"],)
+    # JSON array of shapes for garden design
+    shapes_JSON = models.JSONField(default=list)
+    # AR: Implement slug field
     slug                = models.SlugField(default="tbd", null=False, blank=True)
         
     def __str__(self):
