@@ -70,12 +70,15 @@
 
         // setup variables
         let startX,   startY;    // starting coordinates for drawing
-        let selectX,  selectY;   // 
+        let selectX,  selectY;   // mouse selection coordinates
         let currentX, currentY;  // 
         let mouseX,   mouseY;    // current mouse position
         let deltaX,   deltaY;    // change in mouse position
+        // AR: change to createShape
         let isDrawing = false;
+        // AR: change to resizeShape
         let modifyShape = false; 
+        let moveShape = false;
         
         // setup objects
         // Get the previously stored shapes and draw on the canvas
@@ -143,9 +146,9 @@
                     // console.log("DEBUG: cursor X =", selectX, "Y =", selectY);
                     if (shapes[i].type == 'rectangle')
                     {
-                        if (selectX >= shapes[i].x &
-                            selectX <= shapes[i].x + shapes[i].width & 
-                            selectY >= shapes[i].y &
+                        if (selectX >= shapes[i].x &&
+                            selectX <= shapes[i].x + shapes[i].width && 
+                            selectY >= shapes[i].y &&
                             selectY <= shapes[i].y + shapes[i].height)
                         {
                             // Place resize handles on object - draw circle at each corner
@@ -298,7 +301,7 @@
             }
             
             // Modify an existing shape
-            else if (action == 'select' & modifyShape)
+            else if (action == 'select' && modifyShape)
             {
                 // Determine how much the mouse has moved from the initial mousedown location
                 //   e.clientX = horizontal coordinate at which a mouse event occurred, 
@@ -313,18 +316,22 @@
                 //   selectY = the y-coordinate of the click relative to the canvas
                 selectX = e.clientX - canvas.offsetLeft;
                 selectY = e.clientY - canvas.offsetTop;
+                activeHandle = null;
+                moveShape = false;
                 console.log("DEBUG: Start shape resizing!");
                 console.log("DEBUG: activeShape =", activeShape);
                 if (activeShape.type = "rectangle")
                 {
                     // check to see if a handle has been selected
                     console.log("DEBUG: check to see which handle has been selected");
+                    // AR: change for to while
                     for(let i = 0; i < handles.length; i++)
                     {
                         // console.log("DEBUG: checking handle:", i);
                         let distance = Math.sqrt(Math.pow((selectX - handles[i].x), 2) + Math.pow((selectY - handles[i].y), 2))
                         if (distance <= handles[i].radius)
                         {
+                            // AR: Change if to switch
                             if (handles[i].location == "top-left")
                             {
                                 activeHandle = handles[i];
@@ -353,19 +360,32 @@
                             {
                                 activeHandle = handles[i];
                             }
-                            else if (handles[i].location == "left-middle")
+                            else (handles[i].location == "left-middle")
                             {
                                 activeHandle = handles[i];
-                            }
-                            else
-                            {
-                                handles = [];
                             }
                             isDrawing = true;
                             console.log("DEBUG: shape selected:", activeShape);
                             console.log("DEBUG: handle selected:", activeHandle.location);
                             currentX = activeHandle.x;
                             currentY = activeHandle.y;
+                        }
+                    }
+                    if (!activeHandle)
+                    {
+                        console.log("DEBUG: No active handle was selected");
+                        // Since no handle of the active shape was selected check to see if the
+                        // body of the active shape was selected
+                        if (selectX >= activeShape.x &&
+                            selectX <= activeShape.x + activeShape.width && 
+                            selectY >= activeShape.y &&
+                            selectY <= activeShape.y + activeShape.height)
+                        {
+                            console.log("DEBUG: Body of active shape was selected");
+                            moveShape   = true;
+                            modifyShape = false;
+                            currentX = selectX;
+                            currentY = selectY;
                         }
                     }
                 }
@@ -379,10 +399,14 @@
             mouseX = e.clientX - canvas.offsetLeft;
             mouseY = e.clientY - canvas.offsetTop;
             // determine how much mouse has moved
+            // currentX & currentX were set via mousedown event
             deltaX = mouseX - currentX;
             deltaY = mouseY - currentY;
+            console.log("DEBUG: isDrawing =", isDrawing);
+            console.log("DEBUG: modifyShape =", modifyShape);
+            console.log("DEBUG: moveShape =", moveShape);
                 
-            if (!isDrawing)
+            if (!isDrawing && !moveShape)
             {
                 return;
             } 
@@ -413,7 +437,7 @@
             }
             // Modify an existing shape
             
-            else if (action == 'select' & modifyShape)
+            else if (action == 'select' && modifyShape)
             {
                 if (activeHandle.location == "top-left")
                 {
@@ -529,45 +553,55 @@
                 {
                     console.log("DEBUG: Got to mouse move else");
                 }
-                // capture the current mouse location
-                currentX = mouseX;
-                currentY = mouseY;
-                // Draw all created/saved shapes
-                drawAllShapes();
+                
             }
+            else if (action == 'select' && moveShape)
+            {
+                console.log("DEBUG: Got to move shape code");
+                activeShape.x  += deltaX;
+                activeShape.y      += deltaY;
+
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].x += deltaX;
+                    handles[i].y += deltaY;
+                }
+            }
+            // capture the current mouse location
+            currentX = mouseX;
+            currentY = mouseY;
+            // Draw all created/saved shapes
+            drawAllShapes();
         });
 
         // mouse up events - dependent on selected action and shape
         canvas.addEventListener("mouseup", (e) => 
         {
+            console.log("DEBUG: Got mouse up code");
             if (action == "draw")
             {
                 if (shapeOption == "rectangle")
                 {
-                    // console.log("DEBUG: Got to rectangle - mouse up");
-                    isDrawing = false;
                     // Check for width > 0 and height > 0
-                    if (activeShape.width > 0 & activeShape.height> 0)
+                    if (activeShape.width > 0 && activeShape.height> 0)
                     {
                          shapes.push(activeShape);
                     }
-                    // reset the current shape
-                    activeShape = null;
                 }
                 else if (shapeOption == "circle")
                 {
-                    isDrawing = false;
                     shapes.push(activeShape);
-                    // reset the current shape
-                    activeShape = null;
                 }
                 else if (shapeOption == "polygon")
                 {
                     // console.log("DEBUG: Got to polygon - mouse up");
                 }
             }
+            // reset the current shape and flags
             activeShape = null;
+            isDrawing   = false;
             modifyShape = false;
+            moveShape   = false;
         });
 
         // Draw shape
