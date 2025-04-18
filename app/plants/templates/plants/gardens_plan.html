@@ -71,14 +71,18 @@
         // setup variables
         let startX,   startY;    // starting coordinates for drawing
         let selectX,  selectY;   // mouse selection coordinates
+        let centerX,  centerY;   // center of selected object
         let currentX, currentY;  // 
         let mouseX,   mouseY;    // current mouse position
         let deltaX,   deltaY;    // change in mouse position
-        // AR: change to createShape
-        let isDrawing = false;
-        // AR: change to resizeShape
-        let modifyShape = false; 
-        let moveShape = false;
+        let zIndex;              // current maximum z-index
+        let angleInRadians = 0;  // rotation angle
+        // Action flags
+        let createShape = false;
+        let selectShape = false;
+        let resizeShape = false; 
+        let rotateShape = false;
+        let moveShape   = false;
         
         // setup objects
         // Get the previously stored shapes and draw on the canvas
@@ -131,7 +135,7 @@
             if (action == "select")
             {
                 // this will disable the mousedown, mousemove, & mouseup events
-                isDrawing = false;
+                createShape = false;
                 // clear any existing handles
                 handles = [];
                 // Capture the canvas selection point
@@ -140,10 +144,6 @@
                 // Go through each shape to see if it has been selected
                 for (let i = 0; i < shapes.length; i++) 
                 {
-                    // console.log("DEBUG: ==================");
-                    // console.log("DEBUG: Checking shape:", i);
-                    // console.log("DEBUG: shape details:", shapes[i]);
-                    // console.log("DEBUG: cursor X =", selectX, "Y =", selectY);
                     if (shapes[i].type == 'rectangle')
                     {
                         if (selectX >= shapes[i].x &&
@@ -151,7 +151,7 @@
                             selectY >= shapes[i].y &&
                             selectY <= shapes[i].y + shapes[i].height)
                         {
-                            // Place resize handles on object - draw circle at each corner
+                            // Place resize handles on object
                             // top left handle
                             currentHandle = drawHandle("top-left",
                                                        shapes[i].x,
@@ -200,8 +200,15 @@
                                                        shapes[i].y + shapes[i].height/2);
                             handles.push(currentHandle);
 
+                            // Place rotate handle on object
+                            currentHandle = drawHandle("rotate",
+                                                       shapes[i].x + shapes[i].width / 2,
+                                                       shapes[i].y - 30);
+                            handles.push(currentHandle);
+                            console.log("DEBUG: rotate handle =", currentHandle);
+
                             // Indicate that the modify shape mode is enabled for the selected shape
-                            modifyShape = true;
+                            selectShape = true;
                             activeShape = shapes[i];
                         }
                     }
@@ -239,7 +246,7 @@
                             }
 
                             // Indicate that the modify shape mode is enabled for the selected shape
-                            modifyShape = true;
+                            selectShape = true;
                             activeShape = shapes[i];
                         }
                     }
@@ -251,34 +258,33 @@
         // mouse down events - dependent on selected action and shape
         canvas.addEventListener("mousedown", (e) => 
         {
-            console.log("DEBUG: action =", action);
-            console.log("DEBUG: modifyShape =", modifyShape);
+            // console.log("DEBUG: action =", action);
+            // console.log("DEBUG: selectShape =", selectShape);
 
             // Draw a new shape
             if (action == "draw")
             {
                 if (shapeOption == "rectangle")
                 {
-                    // console.log("DEBUG: Got to rectangle - mouse down");
-                    isDrawing = true;
+                    console.log("DEBUG: Got to rectangle - mouse down");
+                    createShape = true;
                     startX = e.clientX - canvas.offsetLeft;
                     startY = e.clientY - canvas.offsetTop;
-                    // AR: Create if statement for drawing different shapes
-                    // Object for current shape
                     activeShape = 
                     { 
-                        type           : "rectangle", 
-                        x              : startX, 
-                        y              : startY,
-                        width          : 0,
-                        height         : 0,
-                        color          : "#ffffff" 
+                        type       : "rectangle", 
+                        x          : startX, 
+                        y          : startY,
+                        width      : 0,
+                        height     : 0,
+                        color      : "#ffffff",
+                        rotation   : 0
                     };
                 }
                 else if (shapeOption == "circle")
                 {
                     // console.log("DEBUG: Got to circle - mouse down");
-                    isDrawing = true;
+                    createShape = true;
                     startX = e.clientX - canvas.offsetLeft;
                     startY = e.clientY - canvas.offsetTop;
                     activeShape = 
@@ -296,12 +302,12 @@
                 else if (shapeOption == "polygon")
                 {
                     // console.log("DEBUG: Got to polygon - mouse down");
-                    isDrawing = true;
+                    createShape = true;
                 }
             }
             
             // Modify an existing shape
-            else if (action == 'select' && modifyShape)
+            else if (action == 'select' && selectShape)
             {
                 // Determine how much the mouse has moved from the initial mousedown location
                 //   e.clientX = horizontal coordinate at which a mouse event occurred, 
@@ -317,13 +323,12 @@
                 selectX = e.clientX - canvas.offsetLeft;
                 selectY = e.clientY - canvas.offsetTop;
                 activeHandle = null;
-                moveShape = false;
-                console.log("DEBUG: Start shape resizing!");
-                console.log("DEBUG: activeShape =", activeShape);
+                // console.log("DEBUG: Start shape resizing!");
+                // console.log("DEBUG: activeShape =", activeShape);
                 if (activeShape.type = "rectangle")
                 {
                     // check to see if a handle has been selected
-                    console.log("DEBUG: check to see which handle has been selected");
+                    // console.log("DEBUG: check to see which handle has been selected");
                     // AR: change for to while
                     for(let i = 0; i < handles.length; i++)
                     {
@@ -335,45 +340,58 @@
                             if (handles[i].location == "top-left")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "top-middle")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "top-right")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "right-middle")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "bottom-right")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "bottom-middle")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
                             else if (handles[i].location == "bottom-left")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
-                            else (handles[i].location == "left-middle")
+                            else if (handles[i].location == "left-middle")
                             {
                                 activeHandle = handles[i];
+                                resizeShape = true;
                             }
-                            isDrawing = true;
-                            console.log("DEBUG: shape selected:", activeShape);
-                            console.log("DEBUG: handle selected:", activeHandle.location);
+                            else if(handles[i].location == "rotate")
+                            {
+                                activeHandle = handles[i];
+                                rotateShape = true;
+                                console.log("DEBUG: rotateShape =", rotateShape)
+                            }
+                            // console.log("DEBUG: shape selected:", activeShape);
+                            // console.log("DEBUG: handle selected:", activeHandle.location);
                             currentX = activeHandle.x;
                             currentY = activeHandle.y;
                         }
                     }
                     if (!activeHandle)
                     {
-                        console.log("DEBUG: No active handle was selected");
+                        // console.log("DEBUG: No active handle was selected");
                         // Since no handle of the active shape was selected check to see if the
                         // body of the active shape was selected
                         if (selectX >= activeShape.x &&
@@ -381,9 +399,8 @@
                             selectY >= activeShape.y &&
                             selectY <= activeShape.y + activeShape.height)
                         {
-                            console.log("DEBUG: Body of active shape was selected");
+                            // console.log("DEBUG: Body of active shape was selected");
                             moveShape   = true;
-                            modifyShape = false;
                             currentX = selectX;
                             currentY = selectY;
                         }
@@ -399,22 +416,25 @@
             mouseX = e.clientX - canvas.offsetLeft;
             mouseY = e.clientY - canvas.offsetTop;
             // determine how much mouse has moved
-            // currentX & currentX were set via mousedown event
+            // initial currentX & currentX were set via mousedown event
             deltaX = mouseX - currentX;
             deltaY = mouseY - currentY;
-            console.log("DEBUG: isDrawing =", isDrawing);
-            console.log("DEBUG: modifyShape =", modifyShape);
-            console.log("DEBUG: moveShape =", moveShape);
-                
-            if (!isDrawing && !moveShape)
+            
+            // console.log("DEBUG: move - createShape", createShape);
+            // console.log("DEBUG: move - resizeShape", resizeShape);
+            // console.log("DEBUG: move - rotateShape", rotateShape);
+            // console.log("DEBUG: move - moveShape",   moveShape);
+
+            if (!createShape && !resizeShape && !rotateShape && !moveShape)
             {
                 return;
             } 
-
+            // Draw the active shape
             else if (action == "draw")
             {
                 if (shapeOption == "rectangle")
                 {
+                    console.log("DEBUG: Got to rectangle - mouse move");
                     activeShape.width  = mouseX - startX;
                     activeShape.height = mouseY - startY;
                 }
@@ -435,9 +455,9 @@
                 // Draw shape current being drawn
                 drawShape(activeShape);
             }
-            // Modify an existing shape
             
-            else if (action == 'select' && modifyShape)
+            // Modify the selected shape
+            else if (action == 'select' && resizeShape && activeShape.type == "rectangle")
             {
                 if (activeHandle.location == "top-left")
                 {
@@ -456,6 +476,9 @@
                     handles[1].y   += deltaY;
                     handles[2].y   += deltaY;
                     handles[3].y   += deltaY / 2;
+
+                    handles[8].x   += deltaX / 2;
+                    handles[8].y   += deltaY;
                 }
                 else if (activeHandle.location == "top-middle")
                 {
@@ -467,6 +490,8 @@
                     activeHandle.y += deltaY;
                     handles[2].y   += deltaY;
                     handles[3].y   += deltaY / 2;
+
+                    handles[8].y   += deltaY;
                 }
                 else if (activeHandle.location == "top-right")
                 {
@@ -484,6 +509,9 @@
                     handles[3].y   += deltaY / 2;
                     handles[4].x   += deltaX;
                     handles[5].x   += deltaX / 2;
+
+                    handles[8].x   += deltaX / 2;
+                    handles[8].y   += deltaY;
                 }
                 else if (activeHandle.location == "right-middle")
                 {                 
@@ -494,6 +522,8 @@
                     activeHandle.x += deltaX;
                     handles[4].x   += deltaX;
                     handles[5].x   += deltaX / 2;
+
+                    handles[8].x   += deltaX / 2;
                 }
                 else if (activeHandle.location == "bottom-right")
                 {
@@ -510,6 +540,8 @@
                     handles[5].y   += deltaY;
                     handles[6].y   += deltaY;
                     handles[7].y   += deltaY / 2;
+
+                    handles[8].x   += deltaX / 2;
                 }
                 else if (activeHandle.location == "bottom-middle")
                 {
@@ -537,6 +569,8 @@
                     handles[7].y   += deltaY / 2;
                     handles[0].x   += deltaX;
                     handles[1].x   += deltaX / 2;
+
+                    handles[8].x   += deltaX / 2;
                 }
                 else if (activeHandle.location == "left-middle")
                 {
@@ -548,36 +582,58 @@
                     activeHandle.x     += deltaX;
                     handles[0].x       += deltaX;
                     handles[1].x       += deltaX / 2;
+
+                    handles[8].x       += deltaX / 2;
                 }
                 else
                 {
                     console.log("DEBUG: Got to mouse move else");
                 }
-                
+                // Draw all created/saved shapes
+                drawAllShapes();
             }
+            
+            // Rotate the selected shape
+            else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
+            {
+                console.log("DEBUG: Got to rotate shape - mousemove");
+
+                // Determine the amount to rotate the shape based on the mouse movement
+                console.log("DEBUG: *** deltaX =", deltaX);
+                console.log("DEBUG: *** deltaY =", deltaY);
+                angleInRadians += (deltaX + deltaY) * 0.01;
+                // angleInRadians = Math.atan2(mouseY - centerY, mouseX - centerX);
+                // angleInRadians = 45 * (Math.PI / 180);
+                console.log("DEBUG: *** angleInRadians =", angleInRadians);
+
+                activeShape.rotation = angleInRadians;
+                drawAllShapes();
+            }
+            
+            // Move the selected shape
             else if (action == 'select' && moveShape)
             {
-                console.log("DEBUG: Got to move shape code");
+                // console.log("DEBUG: Got to move shape code");
                 activeShape.x  += deltaX;
-                activeShape.y      += deltaY;
+                activeShape.y  += deltaY;
 
                 for(let i = 0; i < handles.length; i++)
                 {
                     handles[i].x += deltaX;
                     handles[i].y += deltaY;
                 }
+                // Draw all created/saved shapes
+                drawAllShapes();
             }
             // capture the current mouse location
             currentX = mouseX;
             currentY = mouseY;
-            // Draw all created/saved shapes
-            drawAllShapes();
         });
 
         // mouse up events - dependent on selected action and shape
         canvas.addEventListener("mouseup", (e) => 
         {
-            console.log("DEBUG: Got mouse up code");
+            // console.log("DEBUG: Got mouse up code");
             if (action == "draw")
             {
                 if (shapeOption == "rectangle")
@@ -598,9 +654,10 @@
                 }
             }
             // reset the current shape and flags
-            activeShape = null;
-            isDrawing   = false;
-            modifyShape = false;
+            // activeShape = null;
+            createShape = false;
+            resizeShape = false;
+            rotateShape = false;
             moveShape   = false;
         });
 
@@ -612,7 +669,39 @@
             {
                 // ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
                 ctx.fillStyle = shape.color;
-                ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                console.log("DEBUG: shape.rotation =", shape.rotation);
+                if(shape.rotation == 0)
+                {
+                    console.log
+                    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                }
+                else
+                {
+                    console.log("DEBUG: Got to draw rotated shape");
+                    console.log("DEBUG: activeShape =", activeShape);
+                    // find center of shape
+                    centerX = shape.x + shape.width  / 2;
+                    centerY = shape.y + shape.height / 2;
+
+                    console.log("DEBUG: centerX =", centerX);
+                    console.log("DEBUG: centerY =", centerY);
+                    console.log("DEBUG: shape.rotation =", shape.rotation);
+                                    
+                    // ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+                    //
+                    ctx.save();
+                    // Translate to rectangle center
+                    ctx.translate(centerX, centerY);
+                    // Rotate
+                    ctx.rotate(shape.rotation);
+                    // Translate back
+                    ctx.translate(-centerX, -centerY);
+                    // Draw the rectangle
+                    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                    //
+                    ctx.restore();
+                }
             }
             else if (shape.type === "circle") 
             {
@@ -713,7 +802,7 @@
     // function canvasApp()
     // {
     //     // Flag to track if the user is drawing
-    //     let isDrawing = false; 
+    //     let createShape = false; 
     //     // Store the last mouse position
     //     let lastX, lastY; 
 
@@ -724,7 +813,7 @@
     //     canvas.addEventListener('mouseout', stopDrawing); 
 
     //     function startDrawing(event) {
-    //         isDrawing = true;
+    //         createShape = true;
     //         lastX = event.offsetX;
     //         lastY = event.offsetY;
     //         ctx.beginPath(); // Start a new path
@@ -732,7 +821,7 @@
     //     }
 
     //     function draw(event) {
-    //         if (!isDrawing) return; // Don't draw if not drawing
+    //         if (!createShape) return; // Don't draw if not drawing
     //         ctx.lineTo(event.offsetX, event.offsetY); // Draw a line to the current position
     //         ctx.stroke(); // Stroke the line
     //         lastX = event.offsetX;
@@ -740,7 +829,7 @@
     //     }
 
     //     function stopDrawing(event) {
-    //         isDrawing = false;
+    //         createShape = false;
     //     }
     // }
 
