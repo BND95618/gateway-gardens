@@ -1315,7 +1315,7 @@ def plants_update(request, id):
                                             'description'       : plant.description,
                                             'pruning'           : plant.pruning,
                                             'fertilization'     : plant.fertilization,
-                                            'propagation  '     : plant.propagation,
+                                            'propagation'       : plant.propagation,
                                             'pests_diseases'    : plant.pests_diseases,
                                             'kingdom'           : plant.kingdom,
                                             'subkingdom'        : plant.subkingdom,

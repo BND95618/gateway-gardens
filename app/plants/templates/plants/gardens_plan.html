@@ -155,55 +155,64 @@
                             // top left handle
                             currentHandle = drawHandle("top-left",
                                                        shapes[i].x,
-                                                       shapes[i].y);
+                                                       shapes[i].y,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
                             
                             // top middle handle
                             currentHandle = drawHandle("top-middle",
                                                        shapes[i].x + shapes[i].width/2,
-                                                       shapes[i].y);
+                                                       shapes[i].y,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // top right handle
                             currentHandle = drawHandle("top-right",
                                                        shapes[i].x + shapes[i].width, 
-                                                       shapes[i].y);
+                                                       shapes[i].y,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // right middle handle
                             currentHandle = drawHandle("right-middle",
                                                        shapes[i].x + shapes[i].width, 
-                                                       shapes[i].y + shapes[i].height/2);
+                                                       shapes[i].y + shapes[i].height/2,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // bottom right handle
                             currentHandle = drawHandle("bottom-right",
                                                        shapes[i].x + shapes[i].width, 
-                                                       shapes[i].y + shapes[i].height);
+                                                       shapes[i].y + shapes[i].height,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // bottom middle handle
                             currentHandle = drawHandle("bottom-middle",
                                                        shapes[i].x + shapes[i].width/2,
-                                                       shapes[i].y + shapes[i].height);
+                                                       shapes[i].y + shapes[i].height,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
                         
                             // bottom left handle
                             currentHandle = drawHandle("bottom-left",
                                                        shapes[i].x,                   
-                                                       shapes[i].y + shapes[i].height);
+                                                       shapes[i].y + shapes[i].height,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // left middle handle
                             currentHandle = drawHandle("left-middle",
                                                        shapes[i].x,
-                                                       shapes[i].y + shapes[i].height/2);
+                                                       shapes[i].y + shapes[i].height/2,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
 
                             // Place rotate handle on object
                             currentHandle = drawHandle("rotate",
                                                        shapes[i].x + shapes[i].width / 2,
-                                                       shapes[i].y - 30);
+                                                       shapes[i].y - 30,
+                                                       shapes[i].rotation);
                             handles.push(currentHandle);
                             console.log("DEBUG: rotate handle =", currentHandle);
 
@@ -607,6 +616,13 @@
                 console.log("DEBUG: *** angleInRadians =", angleInRadians);
 
                 activeShape.rotation = angleInRadians;
+
+                // Set the rotatation angle for all handles associated with the shape
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].rotation = angleInRadians;
+                }
+
                 drawAllShapes();
             }
             
@@ -711,14 +727,33 @@
                 ctx.fill();
                 ctx.stroke();
             }
+            else if (shape.type === "handle") 
+            {
+                //
+                ctx.save();
+                // Translate to rectangle center
+                ctx.translate(centerX, centerY);
+                // Rotate
+                ctx.rotate(shape.rotation);
+                // Translate back
+                ctx.translate(-centerX, -centerY);
+                // Draw the handle
+                ctx.beginPath();
+                ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
+                ctx.fillStyle = shape.color;
+                ctx.fill();
+                ctx.stroke();
+                //
+                ctx.restore();
+            }
         }
 
         // Draw handle
-        function drawHandle(location, x, y)
+        function drawHandle(location, x, y, rotation)
         {
             handle = 
             { 
-                type       : "circle", 
+                type       : "handle", 
                 x          : x, 
                 y          : y, 
                 radius     : 4,
@@ -726,7 +761,8 @@
                 endAngle   : 2 * Math.PI,
                 direction  : "clockwise",
                 color      : "#000000",
-                location   : location
+                location   : location,
+                rotation   : rotation
             };
             return(handle);       
         }
