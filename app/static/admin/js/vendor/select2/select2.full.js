@@ -1261,10 +1261,10 @@ S2.define('select2/results',[
       this.$results.on('mousewheel', function (e) {
         var top = self.$results.scrollTop();
 
-        var bottom = self.$results.get(0).scrollHeight - top + e.deltaY;
+        var bottom = self.$results.get(0).scrollHeight - top + e.yDelta;
 
-        var isAtTop = e.deltaY > 0 && top - e.deltaY <= 0;
-        var isAtBottom = e.deltaY < 0 && bottom <= self.$results.height();
+        var isAtTop = e.yDelta > 0 && top - e.yDelta <= 0;
+        var isAtBottom = e.yDelta < 0 && bottom <= self.$results.height();
 
         if (isAtTop) {
           self.$results.scrollTop(0);
@@ -6614,8 +6614,8 @@ S2.define('select2/selection/stopPropagation',[
         var orgEvent   = event || window.event,
             args       = slice.call(arguments, 1),
             delta      = 0,
-            deltaX     = 0,
-            deltaY     = 0,
+            xDelta     = 0,
+            yDelta     = 0,
             absDelta   = 0,
             offsetX    = 0,
             offsetY    = 0;
@@ -6623,32 +6623,32 @@ S2.define('select2/selection/stopPropagation',[
         event.type = 'mousewheel';
 
         // Old school scrollwheel delta
-        if ( 'detail'      in orgEvent ) { deltaY = orgEvent.detail * -1;      }
-        if ( 'wheelDelta'  in orgEvent ) { deltaY = orgEvent.wheelDelta;       }
-        if ( 'wheelDeltaY' in orgEvent ) { deltaY = orgEvent.wheelDeltaY;      }
-        if ( 'wheelDeltaX' in orgEvent ) { deltaX = orgEvent.wheelDeltaX * -1; }
+        if ( 'detail'      in orgEvent ) { yDelta = orgEvent.detail * -1;      }
+        if ( 'wheelDelta'  in orgEvent ) { yDelta = orgEvent.wheelDelta;       }
+        if ( 'wheelyDelta' in orgEvent ) { yDelta = orgEvent.wheelyDelta;      }
+        if ( 'wheelxDelta' in orgEvent ) { xDelta = orgEvent.wheelxDelta * -1; }
 
         // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
         if ( 'axis' in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS ) {
-            deltaX = deltaY * -1;
-            deltaY = 0;
+            xDelta = yDelta * -1;
+            yDelta = 0;
         }
 
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-        delta = deltaY === 0 ? deltaX : deltaY;
+        // Set delta to be yDelta or xDelta if yDelta is 0 for backwards compatabilitiy
+        delta = yDelta === 0 ? xDelta : yDelta;
 
         // New school wheel delta (wheel event)
-        if ( 'deltaY' in orgEvent ) {
-            deltaY = orgEvent.deltaY * -1;
-            delta  = deltaY;
+        if ( 'yDelta' in orgEvent ) {
+            yDelta = orgEvent.yDelta * -1;
+            delta  = yDelta;
         }
-        if ( 'deltaX' in orgEvent ) {
-            deltaX = orgEvent.deltaX;
-            if ( deltaY === 0 ) { delta  = deltaX * -1; }
+        if ( 'xDelta' in orgEvent ) {
+            xDelta = orgEvent.xDelta;
+            if ( yDelta === 0 ) { delta  = xDelta * -1; }
         }
 
         // No change actually happened, no reason to go any further
-        if ( deltaY === 0 && deltaX === 0 ) { return; }
+        if ( yDelta === 0 && xDelta === 0 ) { return; }
 
         // Need to convert lines and pages to pixels if we aren't already in pixels
         // There are three delta modes:
@@ -6658,17 +6658,17 @@ S2.define('select2/selection/stopPropagation',[
         if ( orgEvent.deltaMode === 1 ) {
             var lineHeight = $.data(this, 'mousewheel-line-height');
             delta  *= lineHeight;
-            deltaY *= lineHeight;
-            deltaX *= lineHeight;
+            yDelta *= lineHeight;
+            xDelta *= lineHeight;
         } else if ( orgEvent.deltaMode === 2 ) {
             var pageHeight = $.data(this, 'mousewheel-page-height');
             delta  *= pageHeight;
-            deltaY *= pageHeight;
-            deltaX *= pageHeight;
+            yDelta *= pageHeight;
+            xDelta *= pageHeight;
         }
 
         // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max( Math.abs(deltaY), Math.abs(deltaX) );
+        absDelta = Math.max( Math.abs(yDelta), Math.abs(xDelta) );
 
         if ( !lowestDelta || absDelta < lowestDelta ) {
             lowestDelta = absDelta;
@@ -6683,14 +6683,14 @@ S2.define('select2/selection/stopPropagation',[
         if ( shouldAdjustOldDeltas(orgEvent, absDelta) ) {
             // Divide all the things by 40!
             delta  /= 40;
-            deltaX /= 40;
-            deltaY /= 40;
+            xDelta /= 40;
+            yDelta /= 40;
         }
 
         // Get a whole, normalized value for the deltas
         delta  = Math[ delta  >= 1 ? 'floor' : 'ceil' ](delta  / lowestDelta);
-        deltaX = Math[ deltaX >= 1 ? 'floor' : 'ceil' ](deltaX / lowestDelta);
-        deltaY = Math[ deltaY >= 1 ? 'floor' : 'ceil' ](deltaY / lowestDelta);
+        xDelta = Math[ xDelta >= 1 ? 'floor' : 'ceil' ](xDelta / lowestDelta);
+        yDelta = Math[ yDelta >= 1 ? 'floor' : 'ceil' ](yDelta / lowestDelta);
 
         // Normalise offsetX and offsetY properties
         if ( special.settings.normalizeOffset && this.getBoundingClientRect ) {
@@ -6700,18 +6700,18 @@ S2.define('select2/selection/stopPropagation',[
         }
 
         // Add information to the event object
-        event.deltaX = deltaX;
-        event.deltaY = deltaY;
+        event.xDelta = xDelta;
+        event.yDelta = yDelta;
         event.deltaFactor = lowestDelta;
         event.offsetX = offsetX;
         event.offsetY = offsetY;
         // Go ahead and set deltaMode to 0 since we converted to pixels
-        // Although this is a little odd since we overwrite the deltaX/Y
+        // Although this is a little odd since we overwrite the xDelta/Y
         // properties with normalized deltas.
         event.deltaMode = 0;
 
         // Add event and delta to the front of the arguments
-        args.unshift(event, delta, deltaX, deltaY);
+        args.unshift(event, delta, xDelta, yDelta);
 
         // Clearout lowestDelta after sometime to better
         // handle multiple device types that give different
