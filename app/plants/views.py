@@ -215,10 +215,10 @@ def gardens_plan(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     if request.method == 'POST':
-        print("DEBUG: request =", request)
+        # print("DEBUG: request =", request)
         # Parses the JSON data from the request body
         shapes_JSON = json.loads(request.body)
-        print("DEBUG: if - shapes_JSON =", shapes_JSON)
+        # print("DEBUG: if - shapes_JSON =", shapes_JSON)
         # Save the garden design to db
         gardens = Garden.objects.filter(owner = request.user.username)
         for garden in gardens:
@@ -233,7 +233,7 @@ def gardens_plan(request):
         for garden in gardens:
             if (garden.owner == request.user.username):
                 shapes_JSON = json.dumps(garden.shapes_JSON)
-        print("DEBUG: else - shapes_JSON =", shapes_JSON)
+        # print("DEBUG: else - shapes_JSON =", shapes_JSON)
         context = { 'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
 
@@ -690,7 +690,7 @@ def myplants_update(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     my_plant = MyPlant.objects.get(id=id)
     if request.POST:
-        print("DEBUG: request =", request)
+        # print("DEBUG: request =", request)
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             my_plant.date_planted = form.cleaned_data.get("date_planted") #
@@ -1169,7 +1169,7 @@ def plants_add(request):
             for pest_item in pest_list:
                 for pest in pests:
                     if (pest.pest_name == pest_item):
-                        print("DEBUG: pest_name =", pest.pest_name)
+                        # print("DEBUG: pest_name =", pest.pest_name)
                         pest.plants.add(plant)
 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
@@ -1268,7 +1268,7 @@ def plants_update(request, id):
             for pest_item in pest_list:
                 for pest in pests:
                     if (pest.pest_name == pest_item):
-                        print("DEBUG: pest_name =", pest.pest_name)
+                        # print("DEBUG: pest_name =", pest.pest_name)
                         pest.plants.add(plant)
 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
@@ -1289,7 +1289,7 @@ def plants_update(request, id):
             pest_name_list.append(pest.pest_name)
         if pest_name_list:
             pest_tbd_checked = False
-        print("DEBUG: pest_name_list:", pest_name_list)
+        # print("DEBUG: pest_name_list:", pest_name_list)
         # set the update form with the current db values
         form = PlantAddUpdateForm(initial={ 'commonName'        : plant.commonName,
                                             'type_x'            : plant.type_x,
@@ -1428,7 +1428,7 @@ def pest_add(request):
         return HttpResponseRedirect(reverse('plants:index'))
     pest = Pest()
     if request.POST:
-        print("DEBUG: Got to pest_add - if")
+        # print("DEBUG: Got to pest_add - if")
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name = form.cleaned_data.get('pest_name')
@@ -1437,7 +1437,7 @@ def pest_add(request):
             pest.save()
         return HttpResponseRedirect(reverse('plants:pest_summary'))
     else:
-        print("DEBUG: Got to pest_add - else")
+        # print("DEBUG: Got to pest_add - else")
         form = PestAddUpdateForm()
         context = { 'form' : form }
         return render(request, 'plants/pest_add.html', context)
@@ -1448,7 +1448,7 @@ def pest_update(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     pest = Pest.objects.get(id=id)
     if request.POST:
-        print("DEBUG: Got to pest_update - if")
+        # print("DEBUG: Got to pest_update - if")
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name = form.cleaned_data.get('pest_name')
@@ -1457,7 +1457,7 @@ def pest_update(request, id):
             pest.save()
         return HttpResponseRedirect(reverse('plants:pest_summary'))
     else:
-        print("DEBUG: Got to pest_update - else")
+        # print("DEBUG: Got to pest_update - else")
         form = PestAddUpdateForm(initial={ 'pest_name' : pest.pest_name,
                                            'pest_type' : pest.pest_type,
                                            'pest_url'  : pest.pest_url,
