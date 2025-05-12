@@ -65,8 +65,8 @@
         // setup the canvas
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
-        canvas.width  = 1600; // px
-        canvas.height = 1000; // px
+        canvas.width  = window.innerWidth  - 180;
+        canvas.height = window.innerHeight - 300;
         
         // setup variables
         let xSelect,       ySelect;     // mouse selection coordinates - relative to the canvas
@@ -107,7 +107,11 @@
         let backgrounds   = [];
         
         // keep track of our panning and zooming
-        const viewportTransform = { x: 0, y: 0, scale: 1}
+        let viewportTransform = { x: 0, y: 0, scale: 1 }
+
+        // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+        // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+        // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
 
         // Draw landscape background
         xPlot = 2000;
@@ -160,12 +164,22 @@
             fillColor = target.value;
         }
         
+        // When the window is resized, djust canvas size to fit
+        window.addEventListener("resize", function()
+        {
+            console.log("Got to canvas resize");
+            console.log("window.innerWidth =", window.innerWidth);
+            canvas.width  = window.innerWidth  - 180;
+            canvas.height = window.innerHeight - 300;
+            drawScreen();
+        });
+
         //************************************************************//
         // mouse click events
         //************************************************************//
         canvas.addEventListener("click", (e) => 
         {
-            console.log("DEBUG: Mouse click event registered");
+            // console.log("DEBUG: Mouse click event registered");
             if (action == "select")
             {
                 // this will disable the mousedown, mousemove, & mouseup events
@@ -176,16 +190,25 @@
                 xSelect = e.clientX - canvas.offsetLeft;
                 ySelect = e.clientY - canvas.offsetTop;
                 // Canvas selection point - absolute position
-                xSelectAbs = xSelect - xPan;
-                ySelectAbs = ySelect - yPan;
+
+                // xSelectAbs = xSelect - xPan;
+                // ySelectAbs = ySelect - yPan;
+
+                xSelectAbs = (xSelect - viewportTransform.x) / viewportTransform.scale ;
+                ySelectAbs = (ySelect - viewportTransform.y) / viewportTransform.scale ;
+
                 // save the canvas selection point for later use
                 xSelectSave = xSelectAbs;
                 ySelectSave = ySelectAbs;
 
-                // console.log("DEBUG: Mouse click -> xSelect = ", xSelect);
-                // console.log("DEBUG: Mouse click -> ySelect = ", ySelect);
-                // console.log("DEBUG: Mouse click -> xSelectAbs = ", xSelectAbs);
-                // console.log("DEBUG: Mouse click -> ySelectAbs = ", ySelectAbs);
+                console.log("DEBUG: ----------------------------------------");
+                console.log("DEBUG: Mouse click -> viewportTransform.x =",     Math.trunc(viewportTransform.x));
+                console.log("DEBUG: Mouse click -> viewportTransform.y =",     Math.trunc(viewportTransform.y));
+                console.log("DEBUG: Mouse click -> viewportTransform.scale =", viewportTransform.scale.toFixed(1));
+                console.log("DEBUG: Mouse click -> xSelect = ", xSelect);
+                console.log("DEBUG: Mouse click -> ySelect = ", ySelect);
+                console.log("DEBUG: Mouse click -> xSelectAbs = ",             Math.trunc(xSelectAbs));
+                console.log("DEBUG: Mouse click -> ySelectAbs = ",             Math.trunc(ySelectAbs));
 
                 // Go through each shape to see if it has been selected
                 for (let i = 0; i < shapes.length; i++) 
@@ -363,14 +386,14 @@
             xSelect = e.clientX - canvas.offsetLeft;
             ySelect = e.clientY - canvas.offsetTop;
             // Canvas selection point - absolute position
-            xSelectAbs = xSelect - xPan;
-            ySelectAbs = ySelect - yPan;
+            xSelectAbs = (xSelect - viewportTransform.x) / viewportTransform.scale ;
+            ySelectAbs = (ySelect - viewportTransform.y) / viewportTransform.scale ;
 
             console.log("========================================");
-            console.log("DEBUG: Mouse down -> xSelect = ", xSelect);
+            // console.log("DEBUG: Mouse down -> xSelect = ", xSelect);
             // console.log("DEBUG: Mouse down -> ySelect = ", ySelect);
             console.log("DEBUG: Mouse down -> xSelectAbs = ", xSelectAbs);
-            // console.log("DEBUG: Mouse down -> ySelectAbs = ", ySelectAbs);
+            console.log("DEBUG: Mouse down -> ySelectAbs = ", ySelectAbs);
 
             // Draw a new shape
             if (action == "draw")
@@ -585,9 +608,9 @@
             // Begin panning
             else if (action == 'pan')
             {
-                console.log("DEBUG: Mouse down - begin panning");
+                // console.log("DEBUG: Mouse down - begin panning");
                 panning = true;
-            } 
+            }
             //
             xCurrent = xSelect;
             yCurrent = ySelect;   
@@ -596,7 +619,6 @@
         //************************************************************//
         // mouse move events - dependent on selected action and shape
         //************************************************************//
-        // $$$$
         canvas.addEventListener("mousemove", (e) => 
         {
             // Return if we are not in a mouse down/move/up mode
@@ -605,8 +627,8 @@
                 return;
             } 
 
-            console.log("DEBUG: ========================================");
-            console.log("DEBUG: Mouse move event registered");
+            // console.log("DEBUG: ========================================");
+            // console.log("DEBUG: Mouse move event registered");
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -633,7 +655,7 @@
 
                 else if (shapeOption == "polygon")
                 {
-                    console.log("DEBUG: Got to polygon - mouse move");
+                    // console.log("DEBUG: Got to polygon - mouse move");
                 }
 
                 // Set the fill color
@@ -796,9 +818,9 @@
             
             else if (action == 'select' && resizeShape && activeShape.type == "circle")
             {
-                console.log("DEBUG: xMouse   =", xMouse);
-                console.log("DEBUG: xCurrent =", xCurrent);
-                console.log("DEBUG: xDelta   =", xDelta);
+                // console.log("DEBUG: xMouse   =", xMouse);
+                // console.log("DEBUG: xCurrent =", xCurrent);
+                // console.log("DEBUG: xDelta   =", xDelta);
                 if (activeHandle.location == "top")
                 {
                     activeShape.radius -= yDelta;
@@ -873,14 +895,14 @@
             // Pan
             else if (panning)
             {
-                console.log("DEBUG: Mouse move - pan");
-                console.log("DEBUG: xSelectAbs =", xSelectAbs);
+                // console.log("DEBUG: Mouse move - pan");
+                // console.log("DEBUG: xSelectAbs =", xSelectAbs);
                 // console.log("DEBUG: ySelect =", ySelect);
-                console.log("DEBUG: xMouse =", xMouse);
+                // console.log("DEBUG: xMouse =", xMouse);
                 // console.log("DEBUG: yMouse =", yMouse);
-                console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
                 // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-                console.log("DEBUG: xDelta =", xDelta);
+                // console.log("DEBUG: xDelta =", xDelta);
 
                 xPan = viewportTransform.x;
                 yPan = viewportTransform.y;
@@ -888,9 +910,9 @@
                 xPan += xDelta;
                 yPan += yDelta;
 
-                console.log("DEBUG: ----------------------------------------");
-                console.log("DEBUG: xPan =", xPan);
-                console.log("DEBUG: xPlot =", xPlot);
+                // console.log("DEBUG: ----------------------------------------");
+                // console.log("DEBUG: xPan =", xPan);
+                // console.log("DEBUG: xPlot =", xPlot);
                 // console.log("DEBUG: canvas.width =", canvas.width);
 
                 // case were viewport is contained within the plot width
@@ -908,7 +930,7 @@
                     viewportTransform.x = canvas.width - xPlot - 8;
                     // alert("DEBUG: condition 3");
                 }
-                console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
 
                 // console.log("DEBUG: ----------------------------------------");
                 // console.log("DEBUG: yPan =", yPan);
@@ -928,7 +950,7 @@
                 {
                     viewportTransform.y = canvas.height - yPlot - 8;
                 }
-                console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+                // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
 
             }
             
@@ -951,7 +973,7 @@
                 return;
             } 
 
-            console.log("DEBUG: Mouse up event registered");
+            // console.log("DEBUG: Mouse up event registered");
             
             if (action == "draw")
             {
@@ -978,6 +1000,91 @@
             panning     = false;
             xPan = viewportTransform.x;
             yPan = viewportTransform.y;
+        });
+
+        //************************************************************//
+        // mouse out events - dependent on selected action and shape
+        //************************************************************//
+        canvas.addEventListener("mouseout", (e) => 
+        {
+            // Return if we are not in a mouse down/move/up mode
+            if (!createShape && !resizeShape && !rotateShape && !moveShape && !panning)
+            {
+                return;
+            } 
+
+            // console.log("DEBUG: Mouse out event registered");
+            // reset the current shape and flags
+            activeShape = null;
+            createShape = false;
+            resizeShape = false;
+            rotateShape = false;
+            moveShape   = false;
+            selectShape = false;
+            panning     = false;
+            xPan = viewportTransform.x;
+            yPan = viewportTransform.y;
+            // Draw the entire screen
+            drawScreen();
+        });
+
+        //************************************************************//
+        // mouse wheel events - zoom
+        //************************************************************//
+        canvas.addEventListener("mousewheel", (e) => 
+        {
+            // Return if we are not in zoom mode
+            if (action != "zoom")
+            {
+                return;
+            } 
+
+            // console.log("DEBUG: ==================================================");
+            console.log("DEBUG: Got to mousewheel event");
+            // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+            // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+            // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
+
+            const oldX = viewportTransform.x;
+            const oldY = viewportTransform.y;
+            const oldScale = viewportTransform.scale;
+
+            // console.log("DEBUG: oldX =", oldX);
+            // console.log("DEBUG: oldY =", oldY);
+            // console.log("DEBUG: oldScale =", oldScale);
+
+            const localX = e.clientX;
+            const localY = e.clientY;
+
+            // console.log("DEBUG: localX =", localX);
+            // console.log("DEBUG: localY =", localY);
+
+            const previousScale = viewportTransform.scale;
+
+            // console.log("DEBUG: previousScale =", previousScale);
+
+            // console.log("DEBUG: e.deltaY =", e.deltaY);
+
+            const newScale = viewportTransform.scale += e.deltaY * -0.01;
+
+            // console.log("DEBUG: newScale =", newScale);
+
+            const newX = localX - (localX - oldX) * (newScale / previousScale);
+            const newY = localY - (localY - oldY) * (newScale / previousScale);
+
+            // console.log("DEBUG: newX =", newX);
+            // console.log("DEBUG: newY =", newY);
+
+            viewportTransform.x = newX;
+            viewportTransform.y = newY;
+            viewportTransform.scale = newScale;
+
+            // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+            // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+            // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
+
+            drawScreen()
+            // console.log(e)
         });
 
         //************************************************************//
@@ -1189,119 +1296,6 @@
             shapes.length = 0;
         };
     }
-
-    //----------------------------------//
-    // Code for panning and zooming     //
-    //----------------------------------//
-    // function canvasApp()
-    // {
-    //   const canvas = document.getElementById("canvas");
-    //   const ctx = canvas.getContext("2d"); 
-
-    //   // keep track of our panning and zooming.
-    //   const viewportTransform = { 
-    //     x: 0, 
-    //     y: 0, 
-    //     scale: 1
-    //   }
-
-    //   // function to draw rectangles
-    //   const drawRect = (x, y, width, height, color) => {
-    //     ctx.strokeStyle = 'black';
-    //     ctx.strokeRect(x, y, width, height);
-    //     ctx.fillStyle = color;
-    //     ctx.fillRect(x, y, width, height);
-    //   }
-
-    //   // Draw the landscape design
-    //   const render = () => {
-    //     //
-    //     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //     ctx.setTransform(viewportTransform.scale, 0, 0, viewportTransform.scale, viewportTransform.x, viewportTransform.y);
-    //     // Draw garden border
-    //     drawRect(0, 0, 3000, 1600, 'white' );
-    //     // Draw non-garden areas
-    //     //          x     y    w    h
-    //     drawRect(1100,  500, 800, 800, 'grey' ); // house
-    //     drawRect( 600,  500, 500, 600, 'grey' ); // garage
-    //     drawRect( 600, 1100, 400, 500, 'grey' ); // driveway
-    //     drawRect(2200,  100, 600, 300, 'blue' ); // pickleball court
-    //     drawRect(2000,  500, 500, 700, 'red'  ); // pool decking
-    //     drawRect(2050,  550, 400, 600, 'blue' ); // pool
-    //     // Greenhouse
-    //     // Garden shed
-    //     // Playhouse
-    //     // Bungalow
-
-    //     // Draw garden areas
-    //     drawRect(  80,  900, 480, 650, 'green'); // se lawn
-    //     // Draw trees
-    //     // Draw raised planter bed 1
-    //   }
-
-    //   // We need to keep track of our previous mouse position for later
-    //   let previousX = 0, previousY = 0;
-
-    //   const updatePanning = (e) => {
-    //     const localX = e.clientX;
-    //     const localY = e.clientY;
-
-    //     viewportTransform.x += localX - previousX;
-    //     viewportTransform.y += localY - previousY;
-
-    //     previousX = localX;
-    //     previousY = localY;
-    //   }
-
-    //   const updateZooming = (e) => {
-    //     const oldScale = viewportTransform.scale;
-    //     const oldX = viewportTransform.x;
-    //     const oldY = viewportTransform.y;
-
-    //     const localX = e.clientX;
-    //     const localY = e.clientY;
-
-    //     const previousScale = viewportTransform.scale;
-
-    //     const newScale = viewportTransform.scale += e.yDelta * -0.01;
-
-    //     const newX = localX - (localX - oldX) * (newScale / previousScale);
-    //     const newY = localY - (localY - oldY) * (newScale / previousScale);
-
-    //     viewportTransform.x = newX;
-    //     viewportTransform.y = newY;
-    //     viewportTransform.scale = newScale;
-    //   }
-
-    //   const onMouseMove = (e) => {
-    //     updatePanning(e)
-    //     render()
-    //     console.log(e)
-    //   }
-
-    //   const onMouseWheel = (e) => {
-    //     updateZooming(e)
-    //     render()
-    //     console.log(e)
-    //   }
-
-    //   canvas.addEventListener("mousedown", (e) => {
-    //     previousX = e.clientX;
-    //     previousY = e.clientY;
-
-    //     canvas.addEventListener("mousemove", onMouseMove);
-    //   })
-
-    //   canvas.addEventListener("mouseup", (e) => {
-    //     canvas.removeEventListener("mousemove", onMouseMove);
-    //   }) 
-
-    //   canvas.addEventListener("wheel", onMouseWheel);
-
-    //   // initial canvas rendering
-    //   render();
-    // }
 
     //-----------------------------------------------------//
     // Code for drawing freeform lines on canvas via mouse //
