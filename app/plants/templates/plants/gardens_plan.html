@@ -28,9 +28,9 @@
       Action: 
       <select id="id_action">
         <option value="select">select</option>
-        <option value="draw">draw</option>
-        <option value="pan" >pan </option>
-        <option value="zoom">zoom </option>
+        <option value="draw"  >draw  </option>
+        <option value="pan"   >pan   </option>
+        <option value="zoom"  >zoom  </option>
       </select>
 
       Shape: 
@@ -62,29 +62,28 @@
 
     function canvasApp()
     {
+        // AR: Fix rectangle rotation jump
+
         // setup the canvas
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
-        canvas.width  = window.innerWidth  - 180;
+        canvas.width  = window.innerWidth  -  40;
         canvas.height = window.innerHeight - 300;
         
         // setup variables
-        let xSelect,       ySelect;     // mouse selection coordinates - relative to the canvas
-        let xSelectAbs,    ySelectAbs;  // mouse selection coordinates - absolute
-        let xSelectSave,   ySelectSave; //
-        let xTrans,        yTrans;      // translated mouse selection coordinates
-        let xCenter,       yCenter;     // center of selected object
-        let xCurrent,      yCurrent;    // 
-        let xMouse,        yMouse;      // current mouse position
-        let xDelta,        yDelta;      // change in mouse position
-        let xPlot,         yPlot;       // Plot size
-        let xPan = 0;                   // viewport x pan amount 
-        let yPan = 0;                   // viewport y pan amount
-        let zIndex;                     // current maximum z-index
-        let angleInRadians = 0;         // rotation angle in radians
-        let theta = 0;                  // rotation angle in radians
-        let lineWidthDefault = 1;
-        let strokeStyleDefault = "black"; //
+        let xSelectAbs,     ySelectAbs;     // mouse selection coordinates - absolute
+        let xSelectAbsSave, ySelectAbsSave; //
+        let xTransAbs,      yTransAbs;      // translated mouse selection coordinates
+        let xShapeCenter,   yShapeCenter;   // center of selected object
+        let xMouse,         yMouse;         // current mouse position - relative to viewport
+        let xMouseAbs,      yMouseAbs;      // current mouse position - absolute
+        let xDelta,         yDelta;         // change in mouse position
+        let xDeltaAcc = 0;  yDeltaAcc = 0;  //
+        let xPlot,          yPlot;          // Plot size
+        let zIndex;                         // current maximum z-index
+        let theta = 0;                      // rotation angle in radians
+        let lineWidthDefault   = 1;
+        let strokeStyleDefault = "black";   //
 
         // Initilize action flags
         let createShape = false;
@@ -94,26 +93,20 @@
         let moveShape   = false;
         let panning     = false;
         
-        // setup objects
         // Get the previously stored shapes and draw on the canvas
         const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
         let shapes = shapes_JSON;
         let activeShape   = null;
-        //
+        // setup objects
         let handles       = [];
         let activeHandle  = null;
         let currentHandle = null;
-        //
         let backgrounds   = [];
         
         // keep track of our panning and zooming
-        let viewportTransform = { x: 0, y: 0, scale: 1 }
+        let viewportTransform = { x : 0, y : 0, scale : 1 }
 
-        // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-        // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-        // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
-
-        // Draw landscape background
+        // Draw landscape border
         xPlot = 2000;
         yPlot = 1200;
         activeShape = 
@@ -164,12 +157,12 @@
             fillColor = target.value;
         }
         
-        // When the window is resized, djust canvas size to fit
+        // When the window is resized, adjust canvas size to fit
         window.addEventListener("resize", function()
         {
             console.log("Got to canvas resize");
             console.log("window.innerWidth =", window.innerWidth);
-            canvas.width  = window.innerWidth  - 180;
+            canvas.width  = window.innerWidth  -  40;
             canvas.height = window.innerHeight - 300;
             drawScreen();
         });
@@ -179,43 +172,31 @@
         //************************************************************//
         canvas.addEventListener("click", (e) => 
         {
+            // console.log("DEBUG: ==============================");
             // console.log("DEBUG: Mouse click event registered");
+            // console.log("DEBUG: ==============================");
+
             if (action == "select")
             {
                 // this will disable the mousedown, mousemove, & mouseup events
                 createShape = false;
                 // clear any existing handles
                 handles = [];
-                // Capture the canvas selection point
-                xSelect = e.clientX - canvas.offsetLeft;
-                ySelect = e.clientY - canvas.offsetTop;
-                // Canvas selection point - absolute position
 
-                // xSelectAbs = xSelect - xPan;
-                // ySelectAbs = ySelect - yPan;
-
-                xSelectAbs = (xSelect - viewportTransform.x) / viewportTransform.scale ;
-                ySelectAbs = (ySelect - viewportTransform.y) / viewportTransform.scale ;
+                // canvas selection point - absolute position
+                xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
+                ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
 
                 // save the canvas selection point for later use
-                xSelectSave = xSelectAbs;
-                ySelectSave = ySelectAbs;
-
-                console.log("DEBUG: ----------------------------------------");
-                console.log("DEBUG: Mouse click -> viewportTransform.x =",     Math.trunc(viewportTransform.x));
-                console.log("DEBUG: Mouse click -> viewportTransform.y =",     Math.trunc(viewportTransform.y));
-                console.log("DEBUG: Mouse click -> viewportTransform.scale =", viewportTransform.scale.toFixed(1));
-                console.log("DEBUG: Mouse click -> xSelect = ", xSelect);
-                console.log("DEBUG: Mouse click -> ySelect = ", ySelect);
-                console.log("DEBUG: Mouse click -> xSelectAbs = ",             Math.trunc(xSelectAbs));
-                console.log("DEBUG: Mouse click -> ySelectAbs = ",             Math.trunc(ySelectAbs));
+                xSelectSaveAbs = xSelectAbs;
+                ySelectSaveAbs = ySelectAbs;
 
                 // Go through each shape to see if it has been selected
                 for (let i = 0; i < shapes.length; i++) 
                 {
                     // Obtain the original selection point
-                    xSelectAbs = xSelectSave;
-                    ySelectAbs = ySelectSave;
+                    xSelectAbs = xSelectSaveAbs;
+                    ySelectAbs = ySelectSaveAbs;
 
                     if (shapes[i].type == 'rectangle')
                     {
@@ -224,21 +205,23 @@
                         //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
                         if(shapes[i].rotation != 0)
                         {
-                            xCenter = shapes[i].x + shapes[i].width  / 2;
-                            yCenter = shapes[i].y + shapes[i].height / 2;
+                            xShapeCenter = shapes[i].x + shapes[i].width  / 2;
+                            yShapeCenter = shapes[i].y + shapes[i].height / 2;
                             theta   = shapes[i].rotation * -1;
 
-                            xTrans = Math.trunc(xCenter + (xSelectAbs - xCenter) * Math.cos(theta) - 
-                                                          (ySelectAbs - yCenter) * Math.sin(theta))
-                            yTrans = Math.trunc(yCenter + (xSelectAbs - xCenter) * Math.sin(theta) + 
-                                                          (ySelectAbs - yCenter) * Math.cos(theta))
+                            xTransAbs = Math.trunc(xShapeCenter + 
+                                                  (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                                  (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                            yTransAbs = Math.trunc(yShapeCenter + 
+                                                  (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                                  (ySelectAbs - yShapeCenter) * Math.cos(theta))
                             
-                            xSelectAbs = xTrans;
-                            ySelectAbs = yTrans;
+                            xSelectAbs = xTransAbs;
+                            ySelectAbs = yTransAbs;
                         }
 
                         // Determine in the selection point is contained within the rectangle
-                        // It so, place resize handles on object
+                        // If so, place resize handles on object
                         if (xSelectAbs >= shapes[i].x &&
                             xSelectAbs <= shapes[i].x + shapes[i].width && 
                             ySelectAbs >= shapes[i].y &&
@@ -365,8 +348,23 @@
                         }
                     } 
                 }
+                // Draw the entire screen
                 drawScreen();
             }
+        });
+
+        //************************************************************//
+        // mouse right click events
+        //************************************************************//
+        // prevent 'standard' context menu from being displayed'
+        canvas.addEventListener("contextmenu", (e) => 
+        {
+            e.preventDefault()
+        });
+        // 
+        canvas.addEventListener("contextmenu", (e) => 
+        {
+            console.log("DEBUG: Mouse right click event registered")
         });
 
         //************************************************************//
@@ -380,20 +378,13 @@
                 return;
             } 
 
-            console.log("DEBUG: Mouse down event registered");
+            // console.log("DEBUG: ==============================");
+            // console.log("DEBUG: Mouse down event registered");
+            // console.log("DEBUG: ==============================");
 
-            // Capture the mouse location
-            xSelect = e.clientX - canvas.offsetLeft;
-            ySelect = e.clientY - canvas.offsetTop;
             // Canvas selection point - absolute position
-            xSelectAbs = (xSelect - viewportTransform.x) / viewportTransform.scale ;
-            ySelectAbs = (ySelect - viewportTransform.y) / viewportTransform.scale ;
-
-            console.log("========================================");
-            // console.log("DEBUG: Mouse down -> xSelect = ", xSelect);
-            // console.log("DEBUG: Mouse down -> ySelect = ", ySelect);
-            console.log("DEBUG: Mouse down -> xSelectAbs = ", xSelectAbs);
-            console.log("DEBUG: Mouse down -> ySelectAbs = ", ySelectAbs);
+            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale;
+            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale;
 
             // Draw a new shape
             if (action == "draw")
@@ -433,6 +424,8 @@
                     // console.log("DEBUG: Got to polygon - mouse down");
                     createShape = true;
                 }
+                xSelectSaveAbs = xSelectAbs;
+                ySelectSaveAbs = ySelectAbs;
             }
             
             // Modify an existing shape
@@ -448,8 +441,8 @@
                 //   canvas.offsetTop  = canvas's top offset
                 //
                 // save the selection point for future use
-                xSelectSave = xSelectAbs;
-                ySelectSave = ySelectAbs;
+                xSelectSaveAbs = xSelectAbs;
+                ySelectSaveAbs = ySelectAbs;
                 activeHandle = null;
 
                 if (activeShape.type == "rectangle")
@@ -458,19 +451,19 @@
                     if(activeShape.rotation != 0)
                     {
                         // rotate the selection coorinates wrt activeShape before checking if handle has been selected
-                        xCenter = activeShape.x + activeShape.width  / 2;
-                        yCenter = activeShape.y + activeShape.height / 2;
+                        xShapeCenter = activeShape.x + activeShape.width  / 2;
+                        yShapeCenter = activeShape.y + activeShape.height / 2;
                         theta   = activeShape.rotation * -1;
 
-                        xTrans = Math.trunc(xCenter + 
-                                           (xSelectAbs - xCenter) * Math.cos(theta) - 
-                                           (ySelectAbs - yCenter) * Math.sin(theta))
-                        yTrans = Math.trunc(yCenter + 
-                                           (xSelectAbs - xCenter) * Math.sin(theta) + 
-                                           (ySelectAbs - yCenter) * Math.cos(theta))
+                        xTransAbs = Math.trunc(xShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                        yTransAbs = Math.trunc(yShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
 
-                        xSelectAbs = xTrans;
-                        ySelectAbs = yTrans;
+                        xSelectAbs = xTransAbs;
+                        ySelectAbs = yTransAbs;
                     }
                     
                     // check to see if a handle has been selected
@@ -529,9 +522,6 @@
                                 activeHandle = handles[i];
                                 rotateShape = true;
                             }
-                            // set the election point to the center of the handle
-                            xCurrent = activeHandle.x;
-                            yCurrent = activeHandle.y;
                         }
                     }
  
@@ -545,8 +535,6 @@
                             ySelectAbs <= activeShape.y + activeShape.height)
                         {
                             moveShape   = true;
-                            xCurrent = xSelect;
-                            yCurrent = ySelect;
                         }
                     }
                 }
@@ -584,8 +572,8 @@
                             }
 
                             // set the election point to the center of the handle
-                            xCurrent = activeHandle.x;
-                            yCurrent = activeHandle.y;
+                            xSelectSaveAbs = activeHandle.x;
+                            ySelectSaveAbs = activeHandle.y;
                         }
                     }
                     // If no handle of the active shape was selected check to see if the
@@ -597,9 +585,9 @@
                                              Math.pow((ySelectAbs - activeShape.y), 2))
                         if (distance <= activeShape.radius)
                         {
-                            moveShape   = true;
-                            xCurrent = xSelect;
-                            yCurrent = ySelect;
+                            moveShape = true;
+                            xSelectSaveAbs  = xSelectAbs;
+                            ySelectSaveAbs  = ySelectAbs;
                         }
                     }
                 }
@@ -608,12 +596,10 @@
             // Begin panning
             else if (action == 'pan')
             {
-                // console.log("DEBUG: Mouse down - begin panning");
                 panning = true;
-            }
-            //
-            xCurrent = xSelect;
-            yCurrent = ySelect;   
+                xSelectSaveAbs = xSelectAbs;
+                ySelectSaveAbs = ySelectAbs;
+            } 
         });
 
         //************************************************************//
@@ -627,30 +613,37 @@
                 return;
             } 
 
-            // console.log("DEBUG: ========================================");
+            // console.log("DEBUG: ==============================");
             // console.log("DEBUG: Mouse move event registered");
+            // console.log("DEBUG: ==============================");
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
             yMouse = e.clientY - canvas.offsetTop;
 
+            // get current mouse location (absolute)
+            xMouseAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale;
+            yMouseAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale;
+
             // determine how much mouse has moved
-            // initial xCurrent & yCurrent were set via mousedown event
-            xDelta = xMouse - xCurrent;
-            yDelta = yMouse - yCurrent;
+            // initial xSelectSaveAbs & ySelectSaveAbs were set via mousedown event
+            xDelta = xMouseAbs - xSelectSaveAbs;
+            yDelta = yMouseAbs - ySelectSaveAbs;
 
             // Draw the active shape
             if (action == "draw")
             {
                 if (shapeOption == "rectangle")
                 {
-                    activeShape.width  = xMouse - xSelect;
-                    activeShape.height = yMouse - ySelect;
+                    activeShape.width  += xDelta;
+                    activeShape.height += yDelta;
                 }
 
                 else if (shapeOption == "circle")
                 {
-                    activeShape.radius = Math.sqrt(Math.pow(xMouse - xSelect, 2) + Math.pow(yMouse - ySelect, 2));
+                    xDeltaAcc += xDelta;
+                    yDeltaAcc += yDelta;
+                    activeShape.radius = Math.sqrt(Math.pow(xDeltaAcc, 2) + Math.pow(yDeltaAcc, 2));
                 }
 
                 else if (shapeOption == "polygon")
@@ -660,32 +653,49 @@
 
                 // Set the fill color
                 activeShape.color = fillColor;
+
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
+            }
+        
+            // Move the selected shape
+            else if (action == 'select' && moveShape)
+            {
+                activeShape.x += xDelta;
+                activeShape.y += yDelta;
+
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].x += xDelta;
+                    handles[i].y += yDelta;
+                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
             }
             
-            // Resize the selected shape
+            // Resize the selected rectangle
             else if (action == 'select' && resizeShape && activeShape.type == "rectangle")
             {
                 // check to see if the selected shape (via mouseclick) has been rotated
                 if(activeShape.type == "rectangle" && activeShape.rotation != 0)
                 {
-                    xSelect = xMouse;
-                    ySelect = yMouse;
-
                     // rotate the selection coordinates wrt activeShape before checking if handle has been selected
-                    xCenter = activeShape.x + activeShape.width  / 2;
-                    yCenter = activeShape.y + activeShape.height / 2;
+                    xShapeCenter = activeShape.x + activeShape.width  / 2;
+                    yShapeCenter = activeShape.y + activeShape.height / 2;
                     theta   = activeShape.rotation * -1;
 
-                    xTrans = Math.trunc(xCenter + (xSelect - xCenter) * Math.cos(theta) - (ySelect - yCenter) * Math.sin(theta))
-                    yTrans = Math.trunc(yCenter + (xSelect - xCenter) * Math.sin(theta) + (ySelect - yCenter) * Math.cos(theta))
+                    xTransAbs = Math.trunc(xShapeCenter + 
+                                          (xMouse - xShapeCenter) * Math.cos(theta) - 
+                                          (yMouse - yShapeCenter) * Math.sin(theta))
+                    yTransAbs = Math.trunc(yShapeCenter + 
+                                          (xMouse - xShapeCenter) * Math.sin(theta) + 
+                                          (yMouse - yShapeCenter) * Math.cos(theta))
 
-                    xMouse = xTrans;
-                    yMouse = yTrans;
+                    xMouse = xTransAbs;
+                    yMouse = yTransAbs;
                 }
-
-                // determine how much mouse has moved
-                xDelta = xMouse - xCurrent;
-                yDelta = yMouse - yCurrent;
 
                 // modify the rectangle based upon the selected handle + mouse movement
                 if (activeHandle.location == "top-left")
@@ -705,7 +715,6 @@
                     handles[1].y   += yDelta;
                     handles[2].y   += yDelta;
                     handles[3].y   += yDelta / 2;
-
                     handles[8].x   += xDelta / 2;
                     handles[8].y   += yDelta;
                 }
@@ -719,7 +728,6 @@
                     activeHandle.y += yDelta;
                     handles[2].y   += yDelta;
                     handles[3].y   += yDelta / 2;
-
                     handles[8].y   += yDelta;
                 }
                 else if (activeHandle.location == "top-right")
@@ -738,7 +746,6 @@
                     handles[3].y   += yDelta / 2;
                     handles[4].x   += xDelta;
                     handles[5].x   += xDelta / 2;
-
                     handles[8].x   += xDelta / 2;
                     handles[8].y   += yDelta;
                 }
@@ -751,7 +758,6 @@
                     activeHandle.x += xDelta;
                     handles[4].x   += xDelta;
                     handles[5].x   += xDelta / 2;
-
                     handles[8].x   += xDelta / 2;
                 }
                 else if (activeHandle.location == "bottom-right")
@@ -769,7 +775,6 @@
                     handles[5].y   += yDelta;
                     handles[6].y   += yDelta;
                     handles[7].y   += yDelta / 2;
-
                     handles[8].x   += xDelta / 2;
                 }
                 else if (activeHandle.location == "bottom-middle")
@@ -798,7 +803,6 @@
                     handles[7].y   += yDelta / 2;
                     handles[0].x   += xDelta;
                     handles[1].x   += xDelta / 2;
-
                     handles[8].x   += xDelta / 2;
                 }
                 else if (activeHandle.location == "left-middle")
@@ -811,16 +815,16 @@
                     activeHandle.x     += xDelta;
                     handles[0].x       += xDelta;
                     handles[1].x       += xDelta / 2;
-
                     handles[8].x       += xDelta / 2;
                 }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
             }
             
+            // Resize the selected circle
             else if (action == 'select' && resizeShape && activeShape.type == "circle")
             {
-                // console.log("DEBUG: xMouse   =", xMouse);
-                // console.log("DEBUG: xCurrent =", xCurrent);
-                // console.log("DEBUG: xDelta   =", xDelta);
                 if (activeHandle.location == "top")
                 {
                     activeShape.radius -= yDelta;
@@ -857,6 +861,9 @@
                     handles[2].y   -= xDelta;
                     handles[3].x   += xDelta;
                 }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
             }
             
             // Rotate the selected shape
@@ -864,99 +871,28 @@
             {
                 // Determine the amount to rotate the shape based on the mouse movement
                 // AR: Find better approach to control the rotation
-                angleInRadians += (xDelta + yDelta) * 0.01;
-                // angleInRadians = Math.atan2(yMouse - yCenter, xMouse - xCenter);
-                // angleInRadians = 45 * (Math.PI / 180);
+                theta += (xDelta + yDelta) * 0.01;
+                // theta = Math.atan2(yMouse - yShapeCenter, xMouse - xShapeCenter);
+                // theta = 45 * (Math.PI / 180);
 
-                activeShape.rotation = angleInRadians;
+                activeShape.rotation = theta;
 
                 // Set the rotatation angle for all handles associated with the shape
                 for(let i = 0; i < handles.length; i++)
                 {
-                    handles[i].rotation = angleInRadians;
+                    handles[i].rotation = theta;
                 }
-
-                drawScreen();
-            }
-            
-            // Move the selected shape
-            else if (action == 'select' && moveShape)
-            {
-                activeShape.x += xDelta;
-                activeShape.y += yDelta;
-
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].x += xDelta;
-                    handles[i].y += yDelta;
-                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
             }
 
             // Pan
             else if (panning)
             {
-                // console.log("DEBUG: Mouse move - pan");
-                // console.log("DEBUG: xSelectAbs =", xSelectAbs);
-                // console.log("DEBUG: ySelect =", ySelect);
-                // console.log("DEBUG: xMouse =", xMouse);
-                // console.log("DEBUG: yMouse =", yMouse);
-                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-                // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-                // console.log("DEBUG: xDelta =", xDelta);
-
-                xPan = viewportTransform.x;
-                yPan = viewportTransform.y;
-
-                xPan += xDelta;
-                yPan += yDelta;
-
-                // console.log("DEBUG: ----------------------------------------");
-                // console.log("DEBUG: xPan =", xPan);
-                // console.log("DEBUG: xPlot =", xPlot);
-                // console.log("DEBUG: canvas.width =", canvas.width);
-
-                // case were viewport is contained within the plot width
-                if (xPan <= 0 && xPan >= (canvas.width - xPlot))
-                {
-                    viewportTransform.x = xPan;
-                }
-                else if (xPan > 0)
-                {
-                    viewportTransform.x = 0;
-                    // alert("DEBUG: condition 2");
-                }
-                else
-                {
-                    viewportTransform.x = canvas.width - xPlot - 8;
-                    // alert("DEBUG: condition 3");
-                }
-                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-
-                // console.log("DEBUG: ----------------------------------------");
-                // console.log("DEBUG: yPan =", yPan);
-                // console.log("DEBUG: yPlot =", yPlot);
-                // console.log("DEBUG: canvas.height =", canvas.height);
-
-                
-                if (yPan <= 0 && yPan >= (canvas.height - yPlot))
-                {
-                    viewportTransform.y = yPan;
-                }
-                else if (yPan > 0)
-                {
-                    viewportTransform.y = 0;
-                }
-                else
-                {
-                    viewportTransform.y = canvas.height - yPlot - 8;
-                }
-                // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-
+                viewportTransform.x += xDelta;
+                viewportTransform.y += yDelta;
             }
-            
-            // capture the current mouse location
-            xCurrent = xMouse;
-            yCurrent = yMouse;
 
             // Draw the entire screen
             drawScreen();
@@ -973,7 +909,9 @@
                 return;
             } 
 
+            // console.log("DEBUG: ==============================");
             // console.log("DEBUG: Mouse up event registered");
+            // console.log("DEBUG: ==============================");
             
             if (action == "draw")
             {
@@ -991,15 +929,14 @@
                 }
             }
             // reset the current shape and flags
-            // handles = [];
             createShape = false;
             resizeShape = false;
             rotateShape = false;
             moveShape   = false;
             selectShape = false;
             panning     = false;
-            xPan = viewportTransform.x;
-            yPan = viewportTransform.y;
+            xDeltaAcc   = 0;
+            yDeltaAcc   = 0;
         });
 
         //************************************************************//
@@ -1013,7 +950,10 @@
                 return;
             } 
 
+            // console.log("DEBUG: ==============================");
             // console.log("DEBUG: Mouse out event registered");
+            // console.log("DEBUG: ==============================");
+
             // reset the current shape and flags
             activeShape = null;
             createShape = false;
@@ -1022,8 +962,7 @@
             moveShape   = false;
             selectShape = false;
             panning     = false;
-            xPan = viewportTransform.x;
-            yPan = viewportTransform.y;
+
             // Draw the entire screen
             drawScreen();
         });
@@ -1039,52 +978,30 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==================================================");
-            console.log("DEBUG: Got to mousewheel event");
-            // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-            // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-            // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
+            // console.log("DEBUG: ==============================");
+            // console.log("DEBUG: Mouse wheel event registered");
+            // console.log("DEBUG: ==============================");
 
             const oldX = viewportTransform.x;
             const oldY = viewportTransform.y;
             const oldScale = viewportTransform.scale;
 
-            // console.log("DEBUG: oldX =", oldX);
-            // console.log("DEBUG: oldY =", oldY);
-            // console.log("DEBUG: oldScale =", oldScale);
-
             const localX = e.clientX;
             const localY = e.clientY;
 
-            // console.log("DEBUG: localX =", localX);
-            // console.log("DEBUG: localY =", localY);
-
             const previousScale = viewportTransform.scale;
-
-            // console.log("DEBUG: previousScale =", previousScale);
-
-            // console.log("DEBUG: e.deltaY =", e.deltaY);
 
             const newScale = viewportTransform.scale += e.deltaY * -0.01;
 
-            // console.log("DEBUG: newScale =", newScale);
-
             const newX = localX - (localX - oldX) * (newScale / previousScale);
             const newY = localY - (localY - oldY) * (newScale / previousScale);
-
-            // console.log("DEBUG: newX =", newX);
-            // console.log("DEBUG: newY =", newY);
 
             viewportTransform.x = newX;
             viewportTransform.y = newY;
             viewportTransform.scale = newScale;
 
-            // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-            // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
-            // console.log("DEBUG: viewportTransform.scale =", viewportTransform.scale);
-
+            // Draw the entire screen
             drawScreen()
-            // console.log(e)
         });
 
         //************************************************************//
@@ -1124,19 +1041,19 @@
                 else
                 {
                     // find center of shape
-                    xCenter = shape.x + (shape.width  / 2);
-                    yCenter = shape.y + (shape.height / 2);
+                    xShapeCenter = shape.x + (shape.width  / 2);
+                    yShapeCenter = shape.y + (shape.height / 2);
                                     
                     // ctx.setTransform(1, 0, 0, 1, 0, 0);
 
                     //
                     ctx.save();
                     // Translate to rectangle center
-                    ctx.translate(xCenter, yCenter);
+                    ctx.translate(xShapeCenter, yShapeCenter);
                     // Rotate
                     ctx.rotate(shape.rotation);
                     // Translate back
-                    ctx.translate(-xCenter, -yCenter);
+                    ctx.translate(-xShapeCenter, -yShapeCenter);
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
                     //
@@ -1154,19 +1071,19 @@
                 else
                 {
                     // find center of shape
-                    xCenter = shape.x + (shape.width  / 2);
-                    yCenter = shape.y + (shape.height / 2);
+                    xShapeCenter = shape.x + (shape.width  / 2);
+                    yShapeCenter = shape.y + (shape.height / 2);
                                     
                     // ctx.setTransform(1, 0, 0, 1, 0, 0);
 
                     //
                     // ctx.save();
                     // Translate to rectangle center
-                    ctx.translate(xCenter, yCenter);
+                    ctx.translate(xShapeCenter, yShapeCenter);
                     // Rotate
                     ctx.rotate(shape.rotation);
                     // Translate back
-                    ctx.translate(-xCenter, -yCenter);
+                    ctx.translate(-xShapeCenter, -yShapeCenter);
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
                     //
@@ -1189,16 +1106,16 @@
             else if (shape.type === "handle") 
             {
                 // find center of associated shape to determine the point of rotation for handle
-                xCenter = shapes[shape.shape_id].x + shapes[shape.shape_id].width  / 2;
-                yCenter = shapes[shape.shape_id].y + shapes[shape.shape_id].height / 2;
+                xShapeCenter = shapes[shape.shape_id].x + shapes[shape.shape_id].width  / 2;
+                yShapeCenter = shapes[shape.shape_id].y + shapes[shape.shape_id].height / 2;
                 //
                 ctx.save();
                 // Translate to rectangle center
-                ctx.translate(xCenter, yCenter);
+                ctx.translate(xShapeCenter, yShapeCenter);
                 // Rotate
                 ctx.rotate(shape.rotation);
                 // Translate back
-                ctx.translate(-xCenter, -yCenter);
+                ctx.translate(-xShapeCenter, -yShapeCenter);
                 // Draw the handle
                 ctx.beginPath();
                 ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
@@ -1229,14 +1146,10 @@
             for (let i = 0; i < backgrounds.length; i++) 
             {
                 drawShape(backgrounds[i]);
-                // console.log("DEBUG: Draw background");
-                // console.log("DEBUG: backgrounds[i] =", backgrounds[i]);
             }
             for (let i = 0; i < shapes.length; i++) 
             {
                 drawShape(shapes[i]);
-                // console.log("DEBUG: Draw shape");
-                // console.log("DEBUG: shapes[i] =", shapes[i]);
             }
             //
             drawShape(activeShape);
