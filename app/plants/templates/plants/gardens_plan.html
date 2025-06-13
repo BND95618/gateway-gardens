@@ -869,6 +869,9 @@
             // Rotate the selected shape
             else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
             {
+                // set theta to the current  shape rotation angle
+                theta = activeShape.rotation;
+
                 // Determine the amount to rotate the shape based on the mouse movement
                 // AR: Find better approach to control the rotation
                 theta += (xDelta + yDelta) * 0.01;
