@@ -982,24 +982,23 @@
             // console.log("DEBUG: Mouse wheel event registered");
             // console.log("DEBUG: ==============================");
 
-            const oldX = viewportTransform.x;
-            const oldY = viewportTransform.y;
-            const oldScale = viewportTransform.scale;
-
-            const localX = e.clientX;
-            const localY = e.clientY;
-
+            // Save the previous transforms and scale factor
             const previousScale = viewportTransform.scale;
+            const previousX     = viewportTransform.x;
+            const previousY     = viewportTransform.y;
 
-            const newScale = viewportTransform.scale += e.deltaY * -0.01;
+            // capture the current mouse location 
+            xMouse = e.clientX;
+            yMouse = e.clientY;
 
-            const newX = localX - (localX - oldX) * (newScale / previousScale);
-            const newY = localY - (localY - oldY) * (newScale / previousScale);
+            // set the new scale factor
+            viewportTransform.scale += e.deltaY * -0.01;
+            const newScale = viewportTransform.scale;
 
-            viewportTransform.x = newX;
-            viewportTransform.y = newY;
-            viewportTransform.scale = newScale;
-
+            // set the new transformation coordinates in order to ...
+            viewportTransform.x = xMouse - (xMouse - previousX) * (newScale / previousScale);
+            viewportTransform.y = yMouse - (yMouse - previousY) * (newScale / previousScale);
+            
             // Draw the entire screen
             drawScreen()
         });
