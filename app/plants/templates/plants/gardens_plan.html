@@ -40,8 +40,19 @@
         <option value="polygon"  >polygon  </option>
       </select>
 
+      Line Width: 
+      <select id="id_line_width">
+        <option value="1">1 px</option>
+        <option value="2">2 px</option>
+        <option value="3">3 px</option>
+        <option value="4">4 px</option>
+      </select>
+
+      Line Color: 
+      <input  type="color"  id="id_line_color" value="#000000"/>
+
       Fill Color: 
-      <input  type="color"  id="id_fill_color" value="#ff0000"/>
+      <input  type="color"  id="id_fill_color" value="#ffffff"/>
 
       <button type="button" id="id_save" class="w3-button w3-gray  w3-round">Save</button>
       <button type="button" id="id_clear" class="w3-button w3-gray  w3-round">Clear</button>
@@ -51,6 +62,13 @@
     <canvas id="myCanvas">
       Your browser does not support HTML 5 Canvas
     </canvas>
+
+    <!-- Context menu - shape -->
+    <ul id="ctxMenu" style="display: none; position: absolute;">
+      <li>Duplicate</li>
+      <li>Delete</li>
+      <li>Option 3</li>
+    </ul>
   </div>
 {% endblock content %}
 
@@ -65,12 +83,14 @@
         // AR: Fix rectangle rotation jump
 
         // setup the canvas
-        const canvas = document.getElementById("myCanvas");
-        const ctx = canvas.getContext("2d");
+        const canvas  = document.getElementById("myCanvas");
+        const ctx     = canvas.getContext("2d");
+        const ctxMenu = document.getElementById('ctxMenu');
         canvas.width  = window.innerWidth  -  40;
         canvas.height = window.innerHeight - 300;
         
         // setup variables
+        let xSelect,        ySelect;        // mouse selection coordinates - relative
         let xSelectAbs,     ySelectAbs;     // mouse selection coordinates - absolute
         let xSelectAbsSave, ySelectAbsSave; //
         let xTransAbs,      yTransAbs;      // translated mouse selection coordinates
@@ -85,13 +105,16 @@
         let lineWidthDefault   = 1;
         let strokeStyleDefault = "black";   //
 
+        let shapeIndex;
+
         // Initilize action flags
-        let createShape = false;
-        let selectShape = false;
-        let resizeShape = false; 
-        let rotateShape = false;
-        let moveShape   = false;
-        let panning     = false;
+        let createShape    = false;
+        let selectShape    = false;
+        let resizeShape    = false; 
+        let rotateShape    = false;
+        let moveShape      = false;
+        let panning        = false;
+        let selectShapeCtx = false;
         
         // Get the previously stored shapes and draw on the canvas
         const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
@@ -147,8 +170,28 @@
             shapeOption = target.value;
         }
 
+        // Setup the shape line width
+        let lineWidth = 1;
+        formElement = document.getElementById("id_line_width");
+        formElement.addEventListener('change', lineWidthChanged, false);
+        function lineWidthChanged(e)
+        {
+            target = e.target;
+            lineWidth = target.value;
+        }
+
+        // Setup the shape line color
+        let lineColor = "black";
+        formElement = document.getElementById("id_line_color");
+        formElement.addEventListener('change', lineColorChanged, false);
+        function lineColorChanged(e)
+        {
+            target = e.target;
+            lineColor = target.value;
+        }
+
         // Setup the shape fill color
-        let fillColor = "#ff0000";
+        let fillColor = "white";
         formElement = document.getElementById("id_fill_color");
         formElement.addEventListener('change', fillColorChanged, false);
         function fillColorChanged(e)
@@ -354,17 +397,129 @@
         });
 
         //************************************************************//
-        // mouse right click events
+        // mouse right click (context menu) events
         //************************************************************//
-        // prevent 'standard' context menu from being displayed'
+        // Context menu: Open the  context menu
         canvas.addEventListener("contextmenu", (e) => 
         {
+            console.log("DEBUG: ==============================");
+            console.log("DEBUG: Mouse right click event registered");
+            console.log("DEBUG: ==============================");
+
+            // Prevent default browser context menu
             e.preventDefault()
+
+            // Get mouse position - relative to canvas
+            xSelect = e.clientX - canvas.offsetLeft;
+            ySelect = e.clientY - canvas.offsetTop;
+
+            // Get mouse position - absolute position
+            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
+            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
+
+            selectShapeCtx = false;
+
+            // Check to see if a shape has been selected
+            for (let i = 0; i < shapes.length; i++) 
+            {
+                if (shapes[i].type == 'rectangle')
+                {
+                    // translate mouse click coordinates if shape is rotated
+                    //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
+                    //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
+                    if(shapes[i].rotation != 0)
+                    {
+                        xShapeCenter = shapes[i].x + shapes[i].width  / 2;
+                        yShapeCenter = shapes[i].y + shapes[i].height / 2;
+                        theta   = shapes[i].rotation * -1;
+
+                        xTransAbs = Math.trunc(xShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                        yTransAbs = Math.trunc(yShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
+                            
+                        xSelectAbs = xTransAbs;
+                        ySelectAbs = yTransAbs;
+                    }
+                    // Determine if the selection point is contained within the rectangle
+                    // If so, place resize handles on object
+                    if (xSelectAbs >= shapes[i].x &&
+                        xSelectAbs <= shapes[i].x + shapes[i].width && 
+                        ySelectAbs >= shapes[i].y &&
+                        ySelectAbs <= shapes[i].y + shapes[i].height)
+                    {
+                        console.log("DEBUG: Rectangle selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+                else if (shapes[i].type == "circle")
+                {
+                    // find the distance of the cursor position from the circle center and compare to the radius
+                    distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
+                                         Math.pow((ySelectAbs - shapes[i].y), 2))
+                    if (distance <= shapes[i].radius)
+                    {
+                        console.log("DEBUG: Circle selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+            }
+
+            // Position and show the custom menu
+            ctxMenu.style.left = xSelect + 'px';
+            ctxMenu.style.top  = (ySelect + 140) + 'px';
+            ctxMenu.style.display = 'block';
         });
-        // 
-        canvas.addEventListener("contextmenu", (e) => 
+
+        // Context menu: Hide when clicking outside of it
+        document.addEventListener('click', function(e) 
         {
-            console.log("DEBUG: Mouse right click event registered")
+            if (!ctxMenu.contains(e.target))
+            {
+                ctxMenu.style.display = 'none';
+            }
+            // cleanup
+            selectShapeCtx = false;
+        });
+
+        // Context menu: Add click handlers for menu items
+        ctxMenu.addEventListener('click', function(e) 
+        {
+
+            console.log("DEBUG: context menu item selected");
+
+            if (selectShapeCtx == true && e.target.tagName === 'LI') 
+            {
+                if (e.target.textContent == "Duplicate")
+                {
+                    console.log("DEBUG: Duplicate Shape");
+                    // copy selected shape and shift new object origin to make it visible
+                    const newShape = {};
+                    Object.assign(newShape, shapes[shapeIndex]);
+                    newShape.x += 15;
+                    newShape.y += 15;
+                    shapes.push(newShape);
+                }
+                else if (e.target.textContent == "Delete")
+                {
+                    console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
+                    shapes.splice(shapeIndex, 1);
+                }
+                else if (e.target.textContent == "Option 3")
+                {
+                    console.log("DEBUG: Option 3");
+                }
+                ctxMenu.style.display = 'none'; // Hide menu after action
+            }
+            // cleanup
+            selectShapeCtx = false;
+            handles = [];
+            // Draw the entire screen
+            drawScreen();
         });
 
         //************************************************************//
@@ -395,13 +550,15 @@
                     createShape = true;
                     activeShape = 
                     { 
-                        type       : "rectangle", 
-                        x          : xSelectAbs, 
-                        y          : ySelectAbs,
-                        width      : 0,
-                        height     : 0,
-                        color      : "#ffffff",
-                        rotation   : 0
+                        type      : "rectangle", 
+                        x         : xSelectAbs, 
+                        y         : ySelectAbs,
+                        width     : 0,
+                        height    : 0,
+                        lineWidth : lineWidth,
+                        lineColor : lineColor,
+                        fillColor : fillColor,
+                        rotation  : 0
                     };
                 }
                 else if (shapeOption == "circle")
@@ -416,7 +573,9 @@
                         startAngle : 0, 
                         endAngle   : 2 * Math.PI,
                         direction  : "clockwise",
-                        color      : "#ffffff"
+                        lineWidth  : lineWidth,
+                        lineColor  : lineColor,
+                        fillColor  : fillColor
                     };
                 }
                 else if (shapeOption == "polygon")
@@ -544,7 +703,8 @@
                     // AR: change for to 'while'
                     for(let i = 0; i < handles.length; i++)
                     {
-                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + Math.pow((ySelectAbs - handles[i].y), 2))
+                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
+                                                 Math.pow((ySelectAbs - handles[i].y), 2))
                         // Determine if one of the handles has been selected
                         if (distance <= handles[i].radius)
                         {
@@ -651,9 +811,6 @@
                     // console.log("DEBUG: Got to polygon - mouse move");
                 }
 
-                // Set the fill color
-                activeShape.color = fillColor;
-
                 // capture the current mouse location
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
@@ -681,7 +838,8 @@
                 // check to see if the selected shape (via mouseclick) has been rotated
                 if(activeShape.type == "rectangle" && activeShape.rotation != 0)
                 {
-                    // rotate the selection coordinates wrt activeShape before checking if handle has been selected
+                    // rotate the selection coordinates wrt activeShape before checking if 
+                    // handle has been selected
                     xShapeCenter = activeShape.x + activeShape.width  / 2;
                     yShapeCenter = activeShape.y + activeShape.height / 2;
                     theta   = activeShape.rotation * -1;
@@ -1035,10 +1193,13 @@
         {
             if (shape.type === "rectangle") 
             {
-                ctx.fillStyle = shape.color;
+                ctx.lineWidth   = shape.lineWidth;
+                ctx.strokeStyle = shape.lineColor;
+                ctx.fillStyle   = shape.fillColor;
                 if(shape.rotation == 0)
                 {
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                    ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
                 }
                 else
                 {
@@ -1058,6 +1219,7 @@
                     ctx.translate(-xShapeCenter, -yShapeCenter);
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
+                    ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
                     //
                     ctx.restore();
                 }
@@ -1098,6 +1260,10 @@
             
             else if (shape.type === "circle") 
             {
+                ctx.lineWidth   = shape.lineWidth;
+                ctx.strokeStyle = shape.lineColor;
+                ctx.fillStyle   = shape.fillColor;
+
                 ctx.beginPath();
                 ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
                 ctx.fillStyle = shape.color;
@@ -1119,11 +1285,11 @@
                 // Translate back
                 ctx.translate(-xShapeCenter, -yShapeCenter);
                 // Draw the handle
+                ctx.lineWidth   = 1;
+                ctx.strokeStyle = "black";
+                ctx.fillStyle   = shape.color;
                 ctx.beginPath();
                 ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
-                // AR: change to non-filled circle
-                ctx.fillStyle = shape.color;
-                // ctx.fill(); // fill the handle
                 ctx.stroke();
                 //
                 ctx.restore();
@@ -1154,7 +1320,10 @@
                 drawShape(shapes[i]);
             }
             //
-            drawShape(activeShape);
+            if (activeShape)
+            {
+                drawShape(activeShape);
+            }
             //
             for (let i = 0; i < handles.length; i++) 
             {
