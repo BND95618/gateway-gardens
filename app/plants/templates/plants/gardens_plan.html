@@ -33,6 +33,13 @@
         <option value="zoom"  >zoom  </option>
       </select>
 
+      <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
+      <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+      <br>
+
+    </form>
+
+    <form class = "w3-margin-bottom">
       Shape: 
       <select id="id_shape">
         <option value="line"     >line     </option>
@@ -41,24 +48,28 @@
         <option value="polygon"  >polygon  </option>
         <option value="free form">free form</option>
       </select>
-
+      
       Line Width: 
-      <select id="id_line_width">
-        <option value="1">1 px</option>
-        <option value="2">2 px</option>
-        <option value="3">3 px</option>
-        <option value="4">4 px</option>
-      </select>
-
-      Line Color: 
-      <input  type="color"  id="id_line_color" value="#000000"/>
-
-      Fill Color: 
-      <input  type="color"  id="id_fill_color" value="#ffffff"/>
-
-      <button type="button" id="id_save" class="w3-button w3-gray  w3-round">Save</button>
-      <button type="button" id="id_clear" class="w3-button w3-gray  w3-round">Clear</button>
-      <br>
+        <select id="id_line_width">
+          <option value="1">1 px</option>
+          <option value="2">2 px</option>
+          <option value="3">3 px</option>
+          <option value="4">4 px</option>
+        </select>
+  
+        Line Style: 
+        <select id="id_line_style">
+          <option value="solid" >solid </option>
+          <option value="dashed">dashed</option>
+          <option value="dotted">dotted</option>
+        </select>
+  
+        Line Color: 
+        <input  type="color"  id="id_line_color" value="#000000"/>
+  
+        Fill Color: 
+        <input  type="color"  id="id_fill_color" value="#ffffff"/>
+    </form>
 
     <!-- Canvas -->
     <canvas id="myCanvas">
@@ -104,6 +115,15 @@
         let theta = 0;                      // rotation angle in radians
         let lineWidthDefault   = 1;
         let strokeStyleDefault = "black";   //
+
+        // set menu defaults
+        let action      = "select";
+        let shapeOption = "line";
+        let lineWidth   = 1;
+        let lineStyle   = "solid";
+        let lineColor   = "black";
+        let fillColor   = "white";
+
         let shapeIndex;
 
         // Initilize action flags
@@ -140,6 +160,7 @@
                         width       : xPlot,
                         height      : yPlot,
                         lineWidth   : 2,
+                        lineStyle   : "solid",
                         strokeStyle : "green",
                         rotation    : 0
                     };
@@ -148,7 +169,6 @@
         drawScreen();
 
         // setup the garden planner action
-        let action = "select";
         let target = "";
         formElement = document.getElementById("id_action");
 	    formElement.addEventListener("change", actionChanged, false);        
@@ -161,7 +181,6 @@
         }
 
         // Setup the shape to be drawn
-        let shapeOption = "line";
         formElement = document.getElementById("id_shape");
 	    formElement.addEventListener("change",  shapeChanged, false);
         function shapeChanged(e)
@@ -171,7 +190,6 @@
         }
 
         // Setup the shape line width
-        let lineWidth = 1;
         formElement = document.getElementById("id_line_width");
         formElement.addEventListener('change', lineWidthChanged, false);
         function lineWidthChanged(e)
@@ -180,8 +198,16 @@
             lineWidth = target.value;
         }
 
+        // Setup the shape line style
+        formElement = document.getElementById("id_line_style");
+        formElement.addEventListener('change', lineStyleChanged, false);
+        function lineStyleChanged(e)
+        {
+            target = e.target;
+            lineStyle = target.value;
+        }
+
         // Setup the shape line color
-        let lineColor = "black";
         formElement = document.getElementById("id_line_color");
         formElement.addEventListener('change', lineColorChanged, false);
         function lineColorChanged(e)
@@ -191,7 +217,6 @@
         }
 
         // Setup the shape fill color
-        let fillColor = "white";
         formElement = document.getElementById("id_fill_color");
         formElement.addEventListener('change', fillColorChanged, false);
         function fillColorChanged(e)
@@ -276,7 +301,7 @@
                         {
                             // clear any existing handles
                             handles = [];
-                            
+
                             // place start point handle
                             currentHandle = placeHandle("start",
                                                         shapes[i].xStart,
@@ -502,6 +527,7 @@
                         xEnd      : xSelectAbs, 
                         yEnd      : ySelectAbs,
                         lineWidth : lineWidth,
+                        lineStyle : lineStyle,
                         lineColor : lineColor
                     };
                 }
@@ -516,6 +542,7 @@
                         width     : 0,
                         height    : 0,
                         lineWidth : lineWidth,
+                        lineStyle : lineStyle,
                         lineColor : lineColor,
                         fillColor : fillColor,
                         rotation  : 0
@@ -534,6 +561,7 @@
                         endAngle   : 2 * Math.PI,
                         direction  : "clockwise",
                         lineWidth  : lineWidth,
+                        lineStyle  : lineStyle,
                         lineColor  : lineColor,
                         fillColor  : fillColor
                     };
@@ -1451,16 +1479,45 @@
                 // console.log("DEBUG: strokeStyle =",  ctx.strokeStyle);
                 // console.log("DEBUG: shape.xStart =", shape.xStart);
                 // console.log("DEBUG: shape.xEnd =",   shape.xEnd);
-                ctx.beginPath();
+
+                // setup the drawing parameters
                 ctx.lineWidth   = shape.lineWidth;
+                if(shape.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(shape.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([7, 5]);
+                }
+                else if(shape.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
                 ctx.strokeStyle = shape.lineColor;
+
+                // draw the line
+                ctx.beginPath();
                 ctx.moveTo(shape.xStart, shape.yStart);
                 ctx.lineTo(shape.xEnd,   shape.yEnd);
                 ctx.stroke();
             }
             else if (shape.type === "rectangle") 
             {
+                // setup the drawing parameters
                 ctx.lineWidth   = shape.lineWidth;
+                if(shape.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(shape.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([5, 5]);
+                }
+                else if(shape.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
                 ctx.strokeStyle = shape.lineColor;
                 ctx.fillStyle   = shape.fillColor;
                 if(shape.rotation == 0)
@@ -1475,7 +1532,6 @@
                     yShapeCenter = shape.y + (shape.height / 2);
                                     
                     // ctx.setTransform(1, 0, 0, 1, 0, 0);
-
                     //
                     ctx.save();
                     // Translate to rectangle center
@@ -1484,6 +1540,7 @@
                     ctx.rotate(shape.rotation);
                     // Translate back
                     ctx.translate(-xShapeCenter, -yShapeCenter);
+
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
                     ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
@@ -1493,15 +1550,20 @@
             }
             else if (shape.type === "rectangle-nofill") 
             {
+                // setup the drawing parameters
                 ctx.strokeStyle = shape.strokeStyle;
                 ctx.lineWidth   = shape.lineWidth;
+                ctx.setLineDash([]);
+
+                //
                 if(shape.rotation == 0)
                 {
+                    // Draw the rectangle
                     ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
                 }
                 else
                 {
-                    // find center of shape
+                    // find the center of shape
                     xShapeCenter = shape.x + (shape.width  / 2);
                     yShapeCenter = shape.y + (shape.height / 2);
                                     
@@ -1515,6 +1577,7 @@
                     ctx.rotate(shape.rotation);
                     // Translate back
                     ctx.translate(-xShapeCenter, -yShapeCenter);
+
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
                     //
@@ -1527,10 +1590,24 @@
             
             else if (shape.type === "circle") 
             {
+                // setup the drawing parameters
                 ctx.lineWidth   = shape.lineWidth;
+                if(shape.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(shape.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([5, 5]);
+                }
+                else if(shape.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
                 ctx.strokeStyle = shape.lineColor;
                 ctx.fillStyle   = shape.fillColor;
 
+                // draw the circle
                 ctx.beginPath();
                 ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
                 ctx.fillStyle = shape.color;
