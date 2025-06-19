@@ -35,9 +35,11 @@
 
       Shape: 
       <select id="id_shape">
+        <option value="line"     >line     </option>
         <option value="rectangle">rectangle</option>
         <option value="circle"   >circle   </option>
         <option value="polygon"  >polygon  </option>
+        <option value="free form">free form</option>
       </select>
 
       Line Width: 
@@ -64,7 +66,7 @@
     </canvas>
 
     <!-- Context menu - shape -->
-    <ul id="ctxMenu" style="display: none; position: absolute;">
+    <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
       <li>Duplicate</li>
       <li>Delete</li>
       <li>Option 3</li>
@@ -80,8 +82,6 @@
 
     function canvasApp()
     {
-        // AR: Fix rectangle rotation jump
-
         // setup the canvas
         const canvas  = document.getElementById("myCanvas");
         const ctx     = canvas.getContext("2d");
@@ -104,7 +104,6 @@
         let theta = 0;                      // rotation angle in radians
         let lineWidthDefault   = 1;
         let strokeStyleDefault = "black";   //
-
         let shapeIndex;
 
         // Initilize action flags
@@ -116,14 +115,15 @@
         let panning        = false;
         let selectShapeCtx = false;
         
-        // Get the previously stored shapes and draw on the canvas
-        const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
-        let shapes = shapes_JSON;
-        let activeShape   = null;
         // setup objects
-        let handles       = [];
+        const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
+        let shapes        = shapes_JSON;
+        let activeShape   = null;
         let activeHandle  = null;
         let currentHandle = null;
+
+        // setup arrays
+        let handles       = [];
         let backgrounds   = [];
         
         // keep track of our panning and zooming
@@ -161,7 +161,7 @@
         }
 
         // Setup the shape to be drawn
-        let shapeOption = "rectangle";
+        let shapeOption = "line";
         formElement = document.getElementById("id_shape");
 	    formElement.addEventListener("change",  shapeChanged, false);
         function shapeChanged(e)
@@ -215,12 +215,15 @@
         //************************************************************//
         canvas.addEventListener("click", (e) => 
         {
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse click event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: ==============================");
+            console.log("DEBUG: Mouse click event registered");
+            console.log("DEBUG: ==============================");
 
             if (action == "select")
             {
+                // reset the active shape flag
+                selectShape = false;
+                activeShape = null;
                 // this will disable the mousedown, mousemove, & mouseup events
                 createShape = false;
                 // clear any existing handles
@@ -241,8 +244,66 @@
                     xSelectAbs = xSelectSaveAbs;
                     ySelectAbs = ySelectSaveAbs;
 
-                    if (shapes[i].type == 'rectangle')
+                    if (shapes[i].type == 'line')
                     {
+                        // Determine in the selection point is close to the line
+                        // If so, place resize handles on object
+
+                        // set the threshold
+                        const threshold = 3;
+                        
+                        // Calculate the difference in coordinates for the line segment
+                        const dx = shapes[i].xEnd - shapes[i].xStart;
+                        const dy = shapes[i].yEnd - shapes[i].yStart;
+
+                        // Calculate the squared length of the line segment
+                        const lineLengthSq = dx * dx + dy * dy;
+
+                        // Calculate the parameter 't' for the closest point on the *infinite* line
+                        // This 't' represents the projection of the point onto the line.
+                        const t = ((xSelectAbs - shapes[i].xStart) * dx + 
+                                   (ySelectAbs - shapes[i].yStart) * dy) / lineLengthSq;
+
+                        // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
+                        const closestX = shapes[i].xStart + t * dx;
+                        const closestY = shapes[i].yStart + t * dy;
+
+                        // Calculate the distance from the point to the closest point on the segment
+                        const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
+                                                   Math.pow(ySelectAbs - closestY, 2));
+
+                        if(distance <= threshold)
+                        {
+                            // clear any existing handles
+                            handles = [];
+                            
+                            // place start point handle
+                            currentHandle = placeHandle("start",
+                                                        shapes[i].xStart,
+                                                        shapes[i].yStart,
+                                                        0,
+                                                        i);
+                            handles.push(currentHandle);
+
+                            // place end point handle
+                            currentHandle = placeHandle("end",
+                                                        shapes[i].xEnd,
+                                                        shapes[i].yEnd,
+                                                        0,
+                                                        i);
+                            handles.push(currentHandle);
+                            // Indicate that the modify shape mode is enabled for the selected shape
+                            selectShape = true;
+                            activeShape = shapes[i];
+
+                            console.log("DEBUG: the line has been selected! i =", i);
+                            console.log("DEBUG: ------------------------------");
+                        }
+                    }
+
+                    else if (shapes[i].type == 'rectangle')
+                    {
+
                         // translate mouse click coordinates if shape is rotated
                         //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
                         //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
@@ -270,6 +331,9 @@
                             ySelectAbs >= shapes[i].y &&
                             ySelectAbs <= shapes[i].y + shapes[i].height)
                         {
+                            // clear any existing handles
+                            handles = [];
+
                             // place top left handle
                             currentHandle = placeHandle("top-left",
                                                         shapes[i].x,
@@ -348,13 +412,16 @@
                         }
                     }
 
-                    if (shapes[i].type == "circle")
+                    else if (shapes[i].type == "circle")
                     {
                         // find the distance of the cursor position from the circle center and compare to the radius
                         distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
                                              Math.pow((ySelectAbs - shapes[i].y), 2))
                         if (distance <= shapes[i].radius)
                         {
+                            // clear any existing handles
+                            handles = [];
+
                             // Place resize handles on object
                             currentHandle = placeHandle("top",
                                                         shapes[i].x, 
@@ -384,7 +451,6 @@
                                                         i);
                             handles.push(currentHandle);
 
-
                             // Indicate that the modify shape mode is enabled for the selected shape
                             selectShape = true;
                             activeShape = shapes[i];
@@ -394,132 +460,11 @@
                 // Draw the entire screen
                 drawScreen();
             }
-        });
 
-        //************************************************************//
-        // mouse right click (context menu) events
-        //************************************************************//
-        // Context menu: Open the  context menu
-        canvas.addEventListener("contextmenu", (e) => 
-        {
-            console.log("DEBUG: ==============================");
-            console.log("DEBUG: Mouse right click event registered");
-            console.log("DEBUG: ==============================");
+            // console.log("DEBUG: -----------------------------------");
+            console.log("DEBUG: click - selectShape =", selectShape);
+            console.log("DEBUG: click - activeShape =", activeShape);
 
-            // Prevent default browser context menu
-            e.preventDefault()
-
-            // Get mouse position - relative to canvas
-            xSelect = e.clientX - canvas.offsetLeft;
-            ySelect = e.clientY - canvas.offsetTop;
-
-            // Get mouse position - absolute position
-            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
-            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
-
-            selectShapeCtx = false;
-
-            // Check to see if a shape has been selected
-            for (let i = 0; i < shapes.length; i++) 
-            {
-                if (shapes[i].type == 'rectangle')
-                {
-                    // translate mouse click coordinates if shape is rotated
-                    //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
-                    //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
-                    if(shapes[i].rotation != 0)
-                    {
-                        xShapeCenter = shapes[i].x + shapes[i].width  / 2;
-                        yShapeCenter = shapes[i].y + shapes[i].height / 2;
-                        theta   = shapes[i].rotation * -1;
-
-                        xTransAbs = Math.trunc(xShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
-                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
-                        yTransAbs = Math.trunc(yShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
-                            
-                        xSelectAbs = xTransAbs;
-                        ySelectAbs = yTransAbs;
-                    }
-                    // Determine if the selection point is contained within the rectangle
-                    // If so, place resize handles on object
-                    if (xSelectAbs >= shapes[i].x &&
-                        xSelectAbs <= shapes[i].x + shapes[i].width && 
-                        ySelectAbs >= shapes[i].y &&
-                        ySelectAbs <= shapes[i].y + shapes[i].height)
-                    {
-                        console.log("DEBUG: Rectangle selected - shape index = ", i);
-                        selectShapeCtx = true;
-                        shapeIndex = i;
-                    }
-                }
-                else if (shapes[i].type == "circle")
-                {
-                    // find the distance of the cursor position from the circle center and compare to the radius
-                    distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
-                                         Math.pow((ySelectAbs - shapes[i].y), 2))
-                    if (distance <= shapes[i].radius)
-                    {
-                        console.log("DEBUG: Circle selected - shape index = ", i);
-                        selectShapeCtx = true;
-                        shapeIndex = i;
-                    }
-                }
-            }
-
-            // Position and show the custom menu
-            ctxMenu.style.left = xSelect + 'px';
-            ctxMenu.style.top  = (ySelect + 140) + 'px';
-            ctxMenu.style.display = 'block';
-        });
-
-        // Context menu: Hide when clicking outside of it
-        document.addEventListener('click', function(e) 
-        {
-            if (!ctxMenu.contains(e.target))
-            {
-                ctxMenu.style.display = 'none';
-            }
-            // cleanup
-            selectShapeCtx = false;
-        });
-
-        // Context menu: Add click handlers for menu items
-        ctxMenu.addEventListener('click', function(e) 
-        {
-
-            console.log("DEBUG: context menu item selected");
-
-            if (selectShapeCtx == true && e.target.tagName === 'LI') 
-            {
-                if (e.target.textContent == "Duplicate")
-                {
-                    console.log("DEBUG: Duplicate Shape");
-                    // copy selected shape and shift new object origin to make it visible
-                    const newShape = {};
-                    Object.assign(newShape, shapes[shapeIndex]);
-                    newShape.x += 15;
-                    newShape.y += 15;
-                    shapes.push(newShape);
-                }
-                else if (e.target.textContent == "Delete")
-                {
-                    console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
-                    shapes.splice(shapeIndex, 1);
-                }
-                else if (e.target.textContent == "Option 3")
-                {
-                    console.log("DEBUG: Option 3");
-                }
-                ctxMenu.style.display = 'none'; // Hide menu after action
-            }
-            // cleanup
-            selectShapeCtx = false;
-            handles = [];
-            // Draw the entire screen
-            drawScreen();
         });
 
         //************************************************************//
@@ -533,9 +478,9 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse down event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: ==============================");
+            console.log("DEBUG: Mouse down event registered");
+            console.log("DEBUG: ==============================");
 
             // Canvas selection point - absolute position
             xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale;
@@ -545,7 +490,22 @@
             if (action == "draw")
             {
                 //
-                if (shapeOption == "rectangle")
+                if (shapeOption == "line")
+                {
+                    // console.log("DEBUG: Start drawing a line");
+                    createShape = true;
+                    activeShape = 
+                    { 
+                        type      : "line", 
+                        xStart    : xSelectAbs, 
+                        yStart    : ySelectAbs,
+                        xEnd      : xSelectAbs, 
+                        yEnd      : ySelectAbs,
+                        lineWidth : lineWidth,
+                        lineColor : lineColor
+                    };
+                }
+                else if (shapeOption == "rectangle")
                 {
                     createShape = true;
                     activeShape = 
@@ -604,7 +564,50 @@
                 ySelectSaveAbs = ySelectAbs;
                 activeHandle = null;
 
-                if (activeShape.type == "rectangle")
+                if (activeShape.type == "line")
+                {
+                    console.log("DEBUG: Active Shape:", activeShape);
+
+                    // check to see if a handle has been selected
+                    // AR: change for to 'while'
+                    for(let i = 0; i < handles.length; i++)
+                    {
+                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
+                                                 Math.pow((ySelectAbs - handles[i].y), 2))
+                        // Determine if one of the handles has been selected
+                        if (distance <= handles[i].radius)
+                        {
+                            // AR: Change if to switch
+                            // Determine which handle has been selected
+                            if (handles[i].location == "start")
+                            {
+                                activeHandle = handles[i];
+                                resizeShape = true;
+                            }
+                            else if (handles[i].location == "end")
+                            {
+                                activeHandle = handles[i];
+                                resizeShape = true;
+                            }
+                            // set the election point to the center of the handle
+                            xSelectSaveAbs = activeHandle.x;
+                            ySelectSaveAbs = activeHandle.y;
+                        }
+                    }
+                    // If no handle of the active shape was selected check to see if the
+                    // body of the active shape was selected
+                    if (!activeHandle)
+                    {
+                        const m = (activeShape.yEnd - activeShape.yStart) / (activeShape.xEnd - activeShape.xStart);
+                        const b = activeShape.yStart - (m * activeShape.xStart)
+                        // y = mx + b -> 0 = mx - y + b 
+                        if(Math.abs(m * xSelectAbs - ySelectAbs + b) <= 2)
+                        {
+                            moveShape = true;
+                        }
+                    }
+                }
+                else if (activeShape.type == "rectangle")
                 {
                     // check to see if the selected shape (via mouseclick) has been rotated
                     if(activeShape.rotation != 0)
@@ -752,7 +755,7 @@
                     }
                 }
             }
-        
+
             // Begin panning
             else if (action == 'pan')
             {
@@ -760,6 +763,9 @@
                 xSelectSaveAbs = xSelectAbs;
                 ySelectSaveAbs = ySelectAbs;
             } 
+
+            // console.log("DEBUG: down - activeShape =", activeShape);
+
         });
 
         //************************************************************//
@@ -792,20 +798,23 @@
 
             // Draw the active shape
             if (action == "draw")
-            {
-                if (shapeOption == "rectangle")
+            { 
+                if (shapeOption == "line")
+                {
+                    activeShape.xEnd += xDelta;
+                    activeShape.yEnd += yDelta;
+                }
+                else if (shapeOption == "rectangle")
                 {
                     activeShape.width  += xDelta;
                     activeShape.height += yDelta;
                 }
-
                 else if (shapeOption == "circle")
                 {
                     xDeltaAcc += xDelta;
                     yDeltaAcc += yDelta;
                     activeShape.radius = Math.sqrt(Math.pow(xDeltaAcc, 2) + Math.pow(yDeltaAcc, 2));
                 }
-
                 else if (shapeOption == "polygon")
                 {
                     // console.log("DEBUG: Got to polygon - mouse move");
@@ -817,7 +826,25 @@
             }
         
             // Move the selected shape
-            else if (action == 'select' && moveShape)
+            if(action == 'select' && moveShape && activeShape.type == "line")
+            {
+                console.log("DEBUG: moving the line");
+                // move the shape
+                activeShape.xStart += xDelta;
+                activeShape.yStart += yDelta;
+                activeShape.xEnd   += xDelta;
+                activeShape.yEnd   += yDelta;
+                // move the handles
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].x += xDelta;
+                    handles[i].y += yDelta;
+                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
+            }
+            else if (action == 'select' && moveShape && activeShape.type == "rectangle")
             {
                 activeShape.x += xDelta;
                 activeShape.y += yDelta;
@@ -826,6 +853,44 @@
                 {
                     handles[i].x += xDelta;
                     handles[i].y += yDelta;
+                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
+            }
+            else if (action == 'select' && moveShape && activeShape.type == "circle")
+            {
+                activeShape.x += xDelta;
+                activeShape.y += yDelta;
+
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].x += xDelta;
+                    handles[i].y += yDelta;
+                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
+            }
+            
+            // Resize the selected line
+            if (action == 'select' && resizeShape && activeShape.type == "line")
+            {
+                if (activeHandle.location == "start")
+                {
+                    activeShape.xStart += xDelta;
+                    activeShape.yStart += yDelta;
+
+                    handles[0].x += xDelta;
+                    handles[0].y += yDelta;
+                }
+                else if (activeHandle.location == "end")
+                {
+                    activeShape.xEnd += xDelta;
+                    activeShape.yEnd += yDelta;
+
+                    handles[1].x += xDelta;
+                    handles[1].y += yDelta;
                 }
                 // capture the current mouse location
                 xSelectSaveAbs += xDelta;
@@ -1076,7 +1141,11 @@
             
             if (action == "draw")
             {
-                if (shapeOption == "rectangle" && activeShape.width > 0 && activeShape.height > 0)
+                if (shapeOption == "line")
+                {
+                    shapes.push(activeShape);
+                }
+                else if (shapeOption == "rectangle" && activeShape.width > 0 && activeShape.height > 0)
                 {
                     shapes.push(activeShape);
                 }
@@ -1124,6 +1193,185 @@
             selectShape = false;
             panning     = false;
 
+            // Draw the entire screen
+            drawScreen();
+        });
+
+        //************************************************************//
+        // mouse right click (context menu) events
+        //************************************************************//
+        // Context menu: Open the  context menu
+        canvas.addEventListener("contextmenu", (e) => 
+        {
+            // console.log("DEBUG: ==============================");
+            // console.log("DEBUG: Mouse right click event registered");
+            // console.log("DEBUG: ==============================");
+
+            // Prevent default browser context menu
+            e.preventDefault()
+
+            // Get mouse position - relative to canvas
+            xSelect = e.clientX - canvas.offsetLeft;
+            ySelect = e.clientY - canvas.offsetTop;
+
+            // Get mouse position - absolute position
+            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
+            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
+
+            selectShapeCtx = false;
+
+            // Check to see if a shape has been selected
+            for (let i = 0; i < shapes.length; i++) 
+            {
+                if (shapes[i].type == "line")
+                {
+                    // Determine in the selection point is close to the line
+                    // If so, duplicate the line object
+
+                    // set the threshold
+                    const threshold = 3;
+                        
+                    // Calculate the difference in coordinates for the line segment
+                    const dx = shapes[i].xEnd - shapes[i].xStart;
+                    const dy = shapes[i].yEnd - shapes[i].yStart;
+
+                    // Calculate the squared length of the line segment
+                    const lineLengthSq = dx * dx + dy * dy;
+
+                    // Calculate the parameter 't' for the closest point on the *infinite* line
+                    // This 't' represents the projection of the point onto the line.
+                    const t = ((xSelectAbs - shapes[i].xStart) * dx + 
+                               (ySelectAbs - shapes[i].yStart) * dy) / lineLengthSq;
+
+                    // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
+                    const closestX = shapes[i].xStart + t * dx;
+                    const closestY = shapes[i].yStart + t * dy;
+
+                    // Calculate the distance from the point to the closest point on the segment
+                    const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
+                                               Math.pow(ySelectAbs - closestY, 2));
+
+                    if(distance <= threshold)
+                    {
+                        console.log("DEBUG: Line selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+
+                else if (shapes[i].type == 'rectangle')
+                {
+                    // translate mouse click coordinates if shape is rotated
+                    //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
+                    //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
+                    if(shapes[i].rotation != 0)
+                    {
+                        xShapeCenter = shapes[i].x + shapes[i].width  / 2;
+                        yShapeCenter = shapes[i].y + shapes[i].height / 2;
+                        theta   = shapes[i].rotation * -1;
+
+                        xTransAbs = Math.trunc(xShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                        yTransAbs = Math.trunc(yShapeCenter + 
+                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
+                            
+                        xSelectAbs = xTransAbs;
+                        ySelectAbs = yTransAbs;
+                    }
+                    // Determine if the selection point is contained within the rectangle
+                    // If so, place resize handles on object
+                    if (xSelectAbs >= shapes[i].x &&
+                        xSelectAbs <= shapes[i].x + shapes[i].width && 
+                        ySelectAbs >= shapes[i].y &&
+                        ySelectAbs <= shapes[i].y + shapes[i].height)
+                    {
+                        // console.log("DEBUG: Rectangle selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+                
+                else if (shapes[i].type == "circle")
+                {
+                    // find the distance of the cursor position from the circle center and compare to the radius
+                    distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
+                                         Math.pow((ySelectAbs - shapes[i].y), 2))
+                    if (distance <= shapes[i].radius)
+                    {
+                        // console.log("DEBUG: Circle selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+            }
+
+            // Position and show the custom menu
+            ctxMenu.style.left = xSelect + 'px';
+            ctxMenu.style.top  = (ySelect + 140) + 'px';
+            ctxMenu.style.display = 'block';
+        });
+
+        // Context menu: Hide when clicking outside of it
+        document.addEventListener('click', function(e) 
+        {
+            if (!ctxMenu.contains(e.target))
+            {
+                ctxMenu.style.display = 'none';
+            }
+            // cleanup
+            selectShapeCtx = false;
+        });
+
+        // Context menu: Add click handlers for menu items
+        ctxMenu.addEventListener('click', function(e) 
+        {
+
+            console.log("DEBUG: context menu item selected");
+
+            if (selectShapeCtx == true && e.target.tagName === 'LI') 
+            {
+                if (e.target.textContent == "Duplicate")
+                {
+                    // console.log("DEBUG: Duplicate Shape");
+                    // make a deep copy of selected shape and shift new object origin to make it visible
+                    // const newShape = {};
+                    // Object.assign(newShape, shapes[shapeIndex]);
+                    const newShape = JSON.parse(JSON.stringify(shapes[shapeIndex]));
+                    if(shapes[shapeIndex].type == "line")
+                    {
+                        newShape.xStart += 20;
+                        newShape.yStart += 20;
+                        newShape.xEnd   += 20;
+                        newShape.yEnd   += 20;
+                    }
+                    else if(shapes[shapeIndex].type == "rectangle")
+                    {
+                        newShape.x += 20;
+                        newShape.y += 20;
+                    }
+                    else if(shapes[shapeIndex].type == "circle")
+                    {
+                        newShape.x += 20;
+                        newShape.y += 20;
+                    }
+                    shapes.push(newShape);
+                }
+                else if (e.target.textContent == "Delete")
+                {
+                    // console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
+                    shapes.splice(shapeIndex, 1);
+                }
+                else if (e.target.textContent == "Option 3")
+                {
+                    console.log("DEBUG: Option 3");
+                }
+                ctxMenu.style.display = 'none'; // Hide menu after action
+            }
+            // cleanup
+            selectShapeCtx = false;
+            handles = [];
             // Draw the entire screen
             drawScreen();
         });
@@ -1187,11 +1435,30 @@
         }
    
         //************************************************************//
+        // Function: line selection
+        //************************************************************//
+        // AR: Create line selection function
+
+        //************************************************************//
         // Draw shape
         //************************************************************//
         function drawShape(shape) 
         {
-            if (shape.type === "rectangle") 
+            if (shape.type === "line")
+            {
+                // console.log("DEBUG: drawing line");
+                // console.log("DEBUG: lineWidth =",    ctx.lineWidth);
+                // console.log("DEBUG: strokeStyle =",  ctx.strokeStyle);
+                // console.log("DEBUG: shape.xStart =", shape.xStart);
+                // console.log("DEBUG: shape.xEnd =",   shape.xEnd);
+                ctx.beginPath();
+                ctx.lineWidth   = shape.lineWidth;
+                ctx.strokeStyle = shape.lineColor;
+                ctx.moveTo(shape.xStart, shape.yStart);
+                ctx.lineTo(shape.xEnd,   shape.yEnd);
+                ctx.stroke();
+            }
+            else if (shape.type === "rectangle") 
             {
                 ctx.lineWidth   = shape.lineWidth;
                 ctx.strokeStyle = shape.lineColor;
