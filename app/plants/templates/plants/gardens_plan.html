@@ -648,8 +648,6 @@
 
                 if (activeShape.type == "line")
                 {
-                    console.log("DEBUG: Active Shape:", activeShape);
-
                     // check to see if a handle has been selected
                     // AR: change for to 'while'
                     for(let i = 0; i < handles.length; i++)
@@ -680,10 +678,30 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        const m = (activeShape.yEnd - activeShape.yStart) / (activeShape.xEnd - activeShape.xStart);
-                        const b = activeShape.yStart - (m * activeShape.xStart)
-                        // y = mx + b -> 0 = mx - y + b 
-                        if(Math.abs(m * xSelectAbs - ySelectAbs + b) <= 2)
+                        // set the threshold
+                        const threshold = 3;
+                        
+                        // Calculate the difference in coordinates for the line segment
+                        const dx = activeShape.xEnd - activeShape.xStart;
+                        const dy = activeShape.yEnd - activeShape.yStart;
+
+                        // Calculate the squared length of the line segment
+                        const lineLengthSq = dx * dx + dy * dy;
+
+                        // Calculate the parameter 't' for the closest point on the *infinite* line
+                        // This 't' represents the projection of the point onto the line.
+                        const t = ((xSelectAbs - activeShape.xStart) * dx + 
+                                   (ySelectAbs - activeShape.yStart) * dy) / lineLengthSq;
+
+                        // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
+                        const closestX = activeShape.xStart + t * dx;
+                        const closestY = activeShape.yStart + t * dy;
+
+                        // Calculate the distance from the point to the closest point on the segment
+                        const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
+                                                   Math.pow(ySelectAbs - closestY, 2));
+
+                        if(distance <= threshold)
                         {
                             moveShape = true;
                         }
