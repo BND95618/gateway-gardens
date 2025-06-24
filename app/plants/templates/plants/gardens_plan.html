@@ -245,9 +245,7 @@
         //************************************************************//
         canvas.addEventListener("click", (e) => 
         {
-            console.log("DEBUG: ==============================");
-            console.log("DEBUG: Mouse click event registered");
-            console.log("DEBUG: ==============================");
+            console.log("DEBUG: *** Mouse click event registered ***");
 
             if (action == "select")
             {
@@ -483,45 +481,38 @@
                     } 
                     else if(shapes[i].type == "polygon")
                     {
-                        console.log("DEBUG: Got to polygon selection check");
                         // Create the path for the target polygon
                         ctx.beginPath();
-                        ctx.moveTo(shapes[i].vertices[0][0], shapes[i].vertices[0][1]);
+                        ctx.moveTo(shapes[i].vertices[0].x, shapes[i].vertices[0].y);
                         for (let j = 1; j < shapes[i].vertices.length; j++) 
                         {
-                            ctx.lineTo(shapes[i].vertices[j][0], shapes[i].vertices[j][1]);
+                            ctx.lineTo(shapes[i].vertices[j].x, shapes[i].vertices[j].y);
                         }
                         ctx.closePath();
                         // check to see if the mouse selection point is contained with the polygon
                         if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
                         {
-                            console.log("DEBUG: Polygon selected");
-
                             // clear any existing handles
                             handles = [];
 
                             // Place resize handles on object
                             currentHandle = placeHandle("v0",
-                                                        shapes[i].vertices[0][0], 
-                                                        shapes[i].vertices[0][1],
+                                                        shapes[i].vertices[0].x, 
+                                                        shapes[i].vertices[0].y,
                                                         0,
                                                         i);
                             handles.push(currentHandle);
 
                             //
-                            for (let j = 1; j < shapes[i].vertices.length-2; j++)
+                            for (let j = 1; j < shapes[i].vertices.length; j++)
                             {
                                 currentHandle = placeHandle("v" + j,
-                                                        shapes[i].vertices[j][0], 
-                                                        shapes[i].vertices[j][1],
+                                                        shapes[i].vertices[j].x, 
+                                                        shapes[i].vertices[j].y,
                                                         0,
                                                         i);
                                 handles.push(currentHandle);
                             }
-                        }
-                        else
-                        {
-                            console.log("DEBUG: Polygon not selected");
                         }
                     }
                 }
@@ -541,9 +532,7 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse down event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: *** Mouse down event registered ***");
 
             // Canvas selection point - absolute position
             xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale;
@@ -623,23 +612,17 @@
                         };
 
                         // Set polygon starting point
-                        activeShape.vertices.push([xSelectAbs,ySelectAbs]);
+                        activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
 
                         // Polygon drawing in process
                         polygonWIP  = true;
-                    }
-                    else if(polygonWIP == true)
-                    {
-                        activeShape.vertices.push([xSelectAbs,ySelectAbs]);
                     }
                     
                     createShape = true;
                     // set the starting coordinates for the next point
                     xPolygonVertex = xSelectAbs;
                     yPolygonVertex = ySelectAbs;
-                    activeShape.vertices.push([xPolygonVertex,yPolygonVertex]);
-
-                    console.log("DEBUG: vertices:", activeShape.vertices);
+                    activeShape.vertices.push({ x : xPolygonVertex, y : yPolygonVertex });
                 }
 
                 xSelectSaveAbs = xSelectAbs;
@@ -881,9 +864,7 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse move event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: *** Mouse move event registered ***");
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -921,7 +902,7 @@
                 {
                     xPolygonVertex += xDelta;
                     yPolygonVertex += yDelta;
-                    activeShape.vertices[activeShape.vertices.length - 1] = [xPolygonVertex, yPolygonVertex];
+                    activeShape.vertices[activeShape.vertices.length - 1] = { x : xPolygonVertex, y : yPolygonVertex };
                 }
 
                 // capture the current mouse location
@@ -1239,9 +1220,7 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse up event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: *** Mouse up event registered ***");
             
             if (action == "draw")
             {
@@ -1263,24 +1242,20 @@
                 else if (shapeOption == "polygon")
                 {
                     // Determine if the polygon is being closed
-                    const xPolygonStart = activeShape.vertices[0][0];
-                    const yPolygonStart = activeShape.vertices[0][1];
+                    const xPolygonStart = activeShape.vertices[0].x;
+                    const yPolygonStart = activeShape.vertices[0].y;
                     const xPolygonDistance = Math.abs(xPolygonStart - xMouseAbs);
                     const yPolygonDistance = Math.abs(yPolygonStart - yMouseAbs);
 
-                    // console.log("DEBUG: Polygon closed x =", xPolygonDistance);
-                    // console.log("DEBUG: Polygon closed y =", yPolygonDistance);
-
                     if (xPolygonDistance < 8 && yPolygonDistance < 8)
                     {
-                        // activeShape.vertices[activeShape.vertices.length - 1] = [xPolygonStart, yPolygonStart];
                         ctx.closePath();
                         activeShape.status = "closed";
+                        // since the polygon has been closed remove the last point
+                        activeShape.vertices.pop();
                         shapes.push(activeShape);
                         polygonWIP = false;
                         activeShape = null;
-
-                        console.log("DEBUG: Polygon closed");
                     }
                 }
             }
@@ -1735,13 +1710,13 @@
 
                 // draw the polygon
                 ctx.beginPath();
-                ctx.moveTo(shape.vertices[0][0], shape.vertices[0][1]);
+                ctx.moveTo(shape.vertices[0].x, shape.vertices[0].y);
 
                 if(shape.vertices.length > 1)
                 {
                     for(let i = 1; i < shape.vertices.length; i++)
                     {
-                        ctx.lineTo(shape.vertices[i][0], shape.vertices[i][1]);
+                        ctx.lineTo(shape.vertices[i].x, shape.vertices[i].y);
                     }
                 }
                 if(shape.status == "closed")
