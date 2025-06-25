@@ -513,6 +513,8 @@
                                                         i);
                                 handles.push(currentHandle);
                             }
+                            selectShape = true;
+                            activeShape = shapes[i];
                         }
                     }
                 }
@@ -854,6 +856,52 @@
                         }
                     }
                 }
+                else if (activeShape.type == "polygon")
+                {
+                    console.log("DEBUG: Checking if a polygon handle has been selected:");
+                    // check to see if a handle has been selected
+                    // AR: change for to 'while'
+                    for(let i = 0; i < handles.length; i++)
+                    {
+                        // Determine if one of the handles has been selected
+                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
+                                                 Math.pow((ySelectAbs - handles[i].y), 2))
+                        if (distance <= handles[i].radius)
+                        {
+                            activeHandle = handles[i];
+
+                            // set the election point to the center of the handle
+                            xSelectSaveAbs = activeHandle.x;
+                            ySelectSaveAbs = activeHandle.y;
+
+                            resizeShape = true;
+
+                            console.log("DEBUG: A polygon handle has been selected:", activeHandle.location);
+                        }
+                    }
+                    // If no handle of the active shape was selected check to see if the
+                    // body of the active shape was selected
+                    if (!activeHandle)
+                    {
+                        // Create the path for the target polygon
+                        ctx.beginPath();
+                        ctx.moveTo(activeShape.vertices[0].x, activeShape.vertices[0].y);
+                        for (let j = 1; j < activeShape.vertices.length; j++) 
+                        {
+                            ctx.lineTo(activeShape.vertices[j].x, activeShape.vertices[j].y);
+                        }
+                        ctx.closePath();
+                        // check to see if the mouse selection point is contained with the polygon
+                        if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
+                        {
+                            moveShape = true;
+                            xSelectSaveAbs  = xSelectAbs;
+                            ySelectSaveAbs  = ySelectAbs;
+
+                            console.log("DEBUG: A polygon has been selected:", activeShape);
+                        }
+                    }
+                }
             }
 
             // Begin panning
@@ -975,8 +1023,27 @@
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
             }
+            else if(action == 'select' && moveShape && activeShape.type == "polygon")
+            {
+                console.log("DEBUG: moving the polygon");
+                // move the shape
+                for(let i = 0; i < activeShape.vertices.length; i++)
+                {
+                    activeShape.vertices[i].x += xDelta;
+                    activeShape.vertices[i].y += yDelta;
+                }
+                // move the handles
+                for(let i = 0; i < handles.length; i++)
+                {
+                    handles[i].x += xDelta;
+                    handles[i].y += yDelta;
+                }
+                // capture the current mouse location
+                xSelectSaveAbs += xDelta;
+                ySelectSaveAbs += yDelta;
+            }
             
-            // Resize the selected line
+            // Resize the selected shape
             if (action == 'select' && resizeShape && activeShape.type == "line")
             {
                 if (activeHandle.location == "start")
@@ -999,8 +1066,6 @@
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
             }
-            
-            // Resize the selected rectangle
             else if (action == 'select' && resizeShape && activeShape.type == "rectangle")
             {
                 // check to see if the selected shape (via mouseclick) has been rotated
@@ -1147,8 +1212,6 @@
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
             }
-            
-            // Resize the selected circle
             else if (action == 'select' && resizeShape && activeShape.type == "circle")
             {
                 if (activeHandle.location == "top")
@@ -1191,9 +1254,36 @@
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
             }
-            
+            else if (action == 'select' && resizeShape && activeShape.type == "polygon")
+            {
+                // console.log("DEBUG: resizing the polygon");
+
+                for(let i = 0; i < activeShape.vertices.length; i++)
+                {
+
+                    // console.log("DEBUG: checking vertex:", i);
+
+                    if (activeHandle.location == "v" + i)
+                    {
+                        // console.log("DEBUG: moving vertex:", i);
+                        // console.log("DEBUG: xDelta:", xDelta);
+                        // console.log("DEBUG: yDelta:", yDelta);
+
+                        activeShape.vertices[i].x += xDelta;
+                        activeShape.vertices[i].y += yDelta;
+
+                        handles[i].x += xDelta;
+                        handles[i].y += yDelta;
+
+                        // capture the current mouse location
+                        xSelectSaveAbs += xDelta;
+                        ySelectSaveAbs += yDelta;
+                    }
+                }
+            }
+
             // Rotate the selected shape
-            else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
+            if (action == 'select' && rotateShape && activeShape.type == "rectangle")
             {
                 // set theta to the current  shape rotation angle
                 theta = activeShape.rotation;
@@ -1325,9 +1415,7 @@
         // Context menu: Open the  context menu
         canvas.addEventListener("contextmenu", (e) => 
         {
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse right click event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: *** Mouse right click event registered ***");
 
             // Prevent default browser context menu
             e.preventDefault()
@@ -1380,7 +1468,6 @@
                         shapeIndex = i;
                     }
                 }
-
                 else if (shapes[i].type == 'rectangle')
                 {
                     // translate mouse click coordinates if shape is rotated
@@ -1413,8 +1500,7 @@
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
-                }
-                
+                }               
                 else if (shapes[i].type == "circle")
                 {
                     // find the distance of the cursor position from the circle center and compare to the radius
@@ -1423,6 +1509,25 @@
                     if (distance <= shapes[i].radius)
                     {
                         // console.log("DEBUG: Circle selected - shape index = ", i);
+                        selectShapeCtx = true;
+                        shapeIndex = i;
+                    }
+                }
+                else if (shapes[i].type == "polygon")
+                {
+                    // Create the path for the target polygon
+                    ctx.beginPath();
+                    ctx.moveTo(shapes[i].vertices[0].x, shapes[i].vertices[0].y);
+                    for (let j = 1; j < shapes[i].vertices.length; j++) 
+                    {
+                        ctx.lineTo(shapes[i].vertices[j].x, shapes[i].vertices[j].y);
+                    }
+                    ctx.closePath();
+                    // check to see if the mouse selection point is contained with the polygon
+                    if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
+                    {
+                        console.log("DEBUG: Polygon selected - shape index = ", i);
+
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
@@ -1478,6 +1583,14 @@
                         newShape.x += 20;
                         newShape.y += 20;
                     }
+                    else if(shapes[shapeIndex].type == "polygon")
+                    {
+                        for (let i = 0; i < newShape.vertices.length; i++)
+                        {
+                            newShape.vertices[i].x += 20;
+                            newShape.vertices[i].y += 20;
+                        }
+                    }
                     shapes.push(newShape);
                 }
                 else if (e.target.textContent == "Delete")
@@ -1489,7 +1602,9 @@
                 {
                     console.log("DEBUG: Option 3");
                 }
-                ctxMenu.style.display = 'none'; // Hide menu after action
+                
+                // Hide menu after action
+                ctxMenu.style.display = 'none'; 
             }
             // cleanup
             selectShapeCtx = false;
@@ -1560,6 +1675,11 @@
         // Function: line selection
         //************************************************************//
         // AR: Create line selection function
+
+        //************************************************************//
+        // Function: polygon selection
+        //************************************************************//
+        // AR: Create polygon selection function
 
         //************************************************************//
         // Draw shape
