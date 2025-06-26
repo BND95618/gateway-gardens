@@ -35,10 +35,9 @@
 
       <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
       <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
-      <br>
-
     </form>
 
+    <!-- Canvas tool options -->
     <form class = "w3-margin-bottom">
       Shape: 
       <select id="id_shape">
@@ -50,24 +49,24 @@
       </select>
       
       Line Width: 
-        <select id="id_line_width">
-          <option value="1">1 px</option>
-          <option value="2">2 px</option>
-          <option value="3">3 px</option>
-          <option value="4">4 px</option>
-        </select>
+      <select id="id_line_width">
+        <option value="1">1 px</option>
+        <option value="2">2 px</option>
+        <option value="3">3 px</option>
+        <option value="4">4 px</option>
+      </select>
   
-        Line Style: 
-        <select id="id_line_style">
-          <option value="solid" >solid </option>
-          <option value="dashed">dashed</option>
-          <option value="dotted">dotted</option>
-        </select>
+      Line Style: 
+      <select id="id_line_style">
+        <option value="solid" >solid </option>
+        <option value="dashed">dashed</option>
+        <option value="dotted">dotted</option>
+      </select>
   
-        Line Color: 
+      Line Color: 
         <input  type="color"  id="id_line_color" value="#000000"/>
   
-        Fill Color: 
+      Fill Color: 
         <input  type="color"  id="id_fill_color" value="#ffffff"/>
     </form>
 
@@ -75,6 +74,8 @@
     <canvas id="myCanvas">
       Your browser does not support HTML 5 Canvas
     </canvas>
+
+    <p><span id="id_shape_attributes"></span></p>
 
     <!-- Context menu - shape -->
     <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
@@ -109,12 +110,13 @@
         let xMouse,         yMouse;         // current mouse position - relative to viewport
         let xMouseAbs,      yMouseAbs;      // current mouse position - absolute
         let xDelta,         yDelta;         // change in mouse position
-        let xDeltaAcc = 0;  yDeltaAcc = 0;  //
+        let xDeltaAcc = 0,  yDeltaAcc = 0;  //
         let xPlot,          yPlot;          // Plot size
         let zIndex;                         // current maximum z-index
         let theta = 0;                      // rotation angle in radians
-        let lineWidthDefault   = 1;
+        let lineWidthDefault   = 1;         //
         let strokeStyleDefault = "black";   //
+        let xPolygonVertex, yPolygonVertex; //
 
         // set menu defaults
         let action      = "select";
@@ -123,11 +125,6 @@
         let lineStyle   = "solid";
         let lineColor   = "black";
         let fillColor   = "white";
-
-        let xPolygonVertex;
-        let yPolygonVertex;
-        let polygonWIP = false;
-        let polygonVertices = [];
 
         let shapeIndex;
 
@@ -139,6 +136,7 @@
         let moveShape      = false;
         let panning        = false;
         let selectShapeCtx = false;
+        let polygonWIP     = false; // actively drawing the polygoon
         
         // setup objects
         const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
@@ -148,8 +146,9 @@
         let currentHandle = null;
 
         // setup object arrays
-        let handles       = [];
-        let backgrounds   = [];
+        let polygonVertices = [];
+        let handles         = [];
+        let backgrounds     = [];
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
@@ -230,6 +229,9 @@
             fillColor = target.value;
         }
         
+        // Get the HTML element which will display the mouse XY coordinates
+        let shapeAttributes = document.getElementById("id_shape_attributes");
+
         // When the window is resized, adjust canvas size to fit
         window.addEventListener("resize", function()
         {
@@ -479,7 +481,7 @@
                             activeShape = shapes[i];
                         }
                     } 
-                    else if(shapes[i].type == "polygon")
+                    else if (shapes[i].type == "polygon")
                     {
                         // Create the path for the target polygon
                         ctx.beginPath();
@@ -518,6 +520,17 @@
                         }
                     }
                 }
+
+                // Display the attriutes for the selected shape
+                if (selectShape)
+                {
+                    shapeAttributes.innerHTML = displayAttributes(activeShape);
+                }
+                else
+                {
+                    shapeAttributes.innerHTML = "<p>No shape selected</p>";
+                }
+
                 // Draw the entire screen
                 drawScreen();
             }
@@ -808,8 +821,9 @@
                     // AR: change for to 'while'
                     for(let i = 0; i < handles.length; i++)
                     {
-                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
-                                                 Math.pow((ySelectAbs - handles[i].y), 2))
+                        distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
+                                             Math.pow((ySelectAbs - handles[i].y), 2)); 
+
                         // Determine if one of the handles has been selected
                         if (distance <= handles[i].radius)
                         {
@@ -914,9 +928,6 @@
 
             // Draw the entire screen
             drawScreen();
-
-            // console.log("DEBUG: down - activeShape =", activeShape);
-
         });
 
         //************************************************************//
@@ -1023,7 +1034,7 @@
                 xSelectSaveAbs += xDelta;
                 ySelectSaveAbs += yDelta;
             }
-            else if(action == 'select' && moveShape && activeShape.type == "polygon")
+            else if (action == 'select' && moveShape && activeShape.type == "polygon")
             {
                 console.log("DEBUG: moving the polygon");
                 // move the shape
@@ -1311,6 +1322,12 @@
             {
                 viewportTransform.x += xDelta;
                 viewportTransform.y += yDelta;
+            }
+
+            // Update the shape attributes
+            if (action == 'draw' || action == 'select')
+            {
+                shapeAttributes.innerHTML = displayAttributes(activeShape);
             }
 
             // Draw the entire screen
@@ -1650,7 +1667,51 @@
         });
 
         //************************************************************//
-        // Place handle
+        // Function: Display shape attributes
+        //************************************************************//
+        function displayAttributes(shape)
+        {
+            if (shape.type == "line")
+            {
+                displayText = "<p>" + "Line: " +
+                              "start: (" + shape.xStart + ", " + shape.yStart + ") " +
+                              "end: (" + shape.xEnd + ", " + shape.yEnd + ")" +
+                              "</p>";
+            }
+            else if (shape.type == "rectangle")
+            {
+                xCenter = shape.x + shape.width / 2;
+                yCenter = shape.y + shape.height / 2;
+                let rotation = shape.rotation * 180 / Math.PI;
+
+                displayText = "<p>" + "Rectangle: " +
+                              "center: ("  + xCenter        + ", " + yCenter + ") " +
+                              "width: "    + shape.width    + ",  " +
+                              "height: "   + shape.height   + ",  " +
+                              "rotation: " + rotation.toFixed(1) + " degrees" +
+                              "</p>";
+            }
+            else if (shape.type == "circle")
+            {
+                displayText = "<p>Circle: " +
+                              "center: (" + shape.x + ", " + shape.y + ") " +
+                              "radius: " + Math.trunc(shape.radius) +
+                              "</p>";
+           }
+            else if (shape.type == "polygon")
+            {
+                let vertices = "";
+                for(let i = 0; i < shape.vertices.length; i++)
+                {
+                    vertices += "v" + i + ": (" + shape.vertices[0].x + ", " + shape.vertices[0].y + "), "
+                }
+                displayText = "<p>Polygon: " + vertices + "</p>";
+            }
+            return(displayText);       
+        }
+   
+        //************************************************************//
+        // Function: Place handle
         //************************************************************//
         function placeHandle(location, x, y, rotation, shape_id)
         {
@@ -1663,7 +1724,10 @@
                 startAngle : 0, 
                 endAngle   : 2 * Math.PI,
                 direction  : "clockwise",
-                color      : "#000000",
+                lineWidth  : 1,
+                lineStyle  : "solid",
+                lineColor  : "black",
+                color      : "white",
                 location   : location,
                 rotation   : rotation,
                 shape_id   : shape_id
@@ -1682,7 +1746,7 @@
         // AR: Create polygon selection function
 
         //************************************************************//
-        // Draw shape
+        // Function: Draw shape
         //************************************************************//
         function drawShape(shape) 
         {
@@ -1866,6 +1930,12 @@
             }
             else if (shape.type === "handle") 
             {
+                // setup the drawing parameters
+                ctx.lineWidth   = shape.lineWidth;
+                ctx.strokeStyle = shape.lineColor;
+                ctx.fillStyle   = shape.fillColor;
+                ctx.setLineDash([])
+
                 // find center of associated shape to determine the point of rotation for handle
                 xShapeCenter = shapes[shape.shape_id].x + shapes[shape.shape_id].width  / 2;
                 yShapeCenter = shapes[shape.shape_id].y + shapes[shape.shape_id].height / 2;
@@ -1878,9 +1948,6 @@
                 // Translate back
                 ctx.translate(-xShapeCenter, -yShapeCenter);
                 // Draw the handle
-                ctx.lineWidth   = 1;
-                ctx.strokeStyle = "black";
-                ctx.fillStyle   = shape.color;
                 ctx.beginPath();
                 ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
                 ctx.stroke();
@@ -1890,7 +1957,7 @@
         }
      
         //************************************************************//
-        // Draw the entire screen
+        // Function: Draw the entire screen
         //************************************************************//
         function drawScreen() 
         {
@@ -1927,7 +1994,7 @@
         }
 
         //************************************************************//
-        // function to save the canvas to db
+        // Function: Save the canvas to db
         //************************************************************//
         save = document.getElementById("id_save");
         save.onclick = async (event) => 
@@ -1964,7 +2031,7 @@
         };
 
         //************************************************************//
-        // function to clear the canvas of all shapes
+        // Function: Clear the canvas of all shapes
         //************************************************************//
         clear = document.getElementById("id_clear");
         clear.onclick = async (event) => 
