@@ -214,6 +214,7 @@ def gardens_plan(request):
     """ Render the Garden Plan page """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    plants = Plant.objects.all()
     if request.method == 'POST':
         # print("DEBUG: request =", request)
         # Parses the JSON data from the request body
@@ -234,7 +235,8 @@ def gardens_plan(request):
             if (garden.owner == request.user.username):
                 shapes_JSON = json.dumps(garden.shapes_JSON)
         # print("DEBUG: else - shapes_JSON =", shapes_JSON)
-        context = { 'shapes_JSON' : shapes_JSON }
+        context = { 'plants'      : plants,
+                    'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
 
 def myplants_summary(request):

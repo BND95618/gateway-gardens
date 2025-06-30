@@ -14,76 +14,160 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">My Garden Layout</h1>
+        <!-- complete the header from master.html -->
+        <div class="w3-bar w3-green">
+            <h1 class="w3-bar-item">My Garden Layout</h1>
+        </div>
     </div>
-  </div>
 {% endblock header-completion %}
 
 {% block content %}
-  <div class="w3-container" style="margin-top:140px;">
-    <!-- Canvas tools-->
-    <form>
-      Action: 
-      <select id="id_action">
-        <option value="select">select</option>
-        <option value="draw"  >draw  </option>
-        <option value="pan"   >pan   </option>
-        <option value="zoom"  >zoom  </option>
-      </select>
+    <div class="w3-container" style="margin-top:140px;">
+        <!-- Canvas tools-->
+        <form class = "w3-margin-bottom, w3-light-grey">
+            Action: 
+            <select id="id_action">
+                <option value="select"   >select   </option>
+                <option value="add plant">add plant</option>
+                <option value="draw"     >draw     </option>
+                <option value="pan"      >pan      </option>
+                <option value="zoom"     >zoom     </option>
+            </select>
 
-      <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
-      <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
-    </form>
+            <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
+            <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+        </form>
 
-    <!-- Canvas tool options -->
-    <form class = "w3-margin-bottom">
-      Shape: 
-      <select id="id_shape">
-        <option value="line"     >line     </option>
-        <option value="rectangle">rectangle</option>
-        <option value="circle"   >circle   </option>
-        <option value="polygon"  >polygon  </option>
-        <option value="free form">free form</option>
-      </select>
-      
-      Line Width: 
-      <select id="id_line_width">
-        <option value="1">1 px</option>
-        <option value="2">2 px</option>
-        <option value="3">3 px</option>
-        <option value="4">4 px</option>
-      </select>
+        <!-- Canvas tool options -->
+
+        <form class = "w3-margin-bottom, w3-light-grey w3-text-black">
+            Plant:
+            <select id="id_plant">
+                <option value="--"> -- </option>
+                <optgroup label="Annual" class = "w3-text-black">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Annual" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Fern">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Fern" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Grass">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Grass" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Groundcover">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Groundcover" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Perennial">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Perennial" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Shrub">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Shrub" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Succulent">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Succulent" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Succulent">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Succulent" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Tree">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Tree" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Vegetable">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Vegetable" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Vine">
+                    {% for plant in plants %}
+                        {% if plant.type_x == "Vine" %}
+                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+            </select>
+
+            Shape: 
+            <select id="id_shape">
+                <option value="line"     >line     </option>
+                <option value="rectangle">rectangle</option>
+                <option value="circle"   >circle   </option>
+                <option value="polygon"  >polygon  </option>
+                <option value="free form">free form</option>
+            </select>
+        
+            Line Width: 
+            <select id="id_line_width">
+                <option value="1">1 px</option>
+                <option value="2">2 px</option>
+                <option value="3">3 px</option>
+                <option value="4">4 px</option>
+            </select>
   
-      Line Style: 
-      <select id="id_line_style">
-        <option value="solid" >solid </option>
-        <option value="dashed">dashed</option>
-        <option value="dotted">dotted</option>
-      </select>
-  
-      Line Color: 
-        <input  type="color"  id="id_line_color" value="#000000"/>
-  
-      Fill Color: 
-        <input  type="color"  id="id_fill_color" value="#ffffff"/>
-    </form>
+            Line Style: 
+            <select id="id_line_style">
+                <option value="solid" >solid </option>
+                <option value="dashed">dashed</option>
+                <option value="dotted">dotted</option>
+            </select>
+    
+            Line Color: 
+                <input  type="color"  id="id_line_color" value="#000000"/>
+    
+            Fill Color: 
+                <input  type="color"  id="id_fill_color" value="#ffffff"/>
+        </form>
 
-    <!-- Canvas -->
-    <canvas id="myCanvas">
-      Your browser does not support HTML 5 Canvas
-    </canvas>
+        <!-- Canvas -->
+        <canvas id="myCanvas">
+            Your browser does not support HTML 5 Canvas
+        </canvas>
 
-    <p><span id="id_shape_attributes"></span></p>
+        <p><span id="id_shape_attributes"></span></p>
 
-    <!-- Context menu - shape -->
-    <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
-      <li>Duplicate</li>
-      <li>Delete</li>
-      <li>Option 3</li>
-    </ul>
-  </div>
+        <!-- Context menu - shape -->
+        <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
+            <li>Duplicate</li>
+            <li>Delete</li>
+            <li>Option 3</li>
+        </ul>
+    </div>
 {% endblock content %}
 
 {% block js %}
@@ -101,7 +185,7 @@
         canvas.width  = window.innerWidth  -  40;
         canvas.height = window.innerHeight - 300;
         
-        // setup variables
+        // setup global variables
         let xSelect,        ySelect;        // mouse selection coordinates - relative
         let xSelectAbs,     ySelectAbs;     // mouse selection coordinates - absolute
         let xSelectAbsSave, ySelectAbsSave; //
@@ -117,6 +201,7 @@
         let lineWidthDefault   = 1;         //
         let strokeStyleDefault = "black";   //
         let xPolygonVertex, yPolygonVertex; //
+        let target = "";                    // selected menu item choice
 
         // set menu defaults
         let action      = "select";
@@ -128,7 +213,7 @@
 
         let shapeIndex;
 
-        // Initilize action flags
+        // Initilize global action flags
         let createShape    = false;
         let selectShape    = false;
         let resizeShape    = false; 
@@ -138,24 +223,28 @@
         let selectShapeCtx = false;
         let polygonWIP     = false; // actively drawing the polygoon
         
-        // setup objects
+        // setup global objects
         const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
         let shapes        = shapes_JSON;
         let activeShape   = null;
         let activeHandle  = null;
         let currentHandle = null;
 
-        // setup object arrays
+        // setup global object arrays
         let polygonVertices = [];
         let handles         = [];
         let backgrounds     = [];
+
+        // plant variables
+        let activePlant;
+        // const plant_JSON = 
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
 
         // Draw landscape border
-        xPlot = 2000;
-        yPlot = 1200;
+        xPlot = 3000;
+        yPlot = 2000;
         activeShape = 
                     { 
                         type        : "rectangle-nofill", 
@@ -173,61 +262,66 @@
         drawScreen();
 
         // setup the garden planner action
-        let target = "";
         formElement = document.getElementById("id_action");
-	    formElement.addEventListener("change", actionChanged, false);        
-        function actionChanged(e)
+	    formElement.addEventListener("change", (e) =>
         {
             target = e.target;
             action = target.value;
             // clear any existing handles
             handles = [];
-        }
+        });
+
+        // Setup the plant to be added
+        formElement = document.getElementById("id_plant");
+        formElement.addEventListener("change", (e) =>
+        {
+            target = e.target;
+            activePlant = target.value;
+            console.log("DEBUG: Plant selected:", activePlant);
+            // fetch the plant details
+
+
+        });
 
         // Setup the shape to be drawn
         formElement = document.getElementById("id_shape");
-	    formElement.addEventListener("change",  shapeChanged, false);
-        function shapeChanged(e)
+	    formElement.addEventListener("change", (e) =>
         {
             target = e.target;
             shapeOption = target.value;
-        }
+        });
 
         // Setup the shape line width
         formElement = document.getElementById("id_line_width");
-        formElement.addEventListener('change', lineWidthChanged, false);
-        function lineWidthChanged(e)
+        formElement.addEventListener('change', (e) =>
         {
             target = e.target;
             lineWidth = target.value;
-        }
+        });
 
         // Setup the shape line style
         formElement = document.getElementById("id_line_style");
-        formElement.addEventListener('change', lineStyleChanged, false);
-        function lineStyleChanged(e)
+        formElement.addEventListener('change', (e) =>
         {
             target = e.target;
             lineStyle = target.value;
-        }
+        });
 
         // Setup the shape line color
         formElement = document.getElementById("id_line_color");
-        formElement.addEventListener('change', lineColorChanged, false);
-        function lineColorChanged(e)
+        formElement.addEventListener('change', (e) =>
         {
             target = e.target;
             lineColor = target.value;
-        }
+        });
 
         // Setup the shape fill color
         formElement = document.getElementById("id_fill_color");
-        formElement.addEventListener('change', fillColorChanged, false);
-        function fillColorChanged(e)
+        formElement.addEventListener('change', (e) =>
         {
             target = e.target;
             fillColor = target.value;
-        }
+        });
         
         // Get the HTML element which will display the mouse XY coordinates
         let shapeAttributes = document.getElementById("id_shape_attributes");
@@ -278,31 +372,7 @@
                     {
                         // Determine in the selection point is close to the line
                         // If so, place resize handles on object
-
-                        // set the threshold
-                        const threshold = 3;
-                        
-                        // Calculate the difference in coordinates for the line segment
-                        const dx = shapes[i].xEnd - shapes[i].xStart;
-                        const dy = shapes[i].yEnd - shapes[i].yStart;
-
-                        // Calculate the squared length of the line segment
-                        const lineLengthSq = dx * dx + dy * dy;
-
-                        // Calculate the parameter 't' for the closest point on the *infinite* line
-                        // This 't' represents the projection of the point onto the line.
-                        const t = ((xSelectAbs - shapes[i].xStart) * dx + 
-                                   (ySelectAbs - shapes[i].yStart) * dy) / lineLengthSq;
-
-                        // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
-                        const closestX = shapes[i].xStart + t * dx;
-                        const closestY = shapes[i].yStart + t * dy;
-
-                        // Calculate the distance from the point to the closest point on the segment
-                        const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
-                                                   Math.pow(ySelectAbs - closestY, 2));
-
-                        if(distance <= threshold)
+                        if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
                         {
                             // clear any existing handles
                             handles = [];
@@ -329,7 +399,6 @@
                     }
                     else if (shapes[i].type == 'rectangle')
                     {
-
                         // translate mouse click coordinates if shape is rotated
                         //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
                         //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
@@ -350,12 +419,9 @@
                             ySelectAbs = yTransAbs;
                         }
 
-                        // Determine in the selection point is contained within the rectangle
+                        // Determine if the selection point is contained within the rectangle
                         // If so, place resize handles on object
-                        if (xSelectAbs >= shapes[i].x &&
-                            xSelectAbs <= shapes[i].x + shapes[i].width && 
-                            ySelectAbs >= shapes[i].y &&
-                            ySelectAbs <= shapes[i].y + shapes[i].height)
+                        if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
                         {
                             // clear any existing handles
                             handles = [];
@@ -439,10 +505,9 @@
                     }
                     else if (shapes[i].type == "circle")
                     {
-                        // find the distance of the cursor position from the circle center and compare to the radius
-                        distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
-                                             Math.pow((ySelectAbs - shapes[i].y), 2))
-                        if (distance <= shapes[i].radius)
+                        // Determine if the selection point is within the circle
+                        // If so, place resize handles on object
+                        if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
                         {
                             // clear any existing handles
                             handles = [];
@@ -483,30 +548,14 @@
                     } 
                     else if (shapes[i].type == "polygon")
                     {
-                        // Create the path for the target polygon
-                        ctx.beginPath();
-                        ctx.moveTo(shapes[i].vertices[0].x, shapes[i].vertices[0].y);
-                        for (let j = 1; j < shapes[i].vertices.length; j++) 
-                        {
-                            ctx.lineTo(shapes[i].vertices[j].x, shapes[i].vertices[j].y);
-                        }
-                        ctx.closePath();
-                        // check to see if the mouse selection point is contained with the polygon
-                        if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
+                        // Check to see if the selection point is within the polygon
+                        if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
                         {
                             // clear any existing handles
                             handles = [];
 
                             // Place resize handles on object
-                            currentHandle = placeHandle("v0",
-                                                        shapes[i].vertices[0].x, 
-                                                        shapes[i].vertices[0].y,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            //
-                            for (let j = 1; j < shapes[i].vertices.length; j++)
+                            for (let j = 0; j < shapes[i].vertices.length; j++)
                             {
                                 currentHandle = placeHandle("v" + j,
                                                         shapes[i].vertices[j].x, 
@@ -693,30 +742,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        // set the threshold
-                        const threshold = 3;
-                        
-                        // Calculate the difference in coordinates for the line segment
-                        const dx = activeShape.xEnd - activeShape.xStart;
-                        const dy = activeShape.yEnd - activeShape.yStart;
-
-                        // Calculate the squared length of the line segment
-                        const lineLengthSq = dx * dx + dy * dy;
-
-                        // Calculate the parameter 't' for the closest point on the *infinite* line
-                        // This 't' represents the projection of the point onto the line.
-                        const t = ((xSelectAbs - activeShape.xStart) * dx + 
-                                   (ySelectAbs - activeShape.yStart) * dy) / lineLengthSq;
-
-                        // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
-                        const closestX = activeShape.xStart + t * dx;
-                        const closestY = activeShape.yStart + t * dy;
-
-                        // Calculate the distance from the point to the closest point on the segment
-                        const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
-                                                   Math.pow(ySelectAbs - closestY, 2));
-
-                        if(distance <= threshold)
+                        if(selectLine(activeShape, xSelectAbs, ySelectAbs))
                         {
                             moveShape = true;
                         }
@@ -806,10 +832,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        if (xSelectAbs >= activeShape.x &&
-                            xSelectAbs <= activeShape.x + activeShape.width && 
-                            ySelectAbs >= activeShape.y &&
-                            ySelectAbs <= activeShape.y + activeShape.height)
+                        if(selectRectangle(activeShape, xSelectAbs, ySelectAbs))
                         {
                             moveShape   = true;
                         }
@@ -859,10 +882,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        // find the distance of the cursor position from the circle center and compare to the radius
-                        distance = Math.sqrt(Math.pow((xSelectAbs - activeShape.x), 2) + 
-                                             Math.pow((ySelectAbs - activeShape.y), 2))
-                        if (distance <= activeShape.radius)
+                        if(selectCircle(activeShape, xSelectAbs, ySelectAbs))
                         {
                             moveShape = true;
                             xSelectSaveAbs  = xSelectAbs;
@@ -872,7 +892,6 @@
                 }
                 else if (activeShape.type == "polygon")
                 {
-                    console.log("DEBUG: Checking if a polygon handle has been selected:");
                     // check to see if a handle has been selected
                     // AR: change for to 'while'
                     for(let i = 0; i < handles.length; i++)
@@ -897,16 +916,8 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        // Create the path for the target polygon
-                        ctx.beginPath();
-                        ctx.moveTo(activeShape.vertices[0].x, activeShape.vertices[0].y);
-                        for (let j = 1; j < activeShape.vertices.length; j++) 
-                        {
-                            ctx.lineTo(activeShape.vertices[j].x, activeShape.vertices[j].y);
-                        }
-                        ctx.closePath();
-                        // check to see if the mouse selection point is contained with the polygon
-                        if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
+                        // Check to see if the selection point is within the polygon
+                        if (selectPolygon(activeShape, xSelectAbs, ySelectAbs)) 
                         {
                             moveShape = true;
                             xSelectSaveAbs  = xSelectAbs;
@@ -1229,37 +1240,37 @@
                 {
                     activeShape.radius -= yDelta;
 
-                    handles[0].y   += yDelta;
-                    handles[1].x   -= yDelta;
-                    handles[2].y   -= yDelta;
-                    handles[3].x   += yDelta;
+                    handles[0].y += yDelta;
+                    handles[1].x -= yDelta;
+                    handles[2].y -= yDelta;
+                    handles[3].x += yDelta;
                 }
                 else if (activeHandle.location == "right")
                 {
                     activeShape.radius += xDelta;
 
-                    handles[0].y   -= xDelta;
-                    handles[1].x   += xDelta;
-                    handles[2].y   += xDelta;
-                    handles[3].x   -= xDelta;
+                    handles[0].y -= xDelta;
+                    handles[1].x += xDelta;
+                    handles[2].y += xDelta;
+                    handles[3].x -= xDelta;
                 }
                 else if (activeHandle.location == "bottom")
                 {
                     activeShape.radius += yDelta;
 
-                    handles[0].y   -= yDelta;
-                    handles[1].x   += yDelta;
-                    handles[2].y   += yDelta;
-                    handles[3].x   -= yDelta;
+                    handles[0].y -= yDelta;
+                    handles[1].x += yDelta;
+                    handles[2].y += yDelta;
+                    handles[3].x -= yDelta;
                 }
                 else if (activeHandle.location == "left")
                 {
                     activeShape.radius -= xDelta;
 
-                    handles[0].y   += xDelta;
-                    handles[1].x   -= xDelta;
-                    handles[2].y   -= xDelta;
-                    handles[3].x   += xDelta;
+                    handles[0].y += xDelta;
+                    handles[1].x -= xDelta;
+                    handles[2].y -= xDelta;
+                    handles[3].x += xDelta;
                 }
                 // capture the current mouse location
                 xSelectSaveAbs += xDelta;
@@ -1267,19 +1278,10 @@
             }
             else if (action == 'select' && resizeShape && activeShape.type == "polygon")
             {
-                // console.log("DEBUG: resizing the polygon");
-
                 for(let i = 0; i < activeShape.vertices.length; i++)
                 {
-
-                    // console.log("DEBUG: checking vertex:", i);
-
                     if (activeHandle.location == "v" + i)
                     {
-                        // console.log("DEBUG: moving vertex:", i);
-                        // console.log("DEBUG: xDelta:", xDelta);
-                        // console.log("DEBUG: yDelta:", yDelta);
-
                         activeShape.vertices[i].x += xDelta;
                         activeShape.vertices[i].y += yDelta;
 
@@ -1445,6 +1447,8 @@
             xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
             ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
 
+            xSelectSaveAbs = xSelectAbs;
+            ySelectSaveAbs = ySelectAbs;
             selectShapeCtx = false;
 
             // Check to see if a shape has been selected
@@ -1454,33 +1458,8 @@
                 {
                     // Determine in the selection point is close to the line
                     // If so, duplicate the line object
-
-                    // set the threshold
-                    const threshold = 3;
-                        
-                    // Calculate the difference in coordinates for the line segment
-                    const dx = shapes[i].xEnd - shapes[i].xStart;
-                    const dy = shapes[i].yEnd - shapes[i].yStart;
-
-                    // Calculate the squared length of the line segment
-                    const lineLengthSq = dx * dx + dy * dy;
-
-                    // Calculate the parameter 't' for the closest point on the *infinite* line
-                    // This 't' represents the projection of the point onto the line.
-                    const t = ((xSelectAbs - shapes[i].xStart) * dx + 
-                               (ySelectAbs - shapes[i].yStart) * dy) / lineLengthSq;
-
-                    // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
-                    const closestX = shapes[i].xStart + t * dx;
-                    const closestY = shapes[i].yStart + t * dy;
-
-                    // Calculate the distance from the point to the closest point on the segment
-                    const distance = Math.sqrt(Math.pow(xSelectAbs - closestX, 2) + 
-                                               Math.pow(ySelectAbs - closestY, 2));
-
-                    if(distance <= threshold)
+                    if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
                     {
-                        console.log("DEBUG: Line selected - shape index = ", i);
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
@@ -1508,43 +1487,28 @@
                     }
                     // Determine if the selection point is contained within the rectangle
                     // If so, place resize handles on object
-                    if (xSelectAbs >= shapes[i].x &&
-                        xSelectAbs <= shapes[i].x + shapes[i].width && 
-                        ySelectAbs >= shapes[i].y &&
-                        ySelectAbs <= shapes[i].y + shapes[i].height)
+                    if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
                     {
-                        // console.log("DEBUG: Rectangle selected - shape index = ", i);
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
+                    // Reset the selection point
+                    xSelectAbs = xSelectSaveAbs;
+                    ySelectAbs = ySelectSaveAbs;
                 }               
                 else if (shapes[i].type == "circle")
                 {
-                    // find the distance of the cursor position from the circle center and compare to the radius
-                    distance = Math.sqrt(Math.pow((xSelectAbs - shapes[i].x), 2) + 
-                                         Math.pow((ySelectAbs - shapes[i].y), 2))
-                    if (distance <= shapes[i].radius)
+                    if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
                     {
-                        // console.log("DEBUG: Circle selected - shape index = ", i);
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
                 }
                 else if (shapes[i].type == "polygon")
                 {
-                    // Create the path for the target polygon
-                    ctx.beginPath();
-                    ctx.moveTo(shapes[i].vertices[0].x, shapes[i].vertices[0].y);
-                    for (let j = 1; j < shapes[i].vertices.length; j++) 
+                    // Check to see if the selection point is within the polygon
+                    if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
                     {
-                        ctx.lineTo(shapes[i].vertices[j].x, shapes[i].vertices[j].y);
-                    }
-                    ctx.closePath();
-                    // check to see if the mouse selection point is contained with the polygon
-                    if(ctx.isPointInPath(xSelectAbs, ySelectAbs)) 
-                    {
-                        console.log("DEBUG: Polygon selected - shape index = ", i);
-
                         selectShapeCtx = true;
                         shapeIndex = i;
                     }
@@ -1571,9 +1535,6 @@
         // Context menu: Add click handlers for menu items
         ctxMenu.addEventListener('click', function(e) 
         {
-
-            console.log("DEBUG: context menu item selected");
-
             if (selectShapeCtx == true && e.target.tagName === 'LI') 
             {
                 if (e.target.textContent == "Duplicate")
@@ -1738,12 +1699,69 @@
         //************************************************************//
         // Function: line selection
         //************************************************************//
-        // AR: Create line selection function
+        function selectLine(shape, x, y)
+        {
+            // Determine if the selection point is 'close' to the line
+
+            // set the threshold
+            const threshold = 3;
+                        
+            // Calculate the difference in coordinates for the line segment
+            const dx = shape.xEnd - shape.xStart;
+            const dy = shape.yEnd - shape.yStart;
+
+            // Calculate the squared length of the line segment
+            const lineLengthSq = dx * dx + dy * dy;
+
+            // Calculate the parameter 't' for the closest point on the *infinite* line
+            // This 't' represents the projection of the point onto the line.
+            const t = ((x - shape.xStart) * dx + (y - shape.yStart) * dy) / lineLengthSq;
+
+            // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
+            const closestX = shape.xStart + t * dx;
+            const closestY = shape.yStart + t * dy;
+
+            // Calculate the distance from the point to the closest point on the segment
+            const distance = Math.sqrt(Math.pow(x - closestX, 2) + Math.pow(y - closestY, 2));
+
+            return(distance <= threshold);
+        }
+
+        //************************************************************//
+        // Function: rectangle selection
+        //************************************************************//
+        function selectRectangle(shape, x, y)
+        {
+            return(x >= shape.x && x <= (shape.x + shape.width) && 
+                   y >= shape.y && y <= (shape.y + shape.height))
+        }
+
+        //************************************************************//
+        // Function: circle selection
+        //************************************************************//
+        function selectCircle(shape, x, y)
+        {
+            // find the distance of the cursor position from the circle center and compare to the radius
+            distance = Math.sqrt(Math.pow((x - shape.x), 2) + Math.pow((y - shape.y), 2))
+            return(distance <= shape.radius);
+        }
 
         //************************************************************//
         // Function: polygon selection
         //************************************************************//
-        // AR: Create polygon selection function
+        function selectPolygon(shape, x, y)
+        {
+            // Create the path for the target polygon
+            ctx.beginPath();
+            ctx.moveTo(shape.vertices[0].x, shape.vertices[0].y);
+            for (let j = 1; j < shape.vertices.length; j++) 
+            {
+                ctx.lineTo(shape.vertices[j].x, shape.vertices[j].y);
+            }
+            ctx.closePath();
+            // return 'true' if the X-Y coordinates are contained within the polygon
+            return(ctx.isPointInPath(x, y));
+        }
 
         //************************************************************//
         // Function: Draw shape
