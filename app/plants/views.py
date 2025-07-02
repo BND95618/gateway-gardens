@@ -238,6 +238,33 @@ def gardens_plan(request):
         context = { 'plants'      : plants,
                     'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
+    
+def plant_fetch(request):
+    """ """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    print("DEBUG: Got to view plant_fetch - request;", request)
+
+    if request.method == 'POST':
+        # Get the JSON sring with the common name of the requested plant
+        requestedPlant_json_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        requestedPlant_dict = json.loads(requestedPlant_json_string)
+        # Get the Common Name of the plant requested
+        requestedPlant = requestedPlant_dict["requestedPlant"]
+
+        # Fetch requested plant and convert to a dictionary
+        # AR: this currently returns a single object in an array - need a standalone object
+
+        requestedPlantData = list(Plant.objects.filter(commonName = requestedPlant).values())
+
+        # safe=False is needed if returning a list directly
+        return JsonResponse(requestedPlantData, safe=False)
+    
+    else:
+        print("DEBUG: Error!")
+        return HttpResponseRedirect(reverse('plants:index'))
 
 def myplants_summary(request):
     if not request.user.is_authenticated:

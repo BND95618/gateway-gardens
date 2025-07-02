@@ -34,6 +34,7 @@ urlpatterns = [
     path('plants_reference',          views.plants_reference,   name='plants_reference'),
     path('plants_about',              views.plants_about,       name='plants_about'),
     path('plants_chart',              views.plants_chart,       name='plants_chart'),
+    path('plant_fetch',               views.plant_fetch,        name='plant_fetch'),
     path('user_signup',               views.user_signup,        name='user_signup'),
     path('user_login',                views.user_login,         name='user_login'),
     path('user_update',               views.user_update,        name='user_update'),

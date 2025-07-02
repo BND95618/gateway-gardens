@@ -236,8 +236,8 @@
         let backgrounds     = [];
 
         // plant variables
-        let activePlant;
-        // const plant_JSON = 
+        let requestedPlant;
+        let activePlant = null;
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
@@ -276,12 +276,55 @@
         formElement.addEventListener("change", (e) =>
         {
             target = e.target;
-            activePlant = target.value;
-            console.log("DEBUG: Plant selected:", activePlant);
+            requestedPlant = target.value;
+            console.log("DEBUG: Requested Plant:", requestedPlant);
+
             // fetch the plant details
+            const url           = "{% url 'plants:plant_fetch' %}"
+            const requestMethod = "POST"
+            const postData      = { requestedPlant : requestedPlant }
+            const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+            fetch(url,
+            {
+                method: requestMethod,
+                headers: 
+                {
+                    // Tells the server that the request body is in JSON format
+                    'Content-Type': 'application/json',
+                    //  Provides CSRF protection, necessary for Django
+                    'X-CSRFToken' : csrfToken
+                },
+                // Convert the dictionary to a JSON string
+                body: JSON.stringify(postData),
+            })
+            .then(response => response.text())
+            .then(activePlantJSON => 
+            {
+                // AR: Convert the array of one object to just an object - remove '[]'
 
+                const activePlantObject = JSON.parse(activePlantJSON);
+                console.log("DEBUG: activePlantObject = ", activePlantObject);
+
+                // activePlant = activePlantObject[0];
+                activePlant.commonName = activePlantObject[0].commonName;
+                activePlant.height     = activePlantObject[0].height_feet;
+                activePlant.width      = activePlantObject[0].width_feet;
+                activePlant.genus      = activePlantObject[0].genus;
+                activePlant.species    = activePlantObject[0].species;
+
+                console.log("DEBUG: activePlant = ", activePlant);
+                console.log("DEBUG: commonName  = ", activePlant.commonName);
+                console.log("DEBUG: height      = ", activePlant.height);
+                console.log("DEBUG: width       = ", activePlant.width);
+                console.log("DEBUG: genus       = ", activePlant.genus);
+                console.log("DEBUG: species     = ", activePlant.species);  
+            })
+            // AR: Why is this needed? 
+            activePlant = {}
         });
+
+
 
         // Setup the shape to be drawn
         formElement = document.getElementById("id_shape");
@@ -2043,9 +2086,6 @@
             .then(response => response.json())
             .then(result => console.log('POST was a success: ${result}'))
             .catch(error => console.error('An error occurred: ${error}'))
-            //
-            // let returnURL = "{% url 'plants:gardens_plan' %}";
-            // window.location.href = returnURL;
         };
 
         //************************************************************//
