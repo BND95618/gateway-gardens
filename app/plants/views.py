@@ -1124,6 +1124,37 @@ def plants_details(request, id):
             }
     return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
 
+def plant_details_modal(request):
+    """ Display plant detail in a pop-up modal """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    print("Got to plant_details_modal view")
+    
+    if request.method == 'POST':
+        # Get the JSON sring with the common name of the requested plant
+        requestedPlant_json_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        requestedPlant_dict = json.loads(requestedPlant_json_string)
+        # Get the Common Name of the plant requested
+        requestedPlant = requestedPlant_dict["requestedPlant"]
+    
+        plant = Plant.objects.get(commonName = requestedPlant)
+
+        plant.sun_exposure = string_display(plant.sun_exposure)
+        plant.water_rqmts  = string_display(plant.water_rqmts)
+        plant.bloom_color  = string_display(plant.bloom_color)
+        plant.bloom_season = string_display(plant.bloom_season)
+        plant.pollinators  = string_display(plant.pollinators)
+        plant.soil_type    = string_display(plant.soil_type)
+
+        context = { "plant" : plant }
+        return render(request, 'plants/plant_details_modal.html', context)
+    
+    else:
+        print("DEBUG: Error!")
+        return HttpResponseRedirect(reverse('plants:index'))
+
 def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:

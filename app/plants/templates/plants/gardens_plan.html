@@ -154,12 +154,20 @@
                 <input  type="color"  id="id_fill_color" value="#ffffff"/>
         </form>
 
+        <div id="drop_target">Drop Zone</div>
+
         <!-- Canvas -->
         <canvas id="myCanvas">
             Your browser does not support HTML 5 Canvas
         </canvas>
 
+        <!-- Display shape attributes below canvas -->
         <p><span id="id_shape_attributes"></span></p>
+
+        <!-- Plant Details Modal -->
+        <div id="plant_details_modal" class="w3-modal" draggable="true">
+            <p> Update HTML to be Inserted Here! </p>
+        </div>
 
         <!-- Context menu - shape -->
         <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
@@ -271,7 +279,50 @@
             handles = [];
         });
 
-        // Setup the plant to be added
+        //************************************************************//
+        // Code to allow drag-and-drop plant details model
+        //************************************************************//
+        // Get the element by id
+        const element = document.getElementById("plant_details_modal");
+        
+        // Add the ondragstart event listener
+        element.addEventListener("dragstart", (ev) => 
+        {
+            // Add the target element's id to the data transfer object
+            ev.dataTransfer.setData("text/plain", ev.target.id);
+        });
+
+        function dragstartHandler(ev) 
+        {
+            // Add different types of drag data
+            ev.dataTransfer.setData("text/plain", ev.target.innerText);
+            ev.dataTransfer.setData("text/html", ev.target.outerHTML);
+            ev.dataTransfer.setData("text/uri-list", ev.target.ownerDocument.location.href,);
+        }
+        function dragstartHandler(ev) 
+        {
+            ev.dataTransfer.dropEffect = "move";
+        }
+
+        const drop_target = document.getElementById("drop_target");
+
+        drop_target.addEventListener("dragover", (ev) => 
+        {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
+        });
+
+        drop_target.addEventListener("drop", (ev) => 
+        {
+            ev.preventDefault();
+            // Get the id of the drop_target and add the moved element to the drop_target's DOM
+            const data = ev.dataTransfer.getData("text/plain");
+            ev.drop_target.appendChild(document.getElementById(data));
+        });
+
+        //************************************************************//
+        // Get the details regarding the plant to be added
+        //************************************************************//
         formElement = document.getElementById("id_plant");
         formElement.addEventListener("change", (e) =>
         {
@@ -279,16 +330,19 @@
             requestedPlant = target.value;
             console.log("DEBUG: Requested Plant:", requestedPlant);
 
-            // fetch the plant details
-            const url           = "{% url 'plants:plant_fetch' %}"
+            // Create/Display modal with plant details
+            // There is a <dialog></dialog> at top of HTML body
+            const url                 = "{% url 'plants:plant_details_modal' %}"
             const requestMethod = "POST"
-            const postData      = { requestedPlant : requestedPlant }
             const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const postData      = { requestedPlant : requestedPlant }
+            const plant_details_modal = document.getElementById('plant_details_modal')
 
-            fetch(url,
+            // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+            fetch(url, 
             {
                 method: requestMethod,
-                headers: 
+                headers:
                 {
                     // Tells the server that the request body is in JSON format
                     'Content-Type': 'application/json',
@@ -299,32 +353,55 @@
                 body: JSON.stringify(postData),
             })
             .then(response => response.text())
-            .then(activePlantJSON => 
-            {
-                // AR: Convert the array of one object to just an object - remove '[]'
+            .then(html => { plant_details_modal.innerHTML = html; })
+            // enable the model display
+            plant_details_modal.style.display = 'block'
 
-                const activePlantObject = JSON.parse(activePlantJSON);
-                console.log("DEBUG: activePlantObject = ", activePlantObject);
+            // // fetch the plant details
+            // const url           = "{% url 'plants:plant_fetch' %}"
+            // const requestMethod = "POST"
+            // const postData      = { requestedPlant : requestedPlant }
+            // const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-                // activePlant = activePlantObject[0];
-                activePlant.commonName = activePlantObject[0].commonName;
-                activePlant.height     = activePlantObject[0].height_feet;
-                activePlant.width      = activePlantObject[0].width_feet;
-                activePlant.genus      = activePlantObject[0].genus;
-                activePlant.species    = activePlantObject[0].species;
+            // fetch(url,
+            // {
+            //     method: requestMethod,
+            //     headers: 
+            //     {
+            //         // Tells the server that the request body is in JSON format
+            //         'Content-Type': 'application/json',
+            //         //  Provides CSRF protection, necessary for Django
+            //         'X-CSRFToken' : csrfToken
+            //     },
+            //     // Convert the dictionary to a JSON string
+            //     body: JSON.stringify(postData),
+            // })
+            // .then(response => response.text())
+            // .then(activePlantJSON => 
+            // {
+            //     // AR: Convert the array of one object to just an object - remove '[]'
 
-                console.log("DEBUG: activePlant = ", activePlant);
-                console.log("DEBUG: commonName  = ", activePlant.commonName);
-                console.log("DEBUG: height      = ", activePlant.height);
-                console.log("DEBUG: width       = ", activePlant.width);
-                console.log("DEBUG: genus       = ", activePlant.genus);
-                console.log("DEBUG: species     = ", activePlant.species);  
-            })
-            // AR: Why is this needed? 
-            activePlant = {}
+            //     const activePlantObject = JSON.parse(activePlantJSON);
+            //     console.log("DEBUG: activePlantObject = ", activePlantObject);
+
+            //     // activePlant = activePlantObject[0];
+            //     activePlant.commonName = activePlantObject[0].commonName;
+            //     activePlant.height     = activePlantObject[0].height_feet;
+            //     activePlant.width      = activePlantObject[0].width_feet;
+            //     activePlant.genus      = activePlantObject[0].genus;
+            //     activePlant.species    = activePlantObject[0].species;
+
+            //     console.log("DEBUG: activePlant = ", activePlant);
+            //     console.log("DEBUG: commonName  = ", activePlant.commonName);
+            //     console.log("DEBUG: height      = ", activePlant.height);
+            //     console.log("DEBUG: width       = ", activePlant.width);
+            //     console.log("DEBUG: genus       = ", activePlant.genus);
+            //     console.log("DEBUG: species     = ", activePlant.species); 
+
+            // })
+            // // AR: Why is this needed? 
+            // activePlant = {}
         });
-
-
 
         // Setup the shape to be drawn
         formElement = document.getElementById("id_shape");

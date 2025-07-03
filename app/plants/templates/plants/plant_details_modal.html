@@ -1,0 +1,31 @@
+<!-- /app/plants/templates/plants/plant_details_modal.html -->
+
+<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
+
+    <header class="w3-container w3-green"> 
+        <!-- Close the plant details modal -->
+        <span onclick="document.getElementById('plant_details_modal').style.display='none'" 
+          class="w3-button w3-display-topright">&times;</span>
+        <h2>Details: {{ plant.commonName }}</h2>
+      </header>
+        
+    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+        <div>
+            <h5>Attributes:</h5>
+            <li>Plant Type:   {{ plant.type_x }}       </li>
+            <li>Bloom Color:  {{ plant.bloom_color }}  </li>
+            <li>Bloom Season: {{ plant.bloom_season }} </li>
+            <li>Pollinators:  {{ plant.pollinators }}  </li>
+            <h5>Requirements:</h5>
+            <li>Sun Exposure: {{ plant.sun_exposure }} </li>
+            <li>Water Rqmts:  {{ plant.water_rqmts }}  </li>
+            <li>Soil Rqmts:   {{ plant.soil_type }}    </li>
+            <li>Genus:        {{ plant.genus }}        </li>
+            <li>Species:      {{ plant.species }}      </li>
+        </div>
+        <hr>
+        {% if plant.image_1 %}
+            <img src="{{ plant.image_1.url }}" alt="No plant image found" style="width:100%">
+        {% endif %}
+    </div>
+</div>
