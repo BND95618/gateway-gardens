@@ -238,7 +238,40 @@ def gardens_plan(request):
         context = { 'plants'      : plants,
                     'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
+
+def plant_details_modal(request):
+    """ Display plant detail in a pop-up modal """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
     
+    print("Got to plant_details_modal view")
+    
+    if request.method == 'POST':
+        # Get the JSON sring with the common name of the requested plant
+        requestedPlant_json_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        requestedPlant_dict = json.loads(requestedPlant_json_string)
+        # Get the Common Name of the plant requested
+        requestedPlant = requestedPlant_dict["requestedPlant"]
+        # Retrieve the requested plant from the db
+        plant = Plant.objects.get(commonName = requestedPlant)
+
+        print("DEBUG: plant:", plant)
+
+        plant.sun_exposure = string_display(plant.sun_exposure)
+        plant.water_rqmts  = string_display(plant.water_rqmts)
+        plant.bloom_color  = string_display(plant.bloom_color)
+        plant.bloom_season = string_display(plant.bloom_season)
+        plant.pollinators  = string_display(plant.pollinators)
+        plant.soil_type    = string_display(plant.soil_type)
+
+        context = { "plant" : plant }
+        return render(request, 'plants/plant_details_modal.html', context)
+    
+    else:
+        print("DEBUG: Error!")
+        return HttpResponseRedirect(reverse('plants:index'))
+ 
 def plant_fetch(request):
     """ """
     if not request.user.is_authenticated:
@@ -254,13 +287,17 @@ def plant_fetch(request):
         # Get the Common Name of the plant requested
         requestedPlant = requestedPlant_dict["requestedPlant"]
 
-        # Fetch requested plant and convert to a dictionary
+        # Retrieve the requested plant from the db and convert to a dictionary
         # AR: this currently returns a single object in an array - need a standalone object
+        plant_json = list(Plant.objects.filter(commonName = requestedPlant).values())
 
-        requestedPlantData = list(Plant.objects.filter(commonName = requestedPlant).values())
+        # plant = Plant.objects.get(commonName = requestedPlant)
+        # print("DEBUG: plant_test.commonName:", plant_test.commonName)
+        # requestedPlantData_json = json.dumps(requestedPlantData_test)
+        # print("DEBUG: requestedPlantData_json:", requestedPlantData_json)
 
         # safe=False is needed if returning a list directly
-        return JsonResponse(requestedPlantData, safe=False)
+        return JsonResponse(plant_json, safe=False)
     
     else:
         print("DEBUG: Error!")
@@ -1123,37 +1160,6 @@ def plants_details(request, id):
                 "comments" : comments, 
             }
     return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
-
-def plant_details_modal(request):
-    """ Display plant detail in a pop-up modal """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    print("Got to plant_details_modal view")
-    
-    if request.method == 'POST':
-        # Get the JSON sring with the common name of the requested plant
-        requestedPlant_json_string = request.body.decode('utf-8')
-        # Convert the JSON string into a dictionary
-        requestedPlant_dict = json.loads(requestedPlant_json_string)
-        # Get the Common Name of the plant requested
-        requestedPlant = requestedPlant_dict["requestedPlant"]
-    
-        plant = Plant.objects.get(commonName = requestedPlant)
-
-        plant.sun_exposure = string_display(plant.sun_exposure)
-        plant.water_rqmts  = string_display(plant.water_rqmts)
-        plant.bloom_color  = string_display(plant.bloom_color)
-        plant.bloom_season = string_display(plant.bloom_season)
-        plant.pollinators  = string_display(plant.pollinators)
-        plant.soil_type    = string_display(plant.soil_type)
-
-        context = { "plant" : plant }
-        return render(request, 'plants/plant_details_modal.html', context)
-    
-    else:
-        print("DEBUG: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
 
 def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """

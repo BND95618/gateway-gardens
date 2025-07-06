@@ -6,11 +6,29 @@
 {% endblock title %}
 
 {% block css %}
-  <style>
-    canvas {
-      border: 2px solid black;
-    }
-  </style>
+    <style>
+
+        canvas 
+        {
+            border: 2px solid black;
+        }
+
+        /* To make the modal background fully transparent */
+        /* You may need to add !important depending on other styles affecting the modal */
+        .w3-modal 
+        {
+            background: none !important; 
+            /* Allows clicks to pass through */
+            pointer-events: none; 
+        }
+
+        /* Ensure the modal content is still interactive */
+        .w3-modal-content 
+        {
+            pointer-events: auto; 
+        }
+
+    </style>
 {% endblock css %}
 
 {% block header-completion %}
@@ -39,7 +57,6 @@
         </form>
 
         <!-- Canvas tool options -->
-
         <form class = "w3-margin-bottom, w3-light-grey w3-text-black">
             Plant:
             <select id="id_plant">
@@ -154,8 +171,6 @@
                 <input  type="color"  id="id_fill_color" value="#ffffff"/>
         </form>
 
-        <div id="drop_target">Drop Zone</div>
-
         <!-- Canvas -->
         <canvas id="myCanvas">
             Your browser does not support HTML 5 Canvas
@@ -165,7 +180,7 @@
         <p><span id="id_shape_attributes"></span></p>
 
         <!-- Plant Details Modal -->
-        <div id="plant_details_modal" class="w3-modal" draggable="true">
+        <div id="plant_details_modal" class="w3-modal">
             <p> Update HTML to be Inserted Here! </p>
         </div>
 
@@ -175,7 +190,9 @@
             <li>Delete</li>
             <li>Option 3</li>
         </ul>
+        
     </div>
+    
 {% endblock content %}
 
 {% block js %}
@@ -280,47 +297,6 @@
         });
 
         //************************************************************//
-        // Code to allow drag-and-drop plant details model
-        //************************************************************//
-        // Get the element by id
-        const element = document.getElementById("plant_details_modal");
-        
-        // Add the ondragstart event listener
-        element.addEventListener("dragstart", (ev) => 
-        {
-            // Add the target element's id to the data transfer object
-            ev.dataTransfer.setData("text/plain", ev.target.id);
-        });
-
-        function dragstartHandler(ev) 
-        {
-            // Add different types of drag data
-            ev.dataTransfer.setData("text/plain", ev.target.innerText);
-            ev.dataTransfer.setData("text/html", ev.target.outerHTML);
-            ev.dataTransfer.setData("text/uri-list", ev.target.ownerDocument.location.href,);
-        }
-        function dragstartHandler(ev) 
-        {
-            ev.dataTransfer.dropEffect = "move";
-        }
-
-        const drop_target = document.getElementById("drop_target");
-
-        drop_target.addEventListener("dragover", (ev) => 
-        {
-            ev.preventDefault();
-            ev.dataTransfer.dropEffect = "move";
-        });
-
-        drop_target.addEventListener("drop", (ev) => 
-        {
-            ev.preventDefault();
-            // Get the id of the drop_target and add the moved element to the drop_target's DOM
-            const data = ev.dataTransfer.getData("text/plain");
-            ev.drop_target.appendChild(document.getElementById(data));
-        });
-
-        //************************************************************//
         // Get the details regarding the plant to be added
         //************************************************************//
         formElement = document.getElementById("id_plant");
@@ -330,15 +306,14 @@
             requestedPlant = target.value;
             console.log("DEBUG: Requested Plant:", requestedPlant);
 
-            // Create/Display modal with plant details
-            // There is a <dialog></dialog> at top of HTML body
-            const url                 = "{% url 'plants:plant_details_modal' %}"
+            // Setup fetch parameters
+            let url             = "{% url 'plants:plant_details_modal' %}"
             const requestMethod = "POST"
             const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const postData      = { requestedPlant : requestedPlant }
             const plant_details_modal = document.getElementById('plant_details_modal')
 
-            // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
+            // Fetch the plant details modal
             fetch(url, 
             {
                 method: requestMethod,
@@ -357,50 +332,55 @@
             // enable the model display
             plant_details_modal.style.display = 'block'
 
-            // // fetch the plant details
-            // const url           = "{% url 'plants:plant_fetch' %}"
-            // const requestMethod = "POST"
-            // const postData      = { requestedPlant : requestedPlant }
-            // const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            // Fetch the plant details and create javascript object for later use
+            url = "{% url 'plants:plant_fetch' %}"
+            fetch(url,
+            {
+                method: requestMethod,
+                headers: 
+                {
+                    // Tells the server that the request body is in JSON format
+                    'Content-Type': 'application/json',
+                    //  Provides CSRF protection, necessary for Django
+                    'X-CSRFToken' : csrfToken
+                },
+                // Convert the dictionary to a JSON string
+                body: JSON.stringify(postData),
+            })
+            .then(response => response.text())
+            .then(activePlantJSON => 
+            {
+                // AR: Convert the array of one object to just an object - remove '[]'
 
-            // fetch(url,
-            // {
-            //     method: requestMethod,
-            //     headers: 
-            //     {
-            //         // Tells the server that the request body is in JSON format
-            //         'Content-Type': 'application/json',
-            //         //  Provides CSRF protection, necessary for Django
-            //         'X-CSRFToken' : csrfToken
-            //     },
-            //     // Convert the dictionary to a JSON string
-            //     body: JSON.stringify(postData),
-            // })
-            // .then(response => response.text())
-            // .then(activePlantJSON => 
-            // {
-            //     // AR: Convert the array of one object to just an object - remove '[]'
+                console.log("DEBUG: activePlantJSON:", activePlantJSON)
 
-            //     const activePlantObject = JSON.parse(activePlantJSON);
-            //     console.log("DEBUG: activePlantObject = ", activePlantObject);
+                const activePlantObject = JSON.parse(activePlantJSON);
+                console.log("DEBUG: activePlantObject = ", activePlantObject);
 
-            //     // activePlant = activePlantObject[0];
-            //     activePlant.commonName = activePlantObject[0].commonName;
-            //     activePlant.height     = activePlantObject[0].height_feet;
-            //     activePlant.width      = activePlantObject[0].width_feet;
-            //     activePlant.genus      = activePlantObject[0].genus;
-            //     activePlant.species    = activePlantObject[0].species;
+                activePlant = activePlantObject[0];
+                // Add parameters to draw the activePlant as a circle
+                activePlant.type       = "circle";
+                activePlant.x          = 200;
+                activePlant.y          = 200;
+                activePlant.radius     =  30;
+                activePlant.startAngle =   0;
+                activePlant.endAngle   = 2 * Math.PI;
+                activePlant.direction  = "clockwise";
+                activePlant.lineWidth  = lineWidth;
+                activePlant.lineStyle  = lineStyle;
+                activePlant.lineColor  = lineColor;
+                activePlant.fillColor  = fillColor;
+                // Push the plant into the drawshapes array
+                shapes.push(activePlant);
 
-            //     console.log("DEBUG: activePlant = ", activePlant);
-            //     console.log("DEBUG: commonName  = ", activePlant.commonName);
-            //     console.log("DEBUG: height      = ", activePlant.height);
-            //     console.log("DEBUG: width       = ", activePlant.width);
-            //     console.log("DEBUG: genus       = ", activePlant.genus);
-            //     console.log("DEBUG: species     = ", activePlant.species); 
-
-            // })
-            // // AR: Why is this needed? 
-            // activePlant = {}
+                console.log("DEBUG: activePlant = ", activePlant);
+                console.log("DEBUG: commonName  = ", activePlant.commonName);
+                console.log("DEBUG: height      = ", activePlant.height_feet);
+                console.log("DEBUG: width       = ", activePlant.width_feet);
+                console.log("DEBUG: genus       = ", activePlant.genus);
+                console.log("DEBUG: species     = ", activePlant.species); 
+            })
+            drawScreen;
         });
 
         // Setup the shape to be drawn
@@ -1881,6 +1861,59 @@
             ctx.closePath();
             // return 'true' if the X-Y coordinates are contained within the polygon
             return(ctx.isPointInPath(x, y));
+        }
+
+        //************************************************************//
+        // Function: Drag-and-Drop
+        //************************************************************//
+        //Make the modal (<div> element) draggable:
+        dragElement(document.getElementById("plant_details_modal"));
+        function dragElement(elmnt) 
+        {
+            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            if (document.getElementById(elmnt.id + "header")) 
+            {
+                /* if present, the header is where you move the DIV from:*/
+                document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } 
+            else 
+            {
+                /* otherwise, move the DIV from anywhere inside the DIV:*/
+                elmnt.onmousedown = dragMouseDown;
+            }
+
+            function dragMouseDown(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // get the mouse cursor position at startup:
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                // call a function whenever the cursor moves:
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) 
+            {
+                e = e || window.event;
+                e.preventDefault();
+                // calculate the new cursor position:
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                // set the element's new position:
+                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() 
+            {
+                /* stop moving when mouse button is released:*/
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
         }
 
         //************************************************************//
