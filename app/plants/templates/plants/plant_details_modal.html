@@ -11,28 +11,31 @@
         
     <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
         <div>
-            <h5>Attributes:</h5>
+            <h5>Characteristics:</h5>
             <ul>
                 <li>Plant Type:   {{ plant.type_x }}       </li>
                 <li>Bloom Color:  {{ plant.bloom_color }}  </li>
                 <li>Bloom Season: {{ plant.bloom_season }} </li>
+                <li>Height:       {{ plant.height_feet }} ft  {{ plant.height_inch }} in</li>
+                <li>Width:        {{ plant.width_feet }} ft  {{ plant.width_inch }} in</li>
                 <li>Pollinators:  {{ plant.pollinators }}  </li>
             </ul>
-            <h5>Requirements:</h5>
+            <h5>Environmental Needs:</h5>
             <ul>
                 <li>Sun Exposure: {{ plant.sun_exposure }} </li>
                 <li>Water Rqmts:  {{ plant.water_rqmts }}  </li>
+                <li>pH Rqmts:     {{ plant.pH_min }}  to {{ plant.pH_max }}</li>
                 <li>Soil Rqmts:   {{ plant.soil_type }}    </li>
             </ul>
             <h5>Scientific Name:</h5>
             <ul>
                 <li>Genus:        {{ plant.genus }}        </li>
                 <li>Species:      {{ plant.species }}      </li>
-            </ul>
+            </ul>  
+            {% if plant.image_1 %}
+                <img src="{{ plant.image_1.url }}" alt="No plant image found" style="width:100%">
+            {% endif %}
+            <hr>
         </div>
-        <hr>
-        {% if plant.image_1 %}
-            <img src="{{ plant.image_1.url }}" alt="No plant image found" style="width:100%">
-        {% endif %}
     </div>
 </div>

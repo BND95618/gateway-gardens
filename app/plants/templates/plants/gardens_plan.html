@@ -351,35 +351,30 @@
             .then(activePlantJSON => 
             {
                 // AR: Convert the array of one object to just an object - remove '[]'
-
-                console.log("DEBUG: activePlantJSON:", activePlantJSON)
-
                 const activePlantObject = JSON.parse(activePlantJSON);
-                console.log("DEBUG: activePlantObject = ", activePlantObject);
-
                 activePlant = activePlantObject[0];
+
+                // Calculate the radius
+                let radiusInPx = (activePlant.width_feet * 12 + activePlant.width_inch) / 2
+
                 // Add parameters to draw the activePlant as a circle
                 activePlant.type       = "circle";
                 activePlant.x          = 200;
                 activePlant.y          = 200;
-                activePlant.radius     =  30;
-                activePlant.startAngle =   0;
+                activePlant.radius     = radiusInPx;
+                activePlant.startAngle = 0;
                 activePlant.endAngle   = 2 * Math.PI;
                 activePlant.direction  = "clockwise";
                 activePlant.lineWidth  = lineWidth;
                 activePlant.lineStyle  = lineStyle;
                 activePlant.lineColor  = lineColor;
                 activePlant.fillColor  = fillColor;
+
                 // Push the plant into the drawshapes array
                 shapes.push(activePlant);
-
-                console.log("DEBUG: activePlant = ", activePlant);
-                console.log("DEBUG: commonName  = ", activePlant.commonName);
-                console.log("DEBUG: height      = ", activePlant.height_feet);
-                console.log("DEBUG: width       = ", activePlant.width_feet);
-                console.log("DEBUG: genus       = ", activePlant.genus);
-                console.log("DEBUG: species     = ", activePlant.species); 
             })
+
+            // AR: Determine why this drawsScreen does not draw the newly added plant
             drawScreen;
         });
 
@@ -699,8 +694,8 @@
             console.log("DEBUG: *** Mouse down event registered ***");
 
             // Canvas selection point - absolute position
-            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale;
-            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale;
+            xSelectAbs = Math.round((e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale);
+            ySelectAbs = Math.round((e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale);
 
             // Draw a new shape
             if (action == "draw")
@@ -1064,8 +1059,8 @@
 
             // determine how much mouse has moved
             // initial xSelectSaveAbs & ySelectSaveAbs were set via mousedown event
-            xDelta = xMouseAbs - xSelectSaveAbs;
-            yDelta = yMouseAbs - ySelectSaveAbs;
+            xDelta = Math.round(xMouseAbs - xSelectSaveAbs);
+            yDelta = Math.round(yMouseAbs - ySelectSaveAbs);
 
             // Draw the active shape
             if (action == "draw")
