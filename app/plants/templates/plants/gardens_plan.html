@@ -1425,8 +1425,11 @@
             // Pan
             else if (panning)
             {
-                viewportTransform.x += xDelta;
-                viewportTransform.y += yDelta;
+                console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+                console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+
+                viewportTransform.x += xDelta / viewportTransform.scale;
+                viewportTransform.y += yDelta / viewportTransform.scale;
             }
 
             // Update the shape attributes
@@ -1786,27 +1789,33 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse wheel event registered");
-            // console.log("DEBUG: ==============================");
+            console.log("DEBUG: Mouse wheel event registered");
 
             // Save the previous transforms and scale factor
             const previousScale = viewportTransform.scale;
             const previousX     = viewportTransform.x;
             const previousY     = viewportTransform.y;
 
+            // limit the zoom factors
+            const zoomMin = 0.25;
+            const zoomMax = 4.00;
+
             // capture the current mouse location 
             xMouse = e.clientX;
             yMouse = e.clientY;
 
-            // set the new scale factor
-            viewportTransform.scale += e.deltaY * -0.01;
-            const newScale = viewportTransform.scale;
+            const newScale = viewportTransform.scale + (e.deltaY * -0.01);
 
-            // set the new transformation coordinates in order to ...
-            viewportTransform.x = xMouse - (xMouse - previousX) * (newScale / previousScale);
-            viewportTransform.y = yMouse - (yMouse - previousY) * (newScale / previousScale);
-            
+            if(newScale >= zoomMin && newScale <= zoomMax)
+            {
+                // set the new scale factor
+                viewportTransform.scale = newScale;
+
+                // set the new transformation coordinates in order to ...
+                viewportTransform.x = xMouse - (xMouse - previousX) * (newScale / previousScale);
+                viewportTransform.y = yMouse - (yMouse - previousY) * (newScale / previousScale);
+            }
+
             // Draw the entire screen
             drawScreen()
         });
