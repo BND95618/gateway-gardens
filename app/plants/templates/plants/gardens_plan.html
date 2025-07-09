@@ -184,11 +184,17 @@
             <p> Update HTML to be Inserted Here! </p>
         </div>
 
-        <!-- Context menu - shape -->
-        <ul id="ctxMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
-            <li>Duplicate</li>
-            <li>Delete</li>
-            <li>Option 3</li>
+        <!-- Context menu - Plant -->
+        <ul id="ctxPlantMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
+            <li>Plant: Show Details</li>
+            <li>Plant: Duplicate</li>
+            <li>Plant: Delete</li>
+        </ul>
+
+        <!-- Context menu - Shape -->
+        <ul id="ctxShapeMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
+            <li>Shape: Duplicate</li>
+            <li>Shape: Delete</li>
         </ul>
         
     </div>
@@ -206,7 +212,7 @@
         // setup the canvas
         const canvas  = document.getElementById("myCanvas");
         const ctx     = canvas.getContext("2d");
-        const ctxMenu = document.getElementById('ctxMenu');
+        const ctxShapeMenu = document.getElementById('ctxShapeMenu');
         canvas.width  = window.innerWidth  -  40;
         canvas.height = window.innerHeight - 300;
         
@@ -263,6 +269,7 @@
         // plant variables
         let requestedPlant;
         let activePlant = null;
+        let selectPlantCtx = false;
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
@@ -358,6 +365,7 @@
                 let radiusInPx = (activePlant.width_feet * 12 + activePlant.width_inch) / 2
 
                 // Add parameters to draw the activePlant as a circle
+                activePlant.isPlant    = true;
                 activePlant.type       = "circle";
                 activePlant.x          = 200;
                 activePlant.y          = 200;
@@ -372,10 +380,10 @@
 
                 // Push the plant into the drawshapes array
                 shapes.push(activePlant);
-            })
 
-            // AR: Determine why this drawsScreen does not draw the newly added plant
-            drawScreen;
+                // Refrest the screen to show the newly added plant
+                drawScreen();
+            })
         });
 
         // Setup the shape to be drawn
@@ -1544,12 +1552,23 @@
 
             xSelectSaveAbs = xSelectAbs;
             ySelectSaveAbs = ySelectAbs;
+            selectPlantCtx = false;
             selectShapeCtx = false;
 
-            // Check to see if a shape has been selected
+            // Check to see if a plant or shape has been selected
             for (let i = 0; i < shapes.length; i++) 
             {
-                if (shapes[i].type == "line")
+                if (shapes[i].isPlant == true)
+                {
+                    // Check to see if the selection point is within the plant
+                    if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
+                    {
+                        selectPlantCtx = true;
+                        shapeIndex = i;
+                        console.log("DEBUG: Plant has been right-clicked!");
+                    }
+                }
+                else if (!shapes[i].isPlant && shapes[i].type == "line")
                 {
                     // Determine in the selection point is close to the line
                     // If so, duplicate the line object
@@ -1559,7 +1578,7 @@
                         shapeIndex = i;
                     }
                 }
-                else if (shapes[i].type == 'rectangle')
+                else if (!shapes[i].isPlant && shapes[i].type == 'rectangle')
                 {
                     // translate mouse click coordinates if shape is rotated
                     //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
@@ -1591,7 +1610,7 @@
                     xSelectAbs = xSelectSaveAbs;
                     ySelectAbs = ySelectSaveAbs;
                 }               
-                else if (shapes[i].type == "circle")
+                else if (!shapes[i].isPlant && shapes[i].type == "circle")
                 {
                     if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
                     {
@@ -1599,7 +1618,7 @@
                         shapeIndex = i;
                     }
                 }
-                else if (shapes[i].type == "polygon")
+                else if (!shapes[i].isPlant && shapes[i].type == "polygon")
                 {
                     // Check to see if the selection point is within the polygon
                     if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
@@ -1611,28 +1630,102 @@
             }
 
             // Position and show the custom menu
-            ctxMenu.style.left = xSelect + 'px';
-            ctxMenu.style.top  = (ySelect + 140) + 'px';
-            ctxMenu.style.display = 'block';
+            if(selectPlantCtx)
+            {
+                ctxPlantMenu.style.left = xSelect + 'px';
+                ctxPlantMenu.style.top  = (ySelect + 140) + 'px';
+                ctxPlantMenu.style.display = 'block';
+                ctxShapeMenu.style.display = 'none';
+            }
+            else if (selectShapeCtx)
+            {
+                ctxShapeMenu.style.left = xSelect + 'px';
+                ctxShapeMenu.style.top  = (ySelect + 140) + 'px';
+                ctxShapeMenu.style.display = 'block';
+                ctxPlantMenu.style.display = 'none';
+            }
         });
 
         // Context menu: Hide when clicking outside of it
         document.addEventListener('click', function(e) 
         {
-            if (!ctxMenu.contains(e.target))
+            if (!ctxPlantMenu.contains(e.target) && !ctxShapeMenu.contains(e.target))
             {
-                ctxMenu.style.display = 'none';
+                ctxPlantMenu.style.display = 'none';
+                ctxShapeMenu.style.display = 'none';
+                // cleanup
+                selectPlantCtx = false;
+                selectShapeCtx = false;
             }
-            // cleanup
-            selectShapeCtx = false;
         });
 
         // Context menu: Add click handlers for menu items
-        ctxMenu.addEventListener('click', function(e) 
+        ctxPlantMenu.addEventListener('click', function(e) 
+        {
+            if (selectPlantCtx == true && e.target.tagName === 'LI') 
+            {
+                if (e.target.textContent == "Plant: Show Details")
+                {
+                    console.log("DEBUG: Got to context menu - show plant details");
+
+                    // Setup fetch parameters
+                    let url             = "{% url 'plants:plant_details_modal' %}"
+                    const requestMethod = "POST"
+                    const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    const postData      = { requestedPlant : shapes[shapeIndex].commonName }
+                    const plant_details_modal = document.getElementById('plant_details_modal');
+
+                    // Fetch the plant details modal
+                    fetch(url, 
+                    {
+                        method: requestMethod,
+                        headers:
+                        {
+                            // Tells the server that the request body is in JSON format
+                            'Content-Type': 'application/json',
+                            //  Provides CSRF protection, necessary for Django
+                            'X-CSRFToken' : csrfToken
+                        },
+                        // Convert the dictionary to a JSON string
+                        body: JSON.stringify(postData),
+                    })
+                    .then(response => response.text())
+                    .then(html => { plant_details_modal.innerHTML = html; })
+                    // enable the model display
+                    plant_details_modal.style.display = 'block'
+                }
+                else if (e.target.textContent == "Plant: Duplicate")
+                {
+                    // console.log("DEBUG: Duplicate Shape");
+                    // make a deep copy of selected shape and shift new object origin to make it visible
+                    // const newShape = {};
+                    // Object.assign(newShape, shapes[shapeIndex]);
+                    const newShape = JSON.parse(JSON.stringify(shapes[shapeIndex]));
+                    newShape.x += 20;
+                    newShape.y += 20;
+                    shapes.push(newShape);
+                }
+                else if (e.target.textContent == "Plant: Delete")
+                {
+                    // console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
+                    shapes.splice(shapeIndex, 1);
+                }
+                // Hide menu after action
+                ctxPlantMenu.style.display = 'none'; 
+            }
+            // cleanup
+            selectShapeCtx = false;
+            handles = [];
+            // Draw the entire screen
+            drawScreen();
+        });
+
+        // Context menu: Add click handlers for menu items
+        ctxShapeMenu.addEventListener('click', function(e) 
         {
             if (selectShapeCtx == true && e.target.tagName === 'LI') 
             {
-                if (e.target.textContent == "Duplicate")
+                if (e.target.textContent == "Shape: Duplicate")
                 {
                     // console.log("DEBUG: Duplicate Shape");
                     // make a deep copy of selected shape and shift new object origin to make it visible
@@ -1666,18 +1759,14 @@
                     }
                     shapes.push(newShape);
                 }
-                else if (e.target.textContent == "Delete")
+                else if (e.target.textContent == "Shape: Delete")
                 {
                     // console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
                     shapes.splice(shapeIndex, 1);
                 }
-                else if (e.target.textContent == "Option 3")
-                {
-                    console.log("DEBUG: Option 3");
-                }
                 
                 // Hide menu after action
-                ctxMenu.style.display = 'none'; 
+                ctxShapeMenu.style.display = 'none'; 
             }
             // cleanup
             selectShapeCtx = false;
