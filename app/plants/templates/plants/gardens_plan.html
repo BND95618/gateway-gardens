@@ -41,6 +41,11 @@
 
 {% block content %}
     <div class="w3-container" style="margin-top:140px;">
+        <!-- Canvas -->
+        <canvas id="myCanvas">
+            Your browser does not support HTML 5 Canvas
+        </canvas>
+
         <!-- Canvas tools-->
         <form class = "w3-margin-bottom, w3-light-grey">
             Action: 
@@ -58,123 +63,130 @@
 
         <!-- Canvas tool options -->
         <form class = "w3-margin-bottom, w3-light-grey w3-text-black">
-            Plant:
-            <select id="id_plant">
-                <option value="--"> -- </option>
-                <optgroup label="Annual" class = "w3-text-black">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Annual" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Fern">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Fern" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Grass">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Grass" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Groundcover">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Groundcover" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Perennial">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Perennial" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Shrub">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Shrub" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Succulent">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Succulent" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Succulent">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Succulent" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Tree">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Tree" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Vegetable">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Vegetable" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-                <optgroup label="Vine">
-                    {% for plant in plants %}
-                        {% if plant.type_x == "Vine" %}
-                            <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                        {% endif %}
-                    {% endfor %}
-                </optgroup>
-            </select>
-
-            Shape: 
-            <select id="id_shape">
-                <option value="line"     >line     </option>
-                <option value="rectangle">rectangle</option>
-                <option value="circle"   >circle   </option>
-                <option value="polygon"  >polygon  </option>
-                <option value="free form">free form</option>
-            </select>
+            <div id="id_plant_div" style="display: none;">
+                Plant:
+                <select id="id_plant">
+                    <option value="--"> -- </option>
+                    <optgroup label="Annual" class = "w3-text-black">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Annual" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Fern">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Fern" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Grass">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Grass" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Groundcover">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Groundcover" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Perennial">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Perennial" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Shrub">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Shrub" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Succulent">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Succulent" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Succulent">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Succulent" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Tree">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Tree" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Vegetable">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Vegetable" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Vine">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Vine" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                </select>
+            </div>
+            
+            <div id="id_shape_div" style="display: none;">
+                Shape: 
+                <select id="id_shape">
+                    <option value="line"     >line     </option>
+                    <option value="rectangle">rectangle</option>
+                    <option value="circle"   >circle   </option>
+                    <option value="polygon"  >polygon  </option>
+                    <option value="free form">free form</option>
+                </select>
+            </div>
+            
+            <div id="id_line_width_div" style="display: none;">
+                Line Width: 
+                <select id="id_line_width">
+                    <option value="1">1 px</option>
+                    <option value="2">2 px</option>
+                    <option value="3">3 px</option>
+                    <option value="4">4 px</option>
+                </select>
+            </div>
         
-            Line Width: 
-            <select id="id_line_width">
-                <option value="1">1 px</option>
-                <option value="2">2 px</option>
-                <option value="3">3 px</option>
-                <option value="4">4 px</option>
-            </select>
-  
-            Line Style: 
-            <select id="id_line_style">
+            <div id="id_line_style_div" style="display: none;">
+                Line Style: 
+                <select id="id_line_style">
                 <option value="solid" >solid </option>
                 <option value="dashed">dashed</option>
                 <option value="dotted">dotted</option>
-            </select>
+                </select>
+            </div>
     
-            Line Color: 
+            <div id="id_line_color_div" style="display: none;">
+                Line Color: 
                 <input  type="color"  id="id_line_color" value="#000000"/>
+            </div>
     
-            Fill Color: 
+            <div id="id_fill_color_div" style="display: none;">
+                Fill Color: 
                 <input  type="color"  id="id_fill_color" value="#ffffff"/>
+            </div>
         </form>
-
-        <!-- Canvas -->
-        <canvas id="myCanvas">
-            Your browser does not support HTML 5 Canvas
-        </canvas>
 
         <!-- Display shape attributes below canvas -->
         <p><span id="id_shape_attributes"></span></p>
@@ -275,13 +287,14 @@
         let viewportTransform = { x : 0, y : 0, scale : 1 }
 
         // Draw landscape border
-        xPlot = 3000;
-        yPlot = 2000;
+        let extBorder = 120; // 10 ft exterior plot border in pixels
+        xPlot = 3600;        // 300 ft at 12 px per foot
+        yPlot = 2400;        // 200 ft at 12 px per foot
         activeShape = 
                     { 
                         type        : "rectangle-nofill", 
-                        x           : 4, 
-                        y           : 4,
+                        x           : extBorder,
+                        y           : extBorder,
                         width       : xPlot,
                         height      : yPlot,
                         lineWidth   : 2,
@@ -299,6 +312,51 @@
         {
             target = e.target;
             action = target.value;
+            //
+            if ( action == 'select')
+            {
+                id_plant_div.style.display = 'none';
+                id_shape_div.style.display = 'none';
+                id_line_width_div.style.display = 'none';
+                id_line_style_div.style.display = 'none';
+                id_line_color_div.style.display = 'none';
+                id_fill_color_div.style.display = 'none';
+            }
+            else if( action == 'add plant')
+            {
+                id_plant_div.style.display = 'inline';
+                id_shape_div.style.display = 'inline';
+                id_line_width_div.style.display = 'inline';
+                id_line_style_div.style.display = 'inline';
+                id_line_color_div.style.display = 'inline';
+                id_fill_color_div.style.display = 'inline';
+            }
+            else if( action == 'draw')
+            {
+                id_plant_div.style.display = 'none';
+                id_shape_div.style.display = 'inline';
+                id_line_width_div.style.display = 'inline';
+                id_line_style_div.style.display = 'inline';
+                id_line_color_div.style.display = 'inline';
+            }
+            else if( action == 'pan')
+            {
+                id_plant_div.style.display = 'none';
+                id_shape_div.style.display = 'none';
+                id_line_width_div.style.display = 'none';
+                id_line_style_div.style.display = 'none';
+                id_line_color_div.style.display = 'none';
+                id_fill_color_div.style.display = 'none';
+            }
+            else if( action == 'zoom')
+            {
+                id_plant_div.style.display = 'none';
+                id_shape_div.style.display = 'none';
+                id_line_width_div.style.display = 'none';
+                id_line_style_div.style.display = 'none';
+                id_line_color_div.style.display = 'none';
+                id_fill_color_div.style.display = 'none';
+            }
             // clear any existing handles
             handles = [];
         });
@@ -314,11 +372,11 @@
             console.log("DEBUG: Requested Plant:", requestedPlant);
 
             // Setup fetch parameters
-            let url             = "{% url 'plants:plant_details_modal' %}"
-            const requestMethod = "POST"
+            let url             = "{% url 'plants:plant_details_modal' %}";
+            const requestMethod = "POST";
             const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const postData      = { requestedPlant : requestedPlant }
-            const plant_details_modal = document.getElementById('plant_details_modal')
+            const plant_details_modal = document.getElementById('plant_details_modal');
 
             // Fetch the plant details modal
             fetch(url, 
@@ -337,7 +395,7 @@
             .then(response => response.text())
             .then(html => { plant_details_modal.innerHTML = html; })
             // enable the model display
-            plant_details_modal.style.display = 'block'
+            plant_details_modal.style.display = 'block';
 
             // Fetch the plant details and create javascript object for later use
             url = "{% url 'plants:plant_fetch' %}"
@@ -362,7 +420,7 @@
                 activePlant = activePlantObject[0];
 
                 // Calculate the radius
-                let radiusInPx = (activePlant.width_feet * 12 + activePlant.width_inch) / 2
+                let radiusInPx = (activePlant.width_feet * 12 + activePlant.width_inch) / 2;
 
                 // Add parameters to draw the activePlant as a circle
                 activePlant.isPlant    = true;
@@ -378,6 +436,9 @@
                 activePlant.lineColor  = lineColor;
                 activePlant.fillColor  = fillColor;
 
+                // Get the user defined label for the plant
+                activePlant.label = prompt("Plant label:");
+
                 // Push the plant into the drawshapes array
                 shapes.push(activePlant);
 
@@ -392,6 +453,10 @@
         {
             target = e.target;
             shapeOption = target.value;
+            if (shapeOption == "rectangle" || shapeOption == "circle" ||shapeOption == "polygon")
+            {
+                id_fill_color_div.style.display = 'inline';
+            }
         });
 
         // Setup the shape line width
@@ -714,6 +779,7 @@
                     createShape = true;
                     activeShape = 
                     { 
+                        label     : "",
                         type      : "line", 
                         xStart    : xSelectAbs, 
                         yStart    : ySelectAbs,
@@ -729,6 +795,7 @@
                     createShape = true;
                     activeShape = 
                     { 
+                        label     : "",
                         type      : "rectangle", 
                         x         : xSelectAbs, 
                         y         : ySelectAbs,
@@ -746,6 +813,7 @@
                     createShape = true;
                     activeShape = 
                     { 
+                        label      : "",
                         type       : "circle", 
                         x          : xSelectAbs, 
                         y          : ySelectAbs, 
@@ -768,6 +836,7 @@
                         polygonVertices = [];
                         activeShape = 
                         { 
+                            label     : "",
                             type      : "polygon", 
                             vertices  : polygonVertices, 
                             lineWidth : lineWidth,
@@ -1425,8 +1494,8 @@
             // Pan
             else if (panning)
             {
-                console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-                console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
+                // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
 
                 viewportTransform.x += xDelta / viewportTransform.scale;
                 viewportTransform.y += yDelta / viewportTransform.scale;
@@ -1459,16 +1528,19 @@
             {
                 if (shapeOption == "line")
                 {
+                    activeShape.label = prompt("Shape label:");
                     shapes.push(activeShape);
                     activeShape = null;
                 }
                 else if (shapeOption == "rectangle" && activeShape.width > 0 && activeShape.height > 0)
                 {
+                    activeShape.label = prompt("Shape label:");
                     shapes.push(activeShape);
                     activeShape = null;
                 }
                 else if (shapeOption == "circle" && activeShape.radius > 0)
                 {
+                    activeShape.label = prompt("Shape label:");
                     shapes.push(activeShape);
                     activeShape = null;
                 }
@@ -1486,6 +1558,7 @@
                         activeShape.status = "closed";
                         // since the polygon has been closed remove the last point
                         activeShape.vertices.pop();
+                        activeShape.label = prompt("Shape label:");
                         shapes.push(activeShape);
                         polygonWIP = false;
                         activeShape = null;
@@ -1827,9 +1900,12 @@
         {
             if (shape.type == "line")
             {
-                displayText = "<p>" + "Line: " +
-                              "start: (" + shape.xStart + ", " + shape.yStart + ") " +
-                              "end: (" + shape.xEnd + ", " + shape.yEnd + ")" +
+                let length = Math.round(Math.sqrt(Math.pow((shape.xEnd - shape.xStart), 2) + 
+                                                  Math.pow((shape.yEnd - shape.yStart), 2)))
+                displayText = "<p>" + shape.label + ": " +
+                              "start: (" + pix2ft(shape.xStart) + ", " + pix2ft(shape.yStart) + ") " +
+                              "end: ("   + pix2ft(shape.xEnd)   + ", " + pix2ft(shape.yEnd)   + ") " +
+                              "length: " + pix2ft(length) +
                               "</p>";
             }
             else if (shape.type == "rectangle")
@@ -1838,18 +1914,18 @@
                 yCenter = shape.y + shape.height / 2;
                 let rotation = shape.rotation * 180 / Math.PI;
 
-                displayText = "<p>" + "Rectangle: " +
-                              "center: ("  + xCenter        + ", " + yCenter + ") " +
-                              "width: "    + shape.width    + ",  " +
-                              "height: "   + shape.height   + ",  " +
+                displayText = "<p>" + shape.label + ": " +
+                              "center: ("  + pix2ft(xCenter) + ", " + pix2ft(yCenter) + ") " + 
+                              "width: "    + pix2ft(shape.width)  + ") " +
+                              "height: "   + pix2ft(shape.height) + ") " +
                               "rotation: " + rotation.toFixed(1) + " degrees" +
                               "</p>";
             }
             else if (shape.type == "circle")
             {
-                displayText = "<p>Circle: " +
-                              "center: (" + shape.x + ", " + shape.y + ") " +
-                              "radius: " + Math.trunc(shape.radius) +
+                displayText = "<p>" + shape.label + ": " +
+                              "center: (" + pix2ft(shape.x) + ", " + pix2ft(shape.x)+ ") " +
+                              "radius: "  + pix2ft(shape.radius) +
                               "</p>";
            }
             else if (shape.type == "polygon")
@@ -1857,9 +1933,11 @@
                 let vertices = "";
                 for(let i = 0; i < shape.vertices.length; i++)
                 {
-                    vertices += "v" + i + ": (" + shape.vertices[0].x + ", " + shape.vertices[0].y + "), "
+                    vertices += "v" + i + ": (" + 
+                                pix2ft(shape.vertices[0].x) + ", " + 
+                                pix2ft(shape.vertices[0].y) + "), "
                 }
-                displayText = "<p>Polygon: " + vertices + "</p>";
+                displayText = "<p>" + shape.label + ": " + vertices + "</p>";
             }
             return(displayText);       
         }
@@ -1957,6 +2035,14 @@
         }
 
         //************************************************************//
+        // Function: pixels to feet
+        //************************************************************//
+        function pix2ft(pixels)
+        {
+            return(Math.trunc(pixels / 12)) + " ft  " + Math.trunc(pixels % 12) + " in";
+        }
+
+        //************************************************************//
         // Function: Drag-and-Drop
         //************************************************************//
         //Make the modal (<div> element) draggable:
@@ -2014,14 +2100,14 @@
         //************************************************************//
         function drawShape(shape) 
         {
+            // Set the text label defaults
+            ctx.font         = '16px chalkboard';
+            ctx.fillStyle    = 'black';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+
             if (shape.type === "line")
             {
-                // console.log("DEBUG: drawing line");
-                // console.log("DEBUG: lineWidth =",    ctx.lineWidth);
-                // console.log("DEBUG: strokeStyle =",  ctx.strokeStyle);
-                // console.log("DEBUG: shape.xStart =", shape.xStart);
-                // console.log("DEBUG: shape.xEnd =",   shape.xEnd);
-
                 // setup the drawing parameters
                 ctx.lineWidth   = shape.lineWidth;
                 if(shape.lineStyle == 'solid')
@@ -2043,6 +2129,19 @@
                 ctx.moveTo(shape.xStart, shape.yStart);
                 ctx.lineTo(shape.xEnd,   shape.yEnd);
                 ctx.stroke();
+
+                // add the label
+                // find the center of the line
+                xShapeCenter = shape.xStart + Math.abs((shape.xEnd - shape.xStart) / 2);
+                yShapeCenter = shape.yStart + Math.abs((shape.yEnd - shape.yStart) / 2);
+                const maxWidth = Math.sqrt((Math.pow((shape.xEnd - shape.xStart), 2)) + 
+                                           (Math.pow((shape.yEnd - shape.yStart), 2) )) * 0.8;
+
+                ctx.font         = '16px chalkboard';
+                ctx.fillStyle    = 'black';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(shape.label, xShapeCenter, yShapeCenter, maxWidth);
             }
             else if (shape.type === "rectangle") 
             {
@@ -2062,6 +2161,11 @@
                 }
                 ctx.strokeStyle = shape.lineColor;
                 ctx.fillStyle   = shape.fillColor;
+
+                // find center of rectangle
+                xShapeCenter = shape.x + (shape.width  / 2);
+                yShapeCenter = shape.y + (shape.height / 2);
+
                 if(shape.rotation == 0)
                 {
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
@@ -2069,10 +2173,6 @@
                 }
                 else
                 {
-                    // find center of shape
-                    xShapeCenter = shape.x + (shape.width  / 2);
-                    yShapeCenter = shape.y + (shape.height / 2);
-                                    
                     // ctx.setTransform(1, 0, 0, 1, 0, 0);
                     //
                     ctx.save();
@@ -2089,6 +2189,16 @@
                     //
                     ctx.restore();
                 }
+
+                // add the label
+
+                const maxWidth = shape.width * 0.8;
+
+                ctx.font         = '16px chalkboard';
+                ctx.fillStyle    = 'black';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(shape.label, xShapeCenter, yShapeCenter, maxWidth);
             }
             else if (shape.type === "rectangle-nofill") 
             {
@@ -2154,6 +2264,14 @@
                 ctx.fillStyle = shape.color;
                 ctx.fill();
                 ctx.stroke();
+
+                // add the label
+                const maxWidth = shape.radius * 2;
+                ctx.font         = '16px chalkboard';
+                ctx.fillStyle    = 'black';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(shape.label, shape.x, shape.y, maxWidth);
             }
             else if (shape.type === "polygon")
             {
@@ -2191,6 +2309,30 @@
                     ctx.fill();
                 }
                 ctx.stroke();
+
+                // if the polygon drawing is done, add the label
+                if (shape.status == "closed")
+                {
+                    // find center of polygon
+                    let sumX = 0;
+                    let sumY = 0;
+                    for (let i = 0; i < shape.vertices.length; i++) 
+                    {
+                        sumX += shape.vertices[i].x;
+                        sumY += shape.vertices[i].y;
+                    }
+
+                    xShapeCenter = sumX / shape.vertices.length;
+                    yShapeCenter = sumY / shape.vertices.length;
+
+                    const maxWidth = 100;
+
+                    ctx.font         = '16px chalkboard';
+                    ctx.fillStyle    = 'black';
+                    ctx.textAlign    = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(shape.label, xShapeCenter, yShapeCenter, maxWidth);
+                }
             }
             else if (shape.type === "handle") 
             {
@@ -2199,6 +2341,9 @@
                 ctx.strokeStyle = shape.lineColor;
                 ctx.fillStyle   = shape.fillColor;
                 ctx.setLineDash([])
+
+                // adjust the handle radius based upon he scale factor
+                radiusScaled = shape.radius / viewportTransform.scale;
 
                 // find center of associated shape to determine the point of rotation for handle
                 xShapeCenter = shapes[shape.shape_id].x + shapes[shape.shape_id].width  / 2;
@@ -2213,7 +2358,7 @@
                 ctx.translate(-xShapeCenter, -yShapeCenter);
                 // Draw the handle
                 ctx.beginPath();
-                ctx.arc(shape.x, shape.y, shape.radius, shape.startAngle, shape.endAngle, shape.direction);
+                ctx.arc(shape.x, shape.y, radiusScaled, shape.startAngle, shape.endAngle, shape.direction);
                 ctx.stroke();
                 //
                 ctx.restore();
