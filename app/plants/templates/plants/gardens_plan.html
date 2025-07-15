@@ -28,6 +28,27 @@
             pointer-events: auto; 
         }
 
+        .ctxMenu
+        {
+            position: fixed;
+            display: none; /* Hidden by default */
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000; /* Ensure it's above other elements */
+        }
+
+        .ctxMenuItem 
+        {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .ctxMenuItem:hover 
+        {
+            background-color: #f0f0f0;
+        }
+
     </style>
 {% endblock css %}
 
@@ -197,20 +218,19 @@
         </div>
 
         <!-- Context menu - Plant -->
-        <ul id="ctxPlantMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
-            <li>Plant: Show Details</li>
-            <li>Plant: Duplicate</li>
-            <li>Plant: Delete</li>
-        </ul>
+        <div id="ctxPlantMenu" class="ctxMenu">
+            <div class = "ctxMenuItem">Plant: Show Details</div>
+            <div class = "ctxMenuItem">Plant: Duplicate</div>
+            <div class = "ctxMenuItem">Plant: Delete</div>
+        </div>
 
         <!-- Context menu - Shape -->
-        <ul id="ctxShapeMenu" class="w3-border w3-grey" style="display: none; position: absolute;">
-            <li>Shape: Duplicate</li>
-            <li>Shape: Delete</li>
-        </ul>
+        <div id="ctxShapeMenu" class="ctxMenu">
+            <div class = "ctxMenuItem">Shape: Duplicate</div>
+            <div class = "ctxMenuItem">Shape: Delete</div>
+        </div>
         
-    </div>
-    
+    </div> 
 {% endblock content %}
 
 {% block js %}
@@ -321,6 +341,7 @@
                 id_line_style_div.style.display = 'none';
                 id_line_color_div.style.display = 'none';
                 id_fill_color_div.style.display = 'none';
+                id_shape_attributes.style.display = 'inline';
             }
             else if( action == 'add plant')
             {
@@ -338,6 +359,7 @@
                 id_line_width_div.style.display = 'inline';
                 id_line_style_div.style.display = 'inline';
                 id_line_color_div.style.display = 'inline';
+                id_shape_attributes.style.display = 'none';
             }
             else if( action == 'pan')
             {
@@ -347,6 +369,7 @@
                 id_line_style_div.style.display = 'none';
                 id_line_color_div.style.display = 'none';
                 id_fill_color_div.style.display = 'none';
+                id_shape_attributes.style.display = 'none';
             }
             else if( action == 'zoom')
             {
@@ -356,6 +379,7 @@
                 id_line_style_div.style.display = 'none';
                 id_line_color_div.style.display = 'none';
                 id_fill_color_div.style.display = 'none';
+                id_shape_attributes.style.display = 'none';
             }
             // clear any existing handles
             handles = [];
@@ -779,7 +803,7 @@
                     createShape = true;
                     activeShape = 
                     { 
-                        label     : "",
+                        label     : "line",
                         type      : "line", 
                         xStart    : xSelectAbs, 
                         yStart    : ySelectAbs,
@@ -795,7 +819,7 @@
                     createShape = true;
                     activeShape = 
                     { 
-                        label     : "",
+                        label     : "rectangle",
                         type      : "rectangle", 
                         x         : xSelectAbs, 
                         y         : ySelectAbs,
@@ -813,7 +837,7 @@
                     createShape = true;
                     activeShape = 
                     { 
-                        label      : "",
+                        label      : "circle",
                         type       : "circle", 
                         x          : xSelectAbs, 
                         y          : ySelectAbs, 
@@ -836,7 +860,7 @@
                         polygonVertices = [];
                         activeShape = 
                         { 
-                            label     : "",
+                            label     : "polygon",
                             type      : "polygon", 
                             vertices  : polygonVertices, 
                             lineWidth : lineWidth,
@@ -863,6 +887,8 @@
 
                 xSelectSaveAbs = xSelectAbs;
                 ySelectSaveAbs = ySelectAbs;
+                // display shape attributes text
+                id_shape_attributes.style.display = 'inline';
             }
             
             // Modify an existing shape
@@ -1735,10 +1761,10 @@
             }
         });
 
-        // Context menu: Add click handlers for menu items
+        // Context menu: Add click handlers for plant menu items
         ctxPlantMenu.addEventListener('click', function(e) 
         {
-            if (selectPlantCtx == true && e.target.tagName === 'LI') 
+            if (selectPlantCtx == true && e.target.tagName === 'DIV') 
             {
                 if (e.target.textContent == "Plant: Show Details")
                 {
@@ -1796,10 +1822,10 @@
             drawScreen();
         });
 
-        // Context menu: Add click handlers for menu items
+        // Context menu: Add click handlers for shape menu items
         ctxShapeMenu.addEventListener('click', function(e) 
         {
-            if (selectShapeCtx == true && e.target.tagName === 'LI') 
+            if (selectShapeCtx == true && e.target.tagName === 'DIV') 
             {
                 if (e.target.textContent == "Shape: Duplicate")
                 {
@@ -1900,18 +1926,23 @@
         {
             if (shape.type == "line")
             {
+                let xStart = shape.xStart - extBorder;
+                let yStart = shape.yStart - extBorder;
+                let xEnd   = shape.xEnd   - extBorder;
+                let yEnd   = shape.yEnd   - extBorder;
+
                 let length = Math.round(Math.sqrt(Math.pow((shape.xEnd - shape.xStart), 2) + 
                                                   Math.pow((shape.yEnd - shape.yStart), 2)))
                 displayText = "<p>" + shape.label + ": " +
-                              "start: (" + pix2ft(shape.xStart) + ", " + pix2ft(shape.yStart) + ") " +
-                              "end: ("   + pix2ft(shape.xEnd)   + ", " + pix2ft(shape.yEnd)   + ") " +
+                              "start: (" + pix2ft(xStart) + ", " + pix2ft(yStart) + ") " +
+                              "end: ("   + pix2ft(xEnd)   + ", " + pix2ft(yEnd)   + ") " +
                               "length: " + pix2ft(length) +
                               "</p>";
             }
             else if (shape.type == "rectangle")
             {
-                xCenter = shape.x + shape.width / 2;
-                yCenter = shape.y + shape.height / 2;
+                xCenter = shape.x + (shape.width  / 2) - extBorder;
+                yCenter = shape.y + (shape.height / 2) - extBorder;
                 let rotation = shape.rotation * 180 / Math.PI;
 
                 displayText = "<p>" + shape.label + ": " +
@@ -1923,8 +1954,11 @@
             }
             else if (shape.type == "circle")
             {
+                xCenter = shape.x - extBorder;
+                yCenter = shape.y - extBorder;
+
                 displayText = "<p>" + shape.label + ": " +
-                              "center: (" + pix2ft(shape.x) + ", " + pix2ft(shape.x)+ ") " +
+                              "center: (" + pix2ft(xCenter) + ", " + pix2ft(yCenter)+ ") " +
                               "radius: "  + pix2ft(shape.radius) +
                               "</p>";
            }
@@ -1934,8 +1968,8 @@
                 for(let i = 0; i < shape.vertices.length; i++)
                 {
                     vertices += "v" + i + ": (" + 
-                                pix2ft(shape.vertices[0].x) + ", " + 
-                                pix2ft(shape.vertices[0].y) + "), "
+                                pix2ft(shape.vertices[0].x - extBorder) + ", " + 
+                                pix2ft(shape.vertices[0].y - extBorder) + "), "
                 }
                 displayText = "<p>" + shape.label + ": " + vertices + "</p>";
             }
@@ -2379,6 +2413,13 @@
             //
             ctx.setTransform(viewportTransform.scale, 0, 0, viewportTransform.scale, viewportTransform.x, viewportTransform.y);
             //
+            //
+            // Place origin coordinates (0,0) at top-left corner
+            ctx.font         = '16px chalkboard';
+            ctx.fillStyle    = 'black';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText("(0,0)", extBorder - 10, extBorder - 10);
             //
             for (let i = 0; i < backgrounds.length; i++) 
             {
