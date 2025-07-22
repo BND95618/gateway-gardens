@@ -10,7 +10,11 @@ urlpatterns = [
     path('gardens_summary',           views.gardens_summary,     name='gardens_summary'),
     path('gardens_add',               views.gardens_add,         name="gardens_add"),
     path('gardens_update/<int:id>',   views.gardens_update,      name="gardens_update"),
+
     path('gardens_plan',              views.gardens_plan,        name='gardens_plan'),
+    path('plant_details_modal',       views.plant_details_modal, name='plant_details_modal'),
+    path('planner_edit_modal',        views.planner_edit_modal,  name='planner_edit_modal'),
+    
     path('pest_summary',              views.pest_summary,        name="pest_summary"),
     path('pest_add',                  views.pest_add,            name="pest_add"),
     path('pest_update/<int:id>',      views.pest_update,         name="pest_update"),
@@ -35,7 +39,6 @@ urlpatterns = [
     path('plants_about',              views.plants_about,        name='plants_about'),
     path('plants_chart',              views.plants_chart,        name='plants_chart'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
-    path('plant_details_modal',       views.plant_details_modal, name='plant_details_modal'),
     path('user_signup',               views.user_signup,         name='user_signup'),
     path('user_login',                views.user_login,          name='user_login'),
     path('user_update',               views.user_update,         name='user_update'),

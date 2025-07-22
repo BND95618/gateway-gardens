@@ -239,6 +239,30 @@ def gardens_plan(request):
                     'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
 
+def planner_edit_modal(request):
+    """ Display shape edit menu in a pop-up modal """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    print("DEBUG: Got to planner_edit_modal view")
+    
+    if request.method == 'POST':
+        # Get the JSON sring with the selected shape attributes
+        shape_JSON_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        shape_dict = json.loads(shape_JSON_string)
+
+        context = { "x"      : shape_dict["x"],
+                    "y"      : shape_dict["y"],
+                    "width"  : shape_dict["width"],
+                    "height" : shape_dict["height"],
+                  }
+        return render(request, 'plants/planner_edit_modal.html', context)
+    
+    else:
+        print("DEBUG: Error!")
+        return HttpResponseRedirect(reverse('plants:index'))
+ 
 def plant_details_modal(request):
     """ Display plant detail in a pop-up modal """
     if not request.user.is_authenticated:

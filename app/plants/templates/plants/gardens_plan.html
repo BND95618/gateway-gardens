@@ -12,7 +12,10 @@
         {
             border: 2px solid black;
         }
-
+        input
+        {
+            line-height: 80%;
+        }
         /* To make the modal background fully transparent */
         /* You may need to add !important depending on other styles affecting the modal */
         .w3-modal 
@@ -192,9 +195,9 @@
             <div id="id_line_style_div" style="display: none;">
                 Line Style: 
                 <select id="id_line_style">
-                <option value="solid" >solid </option>
-                <option value="dashed">dashed</option>
-                <option value="dotted">dotted</option>
+                    <option value="solid" >solid </option>
+                    <option value="dashed">dashed</option>
+                    <option value="dotted">dotted</option>
                 </select>
             </div>
     
@@ -214,7 +217,166 @@
 
         <!-- Plant Details Modal -->
         <div id="plant_details_modal" class="w3-modal">
-            <p> Update HTML to be Inserted Here! </p>
+            <p> Modal HTML to be Inserted Here! </p>
+        </div>
+
+        <!-- Planner Shape Edit Modal -->
+        <div id="planner_edit_modal" class="w3-modal">
+            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px;">
+
+                <header class="w3-container w3-green"> 
+                    <!-- Close the shape edit modal -->
+                    <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
+                        class="w3-button w3-display-topright">&times;
+                    </span>
+                    <h3>Edit Shape</h2>
+                </header>
+                    
+                <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+                    <div>
+                        <!-- populate current attribute values from server response -->
+                        <form id = "id_edit_form" name = "editForm" action = "">
+
+                            <div class="line rectangle circle polygon">
+                                <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
+                                <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
+                                <br>
+                            </div>
+
+                            <div class="line">
+                                <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
+                                <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xStartInForm" name="xStartInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yStartFtForm" style="display: inline-block; width: 80px;">Y (start): </label>
+                                <input type="number" id="yStartFtForm" name="yStartFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yStartInForm" name="yStartInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
+                                <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xEndInForm" name="xEndInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yEndFtForm" style="display: inline-block; width: 80px;">Y (end): </label>
+                                <input type="number" id="yEndFtForm" name="yEndFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yEndInForm" name="yEndInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="rectangle">
+                                <label for="xFtForm" style="display: inline-block; width: 80px;">X: </label>
+                                <input type="number" id="xFtForm" name="xFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xInForm" name="xInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yFtForm" style="display: inline-block; width: 80px;">Y: </label>
+                                <input type="number" id="yFtForm" name="yFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yInForm" name="yInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="circle">
+                                <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
+                                <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xCenterInForm" name="xCenterInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yCenterFtForm" style="display: inline-block; width: 80px;">Y (center): </label>
+                                <input type="number" id="yCenterFtForm" name="yCenterFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yCenterInForm" name="yCenterInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="polygon" id="polygonHTML">
+                                <p>Polygon vertices go here!</p>
+                            </div>
+
+                            <div class="rectangle">
+                                <label for="widthFtForm" style="display: inline-block; width: 80px;">width: </label>
+                                <input type="number" id="widthFtForm" name="widthFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="widthInForm" name="widthInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="heightFtForm" style="display: inline-block; width: 80px;">height: </label>
+                                <input type="number" id="heightFtForm" name="heightFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="heightInForm" name="heightInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="circle">
+                                <label for="radiusFtForm" style="display: inline-block; width: 80px;">radius: </label>
+                                <input type="number" id="radiusFtForm" name="radiusFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="radiusInForm" name="radiusInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="rectangle">
+                                <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
+                                <input type="number" id="rotationForm" name="rotationForm" style="width: 50px;">
+                                <span>degrees</span>
+                                <br>
+                            </div>
+
+                            <div class="line rectangle circle polygon">
+                                <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
+                                <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 50px;">
+                                <span>pixels</span>
+                                <br>
+
+                                <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
+                                <select id="lineStyleForm" style="width: 100px;">
+                                    <option value="solid" >solid </option>
+                                    <option value="dashed">dashed</option>
+                                    <option value="dotted">dotted</option>
+                                </select>
+                                <br>
+
+                                <label for="lineColorForm" style="display: inline-block; width: 80px;">Line color:</label>
+                                <input type="color" id="lineColorForm" name="lineColorForm">
+                                <br>
+                            </div>
+
+                            <div class="rectangle circle polygon">
+                                <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
+                                <input type="color" id="fillColorForm" name="fillColorForm">
+                                <br>
+                            </div>
+
+                            <!-- on submit, process attribute value changes in Javascript -->
+                            <input type="submit" value="Apply" class="w3-button w3-round-large w3-green">
+                            <input type="reset"  value="Reset"  class="w3-button w3-round-large w3-grey">
+                            <button type="button"               class="w3-button w3-round-large w3-red"
+                                    onclick="document.getElementById('planner_edit_modal').style.display='none'">
+                                    Exit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Context menu - Plant -->
@@ -226,6 +388,7 @@
 
         <!-- Context menu - Shape -->
         <div id="ctxShapeMenu" class="ctxMenu">
+            <div class = "ctxMenuItem">Shape: Edit</div>
             <div class = "ctxMenuItem">Shape: Duplicate</div>
             <div class = "ctxMenuItem">Shape: Delete</div>
         </div>
@@ -528,6 +691,51 @@
             drawScreen();
         });
 
+        // get edit form fields
+        const labelForm     = document.getElementById('labelForm');
+        // line coordinates
+        const xStartFtForm  = document.getElementById('xStartFtForm');
+        const xStartInForm  = document.getElementById('xStartInForm');
+        const yStartFtForm  = document.getElementById('yStartFtForm');
+        const yStartInForm  = document.getElementById('yStartInForm');
+        const xEndFtForm    = document.getElementById('xEndFtForm');
+        const xEndInForm    = document.getElementById('xEndInForm');
+        const yEndFtForm    = document.getElementById('yEndFtForm');
+        const yEndInForm    = document.getElementById('yEndInForm');
+        // rectangle coordinates
+        const xFtForm       = document.getElementById('xFtForm');
+        const xInForm       = document.getElementById('xInForm');
+        const yFtForm       = document.getElementById('yFtForm');
+        const yInForm       = document.getElementById('yInForm');
+        // circle coordinates
+        const xCenterFtForm = document.getElementById('xCenterFtForm');
+        const xCenterInForm = document.getElementById('xCenterInForm');
+        const yCenterFtForm = document.getElementById('yCenterFtForm');
+        const yCenterInForm = document.getElementById('yCenterInForm');
+        // polygon coordinates
+        const polygonHTML   = document.getElementById('polygonHTML');
+        //
+        const widthFtForm   = document.getElementById('widthFtForm');
+        const widthInForm   = document.getElementById('widthInForm');
+        const heightFtForm  = document.getElementById('heightFtForm');
+        const heightInForm  = document.getElementById('heightInForm');
+        //
+        const radiusFtForm  = document.getElementById('radiusFtForm');
+        const radiusInForm  = document.getElementById('radiusInForm');
+        //
+        const rotationForm  = document.getElementById('rotationForm');
+        //
+        const lineWidthForm = document.getElementById('lineWidthForm');
+        //
+        const lineStyleForm = document.getElementById('lineStyleForm');
+        const lineColorForm = document.getElementById('lineColorForm');
+        const fillColorForm = document.getElementById('fillColorForm');
+
+        const line      = document.getElementsByClassName('line');
+        const rectangle = document.getElementsByClassName('rectangle');
+        const circle    = document.getElementsByClassName('circle');
+        const polygon   = document.getElementsByClassName('polygon');
+
         //************************************************************//
         // mouse click events
         //************************************************************//
@@ -762,7 +970,7 @@
                     }
                 }
 
-                // Display the attriutes for the selected shape
+                // Display the attributes for the selected shape
                 if (selectShape)
                 {
                     shapeAttributes.innerHTML = displayAttributes(activeShape);
@@ -1827,7 +2035,145 @@
         {
             if (selectShapeCtx == true && e.target.tagName === 'DIV') 
             {
-                if (e.target.textContent == "Shape: Duplicate")
+                if (e.target.textContent == "Shape: Edit")
+                {
+                    // display the shape edit model
+                    planner_edit_modal.style.display = 'block';
+                    // turn off display for all fields - required fields turned back on late
+                    // AR: Change to a more efficient selector
+                    for (let i = 0; i < line.length; i++) 
+                    {
+                        line[i].style.display = "none";
+                    }
+                    for (let i = 0; i < rectangle.length; i++) 
+                    {
+                        rectangle[i].style.display = "none";
+                    }
+                    for (let i = 0; i < circle.length; i++) 
+                    {
+                        circle[i].style.display = "none";
+                    }
+                    for (let i = 0; i < polygon.length; i++) 
+                    {
+                        polygon[i].style.display = "none";
+                    }
+                    //
+                    if (shapes[shapeIndex].type == "line")
+                    {
+                        // turn on the display for all edit form fields used by line
+                        for (let i = 0; i < line.length; i++) 
+                        {
+                            line[i].style.display = "inline";
+                        }
+                        // prepopulate the shape attribute fields - convert pixels to ft/in
+                        labelForm.value     = shapes[shapeIndex].label;
+                        xStartFtForm.value  = Math.trunc(shapes[shapeIndex].xStart / 12) - (extBorder / 12);
+                        xStartInForm.value  = shapes[shapeIndex].xStart % 12;
+                        yStartFtForm.value  = Math.trunc(shapes[shapeIndex].yStart / 12) - (extBorder / 12);
+                        yStartInForm.value  = shapes[shapeIndex].yStart % 12;
+                        xEndFtForm.value    = Math.trunc(shapes[shapeIndex].xEnd / 12) - (extBorder / 12);
+                        xEndInForm.value    = shapes[shapeIndex].xEnd % 12;
+                        yEndFtForm.value    = Math.trunc(shapes[shapeIndex].yEnd / 12) - (extBorder / 12);
+                        yEndInForm.value    = shapes[shapeIndex].yEnd % 12;
+                        lineWidthForm.value = shapes[shapeIndex].lineWidth;
+                        lineStyleForm.value = shapes[shapeIndex].lineStyle;
+                        lineColorForm.value = shapes[shapeIndex].lineColor;
+                    }
+                    else if (shapes[shapeIndex].type == "rectangle")
+                    {
+                        // turn on the display for all edit form fields used by rectangle
+                        for (let i = 0; i < rectangle.length; i++) 
+                        {
+                            rectangle[i].style.display = "inline";
+                        }
+                        // prepopulate the shape attribute fields
+                        // - convert pixels to ft/in
+                        // - convert radians to degrees
+                        labelForm.value     = shapes[shapeIndex].label;
+                        xFtForm.value       = Math.trunc(shapes[shapeIndex].x / 12) - (extBorder / 12);
+                        xInForm.value       = shapes[shapeIndex].x % 12;
+                        yFtForm.value       = Math.trunc(shapes[shapeIndex].y / 12) - (extBorder / 12);
+                        yInForm.value       = shapes[shapeIndex].y % 12;
+                        widthFtForm.value   = Math.trunc(shapes[shapeIndex].width / 12);
+                        widthInForm.value   = shapes[shapeIndex].width % 12;
+                        heightFtForm.value  = Math.trunc(shapes[shapeIndex].height / 12);
+                        heightInForm.value  = shapes[shapeIndex].height % 12;
+                        rotationForm.value  = shapes[shapeIndex].rotation * (180 / Math.PI);
+                        lineWidthForm.value = shapes[shapeIndex].lineWidth;
+                        lineStyleForm.value = shapes[shapeIndex].lineStyle;
+                        lineColorForm.value = shapes[shapeIndex].lineColor;
+                        fillColorForm.value = shapes[shapeIndex].fillColor;
+                    }
+                    else if (shapes[shapeIndex].type == "circle")
+                    {
+                        // turn on the display for all edit form fields used by circle
+                        for (let i = 0; i < circle.length; i++) 
+                        {
+                            circle[i].style.display = "inline";
+                        }
+                        // prepopulate the shape attribute fields - convert pixels to ft/in
+                        labelForm.value     = shapes[shapeIndex].label;
+                        xCenterFtForm.value = Math.trunc(shapes[shapeIndex].x / 12) - (extBorder / 12);
+                        xCenterInForm.value = shapes[shapeIndex].x % 12;
+                        yCenterFtForm.value = Math.trunc(shapes[shapeIndex].y / 12) - (extBorder / 12);
+                        yCenterInForm.value = shapes[shapeIndex].y % 12;
+                        radiusFtForm.value  = Math.trunc(shapes[shapeIndex].radius / 12);
+                        radiusInForm.value  = Math.round(shapes[shapeIndex].radius % 12);
+                        lineWidthForm.value = shapes[shapeIndex].lineWidth;
+                        lineStyleForm.value = shapes[shapeIndex].lineStyle;
+                        lineColorForm.value = shapes[shapeIndex].lineColor; 
+                        fillColorForm.value = shapes[shapeIndex].fillColor;        
+                    }
+                    else if (shapes[shapeIndex].type == "polygon")
+                    {
+                        // turn on the display for all edit form fields used by polygon
+                        for (let i = 0; i < polygon.length; i++) 
+                        {
+                            polygon[i].style.display = "inline";
+                        }
+
+                        // Go through all vertices and construct html input form elements
+                        let polyHTML = '';
+                        for (let i = 0; i < shapes[shapeIndex].vertices.length; i++) 
+                        {
+                            polyHTML += '<label for="xV' + i + 'Ft" style="display: inline-block; width: 80px;">v' + i + ' x: </label>\n' +
+                                    '<input type="number" class="xVFt" name="xV"' + i + '"Ft" style="width: 50px;">\n' +
+                                    '<span>ft</span>\n' +
+                                    '<input type="number" class="xVIn" name="xV"' + i + '"In" style="width: 50px;">\n' +
+                                    '<span>in</span>\n' +
+                                    '<br>\n' +
+                                    '<label for="yV' + i + 'Ft" style="display: inline-block; width: 80px;">v' + i + ' y: </label>\n' +
+                                    '<input type="number" class="yVFt" name="yV"' + i + '"Ft" style="width: 50px;">\n' +
+                                    '<span>ft</span>\n' +
+                                    '<input type="number" class="yVIn" name="yV"' + i + '"In" style="width: 50px;">\n' +
+                                    '<span>in</span>\n' +
+                                    '<br>\n'
+                        }
+                        polygonHTML.innerHTML = polyHTML;
+
+                        const xVFt = document.getElementsByClassName('xVFt');
+                        const xVIn = document.getElementsByClassName('xVIn');
+                        const yVFt = document.getElementsByClassName('yVFt');
+                        const yVIn = document.getElementsByClassName('yVIn');
+
+                        // prepopulate the shape attribute fields - convert pixels to ft/in
+                        labelForm.value     = shapes[shapeIndex].label;
+                        // walk through each vertex, convert pixels to ft/in, and set form field
+                        for (let i = 0; i < xVFt.length; i++) 
+                        {
+                            xVFt[i].value = Math.trunc(shapes[shapeIndex].vertices[i].x / 12) - (extBorder / 12);
+                            xVIn[i].value = shapes[shapeIndex].vertices[i].x % 12;
+                            yVFt[i].value = Math.trunc(shapes[shapeIndex].vertices[i].y / 12) - (extBorder / 12);
+                            yVIn[i].value = shapes[shapeIndex].vertices[i].y % 12;
+                        }
+
+                        lineWidthForm.value = shapes[shapeIndex].lineWidth;
+                        lineStyleForm.value = shapes[shapeIndex].lineStyle;
+                        lineColorForm.value = shapes[shapeIndex].lineColor;
+                        fillColorForm.value = shapes[shapeIndex].fillColor;
+                    }
+                }
+                else if (e.target.textContent == "Shape: Duplicate")
                 {
                     // console.log("DEBUG: Duplicate Shape");
                     // make a deep copy of selected shape and shift new object origin to make it visible
@@ -1873,6 +2219,105 @@
             // cleanup
             selectShapeCtx = false;
             handles = [];
+            // Draw the entire screen
+            drawScreen();
+        });
+
+        // function to process the user's inputs from the attribute edit form
+        const editForm = document.getElementById('id_edit_form');
+        editForm.addEventListener('submit', function(e)
+        {
+            // This line prevents the default form submission (page reload)
+            e.preventDefault(); 
+
+            console.log("DEBUG: Got to processEditForm");
+            console.log("DEBUG: shapes[shapeIndex] (before) = ", shapes[shapeIndex]);
+
+            if (shapes[shapeIndex].type == "line")
+            {
+                // update the selected shape with the new attribute values - convert ft/in to pixels
+                shapes[shapeIndex].label     = labelForm.value;
+                shapes[shapeIndex].xStart    = (Number(xStartFtForm.value) * 12) + 
+                                               (Number(xStartInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].yStart    = (Number(yStartFtForm.value) * 12) + 
+                                               (Number(yStartInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].lineWidth = Number(lineWidthForm.value);
+                shapes[shapeIndex].lineStyle = lineStyleForm.value;
+                shapes[shapeIndex].lineColor = lineColorForm.value;
+            }
+            else if (shapes[shapeIndex].type == "rectangle")
+            {
+                // update the selected shape with the new attribute values - convert ft/in to pixels
+                shapes[shapeIndex].label     = labelForm.value;
+                shapes[shapeIndex].x         = (Number(xFtForm.value) * 12) + 
+                                               (Number(xInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].y         = (Number(yFtForm.value) * 12) + 
+                                               (Number(yInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].width     = (Number(widthFtForm.value) * 12) + 
+                                               (Number(widthInForm.value) % 12);
+                shapes[shapeIndex].height    = (Number(heightFtForm.value) * 12) + 
+                                               (Number(heightInForm.value) % 12);
+                shapes[shapeIndex].rotation  = Number(rotationForm.value) * (Math.PI / 180);
+                shapes[shapeIndex].lineWidth = Number(lineWidthForm.value);
+                shapes[shapeIndex].lineStyle = lineStyleForm.value;
+                shapes[shapeIndex].lineColor = lineColorForm.value;
+                shapes[shapeIndex].fillColor = fillColorForm.value;
+
+                console.log("DEBUG: shapes[shapeIndex] (after) = ", shapes[shapeIndex]);
+
+                planner_edit_modal.style.display = 'none';
+            }
+            else if (shapes[shapeIndex].type == "circle")
+            {
+                // update the selected shape with the new attribute values - convert ft/in to pixels
+                shapes[shapeIndex].label     = labelForm.value;
+                shapes[shapeIndex].x         = (Number(xCenterFtForm.value) * 12) + 
+                                               (Number(xCenterInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].y         = (Number(yCenterFtForm.value) * 12) + 
+                                               (Number(yCenterInForm.value) % 12) +
+                                               extBorder;
+                shapes[shapeIndex].radius    = (Number(radiusFtForm.value) * 12) + 
+                                               (Number(radiusInForm.value) % 12);
+                shapes[shapeIndex].lineWidth = Number(lineWidthForm.value);
+                shapes[shapeIndex].lineStyle = lineStyleForm.value;
+                shapes[shapeIndex].lineColor = lineColorForm.value;
+                shapes[shapeIndex].fillColor = fillColorForm.value;
+
+                planner_edit_modal.style.display = 'none';
+            }
+            else if (shapes[shapeIndex].type == "polygon")
+            {
+                //
+                const xVFt = document.getElementsByClassName('xVFt');
+                const xVIn = document.getElementsByClassName('xVIn');
+                const yVFt = document.getElementsByClassName('yVFt');
+                const yVIn = document.getElementsByClassName('yVIn');
+
+                // update the selected shape with the new attribute values
+                shapes[shapeIndex].label     = labelForm.value;
+                // walk through vertex, convert ft/in to pixels, and save to selected polygon
+                for (let i = 0; i < xVFt.length; i++)
+                {
+                    shapes[shapeIndex].vertices[i].x = (Number(xVFt[i].value) * 12) + 
+                                                       (Number(xVIn[i].value) % 12) +
+                                                        extBorder;
+                    shapes[shapeIndex].vertices[i].y = (Number(yVFt[i].value) * 12) + 
+                                                       (Number(yVIn[i].value) % 12) +
+                                                        extBorder;
+                }
+                shapes[shapeIndex].lineWidth = Number(lineWidthForm.value);
+                shapes[shapeIndex].lineStyle = lineStyleForm.value;
+                shapes[shapeIndex].lineColor = lineColorForm.value;
+                shapes[shapeIndex].fillColor = fillColorForm.value;
+                // hide the modal
+                planner_edit_modal.style.display = 'none';
+            }
+            
             // Draw the entire screen
             drawScreen();
         });
@@ -2081,6 +2526,7 @@
         //************************************************************//
         //Make the modal (<div> element) draggable:
         dragElement(document.getElementById("plant_details_modal"));
+        // dragElement(document.getElementById("planner_edit_modal"));
         function dragElement(elmnt) 
         {
             var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -2164,10 +2610,9 @@
                 ctx.lineTo(shape.xEnd,   shape.yEnd);
                 ctx.stroke();
 
-                // add the label
-                // find the center of the line
-                xShapeCenter = shape.xStart + Math.abs((shape.xEnd - shape.xStart) / 2);
-                yShapeCenter = shape.yStart + Math.abs((shape.yEnd - shape.yStart) / 2);
+                // add the label - find the center of the line
+                xShapeCenter = (shape.xEnd + shape.xStart) / 2;
+                yShapeCenter = (shape.yEnd + shape.yStart) / 2;
                 const maxWidth = Math.sqrt((Math.pow((shape.xEnd - shape.xStart), 2)) + 
                                            (Math.pow((shape.yEnd - shape.yStart), 2) )) * 0.8;
 
