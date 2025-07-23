@@ -473,19 +473,19 @@
         let extBorder = 120; // 10 ft exterior plot border in pixels
         xPlot = 3600;        // 300 ft at 12 px per foot
         yPlot = 2400;        // 200 ft at 12 px per foot
-        activeShape = 
-                    { 
-                        type        : "rectangle-nofill", 
-                        x           : extBorder,
-                        y           : extBorder,
-                        width       : xPlot,
-                        height      : yPlot,
-                        lineWidth   : 2,
-                        lineStyle   : "solid",
-                        strokeStyle : "green",
-                        rotation    : 0
-                    };
-        backgrounds.push(activeShape);
+        // activeShape = 
+        //             { 
+        //                 type        : "rectangle-nofill", 
+        //                 x           : extBorder,
+        //                 y           : extBorder,
+        //                 width       : xPlot,
+        //                 height      : yPlot,
+        //                 lineWidth   : 2,
+        //                 lineStyle   : "solid",
+        //                 strokeStyle : "green",
+        //                 rotation    : 0
+        //             };
+        // backgrounds.push(activeShape);
 
         drawScreen();
 
@@ -2865,21 +2865,42 @@
             ctx.textAlign    = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText("(0,0)", extBorder - 10, extBorder - 10);
-            //
-            for (let i = 0; i < backgrounds.length; i++) 
-            {
-                drawShape(backgrounds[i]);
-            }
+
+            // Draw the landscape plot border
+            // for (let i = 0; i < backgrounds.length; i++) 
+            // {
+            //     drawShape(backgrounds[i]);
+            // }
+
+            ctx.lineWidth   = 2;
+            ctx.lineStyle   = "solid";
+            ctx.strokeStyle = "green";
+            const v0 = {x : extBorder +    0, y : extBorder +    0}
+            const v1 = {x : extBorder + 3000, y : extBorder +   30}
+            const v2 = {x : extBorder + 3000, y : extBorder + 2000}
+            const v3 = {x : extBorder +    0, y : extBorder + 2000}
+            const arcV2V3 = {x : extBorder + 1900, y : extBorder + 1900}
+            
+            ctx.beginPath();
+            ctx.moveTo(v0.x, v0.y);
+            ctx.lineTo(v1.x, v1.y);
+            ctx.lineTo(v2.x, v2.y);
+            ctx.quadraticCurveTo(arcV2V3.x, arcV2V3.y, v3.x, v3.y);
+            ctx.closePath();
+            // ctx.fill();
+            ctx.stroke();
+
+            // Draw shapes stored in shapes array
             for (let i = 0; i < shapes.length; i++) 
             {
                 drawShape(shapes[i]);
             }
-            //
+            // Draw the shape that is currently being created/modified
             if (activeShape)
             {
                 drawShape(activeShape);
             }
-            //
+            // Draw handles on the selected shape
             for (let i = 0; i < handles.length; i++) 
             {
                 drawShape(handles[i]);         
