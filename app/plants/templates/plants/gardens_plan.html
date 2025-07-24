@@ -88,8 +88,8 @@
         <!-- Canvas tool options -->
         <form class = "w3-margin-bottom, w3-light-grey w3-text-black">
             <div id="id_plant_div" style="display: none;">
-                Plant:
-                <select id="id_plant">
+                <label for="plant" style="display: inline-block;">Plant: </label>
+                <select id="id_plant" name="plant">
                     <option value="--"> -- </option>
                     <optgroup label="Annual" class = "w3-text-black">
                         {% for plant in plants %}
@@ -172,8 +172,8 @@
             </div>
             
             <div id="id_shape_div" style="display: none;">
-                Shape: 
-                <select id="id_shape">
+                <label for="shape" style="display: inline-block;">Shape: </label>
+                <select id="id_shape" name="shape">
                     <option value="line"     >line     </option>
                     <option value="rectangle">rectangle</option>
                     <option value="circle"   >circle   </option>
@@ -183,8 +183,8 @@
             </div>
             
             <div id="id_line_width_div" style="display: none;">
-                Line Width: 
-                <select id="id_line_width">
+                <label for="line_width" style="display: inline-block;">Line Width: </label>
+                <select id="id_line_width" name="line_width">
                     <option value="1">1 px</option>
                     <option value="2">2 px</option>
                     <option value="3">3 px</option>
@@ -193,8 +193,8 @@
             </div>
         
             <div id="id_line_style_div" style="display: none;">
-                Line Style: 
-                <select id="id_line_style">
+                <label for="line_style" style="display: inline-block;">Line Style: </label>
+                <select id="id_line_style" name="line_style">
                     <option value="solid" >solid </option>
                     <option value="dashed">dashed</option>
                     <option value="dotted">dotted</option>
@@ -202,13 +202,13 @@
             </div>
     
             <div id="id_line_color_div" style="display: none;">
-                Line Color: 
-                <input  type="color" id="id_line_color" value="#000000"/>
+                <label for="line_color" style="display: inline-block;">Line Color: </label>           
+                <input  type="color" id="id_line_color" name="line_color" value="#000000"/>
             </div>
     
             <div id="id_fill_color_div" style="display: none;">
-                Fill Color: 
-                <input  type="color" id="id_fill_color" value="#ffffff"/>
+                <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
+                <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
             </div>
         </form>
 
@@ -730,9 +730,9 @@
         const rotationForm  = document.getElementById('rotationForm');
         //
         const lineWidthForm = document.getElementById('lineWidthForm');
-        //
         const lineStyleForm = document.getElementById('lineStyleForm');
         const lineColorForm = document.getElementById('lineColorForm');
+        //
         const fillColorForm = document.getElementById('fillColorForm');
 
         const line      = document.getElementsByClassName('line');
