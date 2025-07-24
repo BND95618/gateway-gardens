@@ -203,12 +203,12 @@
     
             <div id="id_line_color_div" style="display: none;">
                 Line Color: 
-                <input  type="color"  id="id_line_color" value="#000000"/>
+                <input  type="color" id="id_line_color" value="#000000"/>
             </div>
     
             <div id="id_fill_color_div" style="display: none;">
                 Fill Color: 
-                <input  type="color"  id="id_fill_color" value="#ffffff"/>
+                <input  type="color" id="id_fill_color" value="#ffffff"/>
             </div>
         </form>
 
@@ -234,7 +234,6 @@
                     
                 <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
                     <div>
-                        <!-- populate current attribute values from server response -->
                         <form id = "id_edit_form" name = "editForm" action = "">
 
                             <div class="line rectangle circle polygon">
@@ -412,9 +411,10 @@
         canvas.height = window.innerHeight - 300;
         
         // setup global variables
-        let xSelect,        ySelect;        // mouse selection coordinates - relative
+        let xSelectRel,     ySelectRel;     // mouse selection coordinates - relative to viewport
+        let xSelectRelSave, ySelectRelSave; // mouse selection coordinates - relative to viewport
         let xSelectAbs,     ySelectAbs;     // mouse selection coordinates - absolute
-        let xSelectAbsSave, ySelectAbsSave; //
+        let xSelectAbsSave, ySelectAbsSave; // mouse selection coordinates - absolute
         let xTransAbs,      yTransAbs;      // translated mouse selection coordinates
         let xShapeCenter,   yShapeCenter;   // center of selected object
         let xMouse,         yMouse;         // current mouse position - relative to viewport
@@ -522,6 +522,10 @@
                 id_line_width_div.style.display = 'inline';
                 id_line_style_div.style.display = 'inline';
                 id_line_color_div.style.display = 'inline';
+                if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
+                {
+                    id_fill_color_div.style.display = 'inline';
+                }
                 id_shape_attributes.style.display = 'none';
             }
             else if( action == 'pan')
@@ -640,7 +644,7 @@
         {
             target = e.target;
             shapeOption = target.value;
-            if (shapeOption == "rectangle" || shapeOption == "circle" ||shapeOption == "polygon")
+            if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
             {
                 id_fill_color_div.style.display = 'inline';
             }
@@ -758,15 +762,15 @@
                 ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
 
                 // save the canvas selection point for later use
-                xSelectSaveAbs = xSelectAbs;
-                ySelectSaveAbs = ySelectAbs;
+                xSelectAbsSave = xSelectAbs;
+                ySelectAbsSave = ySelectAbs;
 
                 // Go through each shape to see if it has been selected
                 for (let i = 0; i < shapes.length; i++) 
                 {
                     // Obtain the original selection point
-                    xSelectAbs = xSelectSaveAbs;
-                    ySelectAbs = ySelectSaveAbs;
+                    xSelectAbs = xSelectAbsSave;
+                    ySelectAbs = ySelectAbsSave;
 
                     if (shapes[i].type == 'line')
                     {
@@ -1093,8 +1097,8 @@
                     activeShape.vertices.push({ x : xPolygonVertex, y : yPolygonVertex });
                 }
 
-                xSelectSaveAbs = xSelectAbs;
-                ySelectSaveAbs = ySelectAbs;
+                xSelectAbsSave = xSelectAbs;
+                ySelectAbsSave = ySelectAbs;
                 // display shape attributes text
                 id_shape_attributes.style.display = 'inline';
             }
@@ -1112,8 +1116,8 @@
                 //   canvas.offsetTop  = canvas's top offset
                 //
                 // save the selection point for future use
-                xSelectSaveAbs = xSelectAbs;
-                ySelectSaveAbs = ySelectAbs;
+                xSelectAbsSave = xSelectAbs;
+                ySelectAbsSave = ySelectAbs;
                 activeHandle = null;
 
                 if (activeShape.type == "line")
@@ -1140,8 +1144,8 @@
                                 resizeShape = true;
                             }
                             // set the election point to the center of the handle
-                            xSelectSaveAbs = activeHandle.x;
-                            ySelectSaveAbs = activeHandle.y;
+                            xSelectAbsSave = activeHandle.x;
+                            ySelectAbsSave = activeHandle.y;
                         }
                     }
                     // If no handle of the active shape was selected check to see if the
@@ -1280,8 +1284,8 @@
                             }
 
                             // set the election point to the center of the handle
-                            xSelectSaveAbs = activeHandle.x;
-                            ySelectSaveAbs = activeHandle.y;
+                            xSelectAbsSave = activeHandle.x;
+                            ySelectAbsSave = activeHandle.y;
                         }
                     }
                     // If no handle of the active shape was selected check to see if the
@@ -1291,8 +1295,8 @@
                         if(selectCircle(activeShape, xSelectAbs, ySelectAbs))
                         {
                             moveShape = true;
-                            xSelectSaveAbs  = xSelectAbs;
-                            ySelectSaveAbs  = ySelectAbs;
+                            xSelectAbsSave  = xSelectAbs;
+                            ySelectAbsSave  = ySelectAbs;
                         }
                     }
                 }
@@ -1310,8 +1314,8 @@
                             activeHandle = handles[i];
 
                             // set the election point to the center of the handle
-                            xSelectSaveAbs = activeHandle.x;
-                            ySelectSaveAbs = activeHandle.y;
+                            xSelectAbsSave = activeHandle.x;
+                            ySelectAbsSave = activeHandle.y;
 
                             resizeShape = true;
 
@@ -1326,8 +1330,8 @@
                         if (selectPolygon(activeShape, xSelectAbs, ySelectAbs)) 
                         {
                             moveShape = true;
-                            xSelectSaveAbs  = xSelectAbs;
-                            ySelectSaveAbs  = ySelectAbs;
+                            xSelectAbsSave  = xSelectAbs;
+                            ySelectAbsSave  = ySelectAbs;
 
                             console.log("DEBUG: A polygon has been selected:", activeShape);
                         }
@@ -1339,8 +1343,8 @@
             else if (action == 'pan')
             {
                 panning = true;
-                xSelectSaveAbs = xSelectAbs;
-                ySelectSaveAbs = ySelectAbs;
+                xSelectAbsSave = xSelectAbs;
+                ySelectAbsSave = ySelectAbs;
             } 
 
             // Draw the entire screen
@@ -1369,9 +1373,9 @@
             yMouseAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale;
 
             // determine how much mouse has moved
-            // initial xSelectSaveAbs & ySelectSaveAbs were set via mousedown event
-            xDelta = Math.round(xMouseAbs - xSelectSaveAbs);
-            yDelta = Math.round(yMouseAbs - ySelectSaveAbs);
+            // initial xSelectAbsSave & ySelectAbsSave were set via mousedown event
+            xDelta = Math.round(xMouseAbs - xSelectAbsSave);
+            yDelta = Math.round(yMouseAbs - ySelectAbsSave);
 
             // Draw the active shape
             if (action == "draw")
@@ -1400,8 +1404,8 @@
                 }
 
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
         
             // Move the selected shape
@@ -1420,8 +1424,8 @@
                     handles[i].y += yDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && moveShape && activeShape.type == "rectangle")
             {
@@ -1434,8 +1438,8 @@
                     handles[i].y += yDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && moveShape && activeShape.type == "circle")
             {
@@ -1448,8 +1452,8 @@
                     handles[i].y += yDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && moveShape && activeShape.type == "polygon")
             {
@@ -1467,8 +1471,8 @@
                     handles[i].y += yDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             
             // Resize the selected shape
@@ -1491,8 +1495,8 @@
                     handles[1].y += yDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && resizeShape && activeShape.type == "rectangle")
             {
@@ -1637,8 +1641,8 @@
                     handles[8].x       += xDelta / 2;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && resizeShape && activeShape.type == "circle")
             {
@@ -1679,8 +1683,8 @@
                     handles[3].x += xDelta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
             else if (action == 'select' && resizeShape && activeShape.type == "polygon")
             {
@@ -1695,8 +1699,8 @@
                         handles[i].y += yDelta;
 
                         // capture the current mouse location
-                        xSelectSaveAbs += xDelta;
-                        ySelectSaveAbs += yDelta;
+                        xSelectAbsSave += xDelta;
+                        ySelectAbsSave += yDelta;
                     }
                 }
             }
@@ -1721,8 +1725,8 @@
                     handles[i].rotation = theta;
                 }
                 // capture the current mouse location
-                xSelectSaveAbs += xDelta;
-                ySelectSaveAbs += yDelta;
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
             }
 
             // Pan
@@ -1853,15 +1857,15 @@
             e.preventDefault()
 
             // Get mouse position - relative to canvas
-            xSelect = e.clientX - canvas.offsetLeft;
-            ySelect = e.clientY - canvas.offsetTop;
+            xSelectRel = e.clientX - canvas.offsetLeft;
+            ySelectRel = e.clientY - canvas.offsetTop;
 
             // Get mouse position - absolute position
             xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
             ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
 
-            xSelectSaveAbs = xSelectAbs;
-            ySelectSaveAbs = ySelectAbs;
+            xSelectAbsSave = xSelectAbs;
+            ySelectAbsSave = ySelectAbs;
             selectPlantCtx = false;
             selectShapeCtx = false;
 
@@ -1917,8 +1921,8 @@
                         shapeIndex = i;
                     }
                     // Reset the selection point
-                    xSelectAbs = xSelectSaveAbs;
-                    ySelectAbs = ySelectSaveAbs;
+                    xSelectAbs = xSelectAbsSave;
+                    ySelectAbs = ySelectAbsSave;
                 }               
                 else if (!shapes[i].isPlant && shapes[i].type == "circle")
                 {
@@ -1942,15 +1946,15 @@
             // Position and show the custom menu
             if(selectPlantCtx)
             {
-                ctxPlantMenu.style.left = xSelect + 'px';
-                ctxPlantMenu.style.top  = (ySelect + 140) + 'px';
+                ctxPlantMenu.style.left = xSelectRel + 'px';
+                ctxPlantMenu.style.top  = (ySelectRel + 140) + 'px';
                 ctxPlantMenu.style.display = 'block';
                 ctxShapeMenu.style.display = 'none';
             }
             else if (selectShapeCtx)
             {
-                ctxShapeMenu.style.left = xSelect + 'px';
-                ctxShapeMenu.style.top  = (ySelect + 140) + 'px';
+                ctxShapeMenu.style.left = xSelectRel + 'px';
+                ctxShapeMenu.style.top  = (ySelectRel + 140) + 'px';
                 ctxShapeMenu.style.display = 'block';
                 ctxPlantMenu.style.display = 'none';
             }
@@ -2098,7 +2102,7 @@
                         widthInForm.value   = shapes[shapeIndex].width % 12;
                         heightFtForm.value  = Math.trunc(shapes[shapeIndex].height / 12);
                         heightInForm.value  = shapes[shapeIndex].height % 12;
-                        rotationForm.value  = shapes[shapeIndex].rotation * (180 / Math.PI);
+                        rotationForm.value  = Math.round(shapes[shapeIndex].rotation * (180 / Math.PI));
                         lineWidthForm.value = shapes[shapeIndex].lineWidth;
                         lineStyleForm.value = shapes[shapeIndex].lineStyle;
                         lineColorForm.value = shapes[shapeIndex].lineColor;
