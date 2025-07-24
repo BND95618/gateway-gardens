@@ -1002,6 +1002,10 @@
 
             console.log("DEBUG: *** Mouse down event registered ***");
 
+            // Canvas selection point - relative position
+            xSelectRel = Math.round(e.clientX - canvas.offsetLeft);
+            ySelectRel = Math.round(e.clientY - canvas.offsetTop );
+
             // Canvas selection point - absolute position
             xSelectAbs = Math.round((e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale);
             ySelectAbs = Math.round((e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale);
@@ -1343,8 +1347,8 @@
             else if (action == 'pan')
             {
                 panning = true;
-                xSelectAbsSave = xSelectAbs;
-                ySelectAbsSave = ySelectAbs;
+                xSelectRelSav = xSelectRel;
+                ySelectRelSav = ySelectRel;
             } 
 
             // Draw the entire screen
@@ -1732,11 +1736,14 @@
             // Pan
             else if (panning)
             {
-                // console.log("DEBUG: viewportTransform.x =", viewportTransform.x);
-                // console.log("DEBUG: viewportTransform.y =", viewportTransform.y);
+                xDelta = xMouse - xSelectRelSav;
+                yDelta = yMouse - ySelectRelSav;
 
-                viewportTransform.x += xDelta / viewportTransform.scale;
-                viewportTransform.y += yDelta / viewportTransform.scale;
+                viewportTransform.x += xDelta;
+                viewportTransform.y += yDelta;
+
+                xSelectRelSav = xMouse;
+                ySelectRelSav = yMouse;
             }
 
             // Update the shape attributes
@@ -2345,8 +2352,8 @@
             const previousY     = viewportTransform.y;
 
             // limit the zoom factors
-            const zoomMin = 0.25;
-            const zoomMax = 4.00;
+            const zoomMin = 0.45;
+            const zoomMax = 5.00;
 
             // capture the current mouse location 
             xMouse = e.clientX;
