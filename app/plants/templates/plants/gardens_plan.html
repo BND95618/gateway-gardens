@@ -31,6 +31,43 @@
             pointer-events: auto; 
         }
 
+        /* zoom slider */
+        .slidecontainer {
+            width: 200px; /* Width of the outside container */
+        }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;  
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+        /* Mouse-over effects */
+        .slider:hover {
+             opacity: 1; /* Fully shown on mouse-over */
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%; 
+            background: #04AA6D;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #04AA6D;
+            cursor: pointer;
+        }
+
+        /* context menu */
         .ctxMenu
         {
             position: fixed;
@@ -40,13 +77,11 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000; /* Ensure it's above other elements */
         }
-
         .ctxMenuItem 
         {
             padding: 8px 12px;
             cursor: pointer;
         }
-
         .ctxMenuItem:hover 
         {
             background-color: #f0f0f0;
@@ -71,144 +106,164 @@
         </canvas>
 
         <!-- Canvas tools-->
-        <form class = "w3-margin-bottom, w3-light-grey">
-            Action: 
-            <select id="id_action">
-                <option value="select"   >select   </option>
-                <option value="add plant">add plant</option>
-                <option value="draw"     >draw     </option>
-                <option value="pan"      >pan      </option>
-                <option value="zoom"     >zoom     </option>
-            </select>
+        <form class = "w3-light-grey">
+            <div style="padding: 10px 0px 0px 10px">
+                <label for="action" style="display: inline-block;">Action: </label>
+                <select id="id_action" name="action">
+                    <option value="select"   >select   </option>
+                    <option value="add plant">add plant</option>
+                    <option value="draw"     >draw     </option>
+                    <option value="pan"      >pan      </option>
+                    <option value="zoom"     >zoom     </option>
+                </select>
 
-            <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
-            <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+                <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
+                <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+            </div>
         </form>
 
         <!-- Canvas tool options -->
-        <form class = "w3-margin-bottom, w3-light-grey w3-text-black">
-            <div id="id_plant_div" style="display: none;">
-                <label for="plant" style="display: inline-block;">Plant: </label>
-                <select id="id_plant" name="plant">
-                    <option value="--"> -- </option>
-                    <optgroup label="Annual" class = "w3-text-black">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Annual" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Fern">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Fern" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Grass">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Grass" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Groundcover">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Groundcover" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Perennial">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Perennial" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Shrub">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Shrub" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Succulent">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Succulent" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Succulent">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Succulent" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Tree">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Tree" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Vegetable">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Vegetable" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                    <optgroup label="Vine">
-                        {% for plant in plants %}
-                            {% if plant.type_x == "Vine" %}
-                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                            {% endif %}
-                        {% endfor %}
-                    </optgroup>
-                </select>
-            </div>
+        <form class = "w3-light-grey w3-text-black">
+            <div style="padding: 10px 0px 0px 10px">
+                <div id="id_plant_div" style="display: none;">
+                    <label for="plant" style="display: inline-block;">Plant: </label>
+                    <select id="id_plant" name="plant">
+                        <option value="--"> -- </option>
+                        <optgroup label="Annual" class = "w3-text-black">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Annual" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Fern">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Fern" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Grass">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Grass" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Groundcover">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Groundcover" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Perennial">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Perennial" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Shrub">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Shrub" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Succulent">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Succulent" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Succulent">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Succulent" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Tree">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Tree" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Vegetable">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Vegetable" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Vine">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Vine" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div id="id_shape_div" style="display: none;">
+                    <label for="shape" style="display: inline-block;">Shape: </label>
+                    <select id="id_shape" name="shape">
+                        <option value="line"     >line     </option>
+                        <option value="rectangle">rectangle</option>
+                        <option value="circle"   >circle   </option>
+                        <option value="polygon"  >polygon  </option>
+                        <option value="free form">free form</option>
+                    </select>
+                </div>
+                
+                <div id="id_line_width_div" style="display: none;">
+                    <label for="line_width" style="display: inline-block;">Line Width: </label>
+                    <select id="id_line_width" name="line_width">
+                        <option value="1">1 px</option>
+                        <option value="2">2 px</option>
+                        <option value="3">3 px</option>
+                        <option value="4">4 px</option>
+                    </select>
+                </div>
             
-            <div id="id_shape_div" style="display: none;">
-                <label for="shape" style="display: inline-block;">Shape: </label>
-                <select id="id_shape" name="shape">
-                    <option value="line"     >line     </option>
-                    <option value="rectangle">rectangle</option>
-                    <option value="circle"   >circle   </option>
-                    <option value="polygon"  >polygon  </option>
-                    <option value="free form">free form</option>
-                </select>
-            </div>
-            
-            <div id="id_line_width_div" style="display: none;">
-                <label for="line_width" style="display: inline-block;">Line Width: </label>
-                <select id="id_line_width" name="line_width">
-                    <option value="1">1 px</option>
-                    <option value="2">2 px</option>
-                    <option value="3">3 px</option>
-                    <option value="4">4 px</option>
-                </select>
-            </div>
+                <div id="id_line_style_div" style="display: none;">
+                    <label for="line_style" style="display: inline-block;">Line Style: </label>
+                    <select id="id_line_style" name="line_style">
+                        <option value="solid" >solid </option>
+                        <option value="dashed">dashed</option>
+                        <option value="dotted">dotted</option>
+                    </select>
+                </div>
         
-            <div id="id_line_style_div" style="display: none;">
-                <label for="line_style" style="display: inline-block;">Line Style: </label>
-                <select id="id_line_style" name="line_style">
-                    <option value="solid" >solid </option>
-                    <option value="dashed">dashed</option>
-                    <option value="dotted">dotted</option>
-                </select>
-            </div>
-    
-            <div id="id_line_color_div" style="display: none;">
-                <label for="line_color" style="display: inline-block;">Line Color: </label>           
-                <input  type="color" id="id_line_color" name="line_color" value="#000000"/>
-            </div>
-    
-            <div id="id_fill_color_div" style="display: none;">
-                <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
-                <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
+                <div id="id_line_color_div" style="display: none;">
+                    <label for="line_color" style="display: inline-block;">Line Color: </label>           
+                    <input  type="color" id="id_line_color" name="line_color" value="#000000"/>
+                </div>
+        
+                <div id="id_fill_color_div" style="display: none;">
+                    <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
+                    <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
+                </div>
+
+                <div id="id_zoom_select_div" style="display: none;">
+                    <label for="zoom_select" style="display: inline-block;">Zoom: </label>
+                    <select id="id_zoom_select" name="zoom_select">
+                        <option value="Slider">Slider</option>
+                        <option value="100%">100%</option>
+                        <option value="200%">200%</option>
+                        <option value="300%">300%</option>
+                        <option value="400%">400%</option>
+                        <option value="500%">500%</option>
+                    </select>
+                </div>
+
+                <div id="id_zoom_slider_div" class="slidecontainer" style="display: none; margin: 10px">
+                    <input type="range" id="id_zoom_slider" class="slider" min="100" max="500" value="250">
+                </div>
             </div>
         </form>
 
@@ -436,6 +491,8 @@
         let lineStyle   = "solid";
         let lineColor   = "black";
         let fillColor   = "white";
+        let zoomSelect  = "full view";
+        let zoomSlider  = 0;
 
         let shapeIndex;
 
@@ -498,55 +555,68 @@
             //
             if ( action == 'select')
             {
-                id_plant_div.style.display = 'none';
-                id_shape_div.style.display = 'none';
-                id_line_width_div.style.display = 'none';
-                id_line_style_div.style.display = 'none';
-                id_line_color_div.style.display = 'none';
-                id_fill_color_div.style.display = 'none';
+                id_plant_div.style.display        = 'none';
+                id_shape_div.style.display        = 'none';
+                id_line_width_div.style.display   = 'none';
+                id_line_style_div.style.display   = 'none';
+                id_line_color_div.style.display   = 'none';
+                id_fill_color_div.style.display   = 'none';
+                id_zoom_select_div.style.display  = 'none';
+                id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'inline';
+                
             }
             else if( action == 'add plant')
             {
-                id_plant_div.style.display = 'inline';
-                id_shape_div.style.display = 'inline';
-                id_line_width_div.style.display = 'inline';
-                id_line_style_div.style.display = 'inline';
-                id_line_color_div.style.display = 'inline';
-                id_fill_color_div.style.display = 'inline';
+                id_plant_div.style.display        = 'inline';
+                id_shape_div.style.display        = 'inline';
+                id_line_width_div.style.display   = 'inline';
+                id_line_style_div.style.display   = 'inline';
+                id_line_color_div.style.display   = 'inline';
+                id_fill_color_div.style.display   = 'inline';
+                id_zoom_select_div.style.display  = 'none';
+                id_zoom_slider_div.style.display  = 'none';
+                id_shape_attributes.style.display = 'none';
             }
             else if( action == 'draw')
             {
-                id_plant_div.style.display = 'none';
-                id_shape_div.style.display = 'inline';
-                id_line_width_div.style.display = 'inline';
-                id_line_style_div.style.display = 'inline';
-                id_line_color_div.style.display = 'inline';
+                id_plant_div.style.display       = 'none';
+                id_shape_div.style.display       = 'inline';
+                id_line_width_div.style.display  = 'inline';
+                id_line_style_div.style.display  = 'inline';
+                id_line_color_div.style.display  = 'inline';
                 if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
                 {
                     id_fill_color_div.style.display = 'inline';
                 }
+                id_zoom_select_div.style.display  = 'none';
+                id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
             }
             else if( action == 'pan')
             {
-                id_plant_div.style.display = 'none';
-                id_shape_div.style.display = 'none';
-                id_line_width_div.style.display = 'none';
-                id_line_style_div.style.display = 'none';
-                id_line_color_div.style.display = 'none';
-                id_fill_color_div.style.display = 'none';
+                id_plant_div.style.display        = 'none';
+                id_shape_div.style.display        = 'none';
+                id_line_width_div.style.display   = 'none';
+                id_line_style_div.style.display   = 'none';
+                id_line_color_div.style.display   = 'none';
+                id_fill_color_div.style.display   = 'none';
+                id_zoom_select_div.style.display  = 'none';
+                id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
             }
             else if( action == 'zoom')
             {
-                id_plant_div.style.display = 'none';
-                id_shape_div.style.display = 'none';
-                id_line_width_div.style.display = 'none';
-                id_line_style_div.style.display = 'none';
-                id_line_color_div.style.display = 'none';
-                id_fill_color_div.style.display = 'none';
+                id_plant_div.style.display        = 'none';
+                id_shape_div.style.display        = 'none';
+                id_line_width_div.style.display   = 'none';
+                id_line_style_div.style.display   = 'none';
+                id_line_color_div.style.display   = 'none';
+                id_fill_color_div.style.display   = 'none';
+                id_zoom_select_div.style.display  = 'inline';
+                id_zoom_slider_div.style.display  = 'inline-block';
                 id_shape_attributes.style.display = 'none';
+                
             }
             // clear any existing handles
             handles = [];
@@ -680,6 +750,72 @@
         {
             target = e.target;
             fillColor = target.value;
+        });
+
+        // Setup the zoom select
+        formElement = document.getElementById("id_zoom_select");
+        formElement.addEventListener('change', (e) =>
+        {
+            target = e.target;
+            zoomSelect = target.value;
+
+            console.log("DEBUG: Zoom Select =", zoomSelect);
+            // xPlot = 3600
+            // yPlot = 2400
+            // extBorder = 120
+            // xViewPort = canvas.width
+            // yViewPort = canvas.height
+            console.log("DEBUG: xPlot =", xPlot);
+            console.log("DEBUG: yPlot =", yPlot);
+            console.log("DEBUG: extBorder =", extBorder);
+            console.log("DEBUG: canvas.width =", canvas.width);
+            console.log("DEBUG: canvas.height =", canvas.height);
+
+            const xScale = canvas.width  / (xPlot - (3 * extBorder));
+            const yScale = canvas.height / (yPlot);
+            const scale  = Math.min(xScale, yScale);
+
+            if(zoomSelect == "100%")
+            {    
+                viewportTransform.scale = xScale * 1.0;
+                viewportTransform.x = 0;
+                viewportTransform.y = 0;
+            }
+            else if(zoomSelect == "200%")
+            {
+                viewportTransform.scale = xScale * 2.0;
+            }
+            else if(zoomSelect == "300%")
+            {
+                viewportTransform.scale = xScale * 3.0;
+            }
+            else if(zoomSelect == "400%")
+            {
+                viewportTransform.scale = xScale * 4.0;
+            }
+            else if(zoomSelect == "500%")
+            {
+                viewportTransform.scale = xScale * 5.0;
+            }
+
+            drawScreen();
+        });
+
+        // Setup the zoom slider
+        formElement = document.getElementById("id_zoom_slider");
+        formElement.addEventListener('input', (e) =>
+        {
+            target = e.target;
+            zoomSlider = target.value;
+
+            console.log("DEBUG: Got to Zoom Slider input change");
+            console.log("DEBUG: Zoom Slider =", zoomSlider);
+
+            const xScale = canvas.width  / (xPlot - (3 * extBorder));
+
+            viewportTransform.scale = xScale * (zoomSlider / 100);
+
+            drawScreen();
         });
         
         // Get the HTML element which will display the mouse XY coordinates
