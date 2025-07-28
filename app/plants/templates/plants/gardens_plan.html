@@ -116,9 +116,13 @@
                     <option value="pan"      >pan      </option>
                     <option value="zoom"     >zoom     </option>
                 </select>
-
-                <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
-                <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+                <span id="id_group_div" style="display: none;">
+                    <button type="button" id="id_group" class="w3-button w3-padding-small w3-gray w3-round">Group</button>
+                </span>
+                <span class="w3-right">
+                    <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
+                    <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+                </span>
             </div>
         </form>
 
@@ -512,11 +516,13 @@
         let activeShape   = null;
         let activeHandle  = null;
         let currentHandle = null;
+        let boundingBox   = null;
 
         // setup global object arrays
         let polygonVertices = [];
         let handles         = [];
         let backgrounds     = [];
+        let activeGroup     = []; // holds all shapes currently selected
 
         // plant variables
         let requestedPlant;
@@ -831,6 +837,8 @@
             drawScreen();
         });
 
+        // get select menu command option fields
+        const selectGroup   = document.getElementById('id_group_div');
         // get edit form fields
         const labelForm     = document.getElementById('labelForm');
         // line coordinates
@@ -882,17 +890,9 @@
         canvas.addEventListener("click", (e) => 
         {
             console.log("DEBUG: *** Mouse click event registered ***");
-
+            
             if (action == "select")
             {
-                // reset the active shape flag
-                selectShape = false;
-                activeShape = null;
-                // this will disable the mousedown, mousemove, & mouseup events
-                createShape = false;
-                // clear any existing handles
-                handles = [];
-
                 // canvas selection point - absolute position
                 xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
                 ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
@@ -901,225 +901,297 @@
                 xSelectAbsSave = xSelectAbs;
                 ySelectAbsSave = ySelectAbs;
 
-                // Go through each shape to see if it has been selected
-                for (let i = 0; i < shapes.length; i++) 
+                // multiple shape selection - shape(s) already selected and shift-click
+                if (selectShape && e.shiftKey)
                 {
-                    // Obtain the original selection point
-                    xSelectAbs = xSelectAbsSave;
-                    ySelectAbs = ySelectAbsSave;
-
-                    if (shapes[i].type == 'line')
+                    // Go through each shape to see if it has been selected
+                    for (let i = 0; i < shapes.length; i++) 
                     {
-                        // Determine in the selection point is close to the line
-                        // If so, place resize handles on object
-                        if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
+                        // Obtain the original selection point
+                        xSelectAbs = xSelectAbsSave;
+                        ySelectAbs = ySelectAbsSave;
+
+                        if (shapes[i].type == 'line')
                         {
-                            // clear any existing handles
-                            handles = [];
-
-                            // place start point handle
-                            currentHandle = placeHandle("start",
-                                                        shapes[i].xStart,
-                                                        shapes[i].yStart,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place end point handle
-                            currentHandle = placeHandle("end",
-                                                        shapes[i].xEnd,
-                                                        shapes[i].yEnd,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-                            // Indicate that the modify shape mode is enabled for the selected shape
-                            selectShape = true;
-                            activeShape = shapes[i];
-                        }
-                    }
-                    else if (shapes[i].type == 'rectangle')
-                    {
-                        // translate mouse click coordinates if shape is rotated
-                        //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
-                        //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
-                        if(shapes[i].rotation != 0)
-                        {
-                            xShapeCenter = shapes[i].x + shapes[i].width  / 2;
-                            yShapeCenter = shapes[i].y + shapes[i].height / 2;
-                            theta   = shapes[i].rotation * -1;
-
-                            xTransAbs = Math.trunc(xShapeCenter + 
-                                                  (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
-                                                  (ySelectAbs - yShapeCenter) * Math.sin(theta))
-                            yTransAbs = Math.trunc(yShapeCenter + 
-                                                  (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                                  (ySelectAbs - yShapeCenter) * Math.cos(theta))
-                            
-                            xSelectAbs = xTransAbs;
-                            ySelectAbs = yTransAbs;
-                        }
-
-                        // Determine if the selection point is contained within the rectangle
-                        // If so, place resize handles on object
-                        if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
-                        {
-                            // clear any existing handles
-                            handles = [];
-
-                            // place top left handle
-                            currentHandle = placeHandle("top-left",
-                                                        shapes[i].x,
-                                                        shapes[i].y,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-                            
-                            // place top middle handle
-                            currentHandle = placeHandle("top-middle",
-                                                        shapes[i].x + shapes[i].width/2,
-                                                        shapes[i].y,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place top right handle
-                            currentHandle = placeHandle("top-right",
-                                                        shapes[i].x + shapes[i].width, 
-                                                        shapes[i].y,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place right middle handle
-                            currentHandle = placeHandle("right-middle",
-                                                        shapes[i].x + shapes[i].width, 
-                                                        shapes[i].y + shapes[i].height/2,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place bottom right handle
-                            currentHandle = placeHandle("bottom-right",
-                                                        shapes[i].x + shapes[i].width, 
-                                                        shapes[i].y + shapes[i].height,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place bottom middle handle
-                            currentHandle = placeHandle("bottom-middle",
-                                                       shapes[i].x + shapes[i].width/2,
-                                                       shapes[i].y + shapes[i].height,
-                                                       shapes[i].rotation,
-                                                       i);
-                            handles.push(currentHandle);
-                        
-                            // place bottom left handle
-                            currentHandle = placeHandle("bottom-left",
-                                                       shapes[i].x,                   
-                                                       shapes[i].y + shapes[i].height,
-                                                       shapes[i].rotation,
-                                                       i);
-                            handles.push(currentHandle);
-
-                            // place left middle handle
-                            currentHandle = placeHandle("left-middle",
-                                                        shapes[i].x,
-                                                        shapes[i].y + shapes[i].height/2,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // place Place rotate handle on object
-                            currentHandle = placeHandle("rotate",
-                                                        shapes[i].x + shapes[i].width / 2,
-                                                        shapes[i].y - 30,
-                                                        shapes[i].rotation,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // Indicate that the modify shape mode is enabled for the selected shape
-                            selectShape = true;
-                            activeShape = shapes[i];
-                        }
-                    }
-                    else if (shapes[i].type == "circle")
-                    {
-                        // Determine if the selection point is within the circle
-                        // If so, place resize handles on object
-                        if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
-                        {
-                            // clear any existing handles
-                            handles = [];
-
-                            // Place resize handles on object
-                            currentHandle = placeHandle("top",
-                                                        shapes[i].x, 
-                                                        shapes[i].y - shapes[i].radius,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            currentHandle = placeHandle("right",
-                                                        shapes[i].x + shapes[i].radius, 
-                                                        shapes[i].y,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            currentHandle = placeHandle("bottom",
-                                                        shapes[i].x, 
-                                                        shapes[i].y + shapes[i].radius,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            currentHandle = placeHandle("left",
-                                                        shapes[i].x - shapes[i].radius, 
-                                                        shapes[i].y,
-                                                        0,
-                                                        i);
-                            handles.push(currentHandle);
-
-                            // Indicate that the modify shape mode is enabled for the selected shape
-                            selectShape = true;
-                            activeShape = shapes[i];
-                        }
-                    } 
-                    else if (shapes[i].type == "polygon")
-                    {
-                        // Check to see if the selection point is within the polygon
-                        if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
-                        {
-                            // clear any existing handles
-                            handles = [];
-
-                            // Place resize handles on object
-                            for (let j = 0; j < shapes[i].vertices.length; j++)
+                            // Determine in the selection point is close to the line
+                            // If so, place resize handles on object
+                            if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
                             {
-                                currentHandle = placeHandle("v" + j,
-                                                        shapes[i].vertices[j].x, 
-                                                        shapes[i].vertices[j].y,
-                                                        0,
-                                                        i);
+                                // place start point handle
+                                currentHandle = placeHandle("start",
+                                                            shapes[i].xStart,
+                                                            shapes[i].yStart,
+                                                            0,
+                                                            i);
                                 handles.push(currentHandle);
-                            }
-                            selectShape = true;
-                            activeShape = shapes[i];
+
+                                // place end point handle
+                                currentHandle = placeHandle("end",
+                                                            shapes[i].xEnd,
+                                                            shapes[i].yEnd,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // put shape in active group array
+                                activeGroup.push(shapes[i]);
+                            } 
+                        }
+                        else if (shapes[i].type == 'rectangle')
+                        {
+
+                        }
+                        else if (shapes[i].type == "circle")
+                        {
+
+                        }
+                        else if (shapes[i].type == "polygon")
+                        {
+
+                        }
+                        else
+                        {
+                            boundingBox = null;
                         }
                     }
-                }
 
-                // Display the attributes for the selected shape
-                if (selectShape)
-                {
-                    shapeAttributes.innerHTML = displayAttributes(activeShape);
+                    // display the "group" button and turn off the active shape details
+                    selectGroup.style.display = "inline";
+                    shapeAttributes.style.display = "none";
+
+                    console.log("DEBUG: shapes in activeGroup:", activeGroup);
                 }
                 else
                 {
-                    shapeAttributes.innerHTML = "<p>No shape selected</p>";
-                }
+                    // reset the active shape flag
+                    selectShape = false;
+                    activeShape = null;
+                    // this will disable the mousedown, mousemove, & mouseup events
+                    createShape = false;
+                    // clear any existing handles and bounding box
+                    handles = [];
+                    boundingBox = null;
 
+                    // Go through each shape to see if it has been selected
+                    for (let i = 0; i < shapes.length; i++) 
+                    {
+                        // Obtain the original selection point
+                        xSelectAbs = xSelectAbsSave;
+                        ySelectAbs = ySelectAbsSave;
+
+                        if (shapes[i].type == 'line')
+                        {
+                            // Determine in the selection point is close to the line
+                            // If so, place resize handles on object
+                            if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
+                            {
+                                // clear any existing handles
+                                handles = [];
+
+                                // place start point handle
+                                currentHandle = placeHandle("start",
+                                                            shapes[i].xStart,
+                                                            shapes[i].yStart,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place end point handle
+                                currentHandle = placeHandle("end",
+                                                            shapes[i].xEnd,
+                                                            shapes[i].yEnd,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+                                // Indicate that the modify shape mode is enabled for the selected shape
+                                selectShape = true;
+                                activeShape = shapes[i];
+                                activeGroup.push(shapes[i]); // at this point it is a group of 1
+                            }
+                        }
+                        else if (shapes[i].type == 'rectangle')
+                        {
+                            // translate mouse click coordinates if shape is rotated
+                            //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
+                            //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
+                            if(shapes[i].rotation != 0)
+                            {
+                                xShapeCenter = shapes[i].x + shapes[i].width  / 2;
+                                yShapeCenter = shapes[i].y + shapes[i].height / 2;
+                                theta   = shapes[i].rotation * -1;
+
+                                xTransAbs = Math.trunc(xShapeCenter + 
+                                                    (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                                    (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                                yTransAbs = Math.trunc(yShapeCenter + 
+                                                    (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                                    (ySelectAbs - yShapeCenter) * Math.cos(theta))
+                                
+                                xSelectAbs = xTransAbs;
+                                ySelectAbs = yTransAbs;
+                            }
+
+                            // Determine if the selection point is contained within the rectangle
+                            // If so, place resize handles on object
+                            if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
+                            {
+                                // clear any existing handles
+                                handles = [];
+
+                                // place top left handle
+                                currentHandle = placeHandle("top-left",
+                                                            shapes[i].x,
+                                                            shapes[i].y,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+                                
+                                // place top middle handle
+                                currentHandle = placeHandle("top-middle",
+                                                            shapes[i].x + shapes[i].width/2,
+                                                            shapes[i].y,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place top right handle
+                                currentHandle = placeHandle("top-right",
+                                                            shapes[i].x + shapes[i].width, 
+                                                            shapes[i].y,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place right middle handle
+                                currentHandle = placeHandle("right-middle",
+                                                            shapes[i].x + shapes[i].width, 
+                                                            shapes[i].y + shapes[i].height/2,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place bottom right handle
+                                currentHandle = placeHandle("bottom-right",
+                                                            shapes[i].x + shapes[i].width, 
+                                                            shapes[i].y + shapes[i].height,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place bottom middle handle
+                                currentHandle = placeHandle("bottom-middle",
+                                                        shapes[i].x + shapes[i].width/2,
+                                                        shapes[i].y + shapes[i].height,
+                                                        shapes[i].rotation,
+                                                        i);
+                                handles.push(currentHandle);
+                            
+                                // place bottom left handle
+                                currentHandle = placeHandle("bottom-left",
+                                                        shapes[i].x,                   
+                                                        shapes[i].y + shapes[i].height,
+                                                        shapes[i].rotation,
+                                                        i);
+                                handles.push(currentHandle);
+
+                                // place left middle handle
+                                currentHandle = placeHandle("left-middle",
+                                                            shapes[i].x,
+                                                            shapes[i].y + shapes[i].height/2,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // place Place rotate handle on object
+                                currentHandle = placeHandle("rotate",
+                                                            shapes[i].x + shapes[i].width / 2,
+                                                            shapes[i].y - 30,
+                                                            shapes[i].rotation,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // Indicate that the modify shape mode is enabled for the selected shape
+                                selectShape = true;
+                                activeShape = shapes[i];
+                            }
+                        }
+                        else if (shapes[i].type == "circle")
+                        {
+                            // Determine if the selection point is within the circle
+                            // If so, place resize handles on object
+                            if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
+                            {
+                                // clear any existing handles
+                                handles = [];
+
+                                // Place resize handles on object
+                                currentHandle = placeHandle("top",
+                                                            shapes[i].x, 
+                                                            shapes[i].y - shapes[i].radius,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                currentHandle = placeHandle("right",
+                                                            shapes[i].x + shapes[i].radius, 
+                                                            shapes[i].y,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                currentHandle = placeHandle("bottom",
+                                                            shapes[i].x, 
+                                                            shapes[i].y + shapes[i].radius,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                currentHandle = placeHandle("left",
+                                                            shapes[i].x - shapes[i].radius, 
+                                                            shapes[i].y,
+                                                            0,
+                                                            i);
+                                handles.push(currentHandle);
+
+                                // Indicate that the modify shape mode is enabled for the selected shape
+                                selectShape = true;
+                                activeShape = shapes[i];
+                            }
+                        } 
+                        else if (shapes[i].type == "polygon")
+                        {
+                            // Check to see if the selection point is within the polygon
+                            if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
+                            {
+                                // clear any existing handles
+                                handles = [];
+
+                                // Place resize handles on object
+                                for (let j = 0; j < shapes[i].vertices.length; j++)
+                                {
+                                    currentHandle = placeHandle("v" + j,
+                                                            shapes[i].vertices[j].x, 
+                                                            shapes[i].vertices[j].y,
+                                                            0,
+                                                            i);
+                                    handles.push(currentHandle);
+                                }
+                                selectShape = true;
+                                activeShape = shapes[i];
+                            }
+                        }
+                    }
+
+                    // Display the attributes for the selected shape
+                    if (selectShape)
+                    {
+                       shapeAttributes.innerHTML = displayAttributes(activeShape);
+                    }
+                    else
+                    {
+                        shapeAttributes.innerHTML = "<p>No shape selected</p>";
+                    }
+                }
                 // Draw the entire screen
                 drawScreen();
             }
@@ -2829,9 +2901,21 @@
             else if (shape.type === "rectangle-nofill") 
             {
                 // setup the drawing parameters
-                ctx.strokeStyle = shape.strokeStyle;
                 ctx.lineWidth   = shape.lineWidth;
-                ctx.setLineDash([]);
+                if(shape.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(shape.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([5, 5]);
+                }
+                else if(shape.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
+                ctx.strokeStyle = shape.lineColor;
+                ctx.fillStyle   = shape.fillColor;
 
                 //
                 if(shape.rotation == 0)
@@ -3052,6 +3136,11 @@
             {
                 drawShape(handles[i]);         
             }
+            // Draw bounding box
+            if (boundingBox)
+            {
+                drawShape(boundingBox);
+            } 
             //
             ctx.restore();
         }
@@ -3098,6 +3187,131 @@
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             shapes.length = 0;
+        };
+
+        //************************************************************//
+        // Function: Group the selected shapes and draw bounding box
+        //************************************************************//
+        const group = document.getElementById("id_group");
+        group.onclick = async (event) => 
+        {
+            console.log("DEBUG: Grouping Shapes");
+            console.log("DEBUG: shapes in activeGroup:", activeGroup);
+            // save group of shapes
+            // determine coordinates of bounding box
+            let xMin = 10000;
+            let yMin = 10000;
+            let xMax = -1000;
+            let yMax = -1000;
+            for(let i=0; i < activeGroup.length; i++)
+            {
+                console.log("DEBUG: Processing Shape:", i);
+
+                if(activeGroup[i].type == "line")
+                {
+                    xMin = Math.min(xMin, activeGroup[i].xStart, activeGroup[i].xEnd);
+                    yMin = Math.min(yMin, activeGroup[i].yStart, activeGroup[i].yEnd);
+                    xMax = Math.max(xMax, activeGroup[i].xStart, activeGroup[i].xEnd);
+                    yMax = Math.max(yMax, activeGroup[i].yStart, activeGroup[i].yEnd);
+                }
+
+                console.log("DEBUG: xMin:", xMin);
+                console.log("DEBUG: yMin:", yMin);
+                console.log("DEBUG: xMax:", xMax);
+                console.log("DEBUG: yMax:", yMax);
+
+                // draw bounding box
+                const boundingBoxPadding = 20;
+                boundingBox = 
+                            { 
+                                type        : "rectangle-nofill", 
+                                x           : xMin - boundingBoxPadding,
+                                y           : yMin - boundingBoxPadding,
+                                width       : xMax - xMin + 2 * boundingBoxPadding,
+                                height      : yMax - yMin + 2 * boundingBoxPadding,
+                                lineWidth   : 1,
+                                lineStyle   : "dashed",
+                                strokeStyle : "black",
+                                rotation    : 0
+                            };
+                
+                // place handles on bounding box
+                handles = [];
+
+                // place top left handle
+                currentHandle = placeHandle("top-left",
+                                            boundingBox.x,
+                                            boundingBox.y,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place top middle handle
+                currentHandle = placeHandle("top-middle",
+                                            boundingBox.x + boundingBox.width/2,
+                                            boundingBox.y,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place top right handle
+                currentHandle = placeHandle("top-right",
+                                            boundingBox.x + boundingBox.width, 
+                                            boundingBox.y,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place right middle handle
+                currentHandle = placeHandle("right-middle",
+                                            boundingBox.x + boundingBox.width, 
+                                            boundingBox.y + boundingBox.height/2,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place bottom right handle
+                currentHandle = placeHandle("bottom-right",
+                                            boundingBox.x + boundingBox.width, 
+                                            boundingBox.y + boundingBox.height,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place bottom middle handle
+                currentHandle = placeHandle("bottom-middle",
+                                            boundingBox.x + boundingBox.width/2,
+                                            boundingBox.y + boundingBox.height,
+                                            boundingBox.rotation,
+                                        i);
+                handles.push(currentHandle);
+
+                // place bottom left handle
+                currentHandle = placeHandle("bottom-left",
+                                        boundingBox.x,                   
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+                handles.push(currentHandle);
+
+                // place left middle handle
+                currentHandle = placeHandle("left-middle",
+                                            boundingBox.x,
+                                            boundingBox.y + boundingBox.height/2,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                // place Place rotate handle on object
+                currentHandle = placeHandle("rotate",
+                                            boundingBox.x + boundingBox.width / 2,
+                                            boundingBox.y - 30,
+                                            boundingBox.rotation,
+                                            i);
+                handles.push(currentHandle);
+
+                drawScreen();
+            }
         };
     }
 
