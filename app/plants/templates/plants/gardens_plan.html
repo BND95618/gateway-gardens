@@ -522,7 +522,9 @@
         let polygonVertices = [];
         let handles         = [];
         let backgrounds     = [];
+        let wipGroup        = []; // holds the shapes during the group formation process
         let activeGroup     = []; // holds all shapes currently selected
+        let shapeGroups     = []; // holds all groups of shapes
 
         // plant variables
         let requestedPlant;
@@ -531,6 +533,11 @@
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
+
+        // setup metadata object
+        let metadata =  {
+                            nextShapeID : 0
+                        }
 
         // Draw landscape border
         let extBorder = 120; // 10 ft exterior plot border in pixels
@@ -636,7 +643,7 @@
         {
             target = e.target;
             requestedPlant = target.value;
-            console.log("DEBUG: Requested Plant:", requestedPlant);
+            // console.log("DEBUG: Requested Plant:", requestedPlant);
 
             // Setup fetch parameters
             let url             = "{% url 'plants:plant_details_modal' %}";
@@ -765,17 +772,17 @@
             target = e.target;
             zoomSelect = target.value;
 
-            console.log("DEBUG: Zoom Select =", zoomSelect);
+            // console.log("DEBUG: Zoom Select =", zoomSelect);
             // xPlot = 3600
             // yPlot = 2400
             // extBorder = 120
             // xViewPort = canvas.width
             // yViewPort = canvas.height
-            console.log("DEBUG: xPlot =", xPlot);
-            console.log("DEBUG: yPlot =", yPlot);
-            console.log("DEBUG: extBorder =", extBorder);
-            console.log("DEBUG: canvas.width =", canvas.width);
-            console.log("DEBUG: canvas.height =", canvas.height);
+            // console.log("DEBUG: xPlot =", xPlot);
+            // console.log("DEBUG: yPlot =", yPlot);
+            // console.log("DEBUG: extBorder =", extBorder);
+            // console.log("DEBUG: canvas.width =", canvas.width);
+            // console.log("DEBUG: canvas.height =", canvas.height);
 
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
             const yScale = canvas.height / (yPlot);
@@ -814,8 +821,8 @@
             target = e.target;
             zoomSlider = target.value;
 
-            console.log("DEBUG: Got to Zoom Slider input change");
-            console.log("DEBUG: Zoom Slider =", zoomSlider);
+            // console.log("DEBUG: Got to Zoom Slider input change");
+            // console.log("DEBUG: Zoom Slider =", zoomSlider);
 
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
 
@@ -933,8 +940,8 @@
                                                             i);
                                 handles.push(currentHandle);
 
-                                // put shape in active group array
-                                activeGroup.push(shapes[i]);
+                                // put shape in WIP group array
+                                wipGroup.push(shapes[i]);
                             } 
                         }
                         else if (shapes[i].type == 'rectangle')
@@ -951,6 +958,7 @@
                         }
                         else
                         {
+                            // no selection on click so clear bounding box
                             boundingBox = null;
                         }
                     }
@@ -959,7 +967,7 @@
                     selectGroup.style.display = "inline";
                     shapeAttributes.style.display = "none";
 
-                    console.log("DEBUG: shapes in activeGroup:", activeGroup);
+                    // console.log("DEBUG: shapes in wipGroup:", wipGroup);
                 }
                 else
                 {
@@ -982,31 +990,56 @@
                         if (shapes[i].type == 'line')
                         {
                             // Determine in the selection point is close to the line
-                            // If so, place resize handles on object
                             if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
-                            {
-                                // clear any existing handles
-                                handles = [];
-
-                                // place start point handle
-                                currentHandle = placeHandle("start",
-                                                            shapes[i].xStart,
-                                                            shapes[i].yStart,
-                                                            0,
-                                                            i);
-                                handles.push(currentHandle);
-
-                                // place end point handle
-                                currentHandle = placeHandle("end",
-                                                            shapes[i].xEnd,
-                                                            shapes[i].yEnd,
-                                                            0,
-                                                            i);
-                                handles.push(currentHandle);
-                                // Indicate that the modify shape mode is enabled for the selected shape
-                                selectShape = true;
+                            { 
                                 activeShape = shapes[i];
-                                activeGroup.push(shapes[i]); // at this point it is a group of 1
+                                // check to see if the selected shape is in a group
+                                if (activeShape.grouped)
+                                {
+                                    // console.log("DEBUG: activeShape is in a group:", activeShape.label);
+                                    // detemine the group which the shape is a member of
+                                    for(let i = 0; i < shapeGroups.length; i++)
+                                    {
+                                        // console.log("DEBUG: checking shapeGroups[i]:", shapeGroups[i]);
+                                        for(let j = 0; j < shapeGroups[i].length; j++)
+                                        {
+                                            // console.log("DEBUG: activeShape.label", activeShape.label);
+                                            // console.log("DEBUG: shapeGroups[i][j].label", shapeGroups[i][j].label);
+                                            if(activeShape.label == shapeGroups[i][j].label)
+                                            {
+                                                // console.log("DEBUG: shape found in:", shapeGroups[i]);
+                                                // draw bounding box around shapes in the group
+                                                drawBoundingBox(shapeGroups[i]);
+                                            }
+                                        }
+                                    }
+                                }
+                                // draw handles on the selected 
+                                else
+                                {
+                                    // clear any existing handles
+                                    handles = [];
+
+                                    // place start point handle
+                                    currentHandle = placeHandle("start",
+                                                                shapes[i].xStart,
+                                                                shapes[i].yStart,
+                                                                0,
+                                                                i);
+                                    handles.push(currentHandle);
+
+                                    // place end point handle
+                                    currentHandle = placeHandle("end",
+                                                                shapes[i].xEnd,
+                                                                shapes[i].yEnd,
+                                                                0,
+                                                                i);
+                                    handles.push(currentHandle);
+                                    // Indicate that the modify shape mode is enabled for the selected shape
+                                    selectShape = true;
+                                    activeShape = shapes[i];
+                                    wipGroup.push(shapes[i]); // at this point it is a group of 1            
+                                }
                             }
                         }
                         else if (shapes[i].type == 'rectangle')
@@ -1235,7 +1268,8 @@
                         yEnd      : ySelectAbs,
                         lineWidth : lineWidth,
                         lineStyle : lineStyle,
-                        lineColor : lineColor
+                        lineColor : lineColor,
+                        grouped   : false
                     };
                 }
                 else if (shapeOption == "rectangle")
@@ -1253,7 +1287,8 @@
                         lineStyle : lineStyle,
                         lineColor : lineColor,
                         fillColor : fillColor,
-                        rotation  : 0
+                        rotation  : 0,
+                        grouped   : false
                     };
                 }
                 else if (shapeOption == "circle")
@@ -1272,7 +1307,8 @@
                         lineWidth  : lineWidth,
                         lineStyle  : lineStyle,
                         lineColor  : lineColor,
-                        fillColor  : fillColor
+                        fillColor  : fillColor,
+                        grouped   : false
                     };
                 }
                 else if (shapeOption == "polygon")
@@ -1292,7 +1328,8 @@
                             lineColor : lineColor,
                             fillColor : fillColor,
                             rotation  : 0,
-                            status    : "WIP"
+                            status    : "WIP",
+                            grouped   : false
                         };
 
                         // Set polygon starting point
@@ -1531,7 +1568,7 @@
 
                             resizeShape = true;
 
-                            console.log("DEBUG: A polygon handle has been selected:", activeHandle.location);
+                            // console.log("DEBUG: A polygon handle has been selected:", activeHandle.location);
                         }
                     }
                     // If no handle of the active shape was selected check to see if the
@@ -1545,7 +1582,7 @@
                             xSelectAbsSave  = xSelectAbs;
                             ySelectAbsSave  = ySelectAbs;
 
-                            console.log("DEBUG: A polygon has been selected:", activeShape);
+                            // console.log("DEBUG: A polygon has been selected:", activeShape);
                         }
                     }
                 }
@@ -1623,7 +1660,7 @@
             // Move the selected shape
             if(action == 'select' && moveShape && activeShape.type == "line")
             {
-                console.log("DEBUG: moving the line");
+                // console.log("DEBUG: moving the line");
                 // move the shape
                 activeShape.xStart += xDelta;
                 activeShape.yStart += yDelta;
@@ -1669,7 +1706,7 @@
             }
             else if (action == 'select' && moveShape && activeShape.type == "polygon")
             {
-                console.log("DEBUG: moving the polygon");
+                // console.log("DEBUG: moving the polygon");
                 // move the shape
                 for(let i = 0; i < activeShape.vertices.length; i++)
                 {
@@ -2094,7 +2131,7 @@
                     {
                         selectPlantCtx = true;
                         shapeIndex = i;
-                        console.log("DEBUG: Plant has been right-clicked!");
+                        // console.log("DEBUG: Plant has been right-clicked!");
                     }
                 }
                 else if (!shapes[i].isPlant && shapes[i].type == "line")
@@ -2195,7 +2232,7 @@
             {
                 if (e.target.textContent == "Plant: Show Details")
                 {
-                    console.log("DEBUG: Got to context menu - show plant details");
+                    // console.log("DEBUG: Got to context menu - show plant details");
 
                     // Setup fetch parameters
                     let url             = "{% url 'plants:plant_details_modal' %}"
@@ -2449,8 +2486,8 @@
             // This line prevents the default form submission (page reload)
             e.preventDefault(); 
 
-            console.log("DEBUG: Got to processEditForm");
-            console.log("DEBUG: shapes[shapeIndex] (before) = ", shapes[shapeIndex]);
+            // console.log("DEBUG: Got to processEditForm");
+            // console.log("DEBUG: shapes[shapeIndex] (before) = ", shapes[shapeIndex]);
 
             if (shapes[shapeIndex].type == "line")
             {
@@ -2486,7 +2523,7 @@
                 shapes[shapeIndex].lineColor = lineColorForm.value;
                 shapes[shapeIndex].fillColor = fillColorForm.value;
 
-                console.log("DEBUG: shapes[shapeIndex] (after) = ", shapes[shapeIndex]);
+                // console.log("DEBUG: shapes[shapeIndex] (after) = ", shapes[shapeIndex]);
 
                 planner_edit_modal.style.display = 'none';
             }
@@ -3195,124 +3232,144 @@
         const group = document.getElementById("id_group");
         group.onclick = async (event) => 
         {
-            console.log("DEBUG: Grouping Shapes");
-            console.log("DEBUG: shapes in activeGroup:", activeGroup);
-            // save group of shapes
+            // console.log("DEBUG: Grouping Shapes");
+
+            // flag the member shapes as being in the group
+            for(let i=0; i < wipGroup.length; i++)
+            {
+                wipGroup[i].grouped = true;
+            }
+            // save the current group of shapes
+            shapeGroups.push(wipGroup);
+            // now that the group has been saved, set activeGroup = wipGroup
+            // and clear the wipGroup
+            activeGroup = wipGroup;
+            wipGroup = [];
+
+            // console.log("DEBUG: shapeGroups:", shapeGroups);
+
+            drawBoundingBox(activeGroup);
+
+            drawScreen();
+        }
+        //************************************************************//
+        // Function: Draw bounding box
+        //************************************************************//
+        function drawBoundingBox(group)
+        {
             // determine coordinates of bounding box
             let xMin = 10000;
             let yMin = 10000;
             let xMax = -1000;
             let yMax = -1000;
-            for(let i=0; i < activeGroup.length; i++)
+            for(let i=0; i < group.length; i++)
             {
-                console.log("DEBUG: Processing Shape:", i);
+                // console.log("DEBUG: Processing Shape:", i);
 
-                if(activeGroup[i].type == "line")
+                if(group[i].type == "line")
                 {
-                    xMin = Math.min(xMin, activeGroup[i].xStart, activeGroup[i].xEnd);
-                    yMin = Math.min(yMin, activeGroup[i].yStart, activeGroup[i].yEnd);
-                    xMax = Math.max(xMax, activeGroup[i].xStart, activeGroup[i].xEnd);
-                    yMax = Math.max(yMax, activeGroup[i].yStart, activeGroup[i].yEnd);
+                    xMin = Math.min(xMin, group[i].xStart, group[i].xEnd);
+                    yMin = Math.min(yMin, group[i].yStart, group[i].yEnd);
+                    xMax = Math.max(xMax, group[i].xStart, group[i].xEnd);
+                    yMax = Math.max(yMax, group[i].yStart, group[i].yEnd);
                 }
 
-                console.log("DEBUG: xMin:", xMin);
-                console.log("DEBUG: yMin:", yMin);
-                console.log("DEBUG: xMax:", xMax);
-                console.log("DEBUG: yMax:", yMax);
-
-                // draw bounding box
-                const boundingBoxPadding = 20;
-                boundingBox = 
-                            { 
-                                type        : "rectangle-nofill", 
-                                x           : xMin - boundingBoxPadding,
-                                y           : yMin - boundingBoxPadding,
-                                width       : xMax - xMin + 2 * boundingBoxPadding,
-                                height      : yMax - yMin + 2 * boundingBoxPadding,
-                                lineWidth   : 1,
-                                lineStyle   : "dashed",
-                                strokeStyle : "black",
-                                rotation    : 0
-                            };
+                // console.log("DEBUG: xMin:", xMin);
+                // console.log("DEBUG: yMin:", yMin);
+                // console.log("DEBUG: xMax:", xMax);
+                // console.log("DEBUG: yMax:", yMax);
+            }
+            // draw bounding box
+            const boundingBoxPadding = 20;
+            boundingBox = 
+                        { 
+                            type        : "rectangle-nofill", 
+                            x           : xMin - boundingBoxPadding,
+                            y           : yMin - boundingBoxPadding,
+                            width       : xMax - xMin + 2 * boundingBoxPadding,
+                            height      : yMax - yMin + 2 * boundingBoxPadding,
+                            lineWidth   : 1,
+                            lineStyle   : "dashed",
+                            strokeStyle : "black",
+                            rotation    : 0
+                        };
                 
-                // place handles on bounding box
-                handles = [];
+            // place handles on bounding box
+            handles = [];
+            let i = 0;
 
-                // place top left handle
-                currentHandle = placeHandle("top-left",
-                                            boundingBox.x,
-                                            boundingBox.y,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                // place top middle handle
-                currentHandle = placeHandle("top-middle",
-                                            boundingBox.x + boundingBox.width/2,
-                                            boundingBox.y,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                // place top right handle
-                currentHandle = placeHandle("top-right",
-                                            boundingBox.x + boundingBox.width, 
-                                            boundingBox.y,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                // place right middle handle
-                currentHandle = placeHandle("right-middle",
-                                            boundingBox.x + boundingBox.width, 
-                                            boundingBox.y + boundingBox.height/2,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                // place bottom right handle
-                currentHandle = placeHandle("bottom-right",
-                                            boundingBox.x + boundingBox.width, 
-                                            boundingBox.y + boundingBox.height,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                // place bottom middle handle
-                currentHandle = placeHandle("bottom-middle",
-                                            boundingBox.x + boundingBox.width/2,
-                                            boundingBox.y + boundingBox.height,
-                                            boundingBox.rotation,
+            // place top left handle
+            currentHandle = placeHandle("top-left",
+                                        boundingBox.x,
+                                        boundingBox.y,
+                                        boundingBox.rotation,
                                         i);
-                handles.push(currentHandle);
+            handles.push(currentHandle);
 
-                // place bottom left handle
-                currentHandle = placeHandle("bottom-left",
+            // place top middle handle
+            currentHandle = placeHandle("top-middle",
+                                        boundingBox.x + boundingBox.width/2,
+                                        boundingBox.y,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+
+            // place top right handle
+            currentHandle = placeHandle("top-right",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+
+            // place right middle handle
+            currentHandle = placeHandle("right-middle",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y + boundingBox.height/2,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+
+            // place bottom right handle
+            currentHandle = placeHandle("bottom-right",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+
+            // place bottom middle handle
+            currentHandle = placeHandle("bottom-middle",
+                                        boundingBox.x + boundingBox.width/2,
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+
+            // place bottom left handle
+            currentHandle = placeHandle("bottom-left",
                                         boundingBox.x,                   
                                         boundingBox.y + boundingBox.height,
                                         boundingBox.rotation,
                                         i);
-                handles.push(currentHandle);
+            handles.push(currentHandle);
 
-                // place left middle handle
-                currentHandle = placeHandle("left-middle",
-                                            boundingBox.x,
-                                            boundingBox.y + boundingBox.height/2,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
+            // place left middle handle
+            currentHandle = placeHandle("left-middle",
+                                        boundingBox.x,
+                                        boundingBox.y + boundingBox.height/2,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
 
-                // place Place rotate handle on object
-                currentHandle = placeHandle("rotate",
-                                            boundingBox.x + boundingBox.width / 2,
-                                            boundingBox.y - 30,
-                                            boundingBox.rotation,
-                                            i);
-                handles.push(currentHandle);
-
-                drawScreen();
-            }
-        };
+            // place Place rotate handle on object
+            currentHandle = placeHandle("rotate",
+                                        boundingBox.x + boundingBox.width / 2,
+                                        boundingBox.y - 30,
+                                        boundingBox.rotation,
+                                        i);
+            handles.push(currentHandle);
+        }
     }
 
     //-----------------------------------------------------//
