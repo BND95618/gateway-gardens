@@ -481,6 +481,7 @@
         let xDelta,         yDelta;         // change in mouse position
         let xDeltaAcc = 0,  yDeltaAcc = 0;  //
         let xPlot,          yPlot;          // Plot size
+        let nextShapeID = 0;                // 
         let zIndex;                         // current maximum z-index
         let theta = 0;                      // rotation angle in radians
         let lineWidthDefault   = 1;         //
@@ -509,22 +510,38 @@
         let panning        = false;
         let selectShapeCtx = false;
         let polygonWIP     = false; // actively drawing the polygoon
-        
+
         // setup global objects
-        const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
-        let shapes        = shapes_JSON;
         let activeShape   = null;
         let activeHandle  = null;
         let currentHandle = null;
         let boundingBox   = null;
 
         // setup global object arrays
+        let shapes          = [];
         let polygonVertices = [];
         let handles         = [];
         let backgrounds     = [];
         let wipGroup        = []; // holds the shapes during the group formation process
         let activeGroup     = []; // holds all shapes currently selected
         let shapeGroups     = []; // holds all groups of shapes
+
+        // upon page load, process the saved data received from the server
+        const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
+        // shapes = shapes_JSON;
+        for (let i = 0; i < shapes_JSON.length; i++)
+        {
+            if (shapes_JSON[i].type)
+            {
+                shapes.push(shapes_JSON[i]);
+
+                nextShapeID = Math.max(nextShapeID, shapes[i].id);
+            }
+            else
+            {
+                shapeGroups.push(shapes_JSON[i]);
+            }
+        }
 
         // plant variables
         let requestedPlant;
@@ -533,11 +550,6 @@
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
-
-        // setup metadata object
-        let metadata =  {
-                            nextShapeID : 0
-                        }
 
         // Draw landscape border
         let extBorder = 120; // 10 ft exterior plot border in pixels
@@ -1005,7 +1017,7 @@
                                         {
                                             // console.log("DEBUG: activeShape.label", activeShape.label);
                                             // console.log("DEBUG: shapeGroups[i][j].label", shapeGroups[i][j].label);
-                                            if(activeShape.label == shapeGroups[i][j].label)
+                                            if(activeShape.id == shapeGroups[i][j].id)
                                             {
                                                 // console.log("DEBUG: shape found in:", shapeGroups[i]);
                                                 // draw bounding box around shapes in the group
@@ -1260,6 +1272,7 @@
                     createShape = true;
                     activeShape = 
                     { 
+                        id        : nextShapeID,
                         label     : "line",
                         type      : "line", 
                         xStart    : xSelectAbs, 
@@ -1271,6 +1284,7 @@
                         lineColor : lineColor,
                         grouped   : false
                     };
+                    nextShapeID++;
                 }
                 else if (shapeOption == "rectangle")
                 {
@@ -3192,9 +3206,11 @@
             event.preventDefault();
             // Acquire the CSRF token
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            //  Converts the JavaScript object to a JSON string
-            let shapes_JSON = JSON.stringify(shapes);
-            // Send the drawing objects back to the Django view
+            // Concatenate data to be saved into a single array
+            saveData = [...shapes, ...shapeGroups];
+            // Converts the JavaScript object to a JSON string
+            let saveData_JSON = JSON.stringify(saveData);
+            // Send the data to be saved back to the Django view
             const postURL = window.location.pathname;
             // Sends the HTTP request
             fetch(postURL, 
@@ -3209,7 +3225,7 @@
                     'X-CSRFToken' : csrfToken
                 },
                 // JSON payload
-                body: shapes_JSON
+                body: saveData_JSON
             })
             .then(response => response.json())
             .then(result => console.log('POST was a success: ${result}'))
