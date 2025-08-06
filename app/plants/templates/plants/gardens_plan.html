@@ -119,6 +119,9 @@
                 <span id="id_group_div" style="display: none;">
                     <button type="button" id="id_group" class="w3-button w3-padding-small w3-gray w3-round">Group</button>
                 </span>
+                <span id="id_ungroup_div" style="display: none;">
+                    <button type="button" id="id_ungroup" class="w3-button w3-padding-small w3-gray w3-round">Ungroup</button>
+                </span>
                 <span class="w3-right">
                     <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
                     <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
@@ -517,27 +520,40 @@
         let currentHandle = null;
         let boundingBox   = null;
 
+        // setup grouping class, objects and array
+        class ShapeGroup 
+        {
+            constructor()
+            {
+                this.type   = "group";
+                this.shapes = [];
+            }
+        }
+        const wipGroup    = new ShapeGroup();
+        const activeGroup = new ShapeGroup();
+        let shapeGroups   = [];
+
         // setup global object arrays
         let shapes          = [];
         let polygonVertices = [];
         let handles         = [];
         let backgrounds     = [];
-        let wipGroup        = []; // holds the shapes during the group formation process
-        let activeGroup     = []; // holds all shapes currently selected
-        let shapeGroups     = []; // holds all groups of shapes
 
         // upon page load, process the saved data received from the server
         const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
-        // shapes = shapes_JSON;
         for (let i = 0; i < shapes_JSON.length; i++)
         {
-            if (shapes_JSON[i].type)
+            // restore saved shapes
+            if (shapes_JSON[i].type == "line"      ||
+                shapes_JSON[i].type == "rectangle" ||
+                shapes_JSON[i].type == "circle"    ||
+                shapes_JSON[i].type == "polygon"    )
             {
                 shapes.push(shapes_JSON[i]);
-
                 nextShapeID = Math.max(nextShapeID, shapes[i].id);
             }
-            else
+            // restore saved groups
+            else if (shapes_JSON[i].type == "group")
             {
                 shapeGroups.push(shapes_JSON[i]);
             }
@@ -555,19 +571,6 @@
         let extBorder = 120; // 10 ft exterior plot border in pixels
         xPlot = 3600;        // 300 ft at 12 px per foot
         yPlot = 2400;        // 200 ft at 12 px per foot
-        // activeShape = 
-        //             { 
-        //                 type        : "rectangle-nofill", 
-        //                 x           : extBorder,
-        //                 y           : extBorder,
-        //                 width       : xPlot,
-        //                 height      : yPlot,
-        //                 lineWidth   : 2,
-        //                 lineStyle   : "solid",
-        //                 strokeStyle : "green",
-        //                 rotation    : 0
-        //             };
-        // backgrounds.push(activeShape);
 
         drawScreen();
 
@@ -655,7 +658,6 @@
         {
             target = e.target;
             requestedPlant = target.value;
-            // console.log("DEBUG: Requested Plant:", requestedPlant);
 
             // Setup fetch parameters
             let url             = "{% url 'plants:plant_details_modal' %}";
@@ -784,17 +786,11 @@
             target = e.target;
             zoomSelect = target.value;
 
-            // console.log("DEBUG: Zoom Select =", zoomSelect);
             // xPlot = 3600
             // yPlot = 2400
             // extBorder = 120
             // xViewPort = canvas.width
             // yViewPort = canvas.height
-            // console.log("DEBUG: xPlot =", xPlot);
-            // console.log("DEBUG: yPlot =", yPlot);
-            // console.log("DEBUG: extBorder =", extBorder);
-            // console.log("DEBUG: canvas.width =", canvas.width);
-            // console.log("DEBUG: canvas.height =", canvas.height);
 
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
             const yScale = canvas.height / (yPlot);
@@ -833,9 +829,6 @@
             target = e.target;
             zoomSlider = target.value;
 
-            // console.log("DEBUG: Got to Zoom Slider input change");
-            // console.log("DEBUG: Zoom Slider =", zoomSlider);
-
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
 
             viewportTransform.scale = xScale * (zoomSlider / 100);
@@ -849,8 +842,6 @@
         // When the window is resized, adjust canvas size to fit
         window.addEventListener("resize", function()
         {
-            console.log("Got to canvas resize");
-            console.log("window.innerWidth =", window.innerWidth);
             canvas.width  = window.innerWidth  -  40;
             canvas.height = window.innerHeight - 300;
             drawScreen();
@@ -858,6 +849,8 @@
 
         // get select menu command option fields
         const selectGroup   = document.getElementById('id_group_div');
+        const unGroup       = document.getElementById('id_ungroup_div');
+        
         // get edit form fields
         const labelForm     = document.getElementById('labelForm');
         // line coordinates
@@ -952,8 +945,9 @@
                                                             i);
                                 handles.push(currentHandle);
 
-                                // put shape in WIP group array
-                                wipGroup.push(shapes[i]);
+                                // put shape in WIP group object shape array
+                                wipGroup.shapes.push(shapes[i]);
+                                group.style.display = "inline";
                             } 
                         }
                         else if (shapes[i].type == 'rectangle')
@@ -978,8 +972,6 @@
                     // display the "group" button and turn off the active shape details
                     selectGroup.style.display = "inline";
                     shapeAttributes.style.display = "none";
-
-                    // console.log("DEBUG: shapes in wipGroup:", wipGroup);
                 }
                 else
                 {
@@ -1005,30 +997,31 @@
                             if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
                             { 
                                 activeShape = shapes[i];
+
                                 // check to see if the selected shape is in a group
                                 if (activeShape.grouped)
                                 {
-                                    // console.log("DEBUG: activeShape is in a group:", activeShape.label);
-                                    // detemine the group which the shape is a member of
+                                    console.log("DEBUG: Got to pt 1");
+                                    // determine the group which the shape is a member of
                                     for(let i = 0; i < shapeGroups.length; i++)
                                     {
-                                        // console.log("DEBUG: checking shapeGroups[i]:", shapeGroups[i]);
-                                        for(let j = 0; j < shapeGroups[i].length; j++)
+                                        for(let j = 0; j < shapeGroups[i].shapes.length; j++)
                                         {
-                                            // console.log("DEBUG: activeShape.label", activeShape.label);
-                                            // console.log("DEBUG: shapeGroups[i][j].label", shapeGroups[i][j].label);
-                                            if(activeShape.id == shapeGroups[i][j].id)
+                                            if(activeShape.id == shapeGroups[i].shapes[j].id)
                                             {
-                                                // console.log("DEBUG: shape found in:", shapeGroups[i]);
+                                                console.log("DEBUG: Got to pt 2");
+                                                selectShape = true;
                                                 // draw bounding box around shapes in the group
                                                 drawBoundingBox(shapeGroups[i]);
                                             }
                                         }
                                     }
+                                    unGroup.style.display = "inline";
                                 }
-                                // draw handles on the selected 
+                                // draw handles on the selected shape
                                 else
                                 {
+                                    console.log("DEBUG: Got to pt 3");
                                     // clear any existing handles
                                     handles = [];
 
@@ -1050,7 +1043,8 @@
                                     // Indicate that the modify shape mode is enabled for the selected shape
                                     selectShape = true;
                                     activeShape = shapes[i];
-                                    wipGroup.push(shapes[i]); // at this point it is a group of 1            
+
+                                    wipGroup.shapes.push(shapes[i]); // at this point it is a group of 1
                                 }
                             }
                         }
@@ -1226,20 +1220,28 @@
                             }
                         }
                     }
-
-                    // Display the attributes for the selected shape
-                    if (selectShape)
-                    {
-                       shapeAttributes.innerHTML = displayAttributes(activeShape);
-                    }
-                    else
-                    {
-                        shapeAttributes.innerHTML = "<p>No shape selected</p>";
-                    }
                 }
-                // Draw the entire screen
-                drawScreen();
             }
+
+            // If a shape is selected, display the shape attributes
+            if (selectShape)
+            {
+                shapeAttributes.innerHTML = displayAttributes(activeShape);
+            }
+            // Else clear selection attributes and the canvas display
+            else
+            { 
+                createShape = false;
+                activeShape = null;
+                wipGroup.shapes = []; 
+                boundingBox = null;
+                handles = [];
+                unGroup.style.display = "none";
+                shapeAttributes.style.display = "none";  
+            }
+
+            // Draw the entire screen
+            drawScreen();
         });
 
         //************************************************************//
@@ -1268,7 +1270,6 @@
             {
                 if (shapeOption == "line")
                 {
-                    // console.log("DEBUG: Start drawing a line");
                     createShape = true;
                     activeShape = 
                     { 
@@ -1581,8 +1582,6 @@
                             ySelectAbsSave = activeHandle.y;
 
                             resizeShape = true;
-
-                            // console.log("DEBUG: A polygon handle has been selected:", activeHandle.location);
                         }
                     }
                     // If no handle of the active shape was selected check to see if the
@@ -1674,7 +1673,6 @@
             // Move the selected shape
             if(action == 'select' && moveShape && activeShape.type == "line")
             {
-                // console.log("DEBUG: moving the line");
                 // move the shape
                 activeShape.xStart += xDelta;
                 activeShape.yStart += yDelta;
@@ -1720,7 +1718,6 @@
             }
             else if (action == 'select' && moveShape && activeShape.type == "polygon")
             {
-                // console.log("DEBUG: moving the polygon");
                 // move the shape
                 for(let i = 0; i < activeShape.vertices.length; i++)
                 {
@@ -2094,10 +2091,8 @@
                 return;
             } 
 
-            // console.log("DEBUG: ==============================");
-            // console.log("DEBUG: Mouse out event registered");
-            // console.log("DEBUG: ==============================");
-
+            console.log("DEBUG: *** Mouse out event registered ***");
+        
             // reset the current shape and flags
             activeShape = null;
             createShape = false;
@@ -2145,7 +2140,6 @@
                     {
                         selectPlantCtx = true;
                         shapeIndex = i;
-                        // console.log("DEBUG: Plant has been right-clicked!");
                     }
                 }
                 else if (!shapes[i].isPlant && shapes[i].type == "line")
@@ -2246,8 +2240,6 @@
             {
                 if (e.target.textContent == "Plant: Show Details")
                 {
-                    // console.log("DEBUG: Got to context menu - show plant details");
-
                     // Setup fetch parameters
                     let url             = "{% url 'plants:plant_details_modal' %}"
                     const requestMethod = "POST"
@@ -2276,7 +2268,6 @@
                 }
                 else if (e.target.textContent == "Plant: Duplicate")
                 {
-                    // console.log("DEBUG: Duplicate Shape");
                     // make a deep copy of selected shape and shift new object origin to make it visible
                     // const newShape = {};
                     // Object.assign(newShape, shapes[shapeIndex]);
@@ -2287,7 +2278,6 @@
                 }
                 else if (e.target.textContent == "Plant: Delete")
                 {
-                    // console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
                     shapes.splice(shapeIndex, 1);
                 }
                 // Hide menu after action
@@ -2445,7 +2435,6 @@
                 }
                 else if (e.target.textContent == "Shape: Duplicate")
                 {
-                    // console.log("DEBUG: Duplicate Shape");
                     // make a deep copy of selected shape and shift new object origin to make it visible
                     // const newShape = {};
                     // Object.assign(newShape, shapes[shapeIndex]);
@@ -2479,7 +2468,6 @@
                 }
                 else if (e.target.textContent == "Shape: Delete")
                 {
-                    // console.log("DEBUG: Delete Shape - shapeIndex = ", shapeIndex);
                     shapes.splice(shapeIndex, 1);
                 }
                 
@@ -2499,9 +2487,6 @@
         {
             // This line prevents the default form submission (page reload)
             e.preventDefault(); 
-
-            // console.log("DEBUG: Got to processEditForm");
-            // console.log("DEBUG: shapes[shapeIndex] (before) = ", shapes[shapeIndex]);
 
             if (shapes[shapeIndex].type == "line")
             {
@@ -2536,8 +2521,6 @@
                 shapes[shapeIndex].lineStyle = lineStyleForm.value;
                 shapes[shapeIndex].lineColor = lineColorForm.value;
                 shapes[shapeIndex].fillColor = fillColorForm.value;
-
-                // console.log("DEBUG: shapes[shapeIndex] (after) = ", shapes[shapeIndex]);
 
                 planner_edit_modal.style.display = 'none';
             }
@@ -2603,7 +2586,7 @@
                 return;
             } 
 
-            console.log("DEBUG: Mouse wheel event registered");
+            console.log("DEBUG: *** Mouse wheel event registered ***");
 
             // Save the previous transforms and scale factor
             const previousScale = viewportTransform.scale;
@@ -3208,6 +3191,7 @@
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             // Concatenate data to be saved into a single array
             saveData = [...shapes, ...shapeGroups];
+
             // Converts the JavaScript object to a JSON string
             let saveData_JSON = JSON.stringify(saveData);
             // Send the data to be saved back to the Django view
@@ -3231,7 +3215,7 @@
             .then(result => console.log('POST was a success: ${result}'))
             .catch(error => console.error('An error occurred: ${error}'))
         };
-
+        
         //************************************************************//
         // Function: Clear the canvas of all shapes
         //************************************************************//
@@ -3240,34 +3224,62 @@
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             shapes.length = 0;
+            shapeGroups.length = 0;
         };
-
+        
         //************************************************************//
         // Function: Group the selected shapes and draw bounding box
         //************************************************************//
         const group = document.getElementById("id_group");
         group.onclick = async (event) => 
         {
-            // console.log("DEBUG: Grouping Shapes");
-
             // flag the member shapes as being in the group
-            for(let i=0; i < wipGroup.length; i++)
+            for(let i = 0; i < wipGroup.shapes.length; i++)
             {
-                wipGroup[i].grouped = true;
+                wipGroup.shapes[i].grouped = true;
             }
             // save the current group of shapes
-            shapeGroups.push(wipGroup);
+            const tempGroup = new ShapeGroup();
+            tempGroup.shapes = wipGroup.shapes;
+            shapeGroups.push(tempGroup);
             // now that the group has been saved, set activeGroup = wipGroup
             // and clear the wipGroup
-            activeGroup = wipGroup;
-            wipGroup = [];
+            activeGroup.shapes = wipGroup.shapes;
+            wipGroup.shapes = [];
 
-            // console.log("DEBUG: shapeGroups:", shapeGroups);
+            group.style.display = "none";
+            unGroup.style.display = "inline";
 
             drawBoundingBox(activeGroup);
 
             drawScreen();
         }
+        
+        //************************************************************//
+        // Function: Ungroup the selected shapes
+        //************************************************************//
+        const ungroup = document.getElementById("id_ungroup");
+        ungroup.onclick = async (event) => 
+        {
+            console.log("DEBUG: Got to ungroup function");
+            // clear the member shape group flags
+            for(let i = 0; i < activeGroup.shapes.length; i++)
+            {
+                console.log("DEBUG: reset shape group flag", activeGroup.shapes[i]);
+                // activeGroup.shapes[i].grouped = false;
+            }
+            // remove current group (activeGroup) of shapes from shapeGroups
+            console.log("DEBUG: remove activeGroup:", activeGroup);
+            for(let i = 0; 0 < shapeGroups.length; i++)
+            {
+
+            }
+
+            unGroup.style.display = "none";
+
+            drawScreen();
+        }
+        
         //************************************************************//
         // Function: Draw bounding box
         //************************************************************//
@@ -3278,22 +3290,15 @@
             let yMin = 10000;
             let xMax = -1000;
             let yMax = -1000;
-            for(let i=0; i < group.length; i++)
+            for(let i=0; i < group.shapes.length; i++)
             {
-                // console.log("DEBUG: Processing Shape:", i);
-
-                if(group[i].type == "line")
+                if(group.shapes[i].type == "line")
                 {
-                    xMin = Math.min(xMin, group[i].xStart, group[i].xEnd);
-                    yMin = Math.min(yMin, group[i].yStart, group[i].yEnd);
-                    xMax = Math.max(xMax, group[i].xStart, group[i].xEnd);
-                    yMax = Math.max(yMax, group[i].yStart, group[i].yEnd);
+                    xMin = Math.min(xMin, group.shapes[i].xStart, group.shapes[i].xEnd);
+                    yMin = Math.min(yMin, group.shapes[i].yStart, group.shapes[i].yEnd);
+                    xMax = Math.max(xMax, group.shapes[i].xStart, group.shapes[i].xEnd);
+                    yMax = Math.max(yMax, group.shapes[i].yStart, group.shapes[i].yEnd);
                 }
-
-                // console.log("DEBUG: xMin:", xMin);
-                // console.log("DEBUG: yMin:", yMin);
-                // console.log("DEBUG: xMax:", xMax);
-                // console.log("DEBUG: yMax:", yMax);
             }
             // draw bounding box
             const boundingBoxPadding = 20;
