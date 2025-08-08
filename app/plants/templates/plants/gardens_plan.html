@@ -520,7 +520,131 @@
         let currentHandle = null;
         let boundingBox   = null;
 
-        // setup grouping class, objects and array
+        // Base Shape class
+        class Shape 
+        {
+            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor) 
+            {
+                this.type      = type;
+                this.id        = id;
+                this.grouped   = grouped;
+                this.label     = label;
+                this.lineWidth = lineWidth;
+                this.lineStyle = lineStyle;
+                this.lineColor = lineColor;
+            }
+        }
+        class Line extends Shape 
+        {
+            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor,
+                        xStart, yStart, xEnd, yEnd) 
+            {
+                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                this.xStart = xStart;
+                this.yStart = yStart;
+                this.xEnd   = xEnd;
+                this.yEnd   = yEnd;
+            }
+            select(x, y) 
+            {
+                // Determine if the selection point is 'close' to the line
+
+                // set the threshold
+                const threshold = 3;
+                        
+                // Calculate the difference in coordinates for the line segment
+                const dx = this.xEnd - this.xStart;
+                const dy = this.yEnd - this.yStart;
+    
+                // Calculate the squared length of the line segment
+                const lineLengthSq = dx * dx + dy * dy;
+    
+                // Calculate the parameter 't' for the closest point on the *infinite* line
+                // This 't' represents the projection of the point onto the line.
+                const t = ((x - this.xStart) * dx + (y - this.yStart) * dy) / lineLengthSq;
+    
+                // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
+                const closestX = this.xStart + t * dx;
+                const closestY = this.yStart + t * dy;
+    
+                // Calculate the distance from the point to the closest point on the segment
+                const distance = Math.sqrt(Math.pow(x - closestX, 2) + Math.pow(y - closestY, 2));
+    
+                return(distance <= threshold);
+            }
+        }
+        class Rectangle extends Shape 
+        {
+            constructor(type, id, grouped, label, 
+                        lineWidth, lineStyle, lineColor, fillColor,
+                        x, y, width, height, rotation) 
+            {
+                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                this.fillColor  = fillColor;
+                this.x          = x;
+                this.y          = y;
+                this.width      = width;
+                this.height     = height;
+                this.rotation   = rotation;
+            }
+            select(x, y) 
+            {
+                return(x >= this.x && x <= (this.x + this.width) && 
+                       y >= this.y && y <= (this.y + this.height))
+            }
+        }
+        class Circle extends Shape 
+        {
+            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor, fillColor,
+                        x, y, radius) 
+            {
+                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                this.fillColor  = fillColor;
+                this.x          = x;
+                this.y          = y;
+                this.radius     = radius;
+                this.startAngle = 0;
+                this.endAngle   = 2 * Math.PI;
+                this.direction  = "clockwise";
+            }
+            select(x, y) 
+            {
+                // find the distance of the cursor position from the circle center and compare to the radius
+                const distance = Math.sqrt(Math.pow((x - this.x), 2) + Math.pow((y - this.y), 2))
+                return(distance <= this.radius);
+            }
+            placeHandles()
+            {
+                
+            }
+        }
+        class Polygon extends Shape 
+        {
+            constructor(type, id, grouped, label, 
+                        lineWidth, lineStyle, lineColor, fillColor,
+                        vertices, rotation, status) 
+            {
+                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                this.fillColor  = fillColor;
+                this.vertices   = vertices;
+                this.rotation   = rotation;
+                this.status     = status;
+            }
+            select(x, y) 
+            {
+                // Create the path for the target polygon
+                ctx.beginPath();
+                ctx.moveTo(this.vertices[0].x, this.vertices[0].y);
+                for (let j = 1; j < this.vertices.length; j++) 
+                {
+                    ctx.lineTo(this.vertices[j].x, this.vertices[j].y);
+                }
+                ctx.closePath();
+                // return 'true' if the X-Y coordinates are contained within the polygon
+                return(ctx.isPointInPath(x, y));
+            }
+        }
+        
         class ShapeGroup 
         {
             constructor()
@@ -529,6 +653,7 @@
                 this.shapes = [];
             }
         }
+
         const wipGroup    = new ShapeGroup();
         const activeGroup = new ShapeGroup();
         let shapeGroups   = [];
@@ -927,7 +1052,7 @@
                         {
                             // Determine in the selection point is close to the line
                             // If so, place resize handles on object
-                            if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
+                            if(shapes[i].select(xSelectAbs, ySelectAbs))
                             {
                                 // place start point handle
                                 currentHandle = placeHandle("start",
@@ -994,7 +1119,7 @@
                         if (shapes[i].type == 'line')
                         {
                             // Determine in the selection point is close to the line
-                            if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
+                            if(shapes[i].select(xSelectAbs, ySelectAbs))
                             { 
                                 activeShape = shapes[i];
 
@@ -1009,7 +1134,6 @@
                                         {
                                             if(activeShape.id == shapeGroups[i].shapes[j].id)
                                             {
-                                                console.log("DEBUG: Got to pt 2");
                                                 selectShape = true;
                                                 // draw bounding box around shapes in the group
                                                 drawBoundingBox(shapeGroups[i]);
@@ -1021,7 +1145,6 @@
                                 // draw handles on the selected shape
                                 else
                                 {
-                                    console.log("DEBUG: Got to pt 3");
                                     // clear any existing handles
                                     handles = [];
 
@@ -1072,7 +1195,7 @@
 
                             // Determine if the selection point is contained within the rectangle
                             // If so, place resize handles on object
-                            if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
+                            if(shapes[i].select(xSelectAbs, ySelectAbs))
                             {
                                 // clear any existing handles
                                 handles = [];
@@ -1158,7 +1281,7 @@
                         {
                             // Determine if the selection point is within the circle
                             // If so, place resize handles on object
-                            if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
+                            if(shapes[i].select(xSelectAbs, ySelectAbs))
                             {
                                 // clear any existing handles
                                 handles = [];
@@ -1200,7 +1323,7 @@
                         else if (shapes[i].type == "polygon")
                         {
                             // Check to see if the selection point is within the polygon
-                            if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
+                            if(shapes[i].select(xSelectAbs, ySelectAbs))
                             {
                                 // clear any existing handles
                                 handles = [];
@@ -1221,27 +1344,26 @@
                         }
                     }
                 }
-            }
+                // If a shape is selected, display the shape attributes
+                if (selectShape)
+                {
+                    shapeAttributes.innerHTML = displayAttributes(activeShape);
+                }
+                // Else clear selection attributes and the canvas display
+                else
+                { 
+                    createShape = false;
+                    activeShape = null;
+                    wipGroup.shapes = []; 
+                    boundingBox = null;
+                    handles = [];
+                    unGroup.style.display = "none";
+                    shapeAttributes.style.display = "none";  
+                }
 
-            // If a shape is selected, display the shape attributes
-            if (selectShape)
-            {
-                shapeAttributes.innerHTML = displayAttributes(activeShape);
+                // Draw the entire screen
+                drawScreen();
             }
-            // Else clear selection attributes and the canvas display
-            else
-            { 
-                createShape = false;
-                activeShape = null;
-                wipGroup.shapes = []; 
-                boundingBox = null;
-                handles = [];
-                unGroup.style.display = "none";
-                shapeAttributes.style.display = "none";  
-            }
-
-            // Draw the entire screen
-            drawScreen();
         });
 
         //************************************************************//
@@ -1271,60 +1393,26 @@
                 if (shapeOption == "line")
                 {
                     createShape = true;
-                    activeShape = 
-                    { 
-                        id        : nextShapeID,
-                        label     : "line",
-                        type      : "line", 
-                        xStart    : xSelectAbs, 
-                        yStart    : ySelectAbs,
-                        xEnd      : xSelectAbs, 
-                        yEnd      : ySelectAbs,
-                        lineWidth : lineWidth,
-                        lineStyle : lineStyle,
-                        lineColor : lineColor,
-                        grouped   : false
-                    };
+                    activeShape = new Line('line', nextShapeID, false, 'line', 
+                                           lineWidth, lineStyle, lineColor,
+                                           xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
                     nextShapeID++;
                 }
                 else if (shapeOption == "rectangle")
                 {
                     createShape = true;
-                    activeShape = 
-                    { 
-                        label     : "rectangle",
-                        type      : "rectangle", 
-                        x         : xSelectAbs, 
-                        y         : ySelectAbs,
-                        width     : 0,
-                        height    : 0,
-                        lineWidth : lineWidth,
-                        lineStyle : lineStyle,
-                        lineColor : lineColor,
-                        fillColor : fillColor,
-                        rotation  : 0,
-                        grouped   : false
-                    };
+                    activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle',
+                                                lineWidth, lineStyle, lineColor, fillColor,
+                                                xSelectAbs, ySelectAbs, 0, 0, 0);
+                    nextShapeID++;
                 }
                 else if (shapeOption == "circle")
                 {
                     createShape = true;
-                    activeShape = 
-                    { 
-                        label      : "circle",
-                        type       : "circle", 
-                        x          : xSelectAbs, 
-                        y          : ySelectAbs, 
-                        radius     : 0,
-                        startAngle : 0, 
-                        endAngle   : 2 * Math.PI,
-                        direction  : "clockwise",
-                        lineWidth  : lineWidth,
-                        lineStyle  : lineStyle,
-                        lineColor  : lineColor,
-                        fillColor  : fillColor,
-                        grouped   : false
-                    };
+                    activeShape = new Circle('circle', nextShapeID, false, 'circle', 
+                                             lineWidth, lineStyle, lineColor, fillColor,
+                                             xSelectAbs, ySelectAbs, 0);
+                    nextShapeID++;
                 }
                 else if (shapeOption == "polygon")
                 {
@@ -1333,19 +1421,9 @@
                         // Create polygon object
                         createShape = true;
                         polygonVertices = [];
-                        activeShape = 
-                        { 
-                            label     : "polygon",
-                            type      : "polygon", 
-                            vertices  : polygonVertices, 
-                            lineWidth : lineWidth,
-                            lineStyle : lineStyle,
-                            lineColor : lineColor,
-                            fillColor : fillColor,
-                            rotation  : 0,
-                            status    : "WIP",
-                            grouped   : false
-                        };
+                        activeShape = new Polygon('polygon', nextShapeID, false, 'polygon',
+                                                  lineWidth, lineStyle, lineColor, fillColor,
+                                                  polygonVertices, 0, status);
 
                         // Set polygon starting point
                         activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
@@ -1416,7 +1494,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        if(selectLine(activeShape, xSelectAbs, ySelectAbs))
+                        if(activeShape.select(xSelectAbs, ySelectAbs))
                         {
                             moveShape = true;
                         }
@@ -1506,7 +1584,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        if(selectRectangle(activeShape, xSelectAbs, ySelectAbs))
+                        if(activeShape.select(xSelectAbs, ySelectAbs))
                         {
                             moveShape   = true;
                         }
@@ -1556,7 +1634,7 @@
                     // body of the active shape was selected
                     if (!activeHandle)
                     {
-                        if(selectCircle(activeShape, xSelectAbs, ySelectAbs))
+                        if(activeShape.select(xSelectAbs, ySelectAbs))
                         {
                             moveShape = true;
                             xSelectAbsSave  = xSelectAbs;
@@ -1589,7 +1667,7 @@
                     if (!activeHandle)
                     {
                         // Check to see if the selection point is within the polygon
-                        if (selectPolygon(activeShape, xSelectAbs, ySelectAbs)) 
+                        if (activeShape.select(xSelectAbs, ySelectAbs)) 
                         {
                             moveShape = true;
                             xSelectAbsSave  = xSelectAbs;
@@ -1608,6 +1686,8 @@
                 xSelectRelSav = xSelectRel;
                 ySelectRelSav = ySelectRel;
             } 
+
+            console.log("DEBUG: activeShape:", activeShape);
 
             // Draw the entire screen
             drawScreen();
@@ -1638,6 +1718,8 @@
             // initial xSelectAbsSave & ySelectAbsSave were set via mousedown event
             xDelta = Math.round(xMouseAbs - xSelectAbsSave);
             yDelta = Math.round(yMouseAbs - ySelectAbsSave);
+
+            console.log("DEBUG: activeShape", activeShape);
 
             // Draw the active shape
             if (action == "draw")
@@ -2008,6 +2090,8 @@
                 shapeAttributes.innerHTML = displayAttributes(activeShape);
             }
 
+            console.log("DEBUG: activeShape", activeShape);
+
             // Draw the entire screen
             drawScreen();
         });
@@ -2064,6 +2148,10 @@
                         polygonWIP = false;
                         activeShape = null;
                     }
+
+                    console.log("DEBUG: activeShape:", activeShape);
+                    console.log("DEBUG: polygonWIP =", polygonWIP);
+
                 }
             }
             // Draw the entire screen
@@ -2136,7 +2224,7 @@
                 if (shapes[i].isPlant == true)
                 {
                     // Check to see if the selection point is within the plant
-                    if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
+                    if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectPlantCtx = true;
                         shapeIndex = i;
@@ -2146,7 +2234,7 @@
                 {
                     // Determine in the selection point is close to the line
                     // If so, duplicate the line object
-                    if(selectLine(shapes[i], xSelectAbs, ySelectAbs))
+                    if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectShapeCtx = true;
                         shapeIndex = i;
@@ -2175,7 +2263,7 @@
                     }
                     // Determine if the selection point is contained within the rectangle
                     // If so, place resize handles on object
-                    if(selectRectangle(shapes[i], xSelectAbs, ySelectAbs))
+                    if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectShapeCtx = true;
                         shapeIndex = i;
@@ -2186,7 +2274,7 @@
                 }               
                 else if (!shapes[i].isPlant && shapes[i].type == "circle")
                 {
-                    if(selectCircle(shapes[i], xSelectAbs, ySelectAbs))
+                    if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectShapeCtx = true;
                         shapeIndex = i;
@@ -2195,7 +2283,7 @@
                 else if (!shapes[i].isPlant && shapes[i].type == "polygon")
                 {
                     // Check to see if the selection point is within the polygon
-                    if(selectPolygon(shapes[i], xSelectAbs, ySelectAbs))
+                    if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectShapeCtx = true;
                         shapeIndex = i;
@@ -2697,73 +2785,6 @@
                 shape_id   : shape_id
             };
             return(handle);       
-        }
-   
-        //************************************************************//
-        // Function: line selection
-        //************************************************************//
-        function selectLine(shape, x, y)
-        {
-            // Determine if the selection point is 'close' to the line
-
-            // set the threshold
-            const threshold = 3;
-                        
-            // Calculate the difference in coordinates for the line segment
-            const dx = shape.xEnd - shape.xStart;
-            const dy = shape.yEnd - shape.yStart;
-
-            // Calculate the squared length of the line segment
-            const lineLengthSq = dx * dx + dy * dy;
-
-            // Calculate the parameter 't' for the closest point on the *infinite* line
-            // This 't' represents the projection of the point onto the line.
-            const t = ((x - shape.xStart) * dx + (y - shape.yStart) * dy) / lineLengthSq;
-
-            // Clamp 't' to the range [0, 1] to ensure the closest point is on the *segment*
-            const closestX = shape.xStart + t * dx;
-            const closestY = shape.yStart + t * dy;
-
-            // Calculate the distance from the point to the closest point on the segment
-            const distance = Math.sqrt(Math.pow(x - closestX, 2) + Math.pow(y - closestY, 2));
-
-            return(distance <= threshold);
-        }
-
-        //************************************************************//
-        // Function: rectangle selection
-        //************************************************************//
-        function selectRectangle(shape, x, y)
-        {
-            return(x >= shape.x && x <= (shape.x + shape.width) && 
-                   y >= shape.y && y <= (shape.y + shape.height))
-        }
-
-        //************************************************************//
-        // Function: circle selection
-        //************************************************************//
-        function selectCircle(shape, x, y)
-        {
-            // find the distance of the cursor position from the circle center and compare to the radius
-            distance = Math.sqrt(Math.pow((x - shape.x), 2) + Math.pow((y - shape.y), 2))
-            return(distance <= shape.radius);
-        }
-
-        //************************************************************//
-        // Function: polygon selection
-        //************************************************************//
-        function selectPolygon(shape, x, y)
-        {
-            // Create the path for the target polygon
-            ctx.beginPath();
-            ctx.moveTo(shape.vertices[0].x, shape.vertices[0].y);
-            for (let j = 1; j < shape.vertices.length; j++) 
-            {
-                ctx.lineTo(shape.vertices[j].x, shape.vertices[j].y);
-            }
-            ctx.closePath();
-            // return 'true' if the X-Y coordinates are contained within the polygon
-            return(ctx.isPointInPath(x, y));
         }
 
         //************************************************************//
