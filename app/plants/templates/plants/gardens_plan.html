@@ -567,7 +567,7 @@
                 }      
             }
         }
-        class Line extends Shape 
+        class Line      extends Shape 
         {
             constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor,
                         xStart, yStart, xEnd, yEnd) 
@@ -835,7 +835,7 @@
                 }
             }
         }
-        class Circle extends Shape 
+        class Circle    extends Shape 
         {
             constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor, fillColor,
                         x, y, radius) 
@@ -917,7 +917,7 @@
                 }
             }
         }
-        class Polygon extends Shape 
+        class Polygon   extends Shape 
         {
             constructor(type, id, grouped, label, 
                         lineWidth, lineStyle, lineColor, fillColor,
@@ -1046,35 +1046,6 @@
         let handles         = [];
         let backgrounds     = [];
 
-        //****************************************************************//
-        // upon page load, process the saved data received from the server
-        //****************************************************************//
-        const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
-        for (let i = 0; i < shapes_JSON.length; i++)
-        {
-            // console.log("DEBUG: shapes_JSON[i]", shapes_JSON[i]);
-
-            // restore saved shapes
-            if (shapes_JSON[i].type == "line"      ||
-                shapes_JSON[i].type == "rectangle" ||
-                shapes_JSON[i].type == "circle"    ||
-                shapes_JSON[i].type == "polygon"    )
-            {
-                shapes.push(shapes_JSON[i]);
-                nextShapeID = Math.max(nextShapeID, shapes[i].id);
-
-                // console.log("DEBUG: shapes[i]", shapes[i]);
-            }
-            // restore saved groups
-            else if (shapes_JSON[i].type == "group")
-            {
-                shapeGroups.push(shapes_JSON[i]);
-            }
-        }
-
-        console.log("DEBUG: restore shapes", shapes);
-        shapes = [];
-
         // plant variables
         let requestedPlant;
         let activePlant = null;
@@ -1087,6 +1058,12 @@
         let extBorder = 120; // 10 ft exterior plot border in pixels
         xPlot = 3600;        // 300 ft at 12 px per foot
         yPlot = 2400;        // 200 ft at 12 px per foot
+
+        // restore the canvas from the server db
+        restore();
+
+        console.log("DEBUG: shapes restored:", shapes);
+        // shapes = [];
 
         drawScreen();
 
@@ -3148,7 +3125,7 @@
         }
 
         //************************************************************//
-        // Function: Save the canvas to db
+        // Function: Save the canvas to the server db
         //************************************************************//
         save = document.getElementById("id_save");
         save.onclick = async (event) => 
@@ -3184,6 +3161,105 @@
             .catch(error => console.error('An error occurred: ${error}'))
         };
         
+        //****************************************************************//
+        // Function: Restore the canvas from the server db
+        //****************************************************************//
+        function restore()
+        {
+            const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
+            let restoredShape = null;
+            // restore saved shapes
+            for (let i = 0; i < shapes_JSON.length; i++)
+            {
+                if (shapes_JSON[i].type == "line")
+                {
+                    restoredShape = new Line();
+
+                    restoredShape.type      = shapes_JSON[i].type;
+                    restoredShape.id        = shapes_JSON[i].id;
+                    restoredShape.grouped   = shapes_JSON[i].grouped;
+                    restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.lineColor = shapes_JSON[i].lineColor;
+                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
+                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.xStart    = shapes_JSON[i].xStart;
+                    restoredShape.yStart    = shapes_JSON[i].yStart;
+                    restoredShape.xEnd      = shapes_JSON[i].xEnd;
+                    restoredShape.yEnd      = shapes_JSON[i].yEnd;
+
+                    nextShapeID = Math.max(nextShapeID, restoredShape.id);
+
+                    shapes.push(restoredShape);
+                }
+                else if (shapes_JSON[i].type == "rectangle")
+                {
+                    restoredShape = new Rectangle();
+
+                    restoredShape.type      = shapes_JSON[i].type;
+                    restoredShape.id        = shapes_JSON[i].id;
+                    restoredShape.grouped   = shapes_JSON[i].grouped;
+                    restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.lineColor = shapes_JSON[i].lineColor;
+                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
+                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fillColor = shapes_JSON[i].fillColor;
+                    restoredShape.x         = shapes_JSON[i].x;
+                    restoredShape.y         = shapes_JSON[i].y;
+                    restoredShape.width     = shapes_JSON[i].width;
+                    restoredShape.height    = shapes_JSON[i].height;
+                    restoredShape.rotation  = shapes_JSON[i].rotation;
+
+                    nextShapeID = Math.max(nextShapeID, restoredShape.id);
+
+                    shapes.push(restoredShape);
+                }
+                else if (shapes_JSON[i].type == "circle")
+                {
+                    restoredShape = new Circle();
+
+                    restoredShape.type      = shapes_JSON[i].type;
+                    restoredShape.id        = shapes_JSON[i].id;
+                    restoredShape.grouped   = shapes_JSON[i].grouped;
+                    restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.lineColor = shapes_JSON[i].lineColor;
+                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
+                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fillColor = shapes_JSON[i].fillColor;
+                    restoredShape.x         = shapes_JSON[i].x;
+                    restoredShape.y         = shapes_JSON[i].y;
+                    restoredShape.radius    = shapes_JSON[i].radius;
+
+                    nextShapeID = Math.max(nextShapeID, restoredShape.id);
+
+                    shapes.push(restoredShape);
+                }
+                else if (shapes_JSON[i].type == "polygon")
+                {
+                    restoredShape = new Polygon();
+
+                    restoredShape.type      = shapes_JSON[i].type;
+                    restoredShape.id        = shapes_JSON[i].id;
+                    restoredShape.grouped   = shapes_JSON[i].grouped;
+                    restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.lineColor = shapes_JSON[i].lineColor;
+                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
+                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fillColor = shapes_JSON[i].fillColor;
+                    restoredShape.vertices  = shapes_JSON[i].vertices;
+                    restoredShape.rotation  = shapes_JSON[i].rotation;
+                    restoredShape.status    = shapes_JSON[i].status;
+
+                    nextShapeID = Math.max(nextShapeID, restoredShape.id);
+
+                    shapes.push(restoredShape);
+                }
+                else if (shapes_JSON[i].type == "group")
+                {
+                    shapeGroups.push(shapes_JSON[i]);
+                }
+            }
+        }         
+
         //************************************************************//
         // Function: Clear the canvas of all shapes
         //************************************************************//
