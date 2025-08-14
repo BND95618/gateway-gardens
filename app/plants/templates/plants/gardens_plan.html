@@ -515,10 +515,9 @@
         let polygonWIP     = false; // actively drawing the polygoon
 
         // setup global objects
-        let activeShape   = null;
-        let activeHandle  = null;
-        let currentHandle = null;
-        let boundingBox   = null;
+        let activeShape  = null;
+        let activeHandle = null;
+        let boundingBox  = null;
 
         // Base Shape class
         class Shape 
@@ -581,9 +580,6 @@
             }
             select(x, y) 
             {
-                // clear any existing handles
-                this.handles = [];
-
                 // Determine if the selection point is 'close' to the line
 
                 // set the threshold
@@ -610,16 +606,8 @@
                 // If line is selected, draw handles
                 if(distance <= threshold)
                 {
-                    // clear any existing handles
-                    this.handles = [];
-
-                    // place start point handle
-                    currentHandle = placeHandle("start", this.xStart, this.yStart);
-                    this.handles.push(currentHandle);
-
-                    // place end point handle
-                    currentHandle = placeHandle("end", this.xEnd, this.yEnd);
-                    this.handles.push(currentHandle);
+                    this.handles.push(placeHandle("start", this.xStart, this.yStart));
+                    this.handles.push(placeHandle("end",   this.xEnd,   this.yEnd));
                 }
                 return(distance <= threshold);
             }
@@ -681,11 +669,8 @@
                 this.rotation   = rotation;
                 this.handles = [];
             }
-            select(xSelectAbs, ySelectAbs) 
+            select(x, y) 
             {
-                // clear any existing handles
-                this.handles = [];
-
                 // translate mouse click coordinates if shape is rotated
                 //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
                 //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
@@ -707,66 +692,19 @@
                 }
 
                 // Determine if the selection point is contained within the rectangle
+                // If so, place resizing handles
                 if (xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
                     ySelectAbs >= this.y && ySelectAbs <= (this.y + this.height))
                 {
-                    // If rectangle is selected, draw handles
-                    // clear any existing handles
-                    this.handles = [];
-
-                    // place top left handle
-                    currentHandle = placeHandle("top-left",
-                                                this.x,
-                                                this.y);
-                    this.handles.push(currentHandle);
-
-                    // place top middle handle
-                    currentHandle = placeHandle("top-middle",
-                                                this.x + this.width/2,
-                                                this.y);
-                    this.handles.push(currentHandle);
-
-                    // place top right handle
-                    currentHandle = placeHandle("top-right",
-                                                this.x + this.width, 
-                                                this.y);
-                    this.handles.push(currentHandle);
-
-                    // place right middle handle
-                    currentHandle = placeHandle("right-middle",
-                                                this.x + this.width, 
-                                                this.y + this.height/2);
-                    this.handles.push(currentHandle);
-
-                    // place bottom right handle
-                                                currentHandle = placeHandle("bottom-right",
-                                                this.x + this.width, 
-                                                this.y + this.height);
-                    this.handles.push(currentHandle);
-
-                    // place bottom middle handle
-                    currentHandle = placeHandle("bottom-middle",
-                                                this.x + this.width/2,
-                                                this.y + this.height);
-                    this.handles.push(currentHandle);
-
-                    // place bottom left handle
-                    currentHandle = placeHandle("bottom-left",
-                                                this.x,                   
-                                                this.y + this.height);
-                    this.handles.push(currentHandle);
-
-                    // place left middle handle
-                    currentHandle = placeHandle("left-middle",
-                                                this.x,
-                                                this.y + this.height/2);
-                    this.handles.push(currentHandle);
-
-                    // place Place rotate handle on object
-                    currentHandle = placeHandle("rotate",
-                                                this.x + this.width / 2,
-                                                this.y - 30);
-                    this.handles.push(currentHandle);
+                    this.handles.push(placeHandle("top-left",      this.x,                this.y));
+                    this.handles.push(placeHandle("top-middle",    this.x + this.width/2, this.y));
+                    this.handles.push(placeHandle("top-right",     this.x + this.width,   this.y));
+                    this.handles.push(placeHandle("right-middle",  this.x + this.width,   this.y + this.height/2));
+                    this.handles.push(placeHandle("bottom-right",  this.x + this.width,   this.y + this.height));
+                    this.handles.push(placeHandle("bottom-middle", this.x + this.width/2, this.y + this.height));
+                    this.handles.push(placeHandle("bottom-left",   this.x,                this.y + this.height));
+                    this.handles.push(placeHandle("left-middle",   this.x,                this.y + this.height/2));
+                    this.handles.push(placeHandle("rotate",        this.x + this.width/2, this.y - 30));
                 }
 
                 return(xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
@@ -852,27 +790,16 @@
             }
             select(x, y) 
             {
-                // clear any existing handles
-                this.handles = [];
-
                 // find the distance of the cursor position from the circle center and compare to the radius
                 const distance = Math.sqrt(Math.pow((x - this.x), 2) + Math.pow((y - this.y), 2))
 
                 // If circle is selected, draw handles
                 if (distance <= this.radius)
                 {
-                    // Place resize handles on object
-                    currentHandle = placeHandle("top", this.x, this.y - this.radius);
-                    this.handles.push(currentHandle);
-
-                    currentHandle = placeHandle("right", this.x + this.radius, this.y);
-                    this.handles.push(currentHandle);
-
-                    currentHandle = placeHandle("bottom", this.x, this.y + this.radius);
-                    this.handles.push(currentHandle);
-
-                    currentHandle = placeHandle("left", this.x - this.radius, this.y);
-                    this.handles.push(currentHandle);
+                    this.handles.push(placeHandle("top",    this.x,               this.y - this.radius));
+                    this.handles.push(placeHandle("right",  this.x + this.radius, this.y));
+                    this.handles.push(placeHandle("bottom", this.x,               this.y + this.radius));
+                    this.handles.push(placeHandle("left",   this.x - this.radius, this.y));
                 }
                 return(distance <= this.radius);
             }
@@ -932,9 +859,6 @@
             }
             select(x, y) 
             {
-                // clear any existing handles
-                this.handles = [];
-
                 // Create the path for the target polygon
                 ctx.beginPath();
                 ctx.moveTo(this.vertices[0].x, this.vertices[0].y);
@@ -947,11 +871,9 @@
                 // If the polygon is selected, draw handles
                 if(ctx.isPointInPath(x, y))
                 {
-                    // Place resize handles on object
                     for (let j = 0; j < this.vertices.length; j++)
                     {
-                        currentHandle = placeHandle("v" + j, this.vertices[j].x, this.vertices[j].y);
-                        this.handles.push(currentHandle);
+                        this.handles.push(placeHandle("v" + j, this.vertices[j].x, this.vertices[j].y));
                     }
                 }
 
@@ -1029,22 +951,18 @@
         
         class ShapeGroup 
         {
-            constructor()
+            constructor(id)
             {
                 this.type   = "group";
+                this.id     = id;
                 this.shapes = [];
             }
         }
-
-        const wipGroup    = new ShapeGroup();
-        const activeGroup = new ShapeGroup();
-        let shapeGroups   = [];
-
+        
         // setup global object arrays
-        let shapes          = [];
-        let polygonVertices = [];
-        let handles         = [];
-        let backgrounds     = [];
+        let shapes      = [];
+        let shapeGroups = [];
+        let backgrounds = [];
 
         // plant variables
         let requestedPlant;
@@ -1059,11 +977,14 @@
         xPlot = 3600;        // 300 ft at 12 px per foot
         yPlot = 2400;        // 200 ft at 12 px per foot
 
+        //
+        let nextGroupID = 0;
+        let wipGroupFlag = false;
+        wipGroup    = new ShapeGroup(nextGroupID);
+        activeGroup = new ShapeGroup(nextGroupID);
+
         // restore the canvas from the server db
         restore();
-
-        console.log("DEBUG: shapes restored:", shapes);
-        // shapes = [];
 
         drawScreen();
 
@@ -1137,10 +1058,7 @@
                 id_zoom_select_div.style.display  = 'inline';
                 id_zoom_slider_div.style.display  = 'inline-block';
                 id_shape_attributes.style.display = 'none';
-                
             }
-            // clear any existing handles
-            handles = [];
         });
 
         //************************************************************//
@@ -1395,42 +1313,46 @@
         canvas.addEventListener("click", (e) => 
         {
             console.log("DEBUG: *** Mouse click event registered ***");
-            
+
+            // canvas selection point - absolute position
+            xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
+            ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
+
             if (action == "select")
             {
-                // canvas selection point - absolute position
-                xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
-                ySelectAbs = (e.clientY - canvas.offsetTop  - viewportTransform.y) / viewportTransform.scale ;
-
+                // Disable the mousedown, mousemove, & mouseup events
+                createShape = false;
+                // Case: single shape selection
+                // - if a shape was previously selected it will be deselected
                 if(!e.shiftKey)
                 {
                     // reset the active shape flag
                     selectShape = false;
                     activeShape = null;
-                    // this will disable the mousedown, mousemove, & mouseup events
-                    createShape = false;
                     // clear grouping array and bounding box 
+                    wipGroupFlag    = false;
                     wipGroup.shapes = [];
                     boundingBox     = null;
 
                     // Go through each shape to see if it has been selected
                     for (let i = 0; i < shapes.length; i++) 
                     {
-                        // Determine in the selection point is close to the line
+                        // clear the shapes handles
+                        shapes[i].handles = [];
+                        // check to see if the shape has been selected
                         if(shapes[i].select(xSelectAbs, ySelectAbs))
                         { 
-                            // check to see if the selected shape is in a group
-                            if(!shapes[i].grouped)
+                            activeShape = shapes[i];
+                            // Case: selected shape check is not currently a member of a group
+                            if(!activeShape.grouped)
                             {
-                                handles = shapes[i].handles;
-
                                 // Indicate that the modify shape mode is enabled for the selected shape
                                 selectShape = true;
-                                activeShape = shapes[i];
                                 // at this point it is a group of 1
                                 wipGroup.shapes.push(shapes[i]);
+                                shapeAttributes.style.display = "inline";
                             }
-                            // this is the case where the shape is part of an existing group
+                            // Case: selected shape is currently a member of a group
                             else
                             {
                                 // determine the group which the shape is a member of
@@ -1438,9 +1360,13 @@
                                 {
                                     for(let j = 0; j < shapeGroups[i].shapes.length; j++)
                                     {
-                                        if(activeShape.id == shapeGroups[i].shapes[j].id)
+                                       if(activeShape.id == shapeGroups[i].shapes[j].id)
                                         {
+                                            // set the activeGroup
+                                            activeGroup = shapeGroups[i];
                                             selectShape = true;
+                                            // clear the handles from the group member shapes
+                                            shapeGroups[i].shapes[j].handles = [];
                                             // draw bounding box around shapes in the group
                                             drawBoundingBox(shapeGroups[i]);
                                         }
@@ -1451,43 +1377,41 @@
                         }
                     }
                 }
-                // multiple shape selection - shape(s) already selected and shift-click
+                // Case: additional shapes being selected - shape(s) already selected
                 else if (selectShape && e.shiftKey)
                 {
                     // Go through each shape to see if it has been selected
+                    // Previously selected shapes will remain selected (handles visible)
                     for (let i = 0; i < shapes.length; i++) 
                     {
                         if(shapes[i].select(xSelectAbs, ySelectAbs))
                         {
-                            // put shape in WIP group object shape array
+                            // put shape in WIP group object shape array and show 'group' button
+                            wipGroupFlag = true;
                             wipGroup.shapes.push(shapes[i]);
-                            group.style.display = "inline";
-                        }
-                        else
-                        {
-                            // no selection on click so clear bounding box
-                            boundingBox = null;
                         }
                     }
-
-                    // display the "group" button and turn off the active shape details
-                    selectGroup.style.display = "inline";
-                    shapeAttributes.style.display = "none";
+                    if(wipGroupFlag)
+                    {
+                        selectGroup.style.display = "inline";
+                        unGroup.style.display     = "none";
+                        shapeAttributes.style.display = "none";
+                    }
                 }
-                
+   
                 // If a shape is selected, display the shape attributes
                 if (selectShape)
                 {
                     shapeAttributes.innerHTML = displayAttributes(activeShape);
                 }
-                // Else clear selection attributes and the canvas display
+                // No shape was selected: clear selection attributes and the canvas display
                 else
                 { 
                     createShape = false;
                     activeShape = null;
+                    wipGroupFlag = false;
                     wipGroup.shapes = []; 
                     boundingBox = null;
-                    handles = [];
                     unGroup.style.display = "none";
                     shapeAttributes.style.display = "none";  
                 }
@@ -1502,13 +1426,15 @@
         //************************************************************//
         canvas.addEventListener("mousedown", (e) => 
         {
+            console.log("DEBUG: *** Mouse down event registered ***");
+            // console.log("DEBUG: activeShape:", activeShape);
+            // console.log("DEBUG: activeGroup:", activeGroup);
+
             // Return if we are not in a mouse down/move/up mode
             if (action == "select" || !selectShape && action != "draw" && action != "pan")
             {
                 return;
             } 
-
-            console.log("DEBUG: *** Mouse down event registered ***");
 
             // Canvas selection point - relative position
             xSelectRel = Math.round(e.clientX - canvas.offsetLeft);
@@ -1551,10 +1477,9 @@
                     {
                         // Create polygon object
                         createShape = true;
-                        polygonVertices = [];
                         activeShape = new Polygon('polygon', nextShapeID, false, 'polygon',
                                                   lineWidth, lineStyle, lineColor, fillColor,
-                                                  polygonVertices, 0, status);
+                                                  [], 0, status);
 
                         // Set polygon starting point
                         activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
@@ -2271,10 +2196,6 @@
                         polygonWIP = false;
                         activeShape = null;
                     }
-
-                    console.log("DEBUG: activeShape:", activeShape);
-                    console.log("DEBUG: polygonWIP =", polygonWIP);
-
                 }
             }
             // Draw the entire screen
@@ -2886,6 +2807,213 @@
         }
    
         //************************************************************//
+        // Function: Group the selected shapes and draw bounding box
+        //************************************************************//
+        const group = document.getElementById("id_group");
+        group.onclick = (event) => 
+        {
+            // flag the member shapes as being in the group
+            for(let i = 0; i < wipGroup.shapes.length; i++)
+            {
+                wipGroup.shapes[i].grouped = true;
+            }
+            // save the current group of shapes
+            const tempGroup = new ShapeGroup(nextGroupID);
+            tempGroup.shapes = wipGroup.shapes;
+            shapeGroups.push(tempGroup);
+
+            // now that the group has been saved set activeGroup = wipGroup
+            
+            activeGroup.id = nextGroupID;
+            activeGroup.shapes = wipGroup.shapes;
+
+            // clear the handles from the shapes in the activeGroup
+            for(let i = 0; i < activeGroup.shapes.length; i++)
+            {
+                activeGroup.shapes[i].handles = []; 
+            }
+
+            // reset wipGroup
+            wipGroupFlag = false;
+            wipGroup.shapes = [];
+            nextGroupID++;
+            activeShape = null;
+            selectGroup.style.display = "none";
+            unGroup.style.display = "inline";
+
+            drawBoundingBox(activeGroup);
+
+            drawScreen();
+        }
+        
+        //************************************************************//
+        // Function: Ungroup the selected shapes
+        //************************************************************//
+        const ungroup = document.getElementById("id_ungroup");
+        ungroup.onclick = (event) => 
+        {
+            // clear the group flags from all shapes in activeGroup
+            for(let i = 0; i < activeGroup.shapes.length; i++)
+            {
+                activeGroup.shapes[i].grouped = false;
+            }
+            // find activeGroup in shapeGroups and remove it from shapeGroups
+            for(let i = 0; i < shapeGroups.length; i++)
+            {
+                console.log("DEBUG: shapeGroups[i].id:", shapeGroups[i].id);
+                console.log("DEBUG: activeGroup.id:", activeGroup.id);
+                if(shapeGroups[i].id == activeGroup.id)
+                {
+                    console.log("DEBUG: shapeGroups (before splice):", shapeGroups);
+                    shapeGroups.splice(i, 1);
+                    console.log("DEBUG: shapeGroups (after splice):", shapeGroups);
+                }
+            }
+            // clear the bounding box
+            boundingBox = null;
+
+            unGroup.style.display = "none";
+
+            drawScreen();
+        }
+        
+        //************************************************************//
+        // Function: Draw bounding box
+        //************************************************************//
+        function drawBoundingBox(group)
+        {
+            // determine coordinates of bounding box
+            let xMin = 10000;
+            let yMin = 10000;
+            let xMax = -1000;
+            let yMax = -1000;
+            for(let i=0; i < group.shapes.length; i++)
+            {
+                if(group.shapes[i].type == "line")
+                {
+                    xMin = Math.min(xMin, group.shapes[i].xStart, group.shapes[i].xEnd);
+                    yMin = Math.min(yMin, group.shapes[i].yStart, group.shapes[i].yEnd);
+                    xMax = Math.max(xMax, group.shapes[i].xStart, group.shapes[i].xEnd);
+                    yMax = Math.max(yMax, group.shapes[i].yStart, group.shapes[i].yEnd);
+                }
+                else if(group.shapes[i].type == "rectangle")
+                {
+                    xMin = Math.min(xMin, group.shapes[i].x);
+                    yMin = Math.min(yMin, group.shapes[i].y);
+                    xMax = Math.max(xMax, group.shapes[i].x + group.shapes[i].width);
+                    yMax = Math.max(yMax, group.shapes[i].y + group.shapes[i].height);
+                }
+                else if(group.shapes[i].type == "circle")
+                {
+                    xMin = Math.min(xMin, group.shapes[i].x - group.shapes[i].radius);
+                    yMin = Math.min(yMin, group.shapes[i].y - group.shapes[i].radius);
+                    xMax = Math.max(xMax, group.shapes[i].x + group.shapes[i].radius);
+                    yMax = Math.max(yMax, group.shapes[i].y + group.shapes[i].radius);
+                }
+                else if(group.shapes[i].type == "polygon")
+                {
+                    for(let j = 0; j < shapes[i].vertices.length; j++)
+                    {
+                        xMin = Math.min(xMin, group.shapes[i].vertices[j].x);
+                        yMin = Math.min(yMin, group.shapes[i].vertices[j].y);
+                        xMax = Math.max(xMax, group.shapes[i].vertices[j].x);
+                        yMax = Math.max(yMax, group.shapes[i].vertices[j].y);
+                    }
+                }
+            }
+            // draw bounding box
+            const boundingBoxPadding = 20;
+            boundingBox = 
+                        { 
+                            type        : "rectangle-nofill", 
+                            x           : xMin - boundingBoxPadding,
+                            y           : yMin - boundingBoxPadding,
+                            width       : xMax - xMin + 2 * boundingBoxPadding,
+                            height      : yMax - yMin + 2 * boundingBoxPadding,
+                            lineWidth   : 1,
+                            lineStyle   : "dashed",
+                            strokeStyle : "black",
+                            rotation    : 0
+                        };
+                
+            // place handles on bounding box
+            handles = [];
+            let i = 0;
+
+            // place top left handle
+            currentHandle = placeHandle("top-left",
+                                        boundingBox.x,
+                                        boundingBox.y,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place top middle handle
+            currentHandle = placeHandle("top-middle",
+                                        boundingBox.x + boundingBox.width/2,
+                                        boundingBox.y,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place top right handle
+            currentHandle = placeHandle("top-right",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place right middle handle
+            currentHandle = placeHandle("right-middle",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y + boundingBox.height/2,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place bottom right handle
+            currentHandle = placeHandle("bottom-right",
+                                        boundingBox.x + boundingBox.width, 
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place bottom middle handle
+            currentHandle = placeHandle("bottom-middle",
+                                        boundingBox.x + boundingBox.width/2,
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place bottom left handle
+            currentHandle = placeHandle("bottom-left",
+                                        boundingBox.x,                   
+                                        boundingBox.y + boundingBox.height,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place left middle handle
+            currentHandle = placeHandle("left-middle",
+                                        boundingBox.x,
+                                        boundingBox.y + boundingBox.height/2,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+
+            // place Place rotate handle on object
+            currentHandle = placeHandle("rotate",
+                                        boundingBox.x + boundingBox.width / 2,
+                                        boundingBox.y - 30,
+                                        boundingBox.rotation,
+                                        i);
+            this.handles.push(currentHandle);
+        }
+    
+        //************************************************************//
         // Function: Place handle
         //************************************************************//
         function placeHandle(location, x, y)
@@ -3102,18 +3230,11 @@
             for (let i = 0; i < shapes.length; i++) 
             {
                 drawShape(shapes[i]);
-
-                console.log("DEBUG: draw shapes[i]", shapes[i]);
             }
             // Draw the shape that is currently being created/modified
             if (activeShape)
             {
                 drawShape(activeShape);
-            }
-            // Draw handles on the selected shape
-            for (let i = 0; i < handles.length; i++) 
-            {
-                drawShape(handles[i]);         
             }
             // Draw bounding box
             if (boundingBox)
@@ -3128,7 +3249,7 @@
         // Function: Save the canvas to the server db
         //************************************************************//
         save = document.getElementById("id_save");
-        save.onclick = async (event) => 
+        save.onclick = (event) => 
         {
             // AR: Is this necessary?
             event.preventDefault();
@@ -3256,185 +3377,26 @@
                 else if (shapes_JSON[i].type == "group")
                 {
                     shapeGroups.push(shapes_JSON[i]);
+                    nextGroupID = Math.max(nextGroupID, restoredShape.id);
                 }
             }
+            console.log("=======================================");
+            console.log("Retrieving landscape design from server");
+            console.log("DEBUG: restored shapes:", shapes);
+            console.log("DEBUG: restored shapeGroups:", shapeGroups);
+            console.log("=======================================");
         }         
 
         //************************************************************//
         // Function: Clear the canvas of all shapes
         //************************************************************//
         clear = document.getElementById("id_clear");
-        clear.onclick = async (event) => 
+        clear.onclick = (event) => 
         {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             shapes.length = 0;
             shapeGroups.length = 0;
-        };
-        
-        //************************************************************//
-        // Function: Group the selected shapes and draw bounding box
-        //************************************************************//
-        const group = document.getElementById("id_group");
-        group.onclick = async (event) => 
-        {
-            // flag the member shapes as being in the group
-            for(let i = 0; i < wipGroup.shapes.length; i++)
-            {
-                wipGroup.shapes[i].grouped = true;
-            }
-            // save the current group of shapes
-            const tempGroup = new ShapeGroup();
-            tempGroup.shapes = wipGroup.shapes;
-            shapeGroups.push(tempGroup);
-            // now that the group has been saved, set activeGroup = wipGroup
-            // and clear the wipGroup
-            activeGroup.shapes = wipGroup.shapes;
-            wipGroup.shapes = [];
-
-            group.style.display = "none";
-            unGroup.style.display = "inline";
-
-            drawBoundingBox(activeGroup);
-
-            drawScreen();
-        }
-        
-        //************************************************************//
-        // Function: Ungroup the selected shapes
-        //************************************************************//
-        const ungroup = document.getElementById("id_ungroup");
-        ungroup.onclick = async (event) => 
-        {
-            console.log("DEBUG: Got to ungroup function");
-            // clear the member shape group flags
-            for(let i = 0; i < activeGroup.shapes.length; i++)
-            {
-                console.log("DEBUG: reset shape group flag", activeGroup.shapes[i]);
-                // activeGroup.shapes[i].grouped = false;
-            }
-            // remove current group (activeGroup) of shapes from shapeGroups
-            console.log("DEBUG: remove activeGroup:", activeGroup);
-            for(let i = 0; 0 < shapeGroups.length; i++)
-            {
-
-            }
-
-            unGroup.style.display = "none";
-
-            drawScreen();
-        }
-        
-        //************************************************************//
-        // Function: Draw bounding box
-        //************************************************************//
-        function drawBoundingBox(group)
-        {
-            // determine coordinates of bounding box
-            let xMin = 10000;
-            let yMin = 10000;
-            let xMax = -1000;
-            let yMax = -1000;
-            for(let i=0; i < group.shapes.length; i++)
-            {
-                if(group.shapes[i].type == "line")
-                {
-                    xMin = Math.min(xMin, group.shapes[i].xStart, group.shapes[i].xEnd);
-                    yMin = Math.min(yMin, group.shapes[i].yStart, group.shapes[i].yEnd);
-                    xMax = Math.max(xMax, group.shapes[i].xStart, group.shapes[i].xEnd);
-                    yMax = Math.max(yMax, group.shapes[i].yStart, group.shapes[i].yEnd);
-                }
-            }
-            // draw bounding box
-            const boundingBoxPadding = 20;
-            boundingBox = 
-                        { 
-                            type        : "rectangle-nofill", 
-                            x           : xMin - boundingBoxPadding,
-                            y           : yMin - boundingBoxPadding,
-                            width       : xMax - xMin + 2 * boundingBoxPadding,
-                            height      : yMax - yMin + 2 * boundingBoxPadding,
-                            lineWidth   : 1,
-                            lineStyle   : "dashed",
-                            strokeStyle : "black",
-                            rotation    : 0
-                        };
-                
-            // place handles on bounding box
-            handles = [];
-            let i = 0;
-
-            // place top left handle
-            currentHandle = placeHandle("top-left",
-                                        boundingBox.x,
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place top middle handle
-            currentHandle = placeHandle("top-middle",
-                                        boundingBox.x + boundingBox.width/2,
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place top right handle
-            currentHandle = placeHandle("top-right",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place right middle handle
-            currentHandle = placeHandle("right-middle",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y + boundingBox.height/2,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place bottom right handle
-            currentHandle = placeHandle("bottom-right",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place bottom middle handle
-            currentHandle = placeHandle("bottom-middle",
-                                        boundingBox.x + boundingBox.width/2,
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place bottom left handle
-            currentHandle = placeHandle("bottom-left",
-                                        boundingBox.x,                   
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place left middle handle
-            currentHandle = placeHandle("left-middle",
-                                        boundingBox.x,
-                                        boundingBox.y + boundingBox.height/2,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-
-            // place Place rotate handle on object
-            currentHandle = placeHandle("rotate",
-                                        boundingBox.x + boundingBox.width / 2,
-                                        boundingBox.y - 30,
-                                        boundingBox.rotation,
-                                        i);
-            handles.push(currentHandle);
-        }
+        };  
     }
 
     //-----------------------------------------------------//
