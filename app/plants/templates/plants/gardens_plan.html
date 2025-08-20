@@ -132,6 +132,31 @@
         <!-- Canvas tool options -->
         <form class = "w3-light-grey w3-text-black">
             <div style="padding: 10px 0px 0px 10px">
+                <div id="id_layer_div" style="display: inline-block;">
+                    <span>Layers:</span>
+                
+                    <input type="checkbox" id="layer_all" name="layer_all" value="layer_all" checked>
+                    <label for="layer_all" style="display: inline-block;"> All</label>
+                    
+                    <input type="checkbox" id="ground" name="ground" value="ground">
+                    <label for="layer_ground" style="display: inline-block;"> Grounds</label>
+                    
+                    <input type="checkbox" id="groundcover" name="groundcover" value="groundcover">
+                    <label for="groundcover" style="display: inline-block;"> Groundcover</label>
+                    
+                    <input type="checkbox" id="flower" name="flower" value="flower">
+                    <label for="flower" style="display: inline-block;"> Flower</label>
+
+                    <input type="checkbox" id="shrub" name="shrub" value="shrub">
+                    <label for="shrub" style="display: inline-block;"> Shrub</label>
+
+                    <input type="checkbox" id="small_tree" name="small_tree" value="small_tree">
+                    <label for="small_tree" style="display: inline-block;"> Small Tree</label>
+                    
+                    <input type="checkbox" id="large_tree" name="large_tree" value="large_tree">
+                    <label for="large_tree" style="display: inline-block;"> Large Tree</label>
+                </div>
+
                 <div id="id_plant_div" style="display: none;">
                     <label for="plant" style="display: inline-block;">Plant: </label>
                     <select id="id_plant" name="plant">
@@ -519,15 +544,16 @@
         let activeHandle = null;
         let boundingBox  = null;
 
-        // Base Shape class
+        // Shape classes
         class Shape 
         {
-            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor) 
+            constructor(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor) 
             {
                 this.type      = type;
                 this.id        = id;
                 this.grouped   = grouped;
                 this.label     = label;
+                this.layer     = "tbd";
                 this.lineWidth = lineWidth;
                 this.lineStyle = lineStyle;
                 this.lineColor = lineColor;
@@ -568,10 +594,11 @@
         }
         class Line      extends Shape 
         {
-            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor,
+            constructor(type, id, grouped, label, layer, 
+                        lineWidth, lineStyle, lineColor,
                         xStart, yStart, xEnd, yEnd) 
             {
-                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
                 this.xStart  = xStart;
                 this.yStart  = yStart;
                 this.xEnd    = xEnd;
@@ -610,6 +637,35 @@
                     this.handles.push(placeHandle("end",   this.xEnd,   this.yEnd));
                 }
                 return(distance <= threshold);
+            }
+            selectHandle(x, y)
+            {
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            move(dx, dy)
+            {
+                this.xStart += dx;
+                this.yStart += dy;
+                this.xEnd   += dx;
+                this.yEnd   += dy;
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
             }
             draw()
             {
@@ -656,11 +712,11 @@
         }
         class Rectangle extends Shape 
         {
-            constructor(type, id, grouped, label, 
+            constructor(type, id, grouped, label, layer,
                         lineWidth, lineStyle, lineColor, fillColor,
                         x, y, width, height, rotation) 
             {
-                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
                 this.fillColor  = fillColor;
                 this.x          = x;
                 this.y          = y;
@@ -710,6 +766,53 @@
 
                 return(xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
                        ySelectAbs >= this.y && ySelectAbs <= (this.y + this.height))
+            }
+            selectHandle(x, y)
+            {
+                // translate mouse click coordinates if shape is rotated
+                //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
+                //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
+                if(this.rotation != 0)
+                {
+                    const xShapeCenter = this.x + this.width  / 2;
+                    const yShapeCenter = this.y + this.height / 2;
+                    const theta        = this.rotation * -1;
+
+                    const xTransAbs = Math.trunc(xShapeCenter + 
+                                                (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
+                                                (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                    const yTransAbs = Math.trunc(yShapeCenter + 
+                                                (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
+                                                (ySelectAbs - yShapeCenter) * Math.cos(theta))
+                                
+                    xSelectAbs = xTransAbs;
+                    ySelectAbs = yTransAbs;
+                }
+                
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            move(dx, dy)
+            {
+                this.x += dx;
+                this.y += dy;
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
             }
             draw()
             {
@@ -776,10 +879,11 @@
         }
         class Circle    extends Shape 
         {
-            constructor(type, id, grouped, label, lineWidth, lineStyle, lineColor, fillColor,
+            constructor(type, id, grouped, label, layer,
+                        lineWidth, lineStyle, lineColor, fillColor,
                         x, y, radius) 
             {
-                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
                 this.fillColor  = fillColor;
                 this.x          = x;
                 this.y          = y;
@@ -803,6 +907,33 @@
                     this.handles.push(placeHandle("left",   this.x - this.radius, this.y));
                 }
                 return(distance <= this.radius);
+            }
+            selectHandle(x, y)
+            {
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            move(dx, dy)
+            {
+                this.x += dx;
+                this.y += dy;
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
             }
             draw()
             {
@@ -847,11 +978,11 @@
         }
         class Polygon   extends Shape 
         {
-            constructor(type, id, grouped, label, 
+            constructor(type, id, grouped, label, layer,
                         lineWidth, lineStyle, lineColor, fillColor,
                         vertices, rotation, status) 
             {
-                super(type, id, grouped, label, lineWidth, lineStyle, lineColor);
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
                 this.fillColor  = fillColor;
                 this.vertices   = vertices;
                 this.rotation   = rotation;
@@ -880,6 +1011,36 @@
 
                 // return 'true' if the X-Y coordinates are contained within the polygon
                 return(ctx.isPointInPath(x, y));
+            }
+            selectHandle(x, y)
+            {
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            move(dx, dy)
+            {
+                for(let i = 0; i < this.vertices.length; i++)
+                {
+                    this.vertices[i].x += xDelta;
+                    this.vertices[i].y += yDelta;
+                }
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
             }
             draw()
             {
@@ -1001,6 +1162,7 @@
             //
             if ( action == 'select')
             {
+                id_layer_div.style.display        = 'inline';
                 id_plant_div.style.display        = 'none';
                 id_shape_div.style.display        = 'none';
                 id_line_width_div.style.display   = 'none';
@@ -1014,6 +1176,7 @@
             }
             else if( action == 'add plant')
             {
+                id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'inline';
                 id_shape_div.style.display        = 'inline';
                 id_line_width_div.style.display   = 'inline';
@@ -1026,6 +1189,7 @@
             }
             else if( action == 'draw')
             {
+                id_layer_div.style.display       = 'none';
                 id_plant_div.style.display       = 'none';
                 id_shape_div.style.display       = 'inline';
                 id_line_width_div.style.display  = 'inline';
@@ -1041,6 +1205,7 @@
             }
             else if( action == 'pan')
             {
+                id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'none';
                 id_shape_div.style.display        = 'none';
                 id_line_width_div.style.display   = 'none';
@@ -1053,6 +1218,7 @@
             }
             else if( action == 'zoom')
             {
+                id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'none';
                 id_shape_div.style.display        = 'none';
                 id_line_width_div.style.display   = 'none';
@@ -1071,6 +1237,9 @@
         //************************************************************//
         // Connect javascript to the level 2 menu items
         //************************************************************//
+        // Setup layer selections
+        formElement = document.getElementById("id_layer_div");
+
         // Retrieve the selected plant from thr server db
         formElement = document.getElementById("id_plant");
         formElement.addEventListener("change", (e) =>
@@ -1427,6 +1596,7 @@
 
             // console.log("DEBUG: shapes:", shapes);
             // console.log("DEBUG: shapeGroups:", shapeGroups);
+            console.log("DEBUG: activeShape:", activeShape);
         });
 
         //************************************************************//
@@ -1434,15 +1604,14 @@
         //************************************************************//
         canvas.addEventListener("mousedown", (e) => 
         {
-            console.log("DEBUG: *** Mouse down event registered ***");
-
             // Return if we are not in a mouse down/move/up mode
-            if (action == "select" || !selectShape && action != "draw" && action != "pan")
+            if (action != "select" && action != "draw" && action != "add plant" && action != "pan")
             {
                 return;
             } 
 
-            // console.log("DEBUG: activeShape:", activeShape);
+            console.log("DEBUG: *** Mouse down event registered ***");
+            console.log("DEBUG: activeShape:", activeShape);
             // console.log("DEBUG: activeGroup:", activeGroup);
 
             // Canvas selection point - relative position
@@ -1456,10 +1625,12 @@
             // Draw a new shape
             if (action == "draw")
             {
+                let layer = "any";
+
                 if (shapeOption == "line")
                 {
                     createShape = true;
-                    activeShape = new Line('line', nextShapeID, false, 'line', 
+                    activeShape = new Line('line', nextShapeID, false, 'line', layer,
                                            lineWidth, lineStyle, lineColor,
                                            xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
                     nextShapeID++;
@@ -1467,7 +1638,7 @@
                 else if (shapeOption == "rectangle")
                 {
                     createShape = true;
-                    activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle',
+                    activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle', layer,
                                                 lineWidth, lineStyle, lineColor, fillColor,
                                                 xSelectAbs, ySelectAbs, 0, 0, 0);
                     nextShapeID++;
@@ -1475,7 +1646,7 @@
                 else if (shapeOption == "circle")
                 {
                     createShape = true;
-                    activeShape = new Circle('circle', nextShapeID, false, 'circle', 
+                    activeShape = new Circle('circle', nextShapeID, false, 'circle', layer,
                                              lineWidth, lineStyle, lineColor, fillColor,
                                              xSelectAbs, ySelectAbs, 0);
                     nextShapeID++;
@@ -1486,7 +1657,7 @@
                     {
                         // Create polygon object
                         createShape = true;
-                        activeShape = new Polygon('polygon', nextShapeID, false, 'polygon',
+                        activeShape = new Polygon('polygon', nextShapeID, false, 'polygon', layer,
                                                   lineWidth, lineStyle, lineColor, fillColor,
                                                   [], 0, status);
 
@@ -1526,223 +1697,26 @@
                 // save the selection point for future use
                 xSelectAbsSave = xSelectAbs;
                 ySelectAbsSave = ySelectAbs;
-                activeHandle = null;
 
-                if (activeShape.type == "line")
+                // check to see if a handle has been selected
+                let activeHandle = activeShape.selectHandle(xSelectAbs, ySelectAbs);
+                
+                if(activeHandle)
                 {
-                    // check to see if a handle has been selected
-                    // AR: change for to 'while'
-                    for(let i = 0; i < handles.length; i++)
-                    {
-                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
-                                                 Math.pow((ySelectAbs - handles[i].y), 2))
-                        // Determine if one of the handles has been selected
-                        if (distance <= handles[i].radius)
-                        {
-                            // AR: Change if to switch
-                            // Determine which handle has been selected
-                            if (handles[i].location == "start")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "end")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            // set the election point to the center of the handle
-                            xSelectAbsSave = activeHandle.x;
-                            ySelectAbsSave = activeHandle.y;
-                        }
-                    }
-                    // If no handle of the active shape was selected check to see if the
-                    // body of the active shape was selected
-                    if (!activeHandle)
-                    {
-                        if(activeShape.select(xSelectAbs, ySelectAbs))
-                        {
-                            moveShape = true;
-                        }
-                    }
+                    // Indicate that shape is in 'resize' mode
+                    resizeShape = true;
+                    // set the selection point to the center of the handle
+                    xSelectAbsSave = activeHandle.x;
+                    ySelectAbsSave = activeHandle.y;
                 }
-                else if (activeShape.type == "rectangle")
+                // If no handle of the active shape was selected check to see if the
+                // body of the active shape was selected
+                else if(activeShape.select(xSelectAbs, ySelectAbs))
                 {
-                    // check to see if the selected shape (via mouseclick) has been rotated
-                    if(activeShape.rotation != 0)
-                    {
-                        // rotate the selection coorinates wrt activeShape before checking if handle has been selected
-                        xShapeCenter = activeShape.x + activeShape.width  / 2;
-                        yShapeCenter = activeShape.y + activeShape.height / 2;
-                        theta   = activeShape.rotation * -1;
-
-                        xTransAbs = Math.trunc(xShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
-                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
-                        yTransAbs = Math.trunc(yShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
-
-                        xSelectAbs = xTransAbs;
-                        ySelectAbs = yTransAbs;
-                    }
-                    
-                    // check to see if a handle has been selected
-                    // AR: change for to 'while'
-                    for(let i = 0; i < handles.length; i++)
-                    {
-                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
-                                                 Math.pow((ySelectAbs - handles[i].y), 2))
-                        // Determine if one of the handles has been selected
-                        if (distance <= handles[i].radius)
-                        {
-                            // AR: Change if to switch
-                            // Determine which handle has been selected
-                            if (handles[i].location == "top-left")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "top-middle")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "top-right")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "right-middle")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "bottom-right")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "bottom-middle")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "bottom-left")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "left-middle")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if(handles[i].location == "rotate")
-                            {
-                                activeHandle = handles[i];
-                                rotateShape = true;
-                            }
-                        }
-                    }
- 
-                    // If no handle of the active shape was selected check to see if the
-                    // body of the active shape was selected
-                    if (!activeHandle)
-                    {
-                        if(activeShape.select(xSelectAbs, ySelectAbs))
-                        {
-                            moveShape   = true;
-                        }
-                    }
-                }
-                else if (activeShape.type == "circle")
-                {
-                    // check to see if a handle has been selected
-                    // AR: change for to 'while'
-                    for(let i = 0; i < handles.length; i++)
-                    {
-                        distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
-                                             Math.pow((ySelectAbs - handles[i].y), 2)); 
-
-                        // Determine if one of the handles has been selected
-                        if (distance <= handles[i].radius)
-                        {
-                            // AR: Change if to switch
-                            // Determine which handle has been selected
-                            if (handles[i].location == "top")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "right")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "bottom")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-                            else if (handles[i].location == "left")
-                            {
-                                activeHandle = handles[i];
-                                resizeShape = true;
-                            }
-
-                            // set the election point to the center of the handle
-                            xSelectAbsSave = activeHandle.x;
-                            ySelectAbsSave = activeHandle.y;
-                        }
-                    }
-                    // If no handle of the active shape was selected check to see if the
-                    // body of the active shape was selected
-                    if (!activeHandle)
-                    {
-                        if(activeShape.select(xSelectAbs, ySelectAbs))
-                        {
-                            moveShape = true;
-                            xSelectAbsSave  = xSelectAbs;
-                            ySelectAbsSave  = ySelectAbs;
-                        }
-                    }
-                }
-                else if (activeShape.type == "polygon")
-                {
-                    // check to see if a handle has been selected
-                    // AR: change for to 'while'
-                    for(let i = 0; i < handles.length; i++)
-                    {
-                        // Determine if one of the handles has been selected
-                        let distance = Math.sqrt(Math.pow((xSelectAbs - handles[i].x), 2) + 
-                                                 Math.pow((ySelectAbs - handles[i].y), 2))
-                        if (distance <= handles[i].radius)
-                        {
-                            activeHandle = handles[i];
-
-                            // set the election point to the center of the handle
-                            xSelectAbsSave = activeHandle.x;
-                            ySelectAbsSave = activeHandle.y;
-
-                            resizeShape = true;
-                        }
-                    }
-                    // If no handle of the active shape was selected check to see if the
-                    // body of the active shape was selected
-                    if (!activeHandle)
-                    {
-                        // Check to see if the selection point is within the polygon
-                        if (activeShape.select(xSelectAbs, ySelectAbs)) 
-                        {
-                            moveShape = true;
-                            xSelectAbsSave  = xSelectAbs;
-                            ySelectAbsSave  = ySelectAbs;
-                        }
-                    }
+                    moveShape = true;
                 }
             }
-
+            
             // Begin panning
             else if (action == 'pan')
             {
@@ -1750,6 +1724,10 @@
                 xSelectRelSav = xSelectRel;
                 ySelectRelSav = ySelectRel;
             } 
+
+            console.log("DEBUG: activeHandle", activeHandle);
+            console.log("DEBUG: resizeShape",  resizeShape);
+            console.log("DEBUG: moveShape",    moveShape);
 
             // Draw the entire screen
             drawScreen();
@@ -1767,6 +1745,7 @@
             } 
 
             console.log("DEBUG: *** Mouse move event registered ***");
+            console.log("DEBUG: activeShape:", activeShape);
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -1813,65 +1792,10 @@
             }
         
             // Move the selected shape
-            if(action == 'select' && moveShape && activeShape.type == "line")
+            if(action == 'select' && moveShape)
             {
-                // move the shape
-                activeShape.xStart += xDelta;
-                activeShape.yStart += yDelta;
-                activeShape.xEnd   += xDelta;
-                activeShape.yEnd   += yDelta;
-                // move the handles
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].x += xDelta;
-                    handles[i].y += yDelta;
-                }
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && moveShape && activeShape.type == "rectangle")
-            {
-                activeShape.x += xDelta;
-                activeShape.y += yDelta;
+                activeShape.move(xDelta, yDelta);
 
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].x += xDelta;
-                    handles[i].y += yDelta;
-                }
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && moveShape && activeShape.type == "circle")
-            {
-                activeShape.x += xDelta;
-                activeShape.y += yDelta;
-
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].x += xDelta;
-                    handles[i].y += yDelta;
-                }
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && moveShape && activeShape.type == "polygon")
-            {
-                // move the shape
-                for(let i = 0; i < activeShape.vertices.length; i++)
-                {
-                    activeShape.vertices[i].x += xDelta;
-                    activeShape.vertices[i].y += yDelta;
-                }
-                // move the handles
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].x += xDelta;
-                    handles[i].y += yDelta;
-                }
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
@@ -3319,6 +3243,7 @@
                     restoredShape.id        = shapes_JSON[i].id;
                     restoredShape.grouped   = shapes_JSON[i].grouped;
                     restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.layer     = shapes_JSON[i].layer;
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
@@ -3339,6 +3264,7 @@
                     restoredShape.id        = shapes_JSON[i].id;
                     restoredShape.grouped   = shapes_JSON[i].grouped;
                     restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.layer     = shapes_JSON[i].layer;
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
@@ -3361,6 +3287,7 @@
                     restoredShape.id        = shapes_JSON[i].id;
                     restoredShape.grouped   = shapes_JSON[i].grouped;
                     restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.layer     = shapes_JSON[i].layer;
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
@@ -3381,6 +3308,7 @@
                     restoredShape.id        = shapes_JSON[i].id;
                     restoredShape.grouped   = shapes_JSON[i].grouped;
                     restoredShape.label     = shapes_JSON[i].label;
+                    restoredShape.layer     = shapes_JSON[i].layer;
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
