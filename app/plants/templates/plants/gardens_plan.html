@@ -667,6 +667,25 @@
                     this.handles[i].y += dy;
                 }
             }
+            resize(handle, dx, dy)
+            {
+                if (handle.location == "start")
+                {
+                    this.xStart += dx;
+                    this.yStart += dy;
+
+                    this.handles[0].x += dx;
+                    this.handles[0].y += dy;
+                }
+                else if (handle.location == "end")
+                {
+                    this.xEnd += dx;
+                    this.yEnd += dy;
+
+                    this.handles[1].x += dx;
+                    this.handles[1].y += dy;
+                }   
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -814,6 +833,148 @@
                     this.handles[i].y += dy;
                 }
             }
+            resize(handle, dx, dy)
+            {
+                // check to see if the selected shape (via mouseclick) has been rotated
+                if(this.rotation != 0)
+                {
+                    // rotate the selection coordinates wrt activeShape before checking if 
+                    // handle has been selected
+                    xShapeCenter = this.x + this.width  / 2;
+                    yShapeCenter = this.y + this.height / 2;
+                    theta   = this.rotation * -1;
+
+                    xTransAbs = Math.trunc(xShapeCenter + 
+                                          (xMouse - xShapeCenter) * Math.cos(theta) - 
+                                          (yMouse - yShapeCenter) * Math.sin(theta))
+                    yTransAbs = Math.trunc(yShapeCenter + 
+                                          (xMouse - xShapeCenter) * Math.sin(theta) + 
+                                          (yMouse - yShapeCenter) * Math.cos(theta))
+
+                    xMouse = xTransAbs;
+                    yMouse = yTransAbs;
+                }
+
+                // modify the rectangle based upon the selected handle + mouse movement
+                if (handle.location == "top-left")
+                {
+                    this.x      += dx;
+                    this.width  -= dx;
+                    this.y      += dy;
+                    this.height -= dy;
+
+                    this.handles[0].x += dx;
+                    this.handles[0].y += dy;
+                    this.handles[1].x += dx / 2;
+                    this.handles[1].y += dy;
+                    this.handles[2].y += dy;
+                    this.handles[3].y += dy / 2;
+                    this.handles[5].x += dx / 2;
+                    this.handles[6].x += dx;
+                    this.handles[7].x += dx;
+                    this.handles[7].y += dy / 2;
+                    this.handles[8].x += dx / 2;
+                    this.handles[8].y += dy;
+                }
+                else if (handle.location == "top-middle")
+                {
+                    this.y      += dy;
+                    this.height -= dy;
+
+                    this.handles[0].y += dy;
+                    this.handles[1].y += dy;
+                    this.handles[2].y += dy;
+                    this.handles[3].y += dy / 2;
+                    this.handles[7].y += dy / 2;
+                    this.handles[8].y += dy;
+                }
+                else if (handle.location == "top-right")
+                {
+                    this.width  += dx;
+                    this.y      += dy;
+                    this.height -= dy;
+
+                    this.handles[0].y += dy;
+                    this.handles[1].x += dx / 2;
+                    this.handles[1].y += dy;
+                    this.handles[2].x += dx;
+                    this.handles[2].y += dy;
+                    this.handles[3].x += dx;
+                    this.handles[3].y += dy / 2;
+                    this.handles[4].x += dx;
+                    this.handles[5].x += dx / 2;
+                    this.handles[8].x += dx / 2;
+                    this.handles[8].y += dy;
+                }
+                else if (handle.location == "right-middle")
+                {                 
+                    this.width += dx;
+
+                    this.handles[1].x += dx / 2;
+                    this.handles[2].x += dx;
+                    this.handles[3].x += dx;
+                    this.handles[4].x += dx;
+                    this.handles[5].x += dx / 2;
+                    this.handles[8].x += dx / 2;
+                }
+                else if (handle.location == "bottom-right")
+                {
+                    this.width  += dx;
+                    this.height += dy;
+
+                    this.handles[1].x += dx / 2;
+                    this.handles[2].x += dx;
+                    this.handles[3].x += dx;
+                    this.handles[3].y += dy / 2;
+                    this.handles[4].x += dx;
+                    this.handles[4].y += dy;
+                    this.handles[5].x += dx / 2;
+                    this.handles[5].y += dy;
+                    this.handles[6].y += dy;
+                    this.handles[7].y += dy / 2;
+                    this.handles[8].x += dx / 2;
+                }
+                else if (handle.location == "bottom-middle")
+                {
+                    this.height += dy;
+
+                    this.handles[3].y += dy / 2;
+                    this.handles[4].y += dy;
+                    this.handles[5].y += dy;
+                    this.handles[6].y += dy;
+                    this.handles[7].y += dy / 2;
+                }
+                else if (handle.location == "bottom-left")
+                {
+                    this.x      += dx;
+                    this.width  -= dx;
+                    this.height += dy;
+
+                    this.handles[0].x += dx;
+                    this.handles[1].x += dx / 2;
+                    this.handles[3].y += dy / 2;
+                    this.handles[4].y += dy;
+                    this.handles[5].x += dx / 2;
+                    this.handles[5].y += dy;
+                    this.handles[6].x += dx;
+                    this.handles[6].y += dy;
+                    this.handles[7].x += dx;
+                    this.handles[7].y += dy / 2;
+                    this.handles[8].x += dx / 2;
+                }
+                else if (handle.location == "left-middle")
+                {
+                    this.x      += dx;
+                    this.width  -= dx;
+
+                    this.handles[0].x += dx;
+                    this.handles[1].x += dx / 2;
+                    this.handles[5].x += dx / 2;
+                    this.handles[6].x += dx;
+                    this.handles[7].x += dx;
+                    this.handles[8].x += dx / 2;
+                }
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -935,6 +1096,45 @@
                     this.handles[i].y += dy;
                 }
             }
+            resize(handle, dx, dy)
+            {
+                if (handle.location == "top")
+                {
+                    this.radius -= dy;
+
+                    this.handles[0].y += dy;
+                    this.handles[1].x -= dy;
+                    this.handles[2].y -= dy;
+                    this.handles[3].x += dy;
+                }
+                else if (handle.location == "right")
+                {
+                    this.radius += xDelta;
+
+                    this.handles[0].y -= dx;
+                    this.handles[1].x += dx;
+                    this.handles[2].y += dx;
+                    this.handles[3].x -= dx;
+                }
+                else if (handle.location == "bottom")
+                {
+                    this.radius += yDelta;
+
+                    this.handles[0].y -= dy;
+                    this.handles[1].x += dy;
+                    this.handles[2].y += dy;
+                    this.handles[3].x -= dy;
+                }
+                else if (handle.location == "left")
+                {
+                    this.radius -= xDelta;
+
+                    this.handles[0].y += dx;
+                    this.handles[1].x -= dx;
+                    this.handles[2].y -= dx;
+                    this.handles[3].x += dx;
+                }
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -1040,6 +1240,20 @@
                 {
                     this.handles[i].x += dx;
                     this.handles[i].y += dy;
+                }
+            }
+            resize(handle, dx, dy)
+            {
+                for(let i = 0; i < this.vertices.length; i++)
+                {    
+                    if (handle.location == "v" + i)
+                    {
+                        this.vertices[i].x += dx;
+                        this.vertices[i].y += dy;
+
+                        this.handles[i].x += dx;
+                        this.handles[i].y += dy;
+                    }
                 }
             }
             draw()
@@ -1699,7 +1913,7 @@
                 ySelectAbsSave = ySelectAbs;
 
                 // check to see if a handle has been selected
-                let activeHandle = activeShape.selectHandle(xSelectAbs, ySelectAbs);
+                activeHandle = activeShape.selectHandle(xSelectAbs, ySelectAbs);
                 
                 if(activeHandle)
                 {
@@ -1802,233 +2016,13 @@
             }
             
             // Resize the selected shape
-            if (action == 'select' && resizeShape && activeShape.type == "line")
+            if (action == 'select' && resizeShape)
             {
-                if (activeHandle.location == "start")
-                {
-                    activeShape.xStart += xDelta;
-                    activeShape.yStart += yDelta;
-
-                    handles[0].x += xDelta;
-                    handles[0].y += yDelta;
-                }
-                else if (activeHandle.location == "end")
-                {
-                    activeShape.xEnd += xDelta;
-                    activeShape.yEnd += yDelta;
-
-                    handles[1].x += xDelta;
-                    handles[1].y += yDelta;
-                }
+                activeShape.resize(activeHandle, xDelta, yDelta);
+               
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && resizeShape && activeShape.type == "rectangle")
-            {
-                // check to see if the selected shape (via mouseclick) has been rotated
-                if(activeShape.type == "rectangle" && activeShape.rotation != 0)
-                {
-                    // rotate the selection coordinates wrt activeShape before checking if 
-                    // handle has been selected
-                    xShapeCenter = activeShape.x + activeShape.width  / 2;
-                    yShapeCenter = activeShape.y + activeShape.height / 2;
-                    theta   = activeShape.rotation * -1;
-
-                    xTransAbs = Math.trunc(xShapeCenter + 
-                                          (xMouse - xShapeCenter) * Math.cos(theta) - 
-                                          (yMouse - yShapeCenter) * Math.sin(theta))
-                    yTransAbs = Math.trunc(yShapeCenter + 
-                                          (xMouse - xShapeCenter) * Math.sin(theta) + 
-                                          (yMouse - yShapeCenter) * Math.cos(theta))
-
-                    xMouse = xTransAbs;
-                    yMouse = yTransAbs;
-                }
-
-                // modify the rectangle based upon the selected handle + mouse movement
-                if (activeHandle.location == "top-left")
-                {
-                    activeShape.x      += xDelta;
-                    activeShape.width  -= xDelta;
-                    activeShape.y      += yDelta;
-                    activeShape.height -= yDelta;
-
-                    handles[5].x   += xDelta / 2;
-                    handles[6].x   += xDelta;
-                    handles[7].x   += xDelta;
-                    handles[7].y   += yDelta / 2;
-                    activeHandle.x += xDelta;
-                    activeHandle.y += yDelta;
-                    handles[1].x   += xDelta / 2;
-                    handles[1].y   += yDelta;
-                    handles[2].y   += yDelta;
-                    handles[3].y   += yDelta / 2;
-                    handles[8].x   += xDelta / 2;
-                    handles[8].y   += yDelta;
-                }
-                else if (activeHandle.location == "top-middle")
-                {
-                    activeShape.y      += yDelta;
-                    activeShape.height -= yDelta;
-
-                    handles[7].y   += yDelta / 2;
-                    handles[0].y   += yDelta;
-                    activeHandle.y += yDelta;
-                    handles[2].y   += yDelta;
-                    handles[3].y   += yDelta / 2;
-                    handles[8].y   += yDelta;
-                }
-                else if (activeHandle.location == "top-right")
-                {
-                    activeShape.width  += xDelta;
-                    activeShape.y      += yDelta;
-                    activeShape.height -= yDelta;
-
-                    handles[7].y   += yDelta / 2;
-                    handles[0].y   += yDelta;
-                    handles[1].x   += xDelta / 2;
-                    handles[1].y   += yDelta;
-                    activeHandle.x += xDelta;
-                    activeHandle.y += yDelta;
-                    handles[3].x   += xDelta;
-                    handles[3].y   += yDelta / 2;
-                    handles[4].x   += xDelta;
-                    handles[5].x   += xDelta / 2;
-                    handles[8].x   += xDelta / 2;
-                    handles[8].y   += yDelta;
-                }
-                else if (activeHandle.location == "right-middle")
-                {                 
-                    activeShape.width += xDelta;
-
-                    handles[1].x   += xDelta / 2;
-                    handles[2].x   += xDelta;
-                    activeHandle.x += xDelta;
-                    handles[4].x   += xDelta;
-                    handles[5].x   += xDelta / 2;
-                    handles[8].x   += xDelta / 2;
-                }
-                else if (activeHandle.location == "bottom-right")
-                {
-                    activeShape.width  += xDelta;
-                    activeShape.height += yDelta;
-
-                    handles[1].x   += xDelta / 2;
-                    handles[2].x   += xDelta;
-                    handles[3].x   += xDelta;
-                    handles[3].y   += yDelta / 2;
-                    activeHandle.x += xDelta;
-                    activeHandle.y += yDelta;
-                    handles[5].x   += xDelta / 2;
-                    handles[5].y   += yDelta;
-                    handles[6].y   += yDelta;
-                    handles[7].y   += yDelta / 2;
-                    handles[8].x   += xDelta / 2;
-                }
-                else if (activeHandle.location == "bottom-middle")
-                {
-                    activeShape.height += yDelta;
-
-                    handles[3].y   += yDelta / 2;
-                    handles[4].y   += yDelta;
-                    activeHandle.y += yDelta;
-                    handles[6].y   += yDelta;
-                    handles[7].y   += yDelta / 2;
-                }
-                else if (activeHandle.location == "bottom-left")
-                {
-                    activeShape.x      += xDelta;
-                    activeShape.width  -= xDelta;
-                    activeShape.height += yDelta;
-
-                    handles[3].y   += yDelta / 2;
-                    handles[4].y   += yDelta;
-                    handles[5].x   += xDelta / 2;
-                    handles[5].y   += yDelta;
-                    activeHandle.x += xDelta;
-                    activeHandle.y += yDelta;
-                    handles[7].x   += xDelta;
-                    handles[7].y   += yDelta / 2;
-                    handles[0].x   += xDelta;
-                    handles[1].x   += xDelta / 2;
-                    handles[8].x   += xDelta / 2;
-                }
-                else if (activeHandle.location == "left-middle")
-                {
-                    activeShape.x      += xDelta;
-                    activeShape.width  -= xDelta;
-
-                    handles[5].x       += xDelta / 2;
-                    handles[6].x       += xDelta;
-                    activeHandle.x     += xDelta;
-                    handles[0].x       += xDelta;
-                    handles[1].x       += xDelta / 2;
-                    handles[8].x       += xDelta / 2;
-                }
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && resizeShape && activeShape.type == "circle")
-            {
-                if (activeHandle.location == "top")
-                {
-                    activeShape.radius -= yDelta;
-
-                    handles[0].y += yDelta;
-                    handles[1].x -= yDelta;
-                    handles[2].y -= yDelta;
-                    handles[3].x += yDelta;
-                }
-                else if (activeHandle.location == "right")
-                {
-                    activeShape.radius += xDelta;
-
-                    handles[0].y -= xDelta;
-                    handles[1].x += xDelta;
-                    handles[2].y += xDelta;
-                    handles[3].x -= xDelta;
-                }
-                else if (activeHandle.location == "bottom")
-                {
-                    activeShape.radius += yDelta;
-
-                    handles[0].y -= yDelta;
-                    handles[1].x += yDelta;
-                    handles[2].y += yDelta;
-                    handles[3].x -= yDelta;
-                }
-                else if (activeHandle.location == "left")
-                {
-                    activeShape.radius -= xDelta;
-
-                    handles[0].y += xDelta;
-                    handles[1].x -= xDelta;
-                    handles[2].y -= xDelta;
-                    handles[3].x += xDelta;
-                }
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
-            }
-            else if (action == 'select' && resizeShape && activeShape.type == "polygon")
-            {
-                for(let i = 0; i < activeShape.vertices.length; i++)
-                {
-                    if (activeHandle.location == "v" + i)
-                    {
-                        activeShape.vertices[i].x += xDelta;
-                        activeShape.vertices[i].y += yDelta;
-
-                        handles[i].x += xDelta;
-                        handles[i].y += yDelta;
-
-                        // capture the current mouse location
-                        xSelectAbsSave += xDelta;
-                        ySelectAbsSave += yDelta;
-                    }
-                }
             }
 
             // Rotate the selected shape
