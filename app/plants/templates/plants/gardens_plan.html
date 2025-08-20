@@ -511,7 +511,6 @@
         let xPlot,          yPlot;          // Plot size
         let nextShapeID = 0;                // 
         let zIndex;                         // current maximum z-index
-        let theta = 0;                      // rotation angle in radians
         let lineWidthDefault   = 1;         //
         let strokeStyleDefault = "black";   //
         let xPolygonVertex, yPolygonVertex; //
@@ -571,17 +570,17 @@
                     // adjust the handle radius based upon he scale factor
                     const radiusScaled = handles[i].radius / viewportTransform.scale;
 
-                    // // find center of associated shape to determine the point of rotation for handle
-                    // xShapeCenter = shapes[shape.shape_id].x + shapes[shape.shape_id].width  / 2;
-                    // yShapeCenter = shapes[shape.shape_id].y + shapes[shape.shape_id].height / 2;
-                    // //
-                    // ctx.save();
-                    // // Translate to rectangle center
-                    // ctx.translate(xShapeCenter, yShapeCenter);
-                    // // Rotate
-                    // ctx.rotate(shape.rotation);
-                    // // Translate back
-                    // ctx.translate(-xShapeCenter, -yShapeCenter);
+                    // find center of associated shape to determine the point of rotation for handle
+                    let xShapeCenter = this.x + this.width  / 2;
+                    let yShapeCenter = this.y + this.height / 2;
+                    //
+                    ctx.save();
+                    // Translate to rectangle center
+                    ctx.translate(xShapeCenter, yShapeCenter);
+                    // Rotate
+                    ctx.rotate(this.rotation);
+                    // Translate back
+                    ctx.translate(-xShapeCenter, -yShapeCenter);
 
                     // Draw the handle
                     ctx.beginPath();
@@ -788,7 +787,7 @@
             }
             selectHandle(x, y)
             {
-                // translate mouse click coordinates if shape is rotated
+                // translate mouse selection click coordinates if shape is rotated
                 //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
                 //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
                 if(this.rotation != 0)
@@ -798,14 +797,13 @@
                     const theta        = this.rotation * -1;
 
                     const xTransAbs = Math.trunc(xShapeCenter + 
-                                                (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
-                                                (ySelectAbs - yShapeCenter) * Math.sin(theta))
+                                                (x - xShapeCenter) * Math.cos(theta) - 
+                                                (y - yShapeCenter) * Math.sin(theta))
                     const yTransAbs = Math.trunc(yShapeCenter + 
-                                                (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                                (ySelectAbs - yShapeCenter) * Math.cos(theta))
-                                
-                    xSelectAbs = xTransAbs;
-                    ySelectAbs = yTransAbs;
+                                                (x - xShapeCenter) * Math.sin(theta) + 
+                                                (y - yShapeCenter) * Math.cos(theta))           
+                    x = xTransAbs;
+                    y = yTransAbs;
                 }
                 
                 let handleSelected = false;
@@ -835,26 +833,6 @@
             }
             resize(handle, dx, dy)
             {
-                // check to see if the selected shape (via mouseclick) has been rotated
-                if(this.rotation != 0)
-                {
-                    // rotate the selection coordinates wrt activeShape before checking if 
-                    // handle has been selected
-                    xShapeCenter = this.x + this.width  / 2;
-                    yShapeCenter = this.y + this.height / 2;
-                    theta   = this.rotation * -1;
-
-                    xTransAbs = Math.trunc(xShapeCenter + 
-                                          (xMouse - xShapeCenter) * Math.cos(theta) - 
-                                          (yMouse - yShapeCenter) * Math.sin(theta))
-                    yTransAbs = Math.trunc(yShapeCenter + 
-                                          (xMouse - xShapeCenter) * Math.sin(theta) + 
-                                          (yMouse - yShapeCenter) * Math.cos(theta))
-
-                    xMouse = xTransAbs;
-                    yMouse = yTransAbs;
-                }
-
                 // modify the rectangle based upon the selected handle + mouse movement
                 if (handle.location == "top-left")
                 {
@@ -973,6 +951,25 @@
                     this.handles[6].x += dx;
                     this.handles[7].x += dx;
                     this.handles[8].x += dx / 2;
+                }
+            }
+            rotate(dx, dy)
+            {
+                // set theta to the current  shape rotation angle
+                let theta = this.rotation;
+
+                // Determine the amount to rotate the shape based on the mouse movement
+                // AR: Find better approach to control the rotation
+                theta += (dx + dy) * 0.01;
+                // theta = Math.atan2(yMouse - yShapeCenter, xMouse - xShapeCenter);
+                // theta = 45 * (Math.PI / 180);
+
+                this.rotation = theta;
+
+                // Set the rotatation angle for all handles associated with the shape
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].rotation = theta;
                 }
             }
             draw()
@@ -1825,7 +1822,7 @@
             } 
 
             console.log("DEBUG: *** Mouse down event registered ***");
-            console.log("DEBUG: activeShape:", activeShape);
+            // console.log("DEBUG: activeShape:", activeShape);
             // console.log("DEBUG: activeGroup:", activeGroup);
 
             // Canvas selection point - relative position
@@ -1915,10 +1912,18 @@
                 // check to see if a handle has been selected
                 activeHandle = activeShape.selectHandle(xSelectAbs, ySelectAbs);
                 
-                if(activeHandle)
+                if(activeHandle && activeHandle.location != 'rotate')
                 {
                     // Indicate that shape is in 'resize' mode
                     resizeShape = true;
+                    // set the selection point to the center of the handle
+                    xSelectAbsSave = activeHandle.x;
+                    ySelectAbsSave = activeHandle.y;
+                }
+                else if(activeHandle && activeHandle.location == 'rotate')
+                {
+                    // Indicate that shape is in 'rotate' mode
+                    rotateShape = true;
                     // set the selection point to the center of the handle
                     xSelectAbsSave = activeHandle.x;
                     ySelectAbsSave = activeHandle.y;
@@ -1939,9 +1944,10 @@
                 ySelectRelSav = ySelectRel;
             } 
 
-            console.log("DEBUG: activeHandle", activeHandle);
-            console.log("DEBUG: resizeShape",  resizeShape);
-            console.log("DEBUG: moveShape",    moveShape);
+            // console.log("DEBUG: activeHandle", activeHandle);
+            // console.log("DEBUG: moveShape",    moveShape);
+            // console.log("DEBUG: resizeShape",  resizeShape);
+            // console.log("DEBUG: rotateShape",  rotateShape);
 
             // Draw the entire screen
             drawScreen();
@@ -2006,7 +2012,7 @@
             }
         
             // Move the selected shape
-            if(action == 'select' && moveShape)
+            else if(action == 'select' && moveShape)
             {
                 activeShape.move(xDelta, yDelta);
 
@@ -2016,7 +2022,7 @@
             }
             
             // Resize the selected shape
-            if (action == 'select' && resizeShape)
+            else if (action == 'select' && resizeShape)
             {
                 activeShape.resize(activeHandle, xDelta, yDelta);
                
@@ -2026,24 +2032,10 @@
             }
 
             // Rotate the selected shape
-            if (action == 'select' && rotateShape && activeShape.type == "rectangle")
+            else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
             {
-                // set theta to the current  shape rotation angle
-                theta = activeShape.rotation;
+                activeShape.rotate(xDelta, yDelta);
 
-                // Determine the amount to rotate the shape based on the mouse movement
-                // AR: Find better approach to control the rotation
-                theta += (xDelta + yDelta) * 0.01;
-                // theta = Math.atan2(yMouse - yShapeCenter, xMouse - xShapeCenter);
-                // theta = 45 * (Math.PI / 180);
-
-                activeShape.rotation = theta;
-
-                // Set the rotatation angle for all handles associated with the shape
-                for(let i = 0; i < handles.length; i++)
-                {
-                    handles[i].rotation = theta;
-                }
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
@@ -2221,7 +2213,7 @@
                     {
                         xShapeCenter = shapes[i].x + shapes[i].width  / 2;
                         yShapeCenter = shapes[i].y + shapes[i].height / 2;
-                        theta   = shapes[i].rotation * -1;
+                        let theta   = shapes[i].rotation * -1;
 
                         xTransAbs = Math.trunc(xShapeCenter + 
                                               (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
@@ -3092,22 +3084,18 @@
                     // find the center of shape
                     xShapeCenter = shape.x + (shape.width  / 2);
                     yShapeCenter = shape.y + (shape.height / 2);
-                                    
-                    // ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-                    //
-                    // ctx.save();
+                    // save current translation and rotation              
+                    ctx.save();
                     // Translate to rectangle center
                     ctx.translate(xShapeCenter, yShapeCenter);
                     // Rotate
                     ctx.rotate(shape.rotation);
                     // Translate back
                     ctx.translate(-xShapeCenter, -yShapeCenter);
-
                     // Draw the rectangle
                     ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
-                    //
-                    // ctx.restore();
+                    // restore the saved translation and rotation
+                    ctx.restore();
                 }
                 // Restore defaults
                 ctx.strokeStyle = strokeStyleDefault;
