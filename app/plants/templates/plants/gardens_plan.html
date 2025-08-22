@@ -565,6 +565,27 @@
                 this.fill      = fill;
                 this.fillColor = fillColor;
             }
+            placeHandle(location, x, y)
+            {
+                let handle = 
+                { 
+                    type       : "handle", 
+                    x          : x, 
+                    y          : y, 
+                    radius     : 5,
+                    startAngle : 0, 
+                    endAngle   : 2 * Math.PI,
+                    direction  : "clockwise",
+                    lineWidth  : 1,
+                    lineStyle  : "solid",
+                    lineColor  : "black",
+                    color      : "white",
+                    location   : location,
+                    rotation   : 0,
+                    shape_id   : 0
+                };
+                return(handle);       
+            }
             drawHandles(handles)
             {
                 for(let i = 0; i < handles.length; i++)
@@ -640,8 +661,8 @@
                 // If line is selected, draw handles
                 if(!this.grouped && distance <= threshold)
                 {
-                    this.handles.push(placeHandle("start", this.xStart, this.yStart));
-                    this.handles.push(placeHandle("end",   this.xEnd,   this.yEnd));
+                    this.handles.push(this.placeHandle("start", this.xStart, this.yStart));
+                    this.handles.push(this.placeHandle("end",   this.xEnd,   this.yEnd));
                 }
                 return(distance <= threshold);
             }
@@ -735,6 +756,23 @@
                     super.drawHandles(this.handles);
                 }
             }
+            restore(shape_JSON)
+            {
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+                this.lineColor = shape_JSON.lineColor;
+                this.lineStyle = shape_JSON.lineStyle;
+                this.lineWidth = shape_JSON.lineWidth;
+                this.fill      = shape_JSON.fill;
+                this.fillColor = shape_JSON.fillColor;
+                this.xStart    = shape_JSON.xStart;
+                this.yStart    = shape_JSON.yStart;
+                this.xEnd      = shape_JSON.xEnd;
+                this.yEnd      = shape_JSON.yEnd;
+            }
         }
         class Rectangle extends Shape 
         {
@@ -778,15 +816,15 @@
                     xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
                     ySelectAbs >= this.y && ySelectAbs <= (this.y + this.height))
                 {
-                    this.handles.push(placeHandle("top-left",      this.x,                this.y));
-                    this.handles.push(placeHandle("top-middle",    this.x + this.width/2, this.y));
-                    this.handles.push(placeHandle("top-right",     this.x + this.width,   this.y));
-                    this.handles.push(placeHandle("right-middle",  this.x + this.width,   this.y + this.height/2));
-                    this.handles.push(placeHandle("bottom-right",  this.x + this.width,   this.y + this.height));
-                    this.handles.push(placeHandle("bottom-middle", this.x + this.width/2, this.y + this.height));
-                    this.handles.push(placeHandle("bottom-left",   this.x,                this.y + this.height));
-                    this.handles.push(placeHandle("left-middle",   this.x,                this.y + this.height/2));
-                    this.handles.push(placeHandle("rotate",        this.x + this.width/2, this.y - 30));
+                    this.handles.push(this.placeHandle("top-left",      this.x,                this.y));
+                    this.handles.push(this.placeHandle("top-middle",    this.x + this.width/2, this.y));
+                    this.handles.push(this.placeHandle("top-right",     this.x + this.width,   this.y));
+                    this.handles.push(this.placeHandle("right-middle",  this.x + this.width,   this.y + this.height/2));
+                    this.handles.push(this.placeHandle("bottom-right",  this.x + this.width,   this.y + this.height));
+                    this.handles.push(this.placeHandle("bottom-middle", this.x + this.width/2, this.y + this.height));
+                    this.handles.push(this.placeHandle("bottom-left",   this.x,                this.y + this.height));
+                    this.handles.push(this.placeHandle("left-middle",   this.x,                this.y + this.height/2));
+                    this.handles.push(this.placeHandle("rotate",        this.x + this.width/2, this.y - 30));
                 }
 
                 return(xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
@@ -1047,6 +1085,24 @@
                     super.drawHandles(this.handles);
                 }
             }
+            restore(shape_JSON)
+            {
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+                this.lineColor = shape_JSON.lineColor;
+                this.lineStyle = shape_JSON.lineStyle;
+                this.lineWidth = shape_JSON.lineWidth;
+                this.fill      = shape_JSON.fill;
+                this.fillColor = shape_JSON.fillColor;
+                this.x         = shape_JSON.x;
+                this.y         = shape_JSON.y;
+                this.width     = shape_JSON.width;
+                this.height    = shape_JSON.height;
+                this.rotation  = shape_JSON.rotation;
+            }
         }
         class Circle    extends Shape 
         {
@@ -1071,10 +1127,10 @@
                 // If circle is selected, draw handles
                 if (!this.grouped && distance <= this.radius)
                 {
-                    this.handles.push(placeHandle("top",    this.x,               this.y - this.radius));
-                    this.handles.push(placeHandle("right",  this.x + this.radius, this.y));
-                    this.handles.push(placeHandle("bottom", this.x,               this.y + this.radius));
-                    this.handles.push(placeHandle("left",   this.x - this.radius, this.y));
+                    this.handles.push(this.placeHandle("top",    this.x,               this.y - this.radius));
+                    this.handles.push(this.placeHandle("right",  this.x + this.radius, this.y));
+                    this.handles.push(this.placeHandle("bottom", this.x,               this.y + this.radius));
+                    this.handles.push(this.placeHandle("left",   this.x - this.radius, this.y));
                 }
                 return(distance <= this.radius);
             }
@@ -1187,12 +1243,28 @@
                     super.drawHandles(this.handles);
                 }
             }
+            restore(shape_JSON)
+            {
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+                this.lineColor = shape_JSON.lineColor;
+                this.lineStyle = shape_JSON.lineStyle;
+                this.lineWidth = shape_JSON.lineWidth;
+                this.fill      = shape_JSON.fill;
+                this.fillColor = shape_JSON.fillColor;
+                this.x         = shape_JSON.x;
+                this.y         = shape_JSON.y;
+                this.radius    = shape_JSON.radius;
+            }
         }
         class Polygon   extends Shape 
         {
             constructor(type, id, grouped, label, layer,
                         lineWidth, lineStyle, lineColor, fill, fillColor,
-                        vertices, rotation, status) 
+                        vertices = [], rotation, status) 
             {
                 super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
                 this.vertices   = vertices;
@@ -1216,7 +1288,7 @@
                 {
                     for (let j = 0; j < this.vertices.length; j++)
                     {
-                        this.handles.push(placeHandle("v" + j, this.vertices[j].x, this.vertices[j].y));
+                        this.handles.push(this.placeHandle("v" + j, this.vertices[j].x, this.vertices[j].y));
                     }
                 }
 
@@ -1337,6 +1409,25 @@
                     super.drawHandles(this.handles);
                 }
             }
+            restore(shape_JSON)
+            {
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+                this.lineColor = shape_JSON.lineColor;
+                this.lineStyle = shape_JSON.lineStyle;
+                this.lineWidth = shape_JSON.lineWidth;
+                this.fill      = shape_JSON.fill;
+                this.fillColor = shape_JSON.fillColor;
+                for(let i = 0; i < shape_JSON.vertices.length; i++)
+                {
+                    this.vertices.push(shape_JSON.vertices[i]);
+                }
+                this.rotation  = shape_JSON.rotation;
+                this.status    = shape_JSON.status;
+            }
         }
         
         class ShapeGroup 
@@ -1427,6 +1518,22 @@
                 }
                 this.createBoundingBox();
             }
+            restore(group_JSON)
+            {
+                this.type = group_JSON.type;
+                this.id   = group_JSON.id;
+                for(let j = 0; j < group_JSON.shapes.length; j++)
+                {
+                    for(let k = 0; k < shapes.length; k++)
+                    {
+                        if(shapes[k].id == group_JSON.shapes[j].id)
+                        {
+                            this.shapes.push(shapes[k]);
+                        }
+                    }
+                }
+                this.createBoundingBox();
+            }
         }
         
         // setup global object arrays
@@ -1469,7 +1576,7 @@
             target = e.target;
             action = target.value;
             //
-            if ( action == 'select')
+            if (action == 'select')
             {
                 id_layer_div.style.display        = 'inline';
                 id_plant_div.style.display        = 'none';
@@ -1484,7 +1591,7 @@
                 id_shape_attributes.style.display = 'inline';
                 
             }
-            else if( action == 'add plant')
+            else if(action == 'add plant')
             {
                 id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'inline';
@@ -1498,7 +1605,7 @@
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
             }
-            else if( action == 'draw')
+            else if(action == 'draw')
             {
                 id_layer_div.style.display       = 'none';
                 id_plant_div.style.display       = 'none';
@@ -1515,8 +1622,13 @@
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
                 unGroup.style.display = "none";
+
+                activeGroupFlag = false;
+                activeGroup = null;
+
+                drawScreen();
             }
-            else if( action == 'pan')
+            else if(action == 'pan')
             {
                 id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'none';
@@ -2251,19 +2363,28 @@
                 if (shapeOption == "line")
                 {
                     activeShape.label = prompt("Shape label:");
-                    shapes.push(activeShape);
+                    if(activeShape.label)
+                    {
+                        shapes.push(activeShape);
+                    }
                     activeShape = null;
                 }
                 else if (shapeOption == "rectangle" && activeShape.width > 0 && activeShape.height > 0)
                 {
                     activeShape.label = prompt("Shape label:");
-                    shapes.push(activeShape);
+                    if(activeShape.label)
+                    {
+                        shapes.push(activeShape);
+                    }
                     activeShape = null;
                 }
                 else if (shapeOption == "circle" && activeShape.radius > 0)
                 {
                     activeShape.label = prompt("Shape label:");
-                    shapes.push(activeShape);
+                    if(activeShape.label)
+                    {
+                        shapes.push(activeShape);
+                    }
                     activeShape = null;
                 }
                 else if (shapeOption == "polygon")
@@ -2281,7 +2402,10 @@
                         // since the polygon has been closed remove the last point
                         activeShape.vertices.pop();
                         activeShape.label = prompt("Shape label:");
-                        shapes.push(activeShape);
+                        if(activeShape.label)
+                        {
+                            shapes.push(activeShape);
+                        }
                         polygonWIP = false;
                         activeShape = null;
                     }
@@ -2909,10 +3033,8 @@
             {
                 wipGroup.shapes[i].grouped = true;
             }
-            // create the boundding box for the newly created group
+            // create the bounding box for the newly created group
             wipGroup.createBoundingBox();
-
-            // console.log("DEBUG: wipGroup:", wipGroup);
 
             // make a deep copy of wipGroup and add to shapeGroups
             const deepCopy = new ShapeGroup(0);
@@ -2921,17 +3043,11 @@
             deepCopy.shapes = wipGroup.shapes;
             deepCopy.createBoundingBox();
 
-            // console.log("DEBUG: deepCopy:", deepCopy);
-
             shapeGroups.push(deepCopy);
-
-            // console.log("DEBUG: shapeGroups:", shapeGroups);
 
             // set activeGroup to the newly formed group
             activeGroupFlag = true;
             activeGroup = shapeGroups.at(-1);
-
-            // console.log("DEBUG: activeGroup:", activeGroup);
 
             // reset the grouping process
             wipGroupFlag = false;
@@ -2943,9 +3059,6 @@
             unGroup.style.display   = "inline";
 
             drawScreen();
-
-            // console.log("DEBUG: after group - shapes:", shapes);
-            // console.log("DEBUG: after group - shapeGroups:", shapeGroups);
         }
         
         //************************************************************//
@@ -2977,31 +3090,6 @@
 
             // console.log("DEBUG: after ungroup - shapes:", shapes);
             // console.log("DEBUG: after ungroup - shapeGroups:", shapeGroups);
-        }
-
-        //************************************************************//
-        // Function: Place handle
-        //************************************************************//
-        function placeHandle(location, x, y)
-        {
-            handle = 
-            { 
-                type       : "handle", 
-                x          : x, 
-                y          : y, 
-                radius     : 5,
-                startAngle : 0, 
-                endAngle   : 2 * Math.PI,
-                direction  : "clockwise",
-                lineWidth  : 1,
-                lineStyle  : "solid",
-                lineColor  : "black",
-                color      : "white",
-                location   : location,
-                rotation   : 0,
-                shape_id   : 0
-            };
-            return(handle);       
         }
 
         //************************************************************//
@@ -3168,125 +3256,40 @@
         function restore()
         {
             const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
-            let restoredShape = null;
             let maxShapeID = 0;
             let maxGroupID = 0;
-            // restore saved shapes
+            // restore saved objects (shapes & groups)
             for (let i = 0; i < shapes_JSON.length; i++)
             {
                 if (shapes_JSON[i].type == "line")
                 {
-                    restoredShape = new Line();
-
-                    restoredShape.type      = shapes_JSON[i].type;
-                    restoredShape.id        = shapes_JSON[i].id;
-                    restoredShape.grouped   = shapes_JSON[i].grouped;
-                    restoredShape.label     = shapes_JSON[i].label;
-                    restoredShape.layer     = shapes_JSON[i].layer;
-                    restoredShape.lineColor = shapes_JSON[i].lineColor;
-                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
-                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
-                    restoredShape.fill      = shapes_JSON[i].fill;
-                    restoredShape.fillColor = shapes_JSON[i].fillColor;
-                    restoredShape.xStart    = shapes_JSON[i].xStart;
-                    restoredShape.yStart    = shapes_JSON[i].yStart;
-                    restoredShape.xEnd      = shapes_JSON[i].xEnd;
-                    restoredShape.yEnd      = shapes_JSON[i].yEnd;
-
-                    maxShapeID = Math.max(maxShapeID, restoredShape.id);
-
-                    shapes.push(restoredShape);
+                    shapes.push(new Line());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id);  
                 }
                 else if (shapes_JSON[i].type == "rectangle")
                 {
-                    restoredShape = new Rectangle();
-
-                    restoredShape.type      = shapes_JSON[i].type;
-                    restoredShape.id        = shapes_JSON[i].id;
-                    restoredShape.grouped   = shapes_JSON[i].grouped;
-                    restoredShape.label     = shapes_JSON[i].label;
-                    restoredShape.layer     = shapes_JSON[i].layer;
-                    restoredShape.lineColor = shapes_JSON[i].lineColor;
-                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
-                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
-                    restoredShape.fill      = shapes_JSON[i].fill;
-                    restoredShape.fillColor = shapes_JSON[i].fillColor;
-                    restoredShape.x         = shapes_JSON[i].x;
-                    restoredShape.y         = shapes_JSON[i].y;
-                    restoredShape.width     = shapes_JSON[i].width;
-                    restoredShape.height    = shapes_JSON[i].height;
-                    restoredShape.rotation  = shapes_JSON[i].rotation;
-
-                    maxShapeID = Math.max(maxShapeID, restoredShape.id);
-
-                    shapes.push(restoredShape);
+                    shapes.push(new Rectangle());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id); 
                 }
                 else if (shapes_JSON[i].type == "circle")
                 {
-                    restoredShape = new Circle();
-
-                    restoredShape.type      = shapes_JSON[i].type;
-                    restoredShape.id        = shapes_JSON[i].id;
-                    restoredShape.grouped   = shapes_JSON[i].grouped;
-                    restoredShape.label     = shapes_JSON[i].label;
-                    restoredShape.layer     = shapes_JSON[i].layer;
-                    restoredShape.lineColor = shapes_JSON[i].lineColor;
-                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
-                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
-                    restoredShape.fill      = shapes_JSON[i].fill;
-                    restoredShape.fillColor = shapes_JSON[i].fillColor;
-                    restoredShape.x         = shapes_JSON[i].x;
-                    restoredShape.y         = shapes_JSON[i].y;
-                    restoredShape.radius    = shapes_JSON[i].radius;
-
-                    maxShapeID = Math.max(maxShapeID, restoredShape.id);
-
-                    shapes.push(restoredShape);
+                    shapes.push(new Circle());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id); 
                 }
                 else if (shapes_JSON[i].type == "polygon")
                 {
-                    restoredShape = new Polygon();
-
-                    restoredShape.type      = shapes_JSON[i].type;
-                    restoredShape.id        = shapes_JSON[i].id;
-                    restoredShape.grouped   = shapes_JSON[i].grouped;
-                    restoredShape.label     = shapes_JSON[i].label;
-                    restoredShape.layer     = shapes_JSON[i].layer;
-                    restoredShape.lineColor = shapes_JSON[i].lineColor;
-                    restoredShape.lineStyle = shapes_JSON[i].lineStyle;
-                    restoredShape.lineWidth = shapes_JSON[i].lineWidth;
-                    restoredShape.fill      = shapes_JSON[i].fill;
-                    restoredShape.fillColor = shapes_JSON[i].fillColor;
-                    restoredShape.vertices  = shapes_JSON[i].vertices;
-                    restoredShape.rotation  = shapes_JSON[i].rotation;
-                    restoredShape.status    = shapes_JSON[i].status;
-
-                    maxShapeID = Math.max(maxShapeID, restoredShape.id);
-
-                    shapes.push(restoredShape);
+                    shapes.push(new Polygon());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id); 
                 }
                 else if (shapes_JSON[i].type == "group")
                 {
-                    restoredGroup = new ShapeGroup();
-
-                    restoredGroup.type   = shapes_JSON[i].type;
-                    restoredGroup.id     = shapes_JSON[i].id;
-                    for(let j = 0; j < shapes_JSON[i].shapes.length; j++)
-                    {
-                        for(let k = 0; k < shapes.length; k++)
-                        {
-                            if(shapes[k].id == shapes_JSON[i].shapes[j].id)
-                            {
-                                restoredGroup.shapes.push(shapes[k]);
-                            }
-                        }
-                    }
-
-                    restoredGroup.createBoundingBox();
-
-                    maxGroupID = Math.max(maxGroupID, restoredGroup.id);
-
-                    shapeGroups.push(restoredGroup);
+                    shapeGroups.push(new ShapeGroup());
+                    shapeGroups.at(-1).restore(shapes_JSON[i]);
+                    maxGroupID = Math.max(maxGroupID, shapeGroups.at(-1).id);
                 }
             }
             nextShapeID = maxShapeID + 1;
