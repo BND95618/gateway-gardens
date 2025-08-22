@@ -273,9 +273,14 @@
         
                 <div id="id_line_color_div" style="display: none;">
                     <label for="line_color" style="display: inline-block;">Line Color: </label>           
-                    <input  type="color" id="id_line_color" name="line_color" value="#000000"/>
+                    <input type="color" id="id_line_color" name="line_color" value="#000000"/>
                 </div>
         
+                <div id="id_fill_div" style="display: none;">
+                    <label for="fill" style="display: inline-block;">Fill: </label>
+                    <input type="checkbox" id="id_fill" name="fill">
+                </div>
+
                 <div id="id_fill_color_div" style="display: none;">
                     <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
                     <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
@@ -522,6 +527,7 @@
         let lineWidth   = 1;
         let lineStyle   = "solid";
         let lineColor   = "black";
+        let fill        = false
         let fillColor   = "white";
         let zoomSelect  = "full view";
         let zoomSlider  = 0;
@@ -534,6 +540,7 @@
         let resizeShape    = false; 
         let rotateShape    = false;
         let moveShape      = false;
+        let moveGroup      = false;
         let panning        = false;
         let selectShapeCtx = false;
         let polygonWIP     = false; // actively drawing the polygoon
@@ -541,12 +548,11 @@
         // setup global objects
         let activeShape  = null;
         let activeHandle = null;
-        let boundingBox  = null;
 
         // Shape classes
         class Shape 
         {
-            constructor(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor) 
+            constructor(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor) 
             {
                 this.type      = type;
                 this.id        = id;
@@ -556,6 +562,8 @@
                 this.lineWidth = lineWidth;
                 this.lineStyle = lineStyle;
                 this.lineColor = lineColor;
+                this.fill      = fill;
+                this.fillColor = fillColor;
             }
             drawHandles(handles)
             {
@@ -594,10 +602,10 @@
         class Line      extends Shape 
         {
             constructor(type, id, grouped, label, layer, 
-                        lineWidth, lineStyle, lineColor,
+                        lineWidth, lineStyle, lineColor, fill, fillColor,
                         xStart, yStart, xEnd, yEnd) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
                 this.xStart  = xStart;
                 this.yStart  = yStart;
                 this.xEnd    = xEnd;
@@ -722,7 +730,7 @@
                 ctx.fillText(this.label, xShapeCenter, yShapeCenter, maxWidth);
 
                 // draw the handles
-                if(this.handles.length > 0)
+                if(!this.grouped && this.handles.length > 0)
                 {
                     super.drawHandles(this.handles);
                 }
@@ -731,11 +739,10 @@
         class Rectangle extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fillColor,
+                        lineWidth, lineStyle, lineColor, fill, fillColor,
                         x, y, width, height, rotation) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
-                this.fillColor  = fillColor;
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
                 this.x          = x;
                 this.y          = y;
                 this.width      = width;
@@ -997,8 +1004,11 @@
 
                 if(this.rotation == 0)
                 {
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
                     ctx.strokeRect(this.x, this.y, this.width, this.height);
+                    if(this.fill)
+                    {
+                        ctx.fillRect(this.x, this.y, this.width, this.height);
+                    }
                 }
                 else
                 {
@@ -1013,8 +1023,11 @@
                     ctx.translate(-xShapeCenter, -yShapeCenter);
 
                     // Draw the rectangle
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
                     ctx.strokeRect(this.x, this.y, this.width, this.height);
+                    if(this.fill)
+                    {
+                        ctx.fillRect(this.x, this.y, this.width, this.height);
+                    }
                     //
                     ctx.restore();
                 }
@@ -1029,7 +1042,7 @@
                 ctx.fillText(this.label, xShapeCenter, yShapeCenter, maxWidth);
 
                 // draw the handles
-                if(this.handles.length > 0)
+                if(!this.grouped && this.handles.length > 0)
                 {
                     super.drawHandles(this.handles);
                 }
@@ -1038,11 +1051,10 @@
         class Circle    extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fillColor,
+                        lineWidth, lineStyle, lineColor, fill, fillColor,
                         x, y, radius) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
-                this.fillColor  = fillColor;
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
                 this.x          = x;
                 this.y          = y;
                 this.radius     = radius;
@@ -1155,8 +1167,11 @@
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle, this.direction);
                 ctx.fillStyle = this.color;
-                ctx.fill();
                 ctx.stroke();
+                if(this.fill)
+                {
+                    ctx.fill();
+                }
 
                 // add the label
                 const maxWidth = this.radius * 2;
@@ -1166,8 +1181,8 @@
                 ctx.textBaseline = 'middle';
                 ctx.fillText(this.label, this.x, this.y, maxWidth);
 
-                // draw the handles
-                if(this.handles.length > 0)
+                // draw the handles only if this is cudrrently selected and is not a grouped shape
+                if(!this.grouped && this.handles.length > 0)
                 {
                     super.drawHandles(this.handles);
                 }
@@ -1176,11 +1191,10 @@
         class Polygon   extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fillColor,
+                        lineWidth, lineStyle, lineColor, fill, fillColor,
                         vertices, rotation, status) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor);
-                this.fillColor  = fillColor;
+                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
                 this.vertices   = vertices;
                 this.rotation   = rotation;
                 this.status     = status;
@@ -1286,7 +1300,10 @@
                 if(this.status == "closed")
                 {
                     ctx.closePath();
-                    ctx.fill();
+                    if(this.fill)
+                    {
+                        ctx.fill();
+                    }
                 }
                 ctx.stroke();
 
@@ -1315,7 +1332,7 @@
                 }
 
                 // draw the handles
-                if(this.handles.length > 0)
+                if(!this.grouped && this.handles.length > 0)
                 {
                     super.drawHandles(this.handles);
                 }
@@ -1329,6 +1346,86 @@
                 this.type   = "group";
                 this.id     = id;
                 this.shapes = [];
+                //
+                this.boundingBox = new Rectangle();
+            }
+            createBoundingBox()
+            {
+                // determine coordinates of bounding box
+                let xMin = 10000;
+                let yMin = 10000;
+                let xMax = -1000;
+                let yMax = -1000;
+                for(let i=0; i < this.shapes.length; i++)
+                {
+                    if(this.shapes[i].type == "line")
+                    {
+                        xMin = Math.min(xMin, this.shapes[i].xStart, this.shapes[i].xEnd);
+                        yMin = Math.min(yMin, this.shapes[i].yStart, this.shapes[i].yEnd);
+                        xMax = Math.max(xMax, this.shapes[i].xStart, this.shapes[i].xEnd);
+                        yMax = Math.max(yMax, this.shapes[i].yStart, this.shapes[i].yEnd);
+                    }
+                    else if(this.shapes[i].type == "rectangle")
+                    {
+                        xMin = Math.min(xMin, this.shapes[i].x);
+                        yMin = Math.min(yMin, this.shapes[i].y);
+                        xMax = Math.max(xMax, this.shapes[i].x + this.shapes[i].width);
+                        yMax = Math.max(yMax, this.shapes[i].y + this.shapes[i].height);
+                    }
+                    else if(this.shapes[i].type == "circle")
+                    {
+                        xMin = Math.min(xMin, this.shapes[i].x - this.shapes[i].radius);
+                        yMin = Math.min(yMin, this.shapes[i].y - this.shapes[i].radius);
+                        xMax = Math.max(xMax, this.shapes[i].x + this.shapes[i].radius);
+                        yMax = Math.max(yMax, this.shapes[i].y + this.shapes[i].radius);
+                    }
+                    else if(this.shapes[i].type == "polygon")
+                    {
+                        for(let j = 0; j < this.shapes[i].vertices.length; j++)
+                        {
+                            xMin = Math.min(xMin, this.shapes[i].vertices[j].x);
+                            yMin = Math.min(yMin, this.shapes[i].vertices[j].y);
+                            xMax = Math.max(xMax, this.shapes[i].vertices[j].x);
+                            yMax = Math.max(yMax, this.shapes[i].vertices[j].y);
+                        }
+                    }
+                }
+                //
+                const boundingBoxPadding = 20;
+                // create bounding box
+                this.boundingBox.type      = 'rectangle';
+                this.boundingBox.id        = 0;
+                this.boundingBox.grouped   = true; // prevents handles from being drawn
+                this.boundingBox.label     = '';
+                this.boundingBox.layer     = "ground";            
+                this.boundingBox.lineWidth = 1;
+                this.boundingBox.lineStyle = "dashed";
+                this.boundingBox.lineColor = "black";
+                this.boundingBox.fill      = false;
+                this.boundingBox.fillColor = "red";
+                this.boundingBox.x         = xMin - boundingBoxPadding;
+                this.boundingBox.y         = yMin - boundingBoxPadding;
+                this.boundingBox.width     = xMax - xMin + 2 * boundingBoxPadding;
+                this.boundingBox.height    = yMax - yMin + 2 * boundingBoxPadding;
+                this.boundingBox.rotation  = 0;
+            }
+            drawBoundingBox()
+            {
+                this.boundingBox.draw();
+            }
+            select(x, y)
+            {
+                return(this.boundingBox.select(x, y));
+            }
+            move(dx, dy)
+            {
+                console.log("DEBUG: got to ShapeGroup move method");
+                console.log("DEBUG: shapes:", this.shapes);
+                for(let i = 0; i < this.shapes.length; i++)
+                {
+                    this.shapes[i].move(dx, dy);
+                }
+                this.createBoundingBox();
             }
         }
         
@@ -1354,7 +1451,8 @@
         let nextGroupID = 0;
         let wipGroupFlag = false;
         wipGroup    = new ShapeGroup(nextGroupID);
-        activeGroup = new ShapeGroup(nextGroupID);
+        let activeGroupFlag = false;
+        let activeGroup = null;
 
         // restore the canvas from the server db
         restore();
@@ -1379,6 +1477,7 @@
                 id_line_width_div.style.display   = 'none';
                 id_line_style_div.style.display   = 'none';
                 id_line_color_div.style.display   = 'none';
+                id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
@@ -1393,6 +1492,7 @@
                 id_line_width_div.style.display   = 'inline';
                 id_line_style_div.style.display   = 'inline';
                 id_line_color_div.style.display   = 'inline';
+                id_fill_div.style.display         = 'inline';
                 id_fill_color_div.style.display   = 'inline';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
@@ -1408,11 +1508,13 @@
                 id_line_color_div.style.display  = 'inline';
                 if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
                 {
+                    id_fill_div.style.display       = 'inline';
                     id_fill_color_div.style.display = 'inline';
                 }
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
+                unGroup.style.display = "none";
             }
             else if( action == 'pan')
             {
@@ -1422,6 +1524,7 @@
                 id_line_width_div.style.display   = 'none';
                 id_line_style_div.style.display   = 'none';
                 id_line_color_div.style.display   = 'none';
+                id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
@@ -1435,6 +1538,7 @@
                 id_line_width_div.style.display   = 'none';
                 id_line_style_div.style.display   = 'none';
                 id_line_color_div.style.display   = 'none';
+                id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
                 id_zoom_select_div.style.display  = 'inline';
                 id_zoom_slider_div.style.display  = 'inline-block';
@@ -1443,8 +1547,8 @@
         });
 
         // Group/Ungroup buttons
-        const selectGroup   = document.getElementById('id_group_div');
-        const unGroup       = document.getElementById('id_ungroup_div');
+        const makeGroup = document.getElementById('id_group_div');
+        const unGroup   = document.getElementById('id_ungroup_div');
         //************************************************************//
         // Connect javascript to the level 2 menu items
         //************************************************************//
@@ -1526,7 +1630,7 @@
                 // Get the user defined label for the plant
                 activePlant.label = prompt("Plant label:");
 
-                // Push the plant into the drawshapes array
+                // Push the plant into shapes array
                 shapes.push(activePlant);
 
                 // Refrest the screen to show the newly added plant
@@ -1542,7 +1646,7 @@
             shapeOption = target.value;
             if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
             {
-                id_fill_color_div.style.display = 'inline';
+                id_fill_div.style.display       = 'inline';
             }
         });
 
@@ -1568,6 +1672,20 @@
         {
             target = e.target;
             lineColor = target.value;
+        });
+
+        // Setup the shape fill checkbox
+        const fill_checkbox = document.getElementById("id_fill");
+        fill_checkbox.addEventListener('change', (e) =>
+        {
+            if(fill_checkbox.checked)
+            {
+                id_fill_color_div.style.display = 'inline';
+            }
+            else
+            {
+                id_fill_color_div.style.display = 'none';
+            }
         });
 
         // Setup the shape fill color
@@ -1712,13 +1830,13 @@
                 // - if a shape was previously selected it will be deselected
                 if(!e.shiftKey)
                 {
-                    // reset the active shape flag
+                    // clear object selections and shape/group arrays
                     selectShape = false;
                     activeShape = null;
-                    // clear grouping array and bounding box 
-                    wipGroupFlag    = false;
-                    wipGroup.shapes = [];
-                    boundingBox     = null;
+                    wipGroupFlag       = false;
+                    wipGroup.shapes    = [];
+                    activeGroupFlag    = false;
+                    activeGroup        = null;
 
                     // Go through each shape to see if it has been selected
                     for (let i = 0; i < shapes.length; i++) 
@@ -1736,7 +1854,6 @@
                                 selectShape = true;
                                 // at this point it is a group of 1
                                 wipGroup.shapes.push(shapes[i]);
-                                shapeAttributes.style.display = "inline";
                             }
                             // Case: selected shape is currently a member of a group
                             else
@@ -1749,15 +1866,11 @@
                                         if(activeShape.id == shapeGroups[i].shapes[j].id)
                                         {
                                             // set the activeGroup
-                                            activeGroup.id     = shapeGroups[i].id;
-                                            activeGroup.shapes = shapeGroups[i].shapes;
-                                            selectShape = true;
-                                            // draw bounding box around shapes in the group
-                                            drawBoundingBox(shapeGroups[i]);
+                                            activeGroupFlag = true;
+                                            activeGroup     = shapeGroups[i];
                                         }
                                     }
                                 }
-                                unGroup.style.display = "inline";
                             }
                         }
                     }
@@ -1776,18 +1889,13 @@
                             wipGroup.shapes.push(shapes[i]);
                         }
                     }
-                    if(wipGroupFlag)
-                    {
-                        selectGroup.style.display = "inline";
-                        unGroup.style.display     = "none";
-                        shapeAttributes.style.display = "none";
-                    }
                 }
    
                 // If a shape is selected, display the shape attributes
                 if (selectShape)
                 {
                     shapeAttributes.innerHTML = displayAttributes(activeShape);
+                    shapeAttributes.style.display = "inline";
                 }
                 // No shape was selected: clear selection attributes and the canvas display
                 else
@@ -1796,9 +1904,29 @@
                     activeShape = null;
                     wipGroupFlag = false;
                     wipGroup.shapes = []; 
-                    boundingBox = null;
-                    unGroup.style.display = "none";
                     shapeAttributes.style.display = "none";  
+                }
+
+                if(wipGroupFlag)
+                {
+                    makeGroup.style.display       = "inline";
+                    unGroup.style.display         = "none";
+                    shapeAttributes.style.display = "none";
+                }
+                else
+                {
+                    makeGroup.style.display = "none";
+                }
+
+                // If a group has been selected
+                if (activeGroup)
+                {
+                    makeGroup.style.display = "none";
+                    unGroup.style.display   = "inline";
+                }
+                else
+                {
+                    unGroup.style.display = "none";
                 }
                 
                 // Draw the entire screen
@@ -1806,8 +1934,13 @@
             }
 
             // console.log("DEBUG: shapes:", shapes);
-            // console.log("DEBUG: shapeGroups:", shapeGroups);
+            console.log("DEBUG: selectShape:", selectShape);
             console.log("DEBUG: activeShape:", activeShape);
+            // console.log("DEBUG: shapeGroups:", shapeGroups);
+            console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
+            // console.log("DEBUG: wipGroup:", wipGroup);
+            console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
+            console.log("DEBUG: activeGroup:", activeGroup);
         });
 
         //************************************************************//
@@ -1837,12 +1970,17 @@
             if (action == "draw")
             {
                 let layer = "any";
+                let fill  = false;
+                if(fill_checkbox.checked)
+                {
+                    fill = true;
+                }
 
                 if (shapeOption == "line")
                 {
                     createShape = true;
                     activeShape = new Line('line', nextShapeID, false, 'line', layer,
-                                           lineWidth, lineStyle, lineColor,
+                                           lineWidth, lineStyle, lineColor, fill, fillColor,
                                            xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
                     nextShapeID++;
                 }
@@ -1850,7 +1988,8 @@
                 {
                     createShape = true;
                     activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle', layer,
-                                                lineWidth, lineStyle, lineColor, fillColor,
+                                                lineWidth, lineStyle, lineColor, 
+                                                fill, fillColor,
                                                 xSelectAbs, ySelectAbs, 0, 0, 0);
                     nextShapeID++;
                 }
@@ -1858,7 +1997,8 @@
                 {
                     createShape = true;
                     activeShape = new Circle('circle', nextShapeID, false, 'circle', layer,
-                                             lineWidth, lineStyle, lineColor, fillColor,
+                                             lineWidth, lineStyle, lineColor, 
+                                             fill, fillColor,
                                              xSelectAbs, ySelectAbs, 0);
                     nextShapeID++;
                 }
@@ -1869,7 +2009,8 @@
                         // Create polygon object
                         createShape = true;
                         activeShape = new Polygon('polygon', nextShapeID, false, 'polygon', layer,
-                                                  lineWidth, lineStyle, lineColor, fillColor,
+                                                  lineWidth, lineStyle, lineColor, 
+                                                  fill, fillColor,
                                                   [], 0, status);
 
                         // Set polygon starting point
@@ -1894,7 +2035,7 @@
             }
             
             // Modify an existing shape
-            else if (action == 'select' && selectShape)
+            else if (action == 'select' && selectShape && activeShape)
             {
                 // Determine how much the mouse has moved from the initial mousedown location
                 //   e.clientX = horizontal coordinate at which a mouse event occurred, 
@@ -1935,6 +2076,19 @@
                     moveShape = true;
                 }
             }
+
+            else if (action == 'select' && activeGroup)
+            {
+                if(activeGroup.select(xSelectAbs, ySelectAbs))
+                {
+                    moveGroup = true;
+                    console.log("DEBUG: group selected for move:", activeGroup);
+
+                    // save the selection point for future use
+                    xSelectAbsSave = xSelectAbs;
+                    ySelectAbsSave = ySelectAbs;
+                }
+            }
             
             // Begin panning
             else if (action == 'pan')
@@ -1944,10 +2098,11 @@
                 ySelectRelSav = ySelectRel;
             } 
 
-            // console.log("DEBUG: activeHandle", activeHandle);
-            // console.log("DEBUG: moveShape",    moveShape);
-            // console.log("DEBUG: resizeShape",  resizeShape);
-            // console.log("DEBUG: rotateShape",  rotateShape);
+            console.log("DEBUG: activeHandle:", activeHandle);
+            console.log("DEBUG: moveShape   =", moveShape);
+            console.log("DEBUG: resizeShape =", resizeShape);
+            console.log("DEBUG: rotateShape =", rotateShape);
+            console.log("DEBUG: moveGroup   =", moveGroup);
 
             // Draw the entire screen
             drawScreen();
@@ -1959,13 +2114,20 @@
         canvas.addEventListener("mousemove", (e) => 
         {
             // Return if we are not in a mouse down/move/up mode
-            if (!createShape && !resizeShape && !rotateShape && !moveShape && !panning)
+            if (!createShape && !resizeShape && !rotateShape && !moveShape && !panning && !moveGroup)
             {
                 return;
             } 
 
             console.log("DEBUG: *** Mouse move event registered ***");
-            console.log("DEBUG: activeShape:", activeShape);
+
+            console.log("DEBUG: activeHandle:", activeHandle);
+            console.log("DEBUG: moveShape   =", moveShape);
+            console.log("DEBUG: resizeShape =", resizeShape);
+            console.log("DEBUG: rotateShape =", rotateShape);
+            console.log("DEBUG: moveGroup   =", moveGroup);
+
+            // console.log("DEBUG: activeShape:", activeShape);
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -2009,8 +2171,7 @@
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
-            }
-        
+            }     
             // Move the selected shape
             else if(action == 'select' && moveShape)
             {
@@ -2019,8 +2180,7 @@
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
-            }
-            
+            }        
             // Resize the selected shape
             else if (action == 'select' && resizeShape)
             {
@@ -2030,7 +2190,6 @@
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
             }
-
             // Rotate the selected shape
             else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
             {
@@ -2040,7 +2199,16 @@
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
             }
+            // Move the select group
+            else if (action == 'select' && moveGroup)
+            {
+                console.log("DEBUG: moving group:", activeGroup);
+                activeGroup.move(xDelta, yDelta);
 
+                // capture the current mouse location
+                xSelectAbsSave += xDelta;
+                ySelectAbsSave += yDelta;
+            }
             // Pan
             else if (panning)
             {
@@ -2055,12 +2223,13 @@
             }
 
             // Update the shape attributes
-            if (action == 'draw' || action == 'select')
+            if (action == 'draw' || action == 'select' && !moveGroup)
             {
                 shapeAttributes.innerHTML = displayAttributes(activeShape);
             }
 
             // Draw the entire screen
+            console.log("DEBUG: ready to draw scrxeen");
             drawScreen();
         });
 
@@ -2070,7 +2239,7 @@
         canvas.addEventListener("mouseup", (e) => 
         {
             // Return if we are not in a mouse down/move/up mode
-            if (!createShape && !resizeShape && !rotateShape && !moveShape && !panning)
+            if (!createShape && !resizeShape && !rotateShape && !moveShape && !panning && !moveGroup)
             {
                 return;
             } 
@@ -2126,6 +2295,7 @@
             resizeShape = false;
             rotateShape = false;
             moveShape   = false;
+            moveGroup   = false;
             selectShape = false;
             panning     = false;
             xDeltaAcc   = 0;
@@ -2727,7 +2897,7 @@
         }
    
         //************************************************************//
-        // Function: Group the selected shapes and draw bounding box
+        // Function: Group the selected shapes and create bounding box
         //************************************************************//
         const group = document.getElementById("id_group");
         group.onclick = (event) => 
@@ -2739,32 +2909,38 @@
             {
                 wipGroup.shapes[i].grouped = true;
             }
+            // create the boundding box for the newly created group
+            wipGroup.createBoundingBox();
 
-            // copy the wipGroup to the shapeGroups array
-            const wipGroupCopy = new ShapeGroup(0);
-            wipGroupCopy.id     = nextGroupID;
-            wipGroupCopy.shapes = wipGroup.shapes;
-            shapeGroups.push(wipGroupCopy);
+            // console.log("DEBUG: wipGroup:", wipGroup);
 
-            // copy wipGroup to the activeGroup
-            activeGroup.id     = nextGroupID;
-            activeGroup.shapes = wipGroup.shapes;
+            // make a deep copy of wipGroup and add to shapeGroups
+            const deepCopy = new ShapeGroup(0);
+            deepCopy.type = "group";
+            deepCopy.id   = nextGroupID;
+            deepCopy.shapes = wipGroup.shapes;
+            deepCopy.createBoundingBox();
 
-            // clear the handles from the shapes in the activeGroup
-            for(let i = 0; i < activeGroup.shapes.length; i++)
-            {
-                activeGroup.shapes[i].handles = []; 
-            }
+            // console.log("DEBUG: deepCopy:", deepCopy);
 
-            // reset wipGroup
+            shapeGroups.push(deepCopy);
+
+            // console.log("DEBUG: shapeGroups:", shapeGroups);
+
+            // set activeGroup to the newly formed group
+            activeGroupFlag = true;
+            activeGroup = shapeGroups.at(-1);
+
+            // console.log("DEBUG: activeGroup:", activeGroup);
+
+            // reset the grouping process
             wipGroupFlag = false;
             wipGroup.shapes = [];
             nextGroupID++;
             activeShape = null;
-            selectGroup.style.display = "none";
-            unGroup.style.display = "inline";
-
-            drawBoundingBox(activeGroup);
+            selectShape = false;
+            makeGroup.style.display = "none";
+            unGroup.style.display   = "inline";
 
             drawScreen();
 
@@ -2796,150 +2972,13 @@
                     shapeGroups.splice(i, 1);
                 }
             }
-            boundingBox = null;
             unGroup.style.display = "none";
             drawScreen();
 
             // console.log("DEBUG: after ungroup - shapes:", shapes);
             // console.log("DEBUG: after ungroup - shapeGroups:", shapeGroups);
         }
-        
-        //************************************************************//
-        // Function: Draw bounding box
-        //************************************************************//
-        function drawBoundingBox(group)
-        {
-            // determine coordinates of bounding box
-            let xMin = 10000;
-            let yMin = 10000;
-            let xMax = -1000;
-            let yMax = -1000;
-            for(let i=0; i < group.shapes.length; i++)
-            {
-                if(group.shapes[i].type == "line")
-                {
-                    xMin = Math.min(xMin, group.shapes[i].xStart, group.shapes[i].xEnd);
-                    yMin = Math.min(yMin, group.shapes[i].yStart, group.shapes[i].yEnd);
-                    xMax = Math.max(xMax, group.shapes[i].xStart, group.shapes[i].xEnd);
-                    yMax = Math.max(yMax, group.shapes[i].yStart, group.shapes[i].yEnd);
-                }
-                else if(group.shapes[i].type == "rectangle")
-                {
-                    xMin = Math.min(xMin, group.shapes[i].x);
-                    yMin = Math.min(yMin, group.shapes[i].y);
-                    xMax = Math.max(xMax, group.shapes[i].x + group.shapes[i].width);
-                    yMax = Math.max(yMax, group.shapes[i].y + group.shapes[i].height);
-                }
-                else if(group.shapes[i].type == "circle")
-                {
-                    xMin = Math.min(xMin, group.shapes[i].x - group.shapes[i].radius);
-                    yMin = Math.min(yMin, group.shapes[i].y - group.shapes[i].radius);
-                    xMax = Math.max(xMax, group.shapes[i].x + group.shapes[i].radius);
-                    yMax = Math.max(yMax, group.shapes[i].y + group.shapes[i].radius);
-                }
-                else if(group.shapes[i].type == "polygon")
-                {
-                    for(let j = 0; j < group.shapes[i].vertices.length; j++)
-                    {
-                        xMin = Math.min(xMin, group.shapes[i].vertices[j].x);
-                        yMin = Math.min(yMin, group.shapes[i].vertices[j].y);
-                        xMax = Math.max(xMax, group.shapes[i].vertices[j].x);
-                        yMax = Math.max(yMax, group.shapes[i].vertices[j].y);
-                    }
-                }
-            }
-            // draw bounding box
-            const boundingBoxPadding = 20;
-            boundingBox = 
-                        { 
-                            type        : "rectangle-nofill", 
-                            x           : xMin - boundingBoxPadding,
-                            y           : yMin - boundingBoxPadding,
-                            width       : xMax - xMin + 2 * boundingBoxPadding,
-                            height      : yMax - yMin + 2 * boundingBoxPadding,
-                            lineWidth   : 1,
-                            lineStyle   : "dashed",
-                            strokeStyle : "black",
-                            rotation    : 0
-                        };
-                
-            // place handles on bounding box
-            handles = [];
-            let i = 0;
 
-            // place top left handle
-            currentHandle = placeHandle("top-left",
-                                        boundingBox.x,
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place top middle handle
-            currentHandle = placeHandle("top-middle",
-                                        boundingBox.x + boundingBox.width/2,
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place top right handle
-            currentHandle = placeHandle("top-right",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place right middle handle
-            currentHandle = placeHandle("right-middle",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y + boundingBox.height/2,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place bottom right handle
-            currentHandle = placeHandle("bottom-right",
-                                        boundingBox.x + boundingBox.width, 
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place bottom middle handle
-            currentHandle = placeHandle("bottom-middle",
-                                        boundingBox.x + boundingBox.width/2,
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place bottom left handle
-            currentHandle = placeHandle("bottom-left",
-                                        boundingBox.x,                   
-                                        boundingBox.y + boundingBox.height,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place left middle handle
-            currentHandle = placeHandle("left-middle",
-                                        boundingBox.x,
-                                        boundingBox.y + boundingBox.height/2,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-
-            // place Place rotate handle on object
-            currentHandle = placeHandle("rotate",
-                                        boundingBox.x + boundingBox.width / 2,
-                                        boundingBox.y - 30,
-                                        boundingBox.rotation,
-                                        i);
-            this.handles.push(currentHandle);
-        }
-    
         //************************************************************//
         // Function: Place handle
         //************************************************************//
@@ -3028,82 +3067,6 @@
         }
 
         //************************************************************//
-        // Function: Draw shape
-        //************************************************************//
-        function drawShape(shape) 
-        {
-            // Set the text label defaults
-            ctx.font         = '16px chalkboard';
-            ctx.fillStyle    = 'black';
-            ctx.textAlign    = 'center';
-            ctx.textBaseline = 'middle';
-
-            if (shape.type === "line")
-            {
-                shape.draw();
-            }
-            else if (shape.type === "rectangle") 
-            {
-                shape.draw();
-            }
-            else if (shape.type === "circle") 
-            {
-                shape.draw();
-            }
-            else if (shape.type === "polygon")
-            {
-                shape.draw();
-            }
-            else if (shape.type === "rectangle-nofill") 
-            {
-                // setup the drawing parameters
-                ctx.lineWidth   = shape.lineWidth;
-                if(shape.lineStyle == 'solid')
-                {
-                    ctx.setLineDash([]);
-                }
-                else if(shape.lineStyle == 'dashed')
-                {
-                    ctx.setLineDash([5, 5]);
-                }
-                else if(shape.lineStyle == 'dotted')
-                {
-                    ctx.setLineDash([2, 4]);
-                }
-                ctx.strokeStyle = shape.lineColor;
-                ctx.fillStyle   = shape.fillColor;
-
-                //
-                if(shape.rotation == 0)
-                {
-                    // Draw the rectangle
-                    ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-                }
-                else
-                {
-                    // find the center of shape
-                    xShapeCenter = shape.x + (shape.width  / 2);
-                    yShapeCenter = shape.y + (shape.height / 2);
-                    // save current translation and rotation              
-                    ctx.save();
-                    // Translate to rectangle center
-                    ctx.translate(xShapeCenter, yShapeCenter);
-                    // Rotate
-                    ctx.rotate(shape.rotation);
-                    // Translate back
-                    ctx.translate(-xShapeCenter, -yShapeCenter);
-                    // Draw the rectangle
-                    ctx.fillRect(shape.x, shape.y, shape.width, shape.height);
-                    // restore the saved translation and rotation
-                    ctx.restore();
-                }
-                // Restore defaults
-                ctx.strokeStyle = strokeStyleDefault;
-                ctx.lineWidth   = lineWidthDefault;
-            }
-        }
-     
-        //************************************************************//
         // Function: Draw the entire screen
         //************************************************************//
         function drawScreen() 
@@ -3124,12 +3087,6 @@
             ctx.textAlign    = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText("(0,0)", extBorder - 10, extBorder - 10);
-
-            // Draw the landscape plot border
-            // for (let i = 0; i < backgrounds.length; i++) 
-            // {
-            //     drawShape(backgrounds[i]);
-            // }
 
             ctx.lineWidth   = 2;
             ctx.lineStyle   = "solid";
@@ -3152,17 +3109,17 @@
             // Draw shapes stored in shapes array
             for (let i = 0; i < shapes.length; i++) 
             {
-                drawShape(shapes[i]);
+                shapes[i].draw()
             }
             // Draw the shape that is currently being created/modified
             if (activeShape)
             {
-                drawShape(activeShape);
+                activeShape.draw();
             }
             // Draw bounding box
-            if (boundingBox)
+            if (activeGroupFlag)
             {
-                drawShape(boundingBox);
+                activeGroup.drawBoundingBox();
             } 
             //
             ctx.restore();
@@ -3229,6 +3186,8 @@
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fill      = shapes_JSON[i].fill;
+                    restoredShape.fillColor = shapes_JSON[i].fillColor;
                     restoredShape.xStart    = shapes_JSON[i].xStart;
                     restoredShape.yStart    = shapes_JSON[i].yStart;
                     restoredShape.xEnd      = shapes_JSON[i].xEnd;
@@ -3250,6 +3209,7 @@
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fill      = shapes_JSON[i].fill;
                     restoredShape.fillColor = shapes_JSON[i].fillColor;
                     restoredShape.x         = shapes_JSON[i].x;
                     restoredShape.y         = shapes_JSON[i].y;
@@ -3273,6 +3233,7 @@
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fill      = shapes_JSON[i].fill;
                     restoredShape.fillColor = shapes_JSON[i].fillColor;
                     restoredShape.x         = shapes_JSON[i].x;
                     restoredShape.y         = shapes_JSON[i].y;
@@ -3294,6 +3255,7 @@
                     restoredShape.lineColor = shapes_JSON[i].lineColor;
                     restoredShape.lineStyle = shapes_JSON[i].lineStyle;
                     restoredShape.lineWidth = shapes_JSON[i].lineWidth;
+                    restoredShape.fill      = shapes_JSON[i].fill;
                     restoredShape.fillColor = shapes_JSON[i].fillColor;
                     restoredShape.vertices  = shapes_JSON[i].vertices;
                     restoredShape.rotation  = shapes_JSON[i].rotation;
@@ -3309,7 +3271,18 @@
 
                     restoredGroup.type   = shapes_JSON[i].type;
                     restoredGroup.id     = shapes_JSON[i].id;
-                    restoredGroup.shapes = shapes_JSON[i].shapes;
+                    for(let j = 0; j < shapes_JSON[i].shapes.length; j++)
+                    {
+                        for(let k = 0; k < shapes.length; k++)
+                        {
+                            if(shapes[k].id == shapes_JSON[i].shapes[j].id)
+                            {
+                                restoredGroup.shapes.push(shapes[k]);
+                            }
+                        }
+                    }
+
+                    restoredGroup.createBoundingBox();
 
                     maxGroupID = Math.max(maxGroupID, restoredGroup.id);
 
