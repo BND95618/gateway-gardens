@@ -714,6 +714,27 @@
                     this.handles[1].y += dy;
                 }   
             }
+            duplicate(id)
+            {
+                const newLine = new Line(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    this.xStart + 20,
+                    this.yStart + 20,
+                    this.xEnd + 20,
+                    this.yEnd + 20,
+                    []
+                    );
+                    return(newLine);
+            }
             showAttributes()
             {
                 let xStart = this.xStart - extBorder;
@@ -1033,6 +1054,28 @@
                     this.handles[i].rotation = theta;
                 }
             }
+            duplicate(id)
+            {
+                const newRectangle = new Rectangle(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    this.x + 20,
+                    this.y + 20,
+                    this.width,
+                    this.height,
+                    this.rotation,
+                    []
+                    );
+                    return(newRectangle);
+            }
             showAttributes()
             {
                 let xCenter = this.x + (this.width  / 2) - extBorder;
@@ -1230,6 +1273,29 @@
                     this.handles[3].x += dx;
                 }
             }
+            duplicate(id)
+            {
+                const newCircle = new Circle(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    this.x + 20,
+                    this.y + 20,
+                    this.radius,
+                    this.startAngle,
+                    this.endAngle,
+                    this.direction,
+                    []
+                    );
+                    return(newCircle);
+            }
             showAttributes()
             {
                 let xCenter = this.x - extBorder;
@@ -1379,6 +1445,31 @@
                         this.handles[i].y += dy;
                     }
                 }
+            }
+            duplicate(id)
+            {
+                const newPolygon = new Polygon(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    [],
+                    this.rotation,
+                    this.status,
+                    []
+                    );
+                for (let i = 0; i < this.vertices.length; i++)
+                {
+                    newPolygon.vertices.push({x : this.vertices[i].x + 20, 
+                                              y : this.vertices[i].y + 20});
+                }
+                return(newPolygon);
             }
             showAttributes()
             {
@@ -2120,6 +2211,16 @@
             } 
 
             console.log("DEBUG: *** Mouse down event registered ***");
+
+            // Defiitions:
+            //   e.clientX = horizontal coordinate at which a mouse event occurred, 
+            //               relative to the viewport's left edge
+            //   e.clientY = verticle coordinate at which a mouse event occurred, 
+            //               relative to the viewport's top edge
+            //
+            //   canvas.offsetLeft = canvas's left offset
+            //   canvas.offsetTop  = canvas's top offset
+
             // console.log("DEBUG: activeShape:", activeShape);
             // console.log("DEBUG: activeGroup:", activeGroup);
 
@@ -2198,19 +2299,9 @@
                 // display shape attributes text
                 id_shape_attributes.style.display = 'inline';
             }
-            
-            // Modify an existing shape
+            // Move or resize selected shape
             else if (action == 'select' && selectShape && activeShape)
             {
-                // Determine how much the mouse has moved from the initial mousedown location
-                //   e.clientX = horizontal coordinate at which a mouse event occurred, 
-                //               relative to the viewport's left edge
-                //   e.clientY = verticle coordinate at which a mouse event occurred, 
-                //               relative to the viewport's top edge
-                //
-                //   canvas.offsetLeft = canvas's left offset
-                //   canvas.offsetTop  = canvas's top offset
-                //
                 // save the selection point for future use
                 xSelectAbsSave = xSelectAbs;
                 ySelectAbsSave = ySelectAbs;
@@ -2241,7 +2332,7 @@
                     moveShape = true;
                 }
             }
-
+            // Move selected group
             else if (action == 'select' && activeGroup)
             {
                 if(activeGroup.select(xSelectAbs, ySelectAbs))
@@ -2254,7 +2345,6 @@
                     ySelectAbsSave = ySelectAbs;
                 }
             }
-            
             // Begin panning
             else if (action == 'pan')
             {
@@ -2834,36 +2924,9 @@
                 }
                 else if (e.target.textContent == "Shape: Duplicate")
                 {
-                    // make a deep copy of selected shape and shift new object origin to make it visible
-                    // const newShape = {};
-                    // Object.assign(newShape, shapes[shapeIndex]);
-                    const newShape = JSON.parse(JSON.stringify(shapes[shapeIndex]));
-                    if(shapes[shapeIndex].type == "line")
-                    {
-                        newShape.xStart += 20;
-                        newShape.yStart += 20;
-                        newShape.xEnd   += 20;
-                        newShape.yEnd   += 20;
-                    }
-                    else if(shapes[shapeIndex].type == "rectangle")
-                    {
-                        newShape.x += 20;
-                        newShape.y += 20;
-                    }
-                    else if(shapes[shapeIndex].type == "circle")
-                    {
-                        newShape.x += 20;
-                        newShape.y += 20;
-                    }
-                    else if(shapes[shapeIndex].type == "polygon")
-                    {
-                        for (let i = 0; i < newShape.vertices.length; i++)
-                        {
-                            newShape.vertices[i].x += 20;
-                            newShape.vertices[i].y += 20;
-                        }
-                    }
-                    shapes.push(newShape);
+                    duplicateShape = shapes[shapeIndex].duplicate(nextShapeID);
+                    nextShapeID++;
+                    shapes.push(duplicateShape); 
                 }
                 else if (e.target.textContent == "Shape: Delete")
                 {
