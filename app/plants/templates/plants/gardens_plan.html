@@ -714,6 +714,22 @@
                     this.handles[1].y += dy;
                 }   
             }
+            showAttributes()
+            {
+                let xStart = this.xStart - extBorder;
+                let yStart = this.yStart - extBorder;
+                let xEnd   = this.xEnd   - extBorder;
+                let yEnd   = this.yEnd   - extBorder;
+
+                let length = Math.round(Math.sqrt(Math.pow((this.xEnd - this.xStart), 2) + 
+                                                  Math.pow((this.yEnd - this.yStart), 2)))
+                let attributes = "<p>" + this.label + ": " +
+                                  "start: (" + pix2ft(xStart) + ", " + pix2ft(yStart) + ") " +
+                                  "end: ("   + pix2ft(xEnd)   + ", " + pix2ft(yEnd)   + ") " +
+                                  "length: " + pix2ft(length) +
+                                  "</p>";
+                return(attributes);
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -1017,6 +1033,20 @@
                     this.handles[i].rotation = theta;
                 }
             }
+            showAttributes()
+            {
+                let xCenter = this.x + (this.width  / 2) - extBorder;
+                let yCenter = this.y + (this.height / 2) - extBorder;
+                let rotation = this.rotation * 180 / Math.PI;
+
+                let attributes = "<p>" + this.label + ": " +
+                                 "center: ("  + pix2ft(xCenter) + ", " + pix2ft(yCenter) + ") " + 
+                                 "width: "    + pix2ft(this.width)  + ") " +
+                                 "height: "   + pix2ft(this.height) + ") " +
+                                 "rotation: " + rotation.toFixed(1) + " degrees" +
+                                 "</p>";
+                return(attributes);
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -1200,6 +1230,17 @@
                     this.handles[3].x += dx;
                 }
             }
+            showAttributes()
+            {
+                let xCenter = this.x - extBorder;
+                let yCenter = this.y - extBorder;
+
+                let attributes = "<p>" + this.label + ": " +
+                                 "center: (" + pix2ft(xCenter) + ", " + pix2ft(yCenter)+ ") " +
+                                 "radius: "  + pix2ft(this.radius) +
+                                 "</p>";
+                return(attributes);
+            }
             draw()
             {
                 // setup the drawing parameters
@@ -1338,6 +1379,18 @@
                         this.handles[i].y += dy;
                     }
                 }
+            }
+            showAttributes()
+            {
+                let vertices = "";
+                for(let i = 0; i < this.vertices.length; i++)
+                {
+                    vertices += "v" + i + ": (" + 
+                                pix2ft(this.vertices[0].x - extBorder) + ", " + 
+                                pix2ft(this.vertices[0].y - extBorder) + "), "
+                }
+                let attributes = "<p>" + this.label + ": " + vertices + "</p>";
+                return(attributes);
             }
             draw()
             {
@@ -2006,7 +2059,7 @@
                 // If a shape is selected, display the shape attributes
                 if (selectShape)
                 {
-                    shapeAttributes.innerHTML = displayAttributes(activeShape);
+                    shapeAttributes.innerHTML = activeShape.showAttributes();
                     shapeAttributes.style.display = "inline";
                 }
                 // No shape was selected: clear selection attributes and the canvas display
@@ -2337,7 +2390,7 @@
             // Update the shape attributes
             if (action == 'draw' || action == 'select' && !moveGroup)
             {
-                shapeAttributes.innerHTML = displayAttributes(activeShape);
+                shapeAttributes.innerHTML = activeShape.showAttributes();
             }
 
             // Draw the entire screen
@@ -2964,63 +3017,6 @@
         });
 
         //************************************************************//
-        // Function: Display shape attributes
-        //************************************************************//
-        function displayAttributes(shape)
-        {
-            if (shape.type == "line")
-            {
-                let xStart = shape.xStart - extBorder;
-                let yStart = shape.yStart - extBorder;
-                let xEnd   = shape.xEnd   - extBorder;
-                let yEnd   = shape.yEnd   - extBorder;
-
-                let length = Math.round(Math.sqrt(Math.pow((shape.xEnd - shape.xStart), 2) + 
-                                                  Math.pow((shape.yEnd - shape.yStart), 2)))
-                displayText = "<p>" + shape.label + ": " +
-                              "start: (" + pix2ft(xStart) + ", " + pix2ft(yStart) + ") " +
-                              "end: ("   + pix2ft(xEnd)   + ", " + pix2ft(yEnd)   + ") " +
-                              "length: " + pix2ft(length) +
-                              "</p>";
-            }
-            else if (shape.type == "rectangle")
-            {
-                xCenter = shape.x + (shape.width  / 2) - extBorder;
-                yCenter = shape.y + (shape.height / 2) - extBorder;
-                let rotation = shape.rotation * 180 / Math.PI;
-
-                displayText = "<p>" + shape.label + ": " +
-                              "center: ("  + pix2ft(xCenter) + ", " + pix2ft(yCenter) + ") " + 
-                              "width: "    + pix2ft(shape.width)  + ") " +
-                              "height: "   + pix2ft(shape.height) + ") " +
-                              "rotation: " + rotation.toFixed(1) + " degrees" +
-                              "</p>";
-            }
-            else if (shape.type == "circle")
-            {
-                xCenter = shape.x - extBorder;
-                yCenter = shape.y - extBorder;
-
-                displayText = "<p>" + shape.label + ": " +
-                              "center: (" + pix2ft(xCenter) + ", " + pix2ft(yCenter)+ ") " +
-                              "radius: "  + pix2ft(shape.radius) +
-                              "</p>";
-           }
-            else if (shape.type == "polygon")
-            {
-                let vertices = "";
-                for(let i = 0; i < shape.vertices.length; i++)
-                {
-                    vertices += "v" + i + ": (" + 
-                                pix2ft(shape.vertices[0].x - extBorder) + ", " + 
-                                pix2ft(shape.vertices[0].y - extBorder) + "), "
-                }
-                displayText = "<p>" + shape.label + ": " + vertices + "</p>";
-            }
-            return(displayText);       
-        }
-   
-        //************************************************************//
         // Function: Group the selected shapes and create bounding box
         //************************************************************//
         const group = document.getElementById("id_group");
@@ -3062,7 +3058,7 @@
         }
         
         //************************************************************//
-        // Function: Ungroup the selected shapes
+        // Function: Ungroup the shapes in the selected group
         //************************************************************//
         const ungroup = document.getElementById("id_ungroup");
         ungroup.onclick = (event) => 
@@ -3170,12 +3166,15 @@
             //
             //
             // Place origin coordinates (0,0) at top-left corner
+
+            // set defaults
             ctx.font         = '16px chalkboard';
             ctx.fillStyle    = 'black';
             ctx.textAlign    = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText("(0,0)", extBorder - 10, extBorder - 10);
 
+            // draw landscape border
             ctx.lineWidth   = 2;
             ctx.lineStyle   = "solid";
             ctx.strokeStyle = "green";
@@ -3204,7 +3203,7 @@
             {
                 activeShape.draw();
             }
-            // Draw bounding box
+            // Draw group bounding box
             if (activeGroupFlag)
             {
                 activeGroup.drawBoundingBox();
