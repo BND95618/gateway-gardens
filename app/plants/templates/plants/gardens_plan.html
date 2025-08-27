@@ -518,7 +518,6 @@
         let zIndex;                         // current maximum z-index
         let lineWidthDefault   = 1;         //
         let strokeStyleDefault = "black";   //
-        let xPolygonVertex, yPolygonVertex; //
         let target = "";                    // selected menu item choice
 
         // set menu defaults
@@ -654,6 +653,11 @@
                 this.xEnd    = xEnd;
                 this.yEnd    = yEnd;
                 this.handles = [];
+            }
+            createShape(dx, dy)
+            {
+                this.xEnd += dx;
+                this.yEnd += dy;
             }
             select(x, y) 
             {
@@ -896,6 +900,11 @@
                 this.rotation   = rotation;
                 this.handles = [];
             }
+            createShape(dx, dy)
+            {
+                this.width  += xDelta;
+                this.height += yDelta;
+            }
             select(x, y) 
             {
                 // translate mouse click coordinates if shape is rotated
@@ -912,23 +921,23 @@
                                                 (ySelectAbs - yShapeCenter) * Math.sin(theta))
                     const yTransAbs = Math.trunc(yShapeCenter + 
                                                 (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                                (ySelectAbs - yShapeCenter) * Math.cos(theta))
-                                
-                    xSelectAbs = xTransAbs;
-                    ySelectAbs = yTransAbs;
+                                                (ySelectAbs - yShapeCenter) * Math.cos(theta))         
+                    x = xTransAbs;
+                    y = yTransAbs;
                 }
 
                 // Determine if the selection point is contained within the rectangle
                 // and the shape is not a member of a group.  If so, place resizing handles
+                let selected = false;
                 if (!this.grouped &&
-                    xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
-                    ySelectAbs >= this.y && ySelectAbs <= (this.y + this.height))
+                    x >= this.x && x <= (this.x + this.width) && 
+                    y >= this.y && y <= (this.y + this.height))
                 {
+                    selected = true;
                     this.createHandles();
                 }
 
-                return(xSelectAbs >= this.x && xSelectAbs <= (this.x + this.width) && 
-                       ySelectAbs >= this.y && ySelectAbs <= (this.y + this.height))
+                return(selected)
             }
             createHandles()
             {
@@ -1315,6 +1324,14 @@
                 this.endAngle   = 2 * Math.PI;
                 this.direction  = "clockwise";
                 this.handles    = [];
+                this.dxAcc  = 0;
+                this.dyAcc  = 0;
+            }
+            createShape(dx, dy)
+            {
+                this.dxAcc += dx;
+                this.dyAcc += dy;
+                this.radius = Math.sqrt(Math.pow(this.dxAcc, 2) + Math.pow(this.dyAcc, 2));
             }
             select(x, y) 
             {
@@ -1547,6 +1564,15 @@
                 this.rotation   = rotation;
                 this.status     = status;
                 this.handles    = [];
+                this.xPolygonVertex = 0;
+                this.yPolygonVertex = 0;
+            }
+            createShape(dx, dy)
+            {
+                this.xPolygonVertex += dx;
+                this.yPolygonVertex += dy;
+                this.vertices[this.vertices.length - 1] = { x : this.xPolygonVertex, 
+                                                            y : this.yPolygonVertex};
             }
             select(x, y) 
             {
@@ -1879,7 +1905,7 @@
                 // create bounding box
                 this.boundingBox.type      = 'rectangle';
                 this.boundingBox.id        = 0;
-                this.boundingBox.grouped   = true; // prevents handles from being drawn
+                this.boundingBox.grouped   = false;
                 this.boundingBox.label     = '';
                 this.boundingBox.layer     = "ground";            
                 this.boundingBox.lineWidth = 1;
@@ -1895,10 +1921,12 @@
             }
             drawBoundingBox()
             {
+                this.boundingBox.handles = [];
                 this.boundingBox.draw();
             }
             select(x, y)
             {
+                console.log("DEBUG: boundingBox:", this.boundingBox);
                 return(this.boundingBox.select(x, y));
             }
             move(dx, dy)
@@ -2461,6 +2489,13 @@
 
             console.log("DEBUG: *** Mouse down event registered ***");
 
+            // console.log("DEBUG: activeHandle:", activeHandle);
+            // console.log("DEBUG: moveShape   =", moveShape);
+            // console.log("DEBUG: resizeShape =", resizeShape);
+            // console.log("DEBUG: rotateShape =", rotateShape);
+            // console.log("DEBUG: activeGroup (in)=", activeGroup);
+            // console.log("DEBUG: moveGroup (in)=", moveGroup);
+
             // Defiitions:
             //   e.clientX = horizontal coordinate at which a mouse event occurred, 
             //               relative to the viewport's left edge
@@ -2538,9 +2573,9 @@
                     
                     createShape = true;
                     // set the starting coordinates for the next point
-                    xPolygonVertex = xSelectAbs;
-                    yPolygonVertex = ySelectAbs;
-                    activeShape.vertices.push({ x : xPolygonVertex, y : yPolygonVertex });
+                    activeShape.xPolygonVertex = xSelectAbs;
+                    activeShape.yPolygonVertex = ySelectAbs;
+                    activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
                 }
 
                 xSelectAbsSave = xSelectAbs;
@@ -2584,11 +2619,10 @@
             // Move selected group
             else if (action == 'select' && activeGroup)
             {
+                console.log("DEBUG: got to move group check");
                 if(activeGroup.select(xSelectAbs, ySelectAbs))
                 {
                     moveGroup = true;
-                    console.log("DEBUG: group selected for move:", activeGroup);
-
                     // save the selection point for future use
                     xSelectAbsSave = xSelectAbs;
                     ySelectAbsSave = ySelectAbs;
@@ -2602,11 +2636,11 @@
                 ySelectRelSav = ySelectRel;
             } 
 
-            console.log("DEBUG: activeHandle:", activeHandle);
-            console.log("DEBUG: moveShape   =", moveShape);
-            console.log("DEBUG: resizeShape =", resizeShape);
-            console.log("DEBUG: rotateShape =", rotateShape);
-            console.log("DEBUG: moveGroup   =", moveGroup);
+            // console.log("DEBUG: activeHandle:", activeHandle);
+            // console.log("DEBUG: moveShape   =", moveShape);
+            // console.log("DEBUG: resizeShape =", resizeShape);
+            // console.log("DEBUG: rotateShape =", rotateShape);
+            // console.log("DEBUG: moveGroup (out)=", moveGroup);
 
             // Draw the entire screen
             drawScreen();
@@ -2649,29 +2683,8 @@
             // Draw the active shape
             if (action == "draw")
             { 
-                if (shapeOption == "line")
-                {
-                    activeShape.xEnd += xDelta;
-                    activeShape.yEnd += yDelta;
-                }
-                else if (shapeOption == "rectangle")
-                {
-                    activeShape.width  += xDelta;
-                    activeShape.height += yDelta;
-                }
-                else if (shapeOption == "circle")
-                {
-                    xDeltaAcc += xDelta;
-                    yDeltaAcc += yDelta;
-                    activeShape.radius = Math.sqrt(Math.pow(xDeltaAcc, 2) + Math.pow(yDeltaAcc, 2));
-                }
-                else if (shapeOption == "polygon")
-                {
-                    xPolygonVertex += xDelta;
-                    yPolygonVertex += yDelta;
-                    activeShape.vertices[activeShape.vertices.length - 1] = { x : xPolygonVertex, y : yPolygonVertex };
-                }
-
+                activeShape.createShape(xDelta, yDelta);
+                
                 // capture the current mouse location
                 xSelectAbsSave += xDelta;
                 ySelectAbsSave += yDelta;
@@ -2847,7 +2860,7 @@
         //************************************************************//
         // mouse right click (context menu) events
         //************************************************************//
-        // Context menu: Open the  context menu
+        // Context menu: Open the context menu
         canvas.addEventListener("contextmenu", (e) => 
         {
             console.log("DEBUG: *** Mouse right click event registered ***");
@@ -2880,59 +2893,9 @@
                         shapeIndex = i;
                     }
                 }
-                else if (!shapes[i].isPlant && shapes[i].type == "line")
+                else
                 {
-                    // Determine in the selection point is close to the line
-                    // If so, duplicate the line object
-                    if(shapes[i].select(xSelectAbs, ySelectAbs))
-                    {
-                        selectShapeCtx = true;
-                        shapeIndex = i;
-                    }
-                }
-                else if (!shapes[i].isPlant && shapes[i].type == 'rectangle')
-                {
-                    // translate mouse click coordinates if shape is rotated
-                    //   𝛼+(𝑥−𝛼)cos𝜃−(𝑦−𝛽)sin𝜃
-                    //   𝛽+(𝑥−𝛼)sin𝜃+(𝑦−𝛽)cos𝜃
-                    if(shapes[i].rotation != 0)
-                    {
-                        xShapeCenter = shapes[i].x + shapes[i].width  / 2;
-                        yShapeCenter = shapes[i].y + shapes[i].height / 2;
-                        let theta   = shapes[i].rotation * -1;
-
-                        xTransAbs = Math.trunc(xShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.cos(theta) - 
-                                              (ySelectAbs - yShapeCenter) * Math.sin(theta))
-                        yTransAbs = Math.trunc(yShapeCenter + 
-                                              (xSelectAbs - xShapeCenter) * Math.sin(theta) + 
-                                              (ySelectAbs - yShapeCenter) * Math.cos(theta))
-                            
-                        xSelectAbs = xTransAbs;
-                        ySelectAbs = yTransAbs;
-                    }
-                    // Determine if the selection point is contained within the rectangle
-                    // If so, place resize handles on object
-                    if(shapes[i].select(xSelectAbs, ySelectAbs))
-                    {
-                        selectShapeCtx = true;
-                        shapeIndex = i;
-                    }
-                    // Reset the selection point
-                    xSelectAbs = xSelectAbsSave;
-                    ySelectAbs = ySelectAbsSave;
-                }               
-                else if (!shapes[i].isPlant && shapes[i].type == "circle")
-                {
-                    if(shapes[i].select(xSelectAbs, ySelectAbs))
-                    {
-                        selectShapeCtx = true;
-                        shapeIndex = i;
-                    }
-                }
-                else if (!shapes[i].isPlant && shapes[i].type == "polygon")
-                {
-                    // Check to see if the selection point is within the polygon
+                    // Determine the shape has been selected.  If so, duplicate the shape
                     if(shapes[i].select(xSelectAbs, ySelectAbs))
                     {
                         selectShapeCtx = true;
