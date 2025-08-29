@@ -515,6 +515,7 @@
         let xDeltaAcc = 0,  yDeltaAcc = 0;  //
         let xPlot,          yPlot;          // Plot size
         let nextShapeID = 0;                // 
+        let nextPlantID = 0;                //
         let zIndex;                         // current maximum z-index
         let lineWidthDefault   = 1;         //
         let strokeStyleDefault = "black";   //
@@ -658,6 +659,19 @@
             {
                 this.xEnd += dx;
                 this.yEnd += dy;
+            }
+            createShapeEnd()
+            {
+                if((this.xStart != this.xEnd) && (this.xStart != this.yEnd))
+                {
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                }
+                else
+                {
+                    alert("Line not saved - zero length");
+                }
+                activeShape = null;
             }
             select(x, y) 
             {
@@ -905,6 +919,19 @@
                 this.width  += xDelta;
                 this.height += yDelta;
             }
+            createShapeEnd(x, y)
+            {
+                if((this.width != 0) && (this.height != 0))
+                {
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                }
+                else
+                {
+                    alert("Rectangle not saved - zero width and/or height");
+                }
+                activeShape = null;
+            }
             select(x, y) 
             {
                 // translate mouse click coordinates if shape is rotated
@@ -927,14 +954,16 @@
                 }
 
                 // Determine if the selection point is contained within the rectangle
-                // and the shape is not a member of a group.  If so, place resizing handles
                 let selected = false;
-                if (!this.grouped &&
-                    x >= this.x && x <= (this.x + this.width) && 
+                if (x >= this.x && x <= (this.x + this.width) && 
                     y >= this.y && y <= (this.y + this.height))
                 {
                     selected = true;
-                    this.createHandles();
+                    // If the rectangle is not a member of a group, create resizing handles.
+                    if (!this.grouped)
+                    {
+                        this.createHandles();
+                    }
                 }
 
                 return(selected)
@@ -1333,6 +1362,19 @@
                 this.dyAcc += dy;
                 this.radius = Math.sqrt(Math.pow(this.dxAcc, 2) + Math.pow(this.dyAcc, 2));
             }
+            createShapeEnd(x, y)
+            {
+                if(this.radius != 0)
+                {
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                }
+                else
+                {
+                    alert("Circle not saved - zero radius");
+                }
+                activeShape = null;
+            }
             select(x, y) 
             {
                 // find the distance of the cursor position from the circle center and compare to the radius
@@ -1573,6 +1615,26 @@
                 this.yPolygonVertex += dy;
                 this.vertices[this.vertices.length - 1] = { x : this.xPolygonVertex, 
                                                             y : this.yPolygonVertex};
+            }
+            createShapeEnd(x, y)
+            {
+                // Determine if the polygon is being closed
+                const xPolygonStart = this.vertices[0].x;
+                const yPolygonStart = this.vertices[0].y;
+                const xPolygonDistance = Math.abs(xPolygonStart - x);
+                const yPolygonDistance = Math.abs(yPolygonStart - y);
+
+                if (xPolygonDistance < 8 && yPolygonDistance < 8)
+                {
+                    ctx.closePath();
+                    this.status = "closed";
+                    // since the polygon has been closed remove the last point
+                    this.vertices.pop();
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                    polygonWIP = false;
+                    activeShape = null;
+                }
             }
             select(x, y) 
             {
@@ -1849,6 +1911,149 @@
             }
         }
         
+        class Plant
+        {
+            constructor(plant, type, id, grouped = false, label, layer, shape = "circle")
+            {
+                this.plant   = plant;
+                this.type    = type;
+                this.id      = id;
+                this.grouped = grouped;
+                this.label   = label;
+                this.layer   = "tbd";
+                this.shape   = new Circle('circle', 
+                                          99, 
+                                          false, 
+                                          'circle', 
+                                          "ground",
+                                          2, 
+                                          "dashed", 
+                                          "green", 
+                                          true, 
+                                          "green",
+                                          200, 
+                                          200, 
+                                          40); 
+
+                // Fetch the plant details and create javascript plant object
+                const url = "{% url 'plants:plant_fetch' %}"
+                const requestMethod = "POST";
+                const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const postData      = { requestedPlant : this.plant }
+                let downloadedPlant;
+
+                fetch(url,
+                {
+                    method: requestMethod,
+                    headers: 
+                    {
+                        // Tells the server that the request body is in JSON format
+                        'Content-Type': 'application/json',
+                        //  Provides CSRF protection, necessary for Django
+                        'X-CSRFToken' : csrfToken
+                    },
+                    // Convert the dictionary to a JSON string
+                    body: JSON.stringify(postData),
+                })
+                .then(response => response.text())
+                .then(newPlantJSON => 
+                {
+                    // AR: Convert the array of one object to just an object - remove '[]'
+                    const tempPlantObject = JSON.parse(newPlantJSON);
+                    downloadedPlant = tempPlantObject[0];
+
+                    console.log("DEBUG: downloadedPlant", downloadedPlant);
+
+                    // Populate the plant data fields
+                    this.commonName  = downloadedPlant.commonName;
+                    this.height_feet = downloadedPlant.height_feet;
+                    this.height_inch = downloadedPlant.height_inch;
+                    this.width_feet  = downloadedPlant.width_feet;
+                    this.width_inch  = downloadedPlant.width_inch;
+                    // Populate the plant shape fields
+                    this.shape.label = this.commonName;
+                    this.shape.radius = (this.width_feet * 12 + downloadedPlant.width_inch) / 2;
+
+                    console.log("DEBUG: plant object:", this);  
+                    // Display the plant details modal
+                    this.getModal();
+                });
+            }
+            getModal()
+            {
+                let url             = "{% url 'plants:plant_details_modal' %}";
+                const requestMethod = "POST";
+                const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const postData      = { requestedPlant : this.plant }
+                const plant_details_modal = document.getElementById('plant_details_modal');
+
+                // Fetch the plant details modal
+                fetch(url, 
+                {
+                    method: requestMethod,
+                    headers:
+                    {
+                        // Tells the server that the request body is in JSON format
+                        'Content-Type': 'application/json',
+                        //  Provides CSRF protection, necessary for Django
+                        'X-CSRFToken' : csrfToken
+                    },
+                    // Convert the dictionary to a JSON string
+                    body: JSON.stringify(postData),
+                })
+                .then(response => response.text())
+                .then(html => { plant_details_modal.innerHTML = html; })
+                // enable the model display
+                plant_details_modal.style.display = 'block';
+            }
+            select(x, y)
+            {
+                return(this.shape.select(x, y));
+            }
+            selectHandle(x, y)
+            {
+                return(this.shape.selectHandle(x, y));
+            }
+            move(dx, dy)
+            {
+                this.shape.move(dx, dy);   
+            }
+            resize(dx, dy)
+            {
+                this.shape.resize(dx, dy);   
+            }
+            duplicate(id)
+            {
+
+            }
+            showAttributes()
+            {
+                let xCenter = this.shape.x - extBorder;
+                let yCenter = this.shape.y - extBorder;
+
+                let attributes = "<p>" + 
+                                 "Common Name: " + this.commonName + " " +
+                                 "center: (" + pix2ft(xCenter) + ", " + pix2ft(yCenter)+ ") " +
+                                 "width: "   + pix2ft(this.shape.radius) +
+                                 "</p>";
+                return(attributes);
+            }
+            draw()
+            {
+                this.shape.draw();
+            }
+            restore(shape_JSON)
+            {
+                console.log("DEBUG: plant", this);
+                this.plant     = shape_JSON.plant;
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+            }
+        }
+
         class ShapeGroup 
         {
             constructor(id)
@@ -2063,7 +2268,7 @@
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
             }
-            else if( action == 'zoom')
+            else if(action == 'zoom')
             {
                 id_layer_div.style.display        = 'none';
                 id_plant_div.style.display        = 'none';
@@ -2087,88 +2292,30 @@
         //************************************************************//
         // Setup layer selections
         formElement = document.getElementById("id_layer_div");
-
-        // Retrieve the selected plant from thr server db
+        
+        // Retrieve the selected plant from the server db
         formElement = document.getElementById("id_plant");
         formElement.addEventListener("change", (e) =>
         {
             target = e.target;
             requestedPlant = target.value;
 
-            // Setup fetch parameters
-            let url             = "{% url 'plants:plant_details_modal' %}";
-            const requestMethod = "POST";
-            const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postData      = { requestedPlant : requestedPlant }
-            const plant_details_modal = document.getElementById('plant_details_modal');
+            const newPlant = new Plant(requestedPlant, 
+                                 "plant", 
+                                 nextPlantID, 
+                                 false, 
+                                 "plant", 
+                                 "circle");
+            shapes.push(newPlant);
 
-            // Fetch the plant details modal
-            fetch(url, 
-            {
-                method: requestMethod,
-                headers:
-                {
-                    // Tells the server that the request body is in JSON format
-                    'Content-Type': 'application/json',
-                    //  Provides CSRF protection, necessary for Django
-                    'X-CSRFToken' : csrfToken
-                },
-                // Convert the dictionary to a JSON string
-                body: JSON.stringify(postData),
-            })
-            .then(response => response.text())
-            .then(html => { plant_details_modal.innerHTML = html; })
-            // enable the model display
-            plant_details_modal.style.display = 'block';
+            console.log("DEBUG: shapes: ", shapes);
 
-            // Fetch the plant details and create javascript object for later use
-            url = "{% url 'plants:plant_fetch' %}"
-            fetch(url,
-            {
-                method: requestMethod,
-                headers: 
-                {
-                    // Tells the server that the request body is in JSON format
-                    'Content-Type': 'application/json',
-                    //  Provides CSRF protection, necessary for Django
-                    'X-CSRFToken' : csrfToken
-                },
-                // Convert the dictionary to a JSON string
-                body: JSON.stringify(postData),
-            })
-            .then(response => response.text())
-            .then(activePlantJSON => 
-            {
-                // AR: Convert the array of one object to just an object - remove '[]'
-                const activePlantObject = JSON.parse(activePlantJSON);
-                activePlant = activePlantObject[0];
+            nextPlantID++;
 
-                // Calculate the radius
-                let radiusInPx = (activePlant.width_feet * 12 + activePlant.width_inch) / 2;
+            console.log("DEBUG: newPlant:", newPlant);
 
-                // Add parameters to draw the activePlant as a circle
-                activePlant.isPlant    = true;
-                activePlant.type       = "circle";
-                activePlant.x          = 200;
-                activePlant.y          = 200;
-                activePlant.radius     = radiusInPx;
-                activePlant.startAngle = 0;
-                activePlant.endAngle   = 2 * Math.PI;
-                activePlant.direction  = "clockwise";
-                activePlant.lineWidth  = lineWidth;
-                activePlant.lineStyle  = lineStyle;
-                activePlant.lineColor  = lineColor;
-                activePlant.fillColor  = fillColor;
-
-                // Get the user defined label for the plant
-                activePlant.label = prompt("Plant label:");
-
-                // Push the plant into shapes array
-                shapes.push(activePlant);
-
-                // Refrest the screen to show the newly added plant
-                drawScreen();
-            })
+            // Refrest the screen to show the newly added plant
+            drawScreen();
         });
 
         // Setup the shape to be drawn
@@ -2364,12 +2511,12 @@
                 if(!e.shiftKey)
                 {
                     // clear object selections and shape/group arrays
-                    selectShape = false;
-                    activeShape = null;
-                    wipGroupFlag       = false;
-                    wipGroup.shapes    = [];
-                    activeGroupFlag    = false;
-                    activeGroup        = null;
+                    selectShape     = false;
+                    activeShape     = null;
+                    wipGroupFlag    = false;
+                    wipGroup.shapes = [];
+                    activeGroupFlag = false;
+                    activeGroup     = null;
 
                     // Go through each shape to see if it has been selected
                     for (let i = 0; i < shapes.length; i++) 
@@ -2380,6 +2527,9 @@
                         if(shapes[i].select(xSelectAbs, ySelectAbs))
                         { 
                             activeShape = shapes[i];
+
+                            console.log("DEBUG: activeShape (1):", activeShape);
+
                             // Case: selected shape check is not currently a member of a group
                             if(!activeShape.grouped)
                             {
@@ -2519,6 +2669,7 @@
             // Draw a new shape
             if (action == "draw")
             {
+                createShape = true;
                 let layer = "any";
                 let fill  = false;
                 if(fill_checkbox.checked)
@@ -2528,7 +2679,6 @@
 
                 if (shapeOption == "line")
                 {
-                    createShape = true;
                     activeShape = new Line('line', nextShapeID, false, 'line', layer,
                                            lineWidth, lineStyle, lineColor, fill, fillColor,
                                            xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
@@ -2536,7 +2686,6 @@
                 }
                 else if (shapeOption == "rectangle")
                 {
-                    createShape = true;
                     activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle', layer,
                                                 lineWidth, lineStyle, lineColor, 
                                                 fill, fillColor,
@@ -2545,7 +2694,6 @@
                 }
                 else if (shapeOption == "circle")
                 {
-                    createShape = true;
                     activeShape = new Circle('circle', nextShapeID, false, 'circle', layer,
                                              lineWidth, lineStyle, lineColor, 
                                              fill, fillColor,
@@ -2557,7 +2705,6 @@
                     if (polygonWIP == false)
                     {
                         // Create polygon object
-                        createShape = true;
                         activeShape = new Polygon('polygon', nextShapeID, false, 'polygon', layer,
                                                   lineWidth, lineStyle, lineColor, 
                                                   fill, fillColor,
@@ -2570,8 +2717,6 @@
                         polygonWIP  = true;
                         nextShapeID++;
                     }
-                    
-                    createShape = true;
                     // set the starting coordinates for the next point
                     activeShape.xPolygonVertex = xSelectAbs;
                     activeShape.yPolygonVertex = ySelectAbs;
@@ -2580,6 +2725,7 @@
 
                 xSelectAbsSave = xSelectAbs;
                 ySelectAbsSave = ySelectAbs;
+
                 // display shape attributes text
                 id_shape_attributes.style.display = 'inline';
             }
@@ -2684,47 +2830,26 @@
             if (action == "draw")
             { 
                 activeShape.createShape(xDelta, yDelta);
-                
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
             }     
             // Move the selected shape
             else if(action == 'select' && moveShape)
             {
                 activeShape.move(xDelta, yDelta);
-
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
             }        
             // Resize the selected shape
             else if (action == 'select' && resizeShape)
             {
                 activeShape.resize(activeHandle, xDelta, yDelta);
-               
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
             }
             // Rotate the selected shape
             else if (action == 'select' && rotateShape && activeShape.type == "rectangle")
             {
                 activeShape.rotate(xDelta, yDelta);
-
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
             }
             // Move the select group
             else if (action == 'select' && moveGroup)
             {
-                console.log("DEBUG: moving group:", activeGroup);
                 activeGroup.move(xDelta, yDelta);
-
-                // capture the current mouse location
-                xSelectAbsSave += xDelta;
-                ySelectAbsSave += yDelta;
             }
             // Pan
             else if (panning)
@@ -2734,10 +2859,15 @@
 
                 viewportTransform.x += xDelta;
                 viewportTransform.y += yDelta;
-
-                xSelectRelSav = xMouse;
-                ySelectRelSav = yMouse;
             }
+
+            // save the current mouse location - relative
+            xSelectRelSav = xMouse;
+            ySelectRelSav = yMouse;
+
+            //save the current mouse location - absolute
+            xSelectAbsSave += xDelta;
+            ySelectAbsSave += yDelta;
 
             // Update the shape attributes
             if (action == 'draw' || action == 'select' && !moveGroup)
@@ -2765,56 +2895,7 @@
             
             if (action == "draw")
             {
-                if (shapeOption == "line")
-                {
-                    activeShape.label = prompt("Shape label:");
-                    if(activeShape.label)
-                    {
-                        shapes.push(activeShape);
-                    }
-                    activeShape = null;
-                }
-                else if (shapeOption == "rectangle" && activeShape.width > 0 && activeShape.height > 0)
-                {
-                    activeShape.label = prompt("Shape label:");
-                    if(activeShape.label)
-                    {
-                        shapes.push(activeShape);
-                    }
-                    activeShape = null;
-                }
-                else if (shapeOption == "circle" && activeShape.radius > 0)
-                {
-                    activeShape.label = prompt("Shape label:");
-                    if(activeShape.label)
-                    {
-                        shapes.push(activeShape);
-                    }
-                    activeShape = null;
-                }
-                else if (shapeOption == "polygon")
-                {
-                    // Determine if the polygon is being closed
-                    const xPolygonStart = activeShape.vertices[0].x;
-                    const yPolygonStart = activeShape.vertices[0].y;
-                    const xPolygonDistance = Math.abs(xPolygonStart - xMouseAbs);
-                    const yPolygonDistance = Math.abs(yPolygonStart - yMouseAbs);
-
-                    if (xPolygonDistance < 8 && yPolygonDistance < 8)
-                    {
-                        ctx.closePath();
-                        activeShape.status = "closed";
-                        // since the polygon has been closed remove the last point
-                        activeShape.vertices.pop();
-                        activeShape.label = prompt("Shape label:");
-                        if(activeShape.label)
-                        {
-                            shapes.push(activeShape);
-                        }
-                        polygonWIP = false;
-                        activeShape = null;
-                    }
-                }
+                activeShape.createShapeEnd(xMouse, yMouse);
             }
             // Draw the entire screen
             drawScreen();
@@ -3256,7 +3337,7 @@
             // Draw shapes stored in shapes array
             for (let i = 0; i < shapes.length; i++) 
             {
-                shapes[i].draw()
+                shapes[i].draw();
             }
             // Draw the shape that is currently being created/modified
             if (activeShape)
@@ -3315,12 +3396,19 @@
         function restore()
         {
             const shapes_JSON = JSON.parse( "{{ shapes_JSON|escapejs }}" );
+            let maxPlantID = 0;
             let maxShapeID = 0;
             let maxGroupID = 0;
             // restore saved objects (shapes & groups)
             for (let i = 0; i < shapes_JSON.length; i++)
             {
-                if (shapes_JSON[i].type == "line")
+                if      (shapes_JSON[i].type == "plant")
+                {
+                    shapes.push(new Plant())
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxPlantID = Math.max(maxPlantID, shapes.at(-1).id);
+                }
+                else if (shapes_JSON[i].type == "line")
                 {
                     shapes.push(new Line());
                     shapes.at(-1).restore(shapes_JSON[i]);
@@ -3351,8 +3439,9 @@
                     maxGroupID = Math.max(maxGroupID, shapeGroups.at(-1).id);
                 }
             }
-            nextShapeID = maxShapeID + 1;
-            nextGroupID = maxGroupID + 1;
+            nextPlantID = maxPlantID++;
+            nextShapeID = maxShapeID++;
+            nextGroupID = maxGroupID++;
             console.log("=======================================");
             console.log("Retrieving landscape design from server");
             console.log("=======================================");
