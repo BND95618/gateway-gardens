@@ -727,6 +727,10 @@
                 }
                 return(null); 
             }
+            clearHandles()
+            {
+                this.handles = [];
+            }
             move(dx, dy)
             {
                 this.xStart += dx;
@@ -1015,6 +1019,10 @@
                     }
                 }
                 return(null); 
+            }
+            clearHandles()
+            {
+                this.handles = [];
             }
             move(dx, dy)
             {
@@ -1411,6 +1419,10 @@
                 }
                 return(null); 
             }
+            clearHandles()
+            {
+                this.handles = [];
+            }
             move(dx, dy)
             {
                 this.x += dx;
@@ -1680,6 +1692,10 @@
                 }
                 return(null); 
             }
+            clearHandles()
+            {
+                this.handles = [];
+            }
             move(dx, dy)
             {
                 for(let i = 0; i < this.vertices.length; i++)
@@ -1915,12 +1931,20 @@
         {
             constructor(plant, type, id, grouped = false, label, layer, shape = "circle")
             {
+                //
                 this.plant   = plant;
                 this.type    = type;
                 this.id      = id;
                 this.grouped = grouped;
                 this.label   = label;
                 this.layer   = "tbd";
+                // Plant details downloded from server
+                this.commonName  = "";
+                this.height_feet = 0;
+                this.height_inch = 0;
+                this.width_feet  = 0;
+                this.width_inch  = 0;
+                // 
                 this.shape   = new Circle('circle', 
                                           99, 
                                           false, 
@@ -1934,7 +1958,9 @@
                                           200, 
                                           200, 
                                           40); 
-
+            }
+            fetchDetails()
+            {
                 // Fetch the plant details and create javascript plant object
                 const url = "{% url 'plants:plant_fetch' %}"
                 const requestMethod = "POST";
@@ -1975,8 +2001,6 @@
                     this.shape.radius = (this.width_feet * 12 + downloadedPlant.width_inch) / 2;
 
                     console.log("DEBUG: plant object:", this);  
-                    // Display the plant details modal
-                    this.getModal();
                 });
             }
             getModal()
@@ -2014,6 +2038,10 @@
             {
                 return(this.shape.selectHandle(x, y));
             }
+            clearHandles()
+            {
+                this.shape.clearHandles();
+            }
             move(dx, dy)
             {
                 this.shape.move(dx, dy);   
@@ -2045,12 +2073,20 @@
             restore(shape_JSON)
             {
                 console.log("DEBUG: plant", this);
+                // 
                 this.plant     = shape_JSON.plant;
                 this.type      = shape_JSON.type;
                 this.id        = shape_JSON.id;
                 this.grouped   = shape_JSON.grouped;
                 this.label     = shape_JSON.label;
                 this.layer     = shape_JSON.layer;
+                // Get the up-to-date plant information s
+                this.fetchDetails(shape_JSON.plant);
+                //
+                this.shape.label  = shape_JSON.plant;
+                this.shape.x      = shape_JSON.shape.x;
+                this.shape.y      = shape_JSON.shape.y;
+                this.shape.radius = shape_JSON.shape.radius;
             }
         }
 
@@ -2306,6 +2342,7 @@
                                  false, 
                                  "plant", 
                                  "circle");
+            newPlant.fetchDetails();
             shapes.push(newPlant);
 
             console.log("DEBUG: shapes: ", shapes);
@@ -2522,7 +2559,7 @@
                     for (let i = 0; i < shapes.length; i++) 
                     {
                         // clear the shapes handles
-                        shapes[i].handles = [];
+                        shapes[i].clearHandles();
                         // check to see if the shape has been selected
                         if(shapes[i].select(xSelectAbs, ySelectAbs))
                         { 
@@ -3442,6 +3479,7 @@
             nextPlantID = maxPlantID++;
             nextShapeID = maxShapeID++;
             nextGroupID = maxGroupID++;
+
             console.log("=======================================");
             console.log("Retrieving landscape design from server");
             console.log("=======================================");
