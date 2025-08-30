@@ -1961,7 +1961,7 @@
             }
             fetchDetails()
             {
-                // Fetch the plant details and create javascript plant object
+                // Fetch the plant details and create new javascript plant object
                 const url = "{% url 'plants:plant_fetch' %}"
                 const requestMethod = "POST";
                 const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -1991,16 +1991,29 @@
                     console.log("DEBUG: downloadedPlant", downloadedPlant);
 
                     // Populate the plant data fields
-                    this.commonName  = downloadedPlant.commonName;
-                    this.height_feet = downloadedPlant.height_feet;
-                    this.height_inch = downloadedPlant.height_inch;
-                    this.width_feet  = downloadedPlant.width_feet;
-                    this.width_inch  = downloadedPlant.width_inch;
+                    this.commonName   = downloadedPlant.commonName;
+                    this.genus        = downloadedPlant.genus;
+                    this.species      = downloadedPlant.species;
+                    this.type_x       = downloadedPlant.type_x;
+                    this.bloom_color  = downloadedPlant.bloom_color;
+                    this.bloom_season = downloadedPlant.bloom_season;
+                    this.pollinators  = downloadedPlant.pollinators;
+                    this.height_feet  = downloadedPlant.height_feet;
+                    this.height_inch  = downloadedPlant.height_inch;
+                    this.width_feet   = downloadedPlant.width_feet;
+                    this.width_inch   = downloadedPlant.width_inch;
+                    this.sun_exposure = downloadedPlant.sun_exposure;
+                    this.water_rqmts  = downloadedPlant.water_rqmts;
+                    this.pH_min       = downloadedPlant.pH_min;
+                    this.pH_max       = downloadedPlant.pH_max;
+                    this.soil_type    = downloadedPlant.soil_type;
                     // Populate the plant shape fields
-                    this.shape.label = this.commonName;
-                    this.shape.radius = (this.width_feet * 12 + downloadedPlant.width_inch) / 2;
+                    this.shape.label  = this.commonName;
+                    this.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
 
-                    console.log("DEBUG: plant object:", this);  
+                    console.log("DEBUG: plant object:", this); 
+
+                    drawScreen();
                 });
             }
             getModal()
@@ -2052,7 +2065,17 @@
             }
             duplicate(id)
             {
-
+                const duplicatePlant = new Plant(this.commonName, 
+                                                 this.type, 
+                                                 nextPlantID, 
+                                                 false, 
+                                                 this.commonName, 
+                                                 this.layer,
+                                                 "circle");
+                duplicatePlant.fetchDetails();
+                duplicatePlant.shape.x = this.shape.x + 20;
+                duplicatePlant.shape.y = this.shape.y + 20
+                shapes.push(duplicatePlant);
             }
             showAttributes()
             {
@@ -2080,7 +2103,7 @@
                 this.grouped   = shape_JSON.grouped;
                 this.label     = shape_JSON.label;
                 this.layer     = shape_JSON.layer;
-                // Get the up-to-date plant information s
+                // Get the up-to-date plant information
                 this.fetchDetails(shape_JSON.plant);
                 //
                 this.shape.label  = shape_JSON.plant;
@@ -2348,6 +2371,8 @@
             console.log("DEBUG: shapes: ", shapes);
 
             nextPlantID++;
+
+            newPlant.getModal();
 
             console.log("DEBUG: newPlant:", newPlant);
 
@@ -3002,7 +3027,7 @@
             // Check to see if a plant or shape has been selected
             for (let i = 0; i < shapes.length; i++) 
             {
-                if (shapes[i].isPlant == true)
+                if (shapes[i].type == "plant")
                 {
                     // Check to see if the selection point is within the plant
                     if(shapes[i].select(xSelectAbs, ySelectAbs))
@@ -3059,39 +3084,12 @@
             {
                 if (e.target.textContent == "Plant: Show Details")
                 {
-                    // Setup fetch parameters
-                    let url             = "{% url 'plants:plant_details_modal' %}"
-                    const requestMethod = "POST"
-                    const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                    const postData      = { requestedPlant : shapes[shapeIndex].commonName }
-                    const plant_details_modal = document.getElementById('plant_details_modal');
-
-                    // Fetch the plant details modal
-                    fetch(url, 
-                    {
-                        method: requestMethod,
-                        headers:
-                        {
-                            // Tells the server that the request body is in JSON format
-                            'Content-Type': 'application/json',
-                            //  Provides CSRF protection, necessary for Django
-                            'X-CSRFToken' : csrfToken
-                        },
-                        // Convert the dictionary to a JSON string
-                        body: JSON.stringify(postData),
-                    })
-                    .then(response => response.text())
-                    .then(html => { plant_details_modal.innerHTML = html; })
-                    // enable the model display
-                    plant_details_modal.style.display = 'block'
+                    shapes[shapeIndex].getModal();
                 }
                 else if (e.target.textContent == "Plant: Duplicate")
                 {
                     // make a deep copy of selected plant and shift new object origin to make it visible
-                    const newShape = JSON.parse(JSON.stringify(shapes[shapeIndex]));
-                    newShape.x += 20;
-                    newShape.y += 20;
-                    shapes.push(newShape);
+                    shapes[shapeIndex].duplicate();
                 }
                 else if (e.target.textContent == "Plant: Delete")
                 {
