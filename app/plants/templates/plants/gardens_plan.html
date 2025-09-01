@@ -1958,9 +1958,13 @@
                                           200, 
                                           200, 
                                           40); 
+
+                console.log("DEBUG: plant constructor - id =", this.id);
             }
             fetchDetails()
             {
+                //
+
                 // Fetch the plant details and create new javascript plant object
                 const url = "{% url 'plants:plant_fetch' %}"
                 const requestMethod = "POST";
@@ -1988,8 +1992,6 @@
                     const tempPlantObject = JSON.parse(newPlantJSON);
                     downloadedPlant = tempPlantObject[0];
 
-                    console.log("DEBUG: downloadedPlant", downloadedPlant);
-
                     // Populate the plant data fields
                     this.commonName   = downloadedPlant.commonName;
                     this.genus        = downloadedPlant.genus;
@@ -2011,8 +2013,12 @@
                     this.shape.label  = this.commonName;
                     this.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
 
-                    console.log("DEBUG: plant object:", this); 
+                    // 
+                    // this.getModal();
 
+                    console.log("DEBUG: plant fetchDetails - id =", this.id)
+
+                    // Refresh the screen to show the newly added plant
                     drawScreen();
                 });
             }
@@ -2068,11 +2074,31 @@
                 const duplicatePlant = new Plant(this.commonName, 
                                                  this.type, 
                                                  nextPlantID, 
-                                                 false, 
+                                                 this.grouped, 
                                                  this.commonName, 
                                                  this.layer,
                                                  "circle");
-                duplicatePlant.fetchDetails();
+                // Populate the plant data fields
+                duplicatePlant.commonName   = this.commonName;
+                duplicatePlant.genus        = this.genus;
+                duplicatePlant.species      = this.species;
+                duplicatePlant.type_x       = this.type_x;
+                duplicatePlant.bloom_color  = this.bloom_color;
+                duplicatePlant.bloom_season = this.bloom_season;
+                duplicatePlant.pollinators  = this.pollinators;
+                duplicatePlant.height_feet  = this.height_feet;
+                duplicatePlant.height_inch  = this.height_inch;
+                duplicatePlant.width_feet   = this.width_feet;
+                duplicatePlant.width_inch   = this.width_inch;
+                duplicatePlant.sun_exposure = this.sun_exposure;
+                duplicatePlant.water_rqmts  = this.water_rqmts;
+                duplicatePlant.pH_min       = this.pH_min;
+                duplicatePlant.pH_max       = this.pH_max;
+                duplicatePlant.soil_type    = this.soil_type;
+                // Populate the plant shape fields
+                duplicatePlant.shape.label  = this.commonName;
+                duplicatePlant.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
+
                 duplicatePlant.shape.x = this.shape.x + 20;
                 duplicatePlant.shape.y = this.shape.y + 20
                 shapes.push(duplicatePlant);
@@ -2110,6 +2136,8 @@
                 this.shape.x      = shape_JSON.shape.x;
                 this.shape.y      = shape_JSON.shape.y;
                 this.shape.radius = shape_JSON.shape.radius;
+
+                console.log("DEBUG: plant restore - id =", this.id);
             }
         }
 
@@ -2190,13 +2218,13 @@
             }
             select(x, y)
             {
-                console.log("DEBUG: boundingBox:", this.boundingBox);
+                // console.log("DEBUG: boundingBox:", this.boundingBox);
                 return(this.boundingBox.select(x, y));
             }
             move(dx, dy)
             {
-                console.log("DEBUG: got to ShapeGroup move method");
-                console.log("DEBUG: shapes:", this.shapes);
+                // console.log("DEBUG: got to ShapeGroup move method");
+                // console.log("DEBUG: shapes:", this.shapes);
                 for(let i = 0; i < this.shapes.length; i++)
                 {
                     this.shapes[i].move(dx, dy);
@@ -2358,26 +2386,20 @@
         {
             target = e.target;
             requestedPlant = target.value;
-
-            const newPlant = new Plant(requestedPlant, 
-                                 "plant", 
-                                 nextPlantID, 
-                                 false, 
-                                 "plant", 
-                                 "circle");
-            newPlant.fetchDetails();
+            // create the new plant object
+            const newPlant = new Plant(requestedPlant, // plant to be fetched from server
+                                       "plant",        // type of object
+                                       nextPlantID,    // id
+                                       false,          // grouped flag
+                                       "plant",        // label for drawn shape
+                                       "tbd",          // layer there the plant resides
+                                       "circle");      // type of shape representing plant
+            // add plant to shapes array and get details from server
             shapes.push(newPlant);
-
-            console.log("DEBUG: shapes: ", shapes);
-
             nextPlantID++;
-
-            newPlant.getModal();
-
-            console.log("DEBUG: newPlant:", newPlant);
-
-            // Refrest the screen to show the newly added plant
-            drawScreen();
+            shapes[shapes.length - 1].fetchDetails();
+            // Reset the type of plant to be added - this is necessary to immediately add the same plant 
+            target.value = "--";           
         });
 
         // Setup the shape to be drawn
@@ -2590,7 +2612,7 @@
                         { 
                             activeShape = shapes[i];
 
-                            console.log("DEBUG: activeShape (1):", activeShape);
+                            // console.log("DEBUG: activeShape (1):", activeShape);
 
                             // Case: selected shape check is not currently a member of a group
                             if(!activeShape.grouped)
@@ -2679,13 +2701,13 @@
             }
 
             // console.log("DEBUG: shapes:", shapes);
-            console.log("DEBUG: selectShape:", selectShape);
-            console.log("DEBUG: activeShape:", activeShape);
+            // console.log("DEBUG: selectShape:", selectShape);
+            // console.log("DEBUG: activeShape:", activeShape);
             // console.log("DEBUG: shapeGroups:", shapeGroups);
-            console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
+            // console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
             // console.log("DEBUG: wipGroup:", wipGroup);
-            console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
-            console.log("DEBUG: activeGroup:", activeGroup);
+            // console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
+            // console.log("DEBUG: activeGroup:", activeGroup);
         });
 
         //************************************************************//
@@ -2867,11 +2889,11 @@
 
             console.log("DEBUG: *** Mouse move event registered ***");
 
-            console.log("DEBUG: activeHandle:", activeHandle);
-            console.log("DEBUG: moveShape   =", moveShape);
-            console.log("DEBUG: resizeShape =", resizeShape);
-            console.log("DEBUG: rotateShape =", rotateShape);
-            console.log("DEBUG: moveGroup   =", moveGroup);
+            // console.log("DEBUG: activeHandle:", activeHandle);
+            // console.log("DEBUG: moveShape   =", moveShape);
+            // console.log("DEBUG: resizeShape =", resizeShape);
+            // console.log("DEBUG: rotateShape =", rotateShape);
+            // console.log("DEBUG: moveGroup   =", moveGroup);
 
             // console.log("DEBUG: activeShape:", activeShape);
 
@@ -2938,7 +2960,7 @@
             }
 
             // Draw the entire screen
-            console.log("DEBUG: ready to draw scrxeen");
+            // console.log("DEBUG: ready to draw screen");
             drawScreen();
         });
 
@@ -3089,7 +3111,9 @@
                 else if (e.target.textContent == "Plant: Duplicate")
                 {
                     // make a deep copy of selected plant and shift new object origin to make it visible
-                    shapes[shapeIndex].duplicate();
+                    duplicatePlant = shapes[shapeIndex].duplicate(nextPlantID);
+                    nextPlantID++;
+                    drawScreen();
                 }
                 else if (e.target.textContent == "Plant: Delete")
                 {
@@ -3401,6 +3425,8 @@
             // Concatenate data to be saved into a single array
             saveData = [...shapes, ...shapeGroups];
 
+            console.log("shapes:", shapes);
+
             // Converts the JavaScript object to a JSON string
             let saveData_JSON = JSON.stringify(saveData);
             // Send the data to be saved back to the Django view
@@ -3437,7 +3463,7 @@
             // restore saved objects (shapes & groups)
             for (let i = 0; i < shapes_JSON.length; i++)
             {
-                if      (shapes_JSON[i].type == "plant")
+                if (shapes_JSON[i].type == "plant")
                 {
                     shapes.push(new Plant())
                     shapes.at(-1).restore(shapes_JSON[i]);
