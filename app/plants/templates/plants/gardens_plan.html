@@ -2160,7 +2160,16 @@
                 let yMax = -1000;
                 for(let i=0; i < this.shapes.length; i++)
                 {
-                    if(this.shapes[i].type == "line")
+                    if(this.shapes[i].type == "plant")
+                    {
+                        console.log("DEBUG: creating bounding box containing a plant");
+
+                        xMin = Math.min(xMin, this.shapes[i].shape.x - this.shapes[i].shape.radius);
+                        yMin = Math.min(yMin, this.shapes[i].shape.y - this.shapes[i].shape.radius);
+                        xMax = Math.max(xMax, this.shapes[i].shape.x + this.shapes[i].shape.radius);
+                        yMax = Math.max(yMax, this.shapes[i].shape.y + this.shapes[i].shape.radius);
+                    }
+                    else if(this.shapes[i].type == "line")
                     {
                         xMin = Math.min(xMin, this.shapes[i].xStart, this.shapes[i].xEnd);
                         yMin = Math.min(yMin, this.shapes[i].yStart, this.shapes[i].yEnd);
@@ -2700,14 +2709,14 @@
                 drawScreen();
             }
 
-            // console.log("DEBUG: shapes:", shapes);
-            // console.log("DEBUG: selectShape:", selectShape);
-            // console.log("DEBUG: activeShape:", activeShape);
-            // console.log("DEBUG: shapeGroups:", shapeGroups);
-            // console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
-            // console.log("DEBUG: wipGroup:", wipGroup);
-            // console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
-            // console.log("DEBUG: activeGroup:", activeGroup);
+            console.log("DEBUG: shapes:", shapes);
+            console.log("DEBUG: selectShape:", selectShape);
+            console.log("DEBUG: activeShape:", activeShape);
+            console.log("DEBUG: shapeGroups:", shapeGroups);
+            console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
+            console.log("DEBUG: wipGroup:", wipGroup);
+            console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
+            console.log("DEBUG: activeGroup:", activeGroup);
         });
 
         //************************************************************//
