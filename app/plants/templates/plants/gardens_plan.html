@@ -1584,7 +1584,7 @@
                 ctx.textBaseline = 'middle';
                 ctx.fillText(this.label, this.x, this.y, maxWidth);
 
-                // draw the handles only if this is cudrrently selected and is not a grouped shape
+                // draw the handles only if this is currently selected and is not a grouped shape
                 if(!this.grouped && this.handles.length > 0)
                 {
                     super.drawHandles(this.handles);
@@ -2117,6 +2117,8 @@
             }
             draw()
             {
+                // pass down the value of the grouped flag to the shape used to depict the plant
+                this.shape.grouped = this.grouped;
                 this.shape.draw();
             }
             restore(shape_JSON)
@@ -2162,8 +2164,6 @@
                 {
                     if(this.shapes[i].type == "plant")
                     {
-                        console.log("DEBUG: creating bounding box containing a plant");
-
                         xMin = Math.min(xMin, this.shapes[i].shape.x - this.shapes[i].shape.radius);
                         yMin = Math.min(yMin, this.shapes[i].shape.y - this.shapes[i].shape.radius);
                         xMax = Math.max(xMax, this.shapes[i].shape.x + this.shapes[i].shape.radius);
@@ -3272,7 +3272,7 @@
         const ungroup = document.getElementById("id_ungroup");
         ungroup.onclick = (event) => 
         {
-            // remove the active Group from shapeGroups and set theshapes group flag to false
+            // remove the active Group from shapeGroups and set group flag to false for each shape
             for(let i = 0; i < shapeGroups.length; i++)
             {
                 if(shapeGroups[i].id == activeGroup.id)
@@ -3290,6 +3290,7 @@
                     shapeGroups.splice(i, 1);
                 }
             }
+            activeGroupFlag = false;
             unGroup.style.display = "none";
             drawScreen();
 
