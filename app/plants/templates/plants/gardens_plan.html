@@ -31,7 +31,7 @@
             pointer-events: auto; 
         }
 
-        /* zoom slider */
+        /* opacity and zoom sliders */
         .slidecontainer {
             width: 200px; /* Width of the outside container */
         }
@@ -286,6 +286,27 @@
                     <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
                 </div>
 
+                <div id="id_fill_opacity_select_div" style="display: none;">
+                    <label for="fill_opacity_select" style="display: inline-block;">Opacity: </label>
+                    <select id="id_fill_opacity_select" name="fill_opacity_select">
+                        <option value=0.0>  0%</option>
+                        <option value=0.1> 10%</option>
+                        <option value=0.2> 20%</option>
+                        <option value=0.3> 30%</option>
+                        <option value=0.4> 40%</option>
+                        <option value=0.5> 50%</option>
+                        <option value=0.6> 60%</option>
+                        <option value=0.7> 70%</option>
+                        <option value=0.8> 80%</option>
+                        <option value=0.9> 90%</option>
+                        <option value=1.0 selected>100%</option>
+                    </select>
+                </div>
+
+                <div id="id_fill_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
+                    <input type="range" id="id_fill_opacity_slider" class="slider" min="0" max="100" value="50">
+                </div>
+                
                 <div id="id_zoom_select_div" style="display: none;">
                     <label for="zoom_select" style="display: inline-block;">Zoom: </label>
                     <select id="id_zoom_select" name="zoom_select">
@@ -455,6 +476,22 @@
                                 <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
                                 <input type="color" id="fillColorForm" name="fillColorForm">
                                 <br>
+                            
+                                <label for="fillOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
+                                <select id="fillOpacityForm" style="width: 100px;">
+                                    <option value=0.0>  0%</option>
+                                    <option value=0.1> 10%</option>
+                                    <option value=0.2> 20%</option>
+                                    <option value=0.3> 30%</option>
+                                    <option value=0.4> 40%</option>
+                                    <option value=0.5> 50%</option>
+                                    <option value=0.6> 60%</option>
+                                    <option value=0.7> 70%</option>
+                                    <option value=0.8> 80%</option>
+                                    <option value=0.9> 90%</option>
+                                    <option value=1.0>100%</option>
+                                </select>
+                                <br>
                             </div>
 
                             <!-- on submit, process attribute value changes in Javascript -->
@@ -529,6 +566,7 @@
         let lineColor   = "black";
         let fill        = false
         let fillColor   = "white";
+        let fillOpacity = 1.0   ;
         let zoomSelect  = "full view";
         let zoomSlider  = 0;
 
@@ -552,18 +590,21 @@
         // Shape classes
         class Shape 
         {
-            constructor(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor) 
+            constructor(type, id, grouped, label, layer, 
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity) 
             {
-                this.type      = type;
-                this.id        = id;
-                this.grouped   = grouped;
-                this.label     = label;
-                this.layer     = "tbd";
-                this.lineWidth = lineWidth;
-                this.lineStyle = lineStyle;
-                this.lineColor = lineColor;
-                this.fill      = fill;
-                this.fillColor = fillColor;
+                this.type        = type;
+                this.id          = id;
+                this.grouped     = grouped;
+                this.label       = label;
+                this.layer       = "tbd";
+                this.lineWidth   = lineWidth;
+                this.lineStyle   = lineStyle;
+                this.lineColor   = lineColor;
+                this.fill        = fill;
+                this.fillColor   = fillColor;
+                this.fillOpacity = fillOpacity;
             }
             editMenuClear()
             {
@@ -616,6 +657,7 @@
                     ctx.lineWidth   = handles[i].lineWidth;
                     ctx.strokeStyle = handles[i].lineColor;
                     ctx.fillStyle   = handles[i].fillColor;
+                    ctx.globalAlpha = 1.0;
                     ctx.setLineDash([])
 
                     // adjust the handle radius based upon he scale factor
@@ -645,10 +687,13 @@
         class Line      extends Shape 
         {
             constructor(type, id, grouped, label, layer, 
-                        lineWidth, lineStyle, lineColor, fill, fillColor,
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
                         xStart, yStart, xEnd, yEnd) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
                 this.xStart  = xStart;
                 this.yStart  = yStart;
                 this.xEnd    = xEnd;
@@ -820,6 +865,7 @@
                     this.lineColor,
                     this.fill,
                     this.fillColor,
+                    this.fillOpacity,
                     this.xStart + 20,
                     this.yStart + 20,
                     this.xEnd + 20,
@@ -898,6 +944,7 @@
                 this.lineWidth = shape_JSON.lineWidth;
                 this.fill      = shape_JSON.fill;
                 this.fillColor = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
                 this.xStart    = shape_JSON.xStart;
                 this.yStart    = shape_JSON.yStart;
                 this.xEnd      = shape_JSON.xEnd;
@@ -907,10 +954,13 @@
         class Rectangle extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fill, fillColor,
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
                         x, y, width, height, rotation) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
                 this.x          = x;
                 this.y          = y;
                 this.width      = width;
@@ -1201,6 +1251,7 @@
                 lineStyleForm.value = this.lineStyle;
                 lineColorForm.value = this.lineColor;
                 fillColorForm.value = this.fillColor;
+                fillOpacityForm.value = this.fillOpacity;
             }
             editSave()
             {
@@ -1221,6 +1272,7 @@
                 this.lineStyle = lineStyleForm.value;
                 this.lineColor = lineColorForm.value;
                 this.fillColor = fillColorForm.value;
+                this.fillOpacity = fillOpacityForm.value;
                 // update the handles
                 this.createHandles();
             }
@@ -1237,6 +1289,7 @@
                     this.lineColor,
                     this.fill,
                     this.fillColor,
+                    this.fillOpacity,
                     this.x + 20,
                     this.y + 20,
                     this.width,
@@ -1278,6 +1331,7 @@
                 }
                 ctx.strokeStyle = this.lineColor;
                 ctx.fillStyle   = this.fillColor;
+                ctx.globalAlpha = this.fillOpacity;
 
                 // find center of rectangle
                 const xShapeCenter = this.x + (this.width  / 2);
@@ -1340,6 +1394,7 @@
                 this.lineWidth = shape_JSON.lineWidth;
                 this.fill      = shape_JSON.fill;
                 this.fillColor = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
                 this.x         = shape_JSON.x;
                 this.y         = shape_JSON.y;
                 this.width     = shape_JSON.width;
@@ -1350,10 +1405,13 @@
         class Circle    extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fill, fillColor,
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
                         x, y, radius) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
                 this.x          = x;
                 this.y          = y;
                 this.radius     = radius;
@@ -1492,7 +1550,8 @@
                 lineWidthForm.value = this.lineWidth;
                 lineStyleForm.value = this.lineStyle;
                 lineColorForm.value = this.lineColor; 
-                fillColorForm.value = this.fillColor;  
+                fillColorForm.value = this.fillColor; 
+                fillOpacityForm.value = this.fillOpacity; 
             }
             editSave()
             {
@@ -1510,6 +1569,7 @@
                 this.lineStyle = lineStyleForm.value;
                 this.lineColor = lineColorForm.value;
                 this.fillColor = fillColorForm.value;
+                this.fillOpacity = fillOpacityForm.value;
                 // update the handles
                 this.createHandles();
             }
@@ -1526,6 +1586,7 @@
                     this.lineColor,
                     this.fill,
                     this.fillColor,
+                    this.fillOpacity,
                     this.x + 20,
                     this.y + 20,
                     this.radius,
@@ -1565,6 +1626,7 @@
                 }
                 ctx.strokeStyle = this.lineColor;
                 ctx.fillStyle   = this.fillColor;
+                ctx.globalAlpha = this.fillOpacity;
 
                 // draw the circle
                 ctx.beginPath();
@@ -1602,6 +1664,7 @@
                 this.lineWidth = shape_JSON.lineWidth;
                 this.fill      = shape_JSON.fill;
                 this.fillColor = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
                 this.x         = shape_JSON.x;
                 this.y         = shape_JSON.y;
                 this.radius    = shape_JSON.radius;
@@ -1610,10 +1673,13 @@
         class Polygon   extends Shape 
         {
             constructor(type, id, grouped, label, layer,
-                        lineWidth, lineStyle, lineColor, fill, fillColor,
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
                         vertices = [], rotation, status) 
             {
-                super(type, id, grouped, label, layer, lineWidth, lineStyle, lineColor, fill, fillColor);
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
                 this.vertices   = vertices;
                 this.rotation   = rotation;
                 this.status     = status;
@@ -1771,6 +1837,7 @@
                 lineStyleForm.value = this.lineStyle;
                 lineColorForm.value = this.lineColor;
                 fillColorForm.value = this.fillColor;
+                fillOpacityForm.value = this.fillOpacity;
             }
             editSave()
             {
@@ -1796,6 +1863,7 @@
                 this.lineStyle = lineStyleForm.value;
                 this.lineColor = lineColorForm.value;
                 this.fillColor = fillColorForm.value;
+                this.fillOpacity = fillOpacityForm.value;
                 // update the handles
                 this.createHandles();
             }
@@ -1812,6 +1880,7 @@
                     this.lineColor,
                     this.fill,
                     this.fillColor,
+                    this.fillOpacity,
                     [],
                     this.rotation,
                     this.status,
@@ -1854,6 +1923,7 @@
                 }
                 ctx.strokeStyle = this.lineColor;
                 ctx.fillStyle   = this.fillColor;
+                ctx.globalAlpha = this.fillOpacity;
 
                 // draw the polygon
                 ctx.beginPath();
@@ -1918,6 +1988,7 @@
                 this.lineWidth = shape_JSON.lineWidth;
                 this.fill      = shape_JSON.fill;
                 this.fillColor = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
                 for(let i = 0; i < shape_JSON.vertices.length; i++)
                 {
                     this.vertices.push(shape_JSON.vertices[i]);
@@ -2216,6 +2287,7 @@
                 this.boundingBox.lineColor = "black";
                 this.boundingBox.fill      = false;
                 this.boundingBox.fillColor = "red";
+                this.boundingBox.fillOpacity = 1.0;
                 this.boundingBox.x         = xMin - boundingBoxPadding;
                 this.boundingBox.y         = yMin - boundingBoxPadding;
                 this.boundingBox.width     = xMax - xMin + 2 * boundingBoxPadding;
@@ -2315,6 +2387,8 @@
                 id_line_color_div.style.display   = 'none';
                 id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
+                id_fill_opacity_select_div.style.display = 'none';
+                id_fill_opacity_slider_div.style.display = 'none';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'inline';
@@ -2330,6 +2404,8 @@
                 id_line_color_div.style.display   = 'inline';
                 id_fill_div.style.display         = 'inline';
                 id_fill_color_div.style.display   = 'inline';
+                id_fill_opacity_select_div.style.display = 'inline';
+                id_fill_opacity_slider_div.style.display = 'inline';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
@@ -2344,8 +2420,10 @@
                 id_line_color_div.style.display  = 'inline';
                 if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
                 {
-                    id_fill_div.style.display       = 'inline';
-                    id_fill_color_div.style.display = 'inline';
+                    id_fill_div.style.display         = 'inline';
+                    id_fill_color_div.style.display   = 'inline';
+                    id_fill_opacity_select_div.style.display = 'inline';
+                    id_fill_opacity_slider_div.style.display = 'inline-block';
                 }
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
@@ -2367,6 +2445,8 @@
                 id_line_color_div.style.display   = 'none';
                 id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
+                id_fill_opacity_select_div.style.display = 'none';
+                id_fill_opacity_slider_div.style.display = 'none';
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
                 id_shape_attributes.style.display = 'none';
@@ -2381,6 +2461,8 @@
                 id_line_color_div.style.display   = 'none';
                 id_fill_div.style.display         = 'none';
                 id_fill_color_div.style.display   = 'none';
+                id_fill_opacity_select_div.style.display = 'none';
+                id_fill_opacity_slider_div.style.display = 'none';
                 id_zoom_select_div.style.display  = 'inline';
                 id_zoom_slider_div.style.display  = 'inline-block';
                 id_shape_attributes.style.display = 'none';
@@ -2460,11 +2542,13 @@
         {
             if(fill_checkbox.checked)
             {
-                id_fill_color_div.style.display = 'inline';
+                id_fill_color_div.style.display   = 'inline';
+                id_fill_opacity_select_div.style.display = 'inline';
             }
             else
             {
-                id_fill_color_div.style.display = 'none';
+                id_fill_color_div.style.display   = 'none';
+                id_fill_opacity_select_div.style.display = 'none';
             }
         });
 
@@ -2474,6 +2558,22 @@
         {
             target = e.target;
             fillColor = target.value;
+        });
+
+        // Setup the shape fill opacity select
+        formElement = document.getElementById("id_fill_opacity_select");
+        formElement.addEventListener('change', (e) =>
+        {
+            target = e.target;
+            fillOpacity = target.value;
+        });
+
+        // Setup the shape fill opacity slider
+        formElement = document.getElementById("id_fill_opacity_slider");
+        formElement.addEventListener('input', (e) =>
+        {
+            target = e.target;
+            fillOpacity = target.value;
         });
 
         // Setup the zoom select
@@ -2584,7 +2684,8 @@
         const lineStyleForm = document.getElementById('lineStyleForm');
         const lineColorForm = document.getElementById('lineColorForm');
         //
-        const fillColorForm = document.getElementById('fillColorForm');
+        const fillColorForm   = document.getElementById('fillColorForm');
+        const fillOpacityForm = document.getElementById('fillOpacityForm');
         // used to create specific context edit menus for each shape type
         const line      = document.getElementsByClassName('line');
         const rectangle = document.getElementsByClassName('rectangle');
@@ -2780,7 +2881,8 @@
                 if (shapeOption == "line")
                 {
                     activeShape = new Line('line', nextShapeID, false, 'line', layer,
-                                           lineWidth, lineStyle, lineColor, fill, fillColor,
+                                           lineWidth, lineStyle, lineColor, 
+                                           fill, fillColor, fillOpacity,
                                            xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
                     nextShapeID++;
                 }
@@ -2788,7 +2890,7 @@
                 {
                     activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle', layer,
                                                 lineWidth, lineStyle, lineColor, 
-                                                fill, fillColor,
+                                                fill, fillColor, fillOpacity,
                                                 xSelectAbs, ySelectAbs, 0, 0, 0);
                     nextShapeID++;
                 }
@@ -2796,7 +2898,7 @@
                 {
                     activeShape = new Circle('circle', nextShapeID, false, 'circle', layer,
                                              lineWidth, lineStyle, lineColor, 
-                                             fill, fillColor,
+                                             fill, fillColor, fillOpacity,
                                              xSelectAbs, ySelectAbs, 0);
                     nextShapeID++;
                 }
@@ -2807,7 +2909,7 @@
                         // Create polygon object
                         activeShape = new Polygon('polygon', nextShapeID, false, 'polygon', layer,
                                                   lineWidth, lineStyle, lineColor, 
-                                                  fill, fillColor,
+                                                  fill, fillColor, fillOpacity,
                                                   [], 0, status);
 
                         // Set polygon starting point
