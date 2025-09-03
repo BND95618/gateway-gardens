@@ -1959,12 +1959,10 @@
                                           200, 
                                           40); 
 
-                console.log("DEBUG: plant constructor - id =", this.id);
+                // console.log("DEBUG: plant constructor - id =", this.id);
             }
             fetchDetails()
             {
-                //
-
                 // Fetch the plant details and create new javascript plant object
                 const url = "{% url 'plants:plant_fetch' %}"
                 const requestMethod = "POST";
@@ -2016,7 +2014,7 @@
                     // 
                     // this.getModal();
 
-                    console.log("DEBUG: plant fetchDetails - id =", this.id)
+                    // console.log("DEBUG: plant fetchDetails - id =", this.id)
 
                     // Refresh the screen to show the newly added plant
                     drawScreen();
@@ -2123,7 +2121,7 @@
             }
             restore(shape_JSON)
             {
-                console.log("DEBUG: plant", this);
+                // console.log("DEBUG: plant", this);
                 // 
                 this.plant     = shape_JSON.plant;
                 this.type      = shape_JSON.type;
@@ -2139,7 +2137,7 @@
                 this.shape.y      = shape_JSON.shape.y;
                 this.shape.radius = shape_JSON.shape.radius;
 
-                console.log("DEBUG: plant restore - id =", this.id);
+                // console.log("DEBUG: plant restore - id =", this.id);
             }
         }
 
@@ -2152,6 +2150,10 @@
                 this.shapes = [];
                 //
                 this.boundingBox = new Rectangle();
+            }
+            addShape(shape)
+            {
+                this.shapes.push(shape);
             }
             createBoundingBox()
             {
@@ -2240,6 +2242,10 @@
                 }
                 this.createBoundingBox();
             }
+            clear()
+            {
+                this.shapes = [];
+            }
             restore(group_JSON)
             {
                 this.type = group_JSON.type;
@@ -2248,7 +2254,8 @@
                 {
                     for(let k = 0; k < shapes.length; k++)
                     {
-                        if(shapes[k].id == group_JSON.shapes[j].id)
+                        if(shapes[k].type == group_JSON.shapes[j].type && 
+                           shapes[k].id   == group_JSON.shapes[j].id)
                         {
                             this.shapes.push(shapes[k]);
                         }
@@ -2267,6 +2274,13 @@
         let requestedPlant;
         let activePlant = null;
         let selectPlantCtx = false;
+
+        // grouping variables
+        let nextGroupID = 0;
+        let wipGroupFlag = false;
+        let wipGroup    = new ShapeGroup(nextGroupID);
+        let activeGroupFlag = false;
+        let activeGroup = null;
         
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
@@ -2275,13 +2289,6 @@
         let extBorder = 120; // 10 ft exterior plot border in pixels
         xPlot = 3600;        // 300 ft at 12 px per foot
         yPlot = 2400;        // 200 ft at 12 px per foot
-
-        // grouping variables
-        let nextGroupID = 0;
-        let wipGroupFlag = false;
-        wipGroup    = new ShapeGroup(nextGroupID);
-        let activeGroupFlag = false;
-        let activeGroup = null;
 
         // restore the canvas from the server db
         restore();
@@ -2607,7 +2614,7 @@
                     selectShape     = false;
                     activeShape     = null;
                     wipGroupFlag    = false;
-                    wipGroup.shapes = [];
+                    wipGroup.clear();
                     activeGroupFlag = false;
                     activeGroup     = null;
 
@@ -2629,7 +2636,7 @@
                                 // Indicate that the modify shape mode is enabled for the selected shape
                                 selectShape = true;
                                 // at this point it is a group of 1
-                                wipGroup.shapes.push(shapes[i]);
+                                wipGroup.addShape(shapes[i]);
                             }
                             // Case: selected shape is currently a member of a group
                             else
@@ -2662,7 +2669,7 @@
                         {
                             // put shape in WIP group object shape array and show 'group' button
                             wipGroupFlag = true;
-                            wipGroup.shapes.push(shapes[i]);
+                            wipGroup.addShape(shapes[i]);
                         }
                     }
                 }
@@ -2679,7 +2686,7 @@
                     createShape = false;
                     activeShape = null;
                     wipGroupFlag = false;
-                    wipGroup.shapes = []; 
+                    wipGroup.clear(); 
                     shapeAttributes.style.display = "none";  
                 }
 
@@ -2709,14 +2716,14 @@
                 drawScreen();
             }
 
-            console.log("DEBUG: shapes:", shapes);
-            console.log("DEBUG: selectShape:", selectShape);
-            console.log("DEBUG: activeShape:", activeShape);
-            console.log("DEBUG: shapeGroups:", shapeGroups);
-            console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
-            console.log("DEBUG: wipGroup:", wipGroup);
-            console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
-            console.log("DEBUG: activeGroup:", activeGroup);
+            // console.log("DEBUG: shapes:", shapes);
+            // console.log("DEBUG: selectShape:", selectShape);
+            // console.log("DEBUG: activeShape:", activeShape);
+            // console.log("DEBUG: shapeGroups:", shapeGroups);
+            // console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
+            // console.log("DEBUG: wipGroup:", wipGroup);
+            // console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
+            // console.log("DEBUG: activeGroup:", activeGroup);
         });
 
         //************************************************************//
@@ -2858,7 +2865,7 @@
             // Move selected group
             else if (action == 'select' && activeGroup)
             {
-                console.log("DEBUG: got to move group check");
+                // console.log("DEBUG: got to move group check");
                 if(activeGroup.select(xSelectAbs, ySelectAbs))
                 {
                     moveGroup = true;
@@ -3233,6 +3240,11 @@
         {
             console.log("DEBUG: *** Grouping Shapes ***");
 
+            // console.log("DEBUG: Grouping In - nextGroupID:", nextGroupID);
+            // console.log("DEBUG: Grouping In - wipGroup:", wipGroup);
+            // console.log("DEBUG: Grouping In - activeGroup:", activeGroup);
+            // console.log("DEBUG: Grouping In - shapeGroups:", shapeGroups);
+
             // set the group flag for the shapes that are in the group
             for(let i = 0; i < wipGroup.shapes.length; i++)
             {
@@ -3256,7 +3268,7 @@
 
             // reset the grouping process
             wipGroupFlag = false;
-            wipGroup.shapes = [];
+            wipGroup.clear();
             nextGroupID++;
             activeShape = null;
             selectShape = false;
@@ -3264,6 +3276,12 @@
             unGroup.style.display   = "inline";
 
             drawScreen();
+
+            // console.log("DEBUG: Grouping Out - nextGroupID:", nextGroupID);
+            // console.log("DEBUG: Grouping Out - wipGroupFlag:", wipGroupFlag);
+            // console.log("DEBUG: Grouping Out - wipGroup:", wipGroup);
+            // console.log("DEBUG: Grouping Out - activeGroup:", activeGroup);
+            // console.log("DEBUG: Grouping Out - shapeGroups:", shapeGroups);
         }
         
         //************************************************************//
@@ -3470,7 +3488,7 @@
             let maxPlantID = 0;
             let maxShapeID = 0;
             let maxGroupID = 0;
-            // restore saved objects (shapes & groups)
+            // restore saved objects (plants, shapes & groups)
             for (let i = 0; i < shapes_JSON.length; i++)
             {
                 if (shapes_JSON[i].type == "plant")
@@ -3505,20 +3523,29 @@
                 }
                 else if (shapes_JSON[i].type == "group")
                 {
-                    shapeGroups.push(new ShapeGroup());
+                    shapeGroups.push(new ShapeGroup(nextGroupID));
                     shapeGroups.at(-1).restore(shapes_JSON[i]);
                     maxGroupID = Math.max(maxGroupID, shapeGroups.at(-1).id);
+
+                    // console.log("DEBUG: maxGroupID =", maxGroupID);
                 }
             }
-            nextPlantID = maxPlantID++;
-            nextShapeID = maxShapeID++;
-            nextGroupID = maxGroupID++;
+
+            // console.log("DEBUG: maxGroupID =", maxGroupID);
+
+            nextPlantID = maxPlantID + 1;
+            nextShapeID = maxShapeID + 1;
+            nextGroupID = maxGroupID + 1;
+
+            // console.log("DEBUG: nextGroupID =", nextGroupID);
 
             console.log("=======================================");
             console.log("Retrieving landscape design from server");
             console.log("=======================================");
+            // console.log("DEBUG: shapes_JSON:", shapes_JSON);
             console.log("DEBUG: restored shapes:", shapes);
             console.log("DEBUG: restored shapeGroups:", shapeGroups);
+            // console.log("DEBUG: nextGroupID =", nextGroupID);
             console.log("=======================================");
         }         
 
