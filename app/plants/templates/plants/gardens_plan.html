@@ -245,6 +245,7 @@
                     <label for="shape" style="display: inline-block;">Shape: </label>
                     <select id="id_shape" name="shape">
                         <option value="line"     >line     </option>
+                        <option value="curve"    >curve    </option>
                         <option value="rectangle">rectangle</option>
                         <option value="circle"   >circle   </option>
                         <option value="polygon"  >polygon  </option>
@@ -355,7 +356,7 @@
                                 <br>
                             </div>
 
-                            <div class="line">
+                            <div class="line curve">
                                 <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
                                 <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 50px;">
                                 <span>ft</span>
@@ -369,7 +370,25 @@
                                 <input type="number" id="yStartInForm" name="yStartInForm" style="width: 50px;">
                                 <span>in</span>
                                 <br>
+                            </div>
 
+                            <div class="curve">
+                                <label for="xControlFtForm" style="display: inline-block; width: 80px;">X (control): </label>
+                                <input type="number" id="xControlFtForm" name="xControFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xControlInForm" name="xControlInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yControlFtForm" style="display: inline-block; width: 80px;">Y (control): </label>
+                                <input type="number" id="yControlFtForm" name="yControlFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yControlInForm" name="yControlInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
+                            <div class="line curve">
                                 <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
                                 <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 50px;">
                                 <span>ft</span>
@@ -453,7 +472,7 @@
                                 <br>
                             </div>
 
-                            <div class="line rectangle circle polygon">
+                            <div class="line curve rectangle circle polygon">
                                 <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
                                 <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 50px;">
                                 <span>pixels</span>
@@ -615,6 +634,10 @@
                 {
                     line[i].style.display = "none";
                 }
+                for (let i = 0; i < curve.length; i++) 
+                {
+                    curve[i].style.display = "none";
+                }
                 for (let i = 0; i < rectangle.length; i++) 
                 {
                     rectangle[i].style.display = "none";
@@ -707,7 +730,7 @@
             }
             createShapeEnd()
             {
-                if((this.xStart != this.xEnd) && (this.xStart != this.yEnd))
+                if((this.xStart != this.xEnd) || (this.yStart != this.yEnd))
                 {
                     this.label = prompt("Shape label:");
                     shapes.push(this);
@@ -949,6 +972,296 @@
                 this.yStart    = shape_JSON.yStart;
                 this.xEnd      = shape_JSON.xEnd;
                 this.yEnd      = shape_JSON.yEnd;
+            }
+        }
+        class Curve     extends Shape
+        {
+            constructor(type, id, grouped, label, layer, 
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
+                        xStart, yStart, xControl, yControl, xEnd, yEnd) 
+            {
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
+                this.xStart   = xStart;
+                this.yStart   = yStart;
+                this.xControl = xControl;
+                this.yControl = yControl;
+                this.xEnd     = xEnd;
+                this.yEnd     = yEnd;
+                this.handles  = [];
+            }
+            createShape(dx, dy)
+            {
+                this.xEnd += dx;
+                this.yEnd += dy;
+
+                // Simple control point calculation 
+                // (e.g., halfway between start and end, slightly offset)
+                this.xControl = (this.xStart + this.xEnd) / 2;
+                // Pulls the curve upwards
+                this.yControl = Math.min(this.yStart, this.yEnd) - 50;
+            }
+            createShapeEnd()
+            {
+                if((this.xStart != this.xEnd) || (this.yStart != this.yEnd))
+                {
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                }
+                else
+                {
+                    alert("Curves not saved - zero length");
+                }
+                activeShape = null;
+            }
+            select(x, y)
+            {
+                // capture the curve path
+                const path = new Path2D();
+                path.moveTo(this.xStart, this.yStart);
+                path.quadraticCurveTo(this.xControl, this.yControl, this.xEnd, this.yEnd);
+                // Increase line width for a larger hit-test area
+                ctx.lineWidth = 10;
+                // Perform hit test
+                if (ctx.isPointInStroke(path, x, y)) 
+                {
+                    console.log("DEBUG: curve has been selected");
+                    if(!this.grouped)
+                    {
+                        this.createHandles();
+                    }
+                    return(true);
+                }
+            }
+            createHandles()
+            {
+                this.handles = [];
+                this.handles.push(this.placeHandle("start",   this.xStart,   this.yStart));
+                this.handles.push(this.placeHandle("control", this.xControl, this.yControl));
+                this.handles.push(this.placeHandle("end",     this.xEnd,     this.yEnd));
+            }
+            selectHandle(x, y)
+            {
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            clearHandles()
+            {
+                this.handles = [];
+            }
+            move(dx, dy)
+            {
+                this.xStart   += dx;
+                this.yStart   += dy;
+                this.xControl += dx;
+                this.yControl += dy;
+                this.xEnd     += dx;
+                this.yEnd     += dy;
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
+            }
+            resize(handle, dx, dy)
+            {
+                if (handle.location == "start")
+                {
+                    this.xStart += dx;
+                    this.yStart += dy;
+
+                    this.handles[0].x += dx;
+                    this.handles[0].y += dy;
+                }
+                else if (handle.location == "control")
+                {
+                    this.xControl += dx;
+                    this.yControl += dy;
+
+                    this.handles[1].x += dx;
+                    this.handles[1].y += dy;
+                }   
+                else if (handle.location == "end")
+                {
+                    this.xEnd += dx;
+                    this.yEnd += dy;
+
+                    this.handles[2].x += dx;
+                    this.handles[2].y += dy;
+                }   
+            }
+            editMenu()
+            {
+                super.editMenuClear();
+                // turn on the display for all edit form fields used by line
+                for (let i = 0; i < curve.length; i++) 
+                {
+                    curve[i].style.display = "inline";
+                }
+                // prepopulate the shape attribute fields - convert pixels to ft/in
+                labelForm.value      = this.label;
+                xStartFtForm.value   = Math.trunc(this.xStart / 12) - (extBorder / 12);
+                xStartInForm.value   = this.xStart % 12;
+                yStartFtForm.value   = Math.trunc(this.yStart / 12) - (extBorder / 12);
+                yStartInForm.value   = this.yStart % 12;
+                xControlFtForm.value = Math.trunc(this.xControl / 12) - (extBorder / 12);
+                xControlInForm.value = this.xControl % 12;
+                yControlFtForm.value = Math.trunc(this.yControl / 12) - (extBorder / 12);
+                yControlInForm.value = this.yControl % 12;
+                xEndFtForm.value     = Math.trunc(this.xEnd / 12) - (extBorder / 12);
+                xEndInForm.value     = this.xEnd % 12;
+                yEndFtForm.value     = Math.trunc(this.yEnd / 12) - (extBorder / 12);
+                yEndInForm.value     = this.yEnd % 12;
+                lineWidthForm.value  = this.lineWidth;
+                lineStyleForm.value  = this.lineStyle;
+                lineColorForm.value  = this.lineColor;
+            }
+            editSave()
+            {
+                // update the curve with the new attribute values - convert ft/in to pixels
+                this.label     = labelForm.value;
+                this.xStart    = (Number(xStartFtForm.value) * 12) + 
+                                 (Number(xStartInForm.value) % 12) +
+                                 extBorder;
+                this.yStart    = (Number(yStartFtForm.value) * 12) + 
+                                 (Number(yStartInForm.value) % 12) +
+                                 extBorder;
+                this.xControl  = (Number(xControlFtForm.value) * 12) + 
+                                 (Number(xControlInForm.value) % 12) +
+                                 extBorder;
+                this.yControl  = (Number(yControlFtForm.value) * 12) + 
+                                 (Number(yControlInForm.value) % 12) +
+                                 extBorder;
+                this.xEnd      = (Number(xEndFtForm.value) * 12) + 
+                                 (Number(xEndInForm.value) % 12) +
+                                 extBorder;
+                this.yEnd      = (Number(yEndFtForm.value) * 12) + 
+                                 (Number(yEndInForm.value) % 12) +
+                                 extBorder;
+                this.lineWidth = Number(lineWidthForm.value);
+                this.lineStyle = lineStyleForm.value;
+                this.lineColor = lineColorForm.value;
+                // update the handles
+                this.createHandles();
+            }
+            duplicate(id)
+            {
+                const newCurve = new Curve(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    this.fillOpacity,
+                    this.xStart + 20,
+                    this.yStart + 20,
+                    this.xControl + 20,
+                    this.yControl + 20,
+                    this.xEnd + 20,
+                    this.yEnd + 20,
+                    []
+                    );
+                    return(newCurve);
+            }
+            showAttributes()
+            {
+                let xStart   = this.xStart   - extBorder;
+                let yStart   = this.yStart   - extBorder;
+                let xControl = this.xControl - extBorder;
+                let yControl = this.yControl - extBorder;
+                let xEnd     = this.xEnd     - extBorder;
+                let yEnd     = this.yEnd     - extBorder;
+
+                let length = Math.round(Math.sqrt(Math.pow((this.xEnd - this.xStart), 2) + 
+                                                  Math.pow((this.yEnd - this.yStart), 2)))
+                let attributes = "<p>" + this.label + ": " +
+                                  "start: ("   + pix2ft(xStart)   + ", " + pix2ft(yStart)   + ") " +
+                                  "control: (" + pix2ft(xControl) + ", " + pix2ft(yControl) + ") " +
+                                  "end: ("     + pix2ft(xEnd)     + ", " + pix2ft(yEnd)     + ") " +
+                                  "length: "   + pix2ft(length)   +
+                                  "</p>";
+                return(attributes);
+            }
+            draw()
+            {
+                // setup the drawing parameters
+                ctx.lineWidth   = this.lineWidth;
+                if(this.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(this.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([7, 5]);
+                }
+                else if(this.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
+                ctx.strokeStyle = this.lineColor;
+
+                // draw the line
+                ctx.beginPath();
+                ctx.moveTo(this.xStart, this.yStart);
+                ctx.quadraticCurveTo(this.xControl, this.yControl, this.xEnd, this.yEnd);
+                ctx.stroke();
+
+                // draw the label - find the center of the line
+                const xShapeCenter = (this.xEnd + this.xStart) / 2;
+                const yShapeCenter = (this.yEnd + this.yStart) / 2;
+                const maxWidth = Math.sqrt((Math.pow((this.xEnd - this.xStart), 2)) + 
+                                           (Math.pow((this.yEnd - this.yStart), 2))) * 0.8;
+
+                ctx.font         = '16px chalkboard';
+                ctx.fillStyle    = 'black';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.label, xShapeCenter, yShapeCenter, maxWidth);
+
+                // draw the handles
+                if(!this.grouped && this.handles.length > 0)
+                {
+                    super.drawHandles(this.handles);
+                }
+            }
+            restore(shape_JSON)
+            {
+                this.type        = shape_JSON.type;
+                this.id          = shape_JSON.id;
+                this.grouped     = shape_JSON.grouped;
+                this.label       = shape_JSON.label;
+                this.layer       = shape_JSON.layer;
+                this.lineColor   = shape_JSON.lineColor;
+                this.lineStyle   = shape_JSON.lineStyle;
+                this.lineWidth   = shape_JSON.lineWidth;
+                this.fill        = shape_JSON.fill;
+                this.fillColor   = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
+                this.xStart      = shape_JSON.xStart;
+                this.yStart      = shape_JSON.yStart;
+                this.xControl    = shape_JSON.xControl;
+                this.yControl    = shape_JSON.yControl;
+                this.xEnd        = shape_JSON.xEnd;
+                this.yEnd        = shape_JSON.yEnd;
             }
         }
         class Rectangle extends Shape 
@@ -2648,7 +2961,7 @@
         
         // get edit form fields
         const labelForm     = document.getElementById('labelForm');
-        // line coordinates
+        // line and curve coordinates
         const xStartFtForm  = document.getElementById('xStartFtForm');
         const xStartInForm  = document.getElementById('xStartInForm');
         const yStartFtForm  = document.getElementById('yStartFtForm');
@@ -2657,6 +2970,11 @@
         const xEndInForm    = document.getElementById('xEndInForm');
         const yEndFtForm    = document.getElementById('yEndFtForm');
         const yEndInForm    = document.getElementById('yEndInForm');
+        // curve coordinates
+        const xControlFtForm  = document.getElementById('xControlFtForm');
+        const xControlInForm  = document.getElementById('xControlInForm');
+        const yControlFtForm  = document.getElementById('yControlFtForm');
+        const yControlInForm  = document.getElementById('yControlInForm');
         // rectangle coordinates
         const xFtForm       = document.getElementById('xFtForm');
         const xInForm       = document.getElementById('xInForm');
@@ -2688,6 +3006,7 @@
         const fillOpacityForm = document.getElementById('fillOpacityForm');
         // used to create specific context edit menus for each shape type
         const line      = document.getElementsByClassName('line');
+        const curve     = document.getElementsByClassName('curve');
         const rectangle = document.getElementsByClassName('rectangle');
         const circle    = document.getElementsByClassName('circle');
         const polygon   = document.getElementsByClassName('polygon');
@@ -2884,6 +3203,17 @@
                                            lineWidth, lineStyle, lineColor, 
                                            fill, fillColor, fillOpacity,
                                            xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
+                    nextShapeID++;
+                }
+                else if (shapeOption == "curve")
+                {
+                    console.log("DEBUG: starting curve creation process");
+                    activeShape = new Curve('curve', nextShapeID, false, 'curve', layer,
+                                            lineWidth, lineStyle, lineColor, 
+                                            fill, fillColor, fillOpacity,
+                                            xSelectAbs, ySelectAbs, 
+                                            xSelectAbs, ySelectAbs,
+                                            xSelectAbs, ySelectAbs);
                     nextShapeID++;
                 }
                 else if (shapeOption == "rectangle")
@@ -3602,6 +3932,12 @@
                 else if (shapes_JSON[i].type == "line")
                 {
                     shapes.push(new Line());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id);  
+                }
+                else if (shapes_JSON[i].type == "curve")
+                {
+                    shapes.push(new Curve());
                     shapes.at(-1).restore(shapes_JSON[i]);
                     maxShapeID = Math.max(maxShapeID, shapes.at(-1).id);  
                 }
