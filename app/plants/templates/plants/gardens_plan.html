@@ -248,6 +248,7 @@
                         <option value="curve"    >curve    </option>
                         <option value="rectangle">rectangle</option>
                         <option value="circle"   >circle   </option>
+                        <option value="ellipse"  >ellipse  </option>
                         <option value="polygon"  >polygon  </option>
                         <option value="free form">free form</option>
                     </select>
@@ -334,7 +335,7 @@
             <p> Modal HTML to be Inserted Here! </p>
         </div>
 
-        <!-- Planner Shape Edit Modal -->
+        <!-- Shape Edit Modal -->
         <div id="planner_edit_modal" class="w3-modal">
             <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px;">
 
@@ -350,7 +351,7 @@
                     <div>
                         <form id = "id_edit_form" name = "editForm" action = "">
 
-                            <div class="line rectangle circle polygon">
+                            <div class="line rectangle circle ellipse polygon">
                                 <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
                                 <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
                                 <br>
@@ -420,7 +421,7 @@
                                 <br>
                             </div>
 
-                            <div class="circle">
+                            <div class="circle ellipse">
                                 <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
                                 <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 50px;">
                                 <span>ft</span>
@@ -465,6 +466,22 @@
                                 <br>
                             </div>
 
+                            <div class="ellipse">
+                                <label for="xRadiusFtForm" style="display: inline-block; width: 80px;">X radius: </label>
+                                <input type="number" id="xRadiusFtForm" name="xRadiusFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="xRadiusInForm" name="xRadiusInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+
+                                <label for="yRadiusFtForm" style="display: inline-block; width: 80px;">Y radius: </label>
+                                <input type="number" id="yRadiusFtForm" name="yRadiusFtForm" style="width: 50px;">
+                                <span>ft</span>
+                                <input type="number" id="yRadiusInForm" name="yRadiusInForm" style="width: 50px;">
+                                <span>in</span>
+                                <br>
+                            </div>
+
                             <div class="rectangle">
                                 <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
                                 <input type="number" id="rotationForm" name="rotationForm" style="width: 50px;">
@@ -472,14 +489,14 @@
                                 <br>
                             </div>
 
-                            <div class="line curve rectangle circle polygon">
+                            <div class="line curve rectangle circle ellipse polygon">
                                 <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
                                 <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 50px;">
                                 <span>pixels</span>
                                 <br>
 
                                 <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
-                                <select id="lineStyleForm" style="width: 100px;">
+                                <select id="lineStyleForm" style="width: 100px;" name="lineStyleForm">
                                     <option value="solid" >solid </option>
                                     <option value="dashed">dashed</option>
                                     <option value="dotted">dotted</option>
@@ -491,7 +508,7 @@
                                 <br>
                             </div>
 
-                            <div class="rectangle circle polygon">
+                            <div class="rectangle circle ellipse polygon">
                                 <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
                                 <input type="color" id="fillColorForm" name="fillColorForm">
                                 <br>
@@ -645,6 +662,10 @@
                 for (let i = 0; i < circle.length; i++) 
                 {
                     circle[i].style.display = "none";
+                }
+                for (let i = 0; i < ellipse.length; i++) 
+                {
+                    ellipse[i].style.display = "none";
                 }
                 for (let i = 0; i < polygon.length; i++) 
                 {
@@ -1283,8 +1304,8 @@
             }
             createShape(dx, dy)
             {
-                this.width  += xDelta;
-                this.height += yDelta;
+                this.width  += dx;
+                this.height += dy;
             }
             createShapeEnd(x, y)
             {
@@ -1868,6 +1889,8 @@
             }
             editSave()
             {
+                // console.log("DEBUG: lineColorForm.value:", lineColorForm.value);
+
                 // update the selected shape with the new attribute values - convert ft/in to pixels
                 this.label     = labelForm.value;
                 this.x         = (Number(xCenterFtForm.value) * 12) + 
@@ -1981,6 +2004,285 @@
                 this.x         = shape_JSON.x;
                 this.y         = shape_JSON.y;
                 this.radius    = shape_JSON.radius;
+            }
+        }
+        class Ellipse   extends Shape
+        {
+            constructor(type, id, grouped, label, layer,
+                        lineWidth, lineStyle, lineColor, 
+                        fill, fillColor, fillOpacity,
+                        x, y, xRadius, yRadius, rotation) 
+            {
+                super(type, id, grouped, label, layer, 
+                      lineWidth, lineStyle, lineColor, 
+                      fill, fillColor, fillOpacity);
+                this.x          = x;
+                this.y          = y;
+                this.xRadius    = xRadius;
+                this.yRadius    = yRadius;
+                this.rotation   = rotation;
+                // 
+                this.startAngle = 0;
+                this.endAngle   = 2 * Math.PI;
+                this.direction  = "clockwise";
+                //
+                this.handles    = [];
+                this.dxAcc  = 0;
+                this.dyAcc  = 0;
+            }
+            createShape(dx, dy)
+            {
+                console.log("DEBUG: xRadius =", this.xRadius);
+                console.log("DEBUG: yRadius =", this.yRadius);
+                console.log("DEBUG: dx =", dx);
+                console.log("DEBUG: dy =", dy);
+
+                this.dxAcc += dx;
+                this.dyAcc += dy;
+                this.xRadius = Math.abs(this.dxAcc);
+                this.yRadius = Math.abs(this.dyAcc);
+            }
+            createShapeEnd(x, y)
+            {
+                if(this.xRadius != 0 || this.yRadius)
+                {
+                    this.label = prompt("Shape label:");
+                    shapes.push(this);
+                }
+                else
+                {
+                    alert("Ellipse not saved - zero radius");
+                }
+                activeShape = null;
+            }
+            select(x, y) 
+            {
+                const dx = x - this.x;
+                const dy = y - this.y;
+                const selected = (dx * dx) / (this.xRadius * this.xRadius) + 
+                                 (dy * dy) / (this.yRadius * this.yRadius) <= 1;
+
+                // If ellipse is selected, draw handles
+                if (!this.grouped && selected)
+                {
+                    this.createHandles();
+                }
+                return(selected);
+            }
+            createHandles()
+            {
+                this.handles = [];
+                this.handles.push(this.placeHandle("top",    this.x,                this.y - this.yRadius));
+                this.handles.push(this.placeHandle("right",  this.x + this.xRadius, this.y));
+                this.handles.push(this.placeHandle("bottom", this.x,                this.y + this.yRadius));
+                this.handles.push(this.placeHandle("left",   this.x - this.xRadius, this.y));
+            }
+            selectHandle(x, y)
+            {
+                let handleSelected = false;
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    let distance = Math.sqrt(Math.pow((x - this.handles[i].x), 2) + 
+                                             Math.pow((y - this.handles[i].y), 2))
+                    // Determine if one of the handles has been selected
+                    if (distance <= this.handles[i].radius)
+                    {
+                        handleSelected = true;
+                        return(this.handles[i])
+                    }
+                }
+                return(null); 
+            }
+            clearHandles()
+            {
+                this.handles = [];
+            }
+            move(dx, dy)
+            {
+                this.x += dx;
+                this.y += dy;
+                // move the handles
+                for(let i = 0; i < this.handles.length; i++)
+                {
+                    this.handles[i].x += dx;
+                    this.handles[i].y += dy;
+                }
+            }
+            resize(handle, dx, dy)
+            {
+                if (handle.location == "top")
+                {
+                    this.yRadius -= dy;
+
+                    this.handles[0].y += dy;
+                    this.handles[2].y -= dy;
+                }
+                else if (handle.location == "right")
+                {
+                    this.xRadius += xDelta;
+
+                    this.handles[1].x += dx;
+                    this.handles[3].x -= dx;
+                }
+                else if (handle.location == "bottom")
+                {
+                    this.yRadius += yDelta;
+
+                    this.handles[0].y -= dy;
+                    this.handles[2].y += dy;
+                }
+                else if (handle.location == "left")
+                {
+                    this.xRadius -= xDelta;
+
+                    this.handles[1].x -= dx;
+                    this.handles[3].x += dx;
+                }
+            }
+            editMenu()
+            {
+                super.editMenuClear();
+                // turn on the display for all edit form fields used by the ellipse
+                for (let i = 0; i < ellipse.length; i++) 
+                {
+                    ellipse[i].style.display = "inline";
+                }
+                // prepopulate the shape attribute fields - convert pixels to ft/in
+                labelForm.value     = this.label;
+                xCenterFtForm.value = Math.trunc(this.x / 12) - (extBorder / 12);
+                xCenterInForm.value = this.x % 12;
+                yCenterFtForm.value = Math.trunc(this.y / 12) - (extBorder / 12);
+                yCenterInForm.value = this.y % 12;
+                xRadiusFtForm.value = Math.trunc(this.xRadius / 12);
+                xRadiusInForm.value = Math.round(this.xRadius % 12);
+                yRadiusFtForm.value = Math.trunc(this.yRadius / 12);
+                yRadiusInForm.value = Math.round(this.yRadius % 12);
+                lineWidthForm.value = this.lineWidth;
+                lineStyleForm.value = this.lineStyle;
+                lineColorForm.value = this.lineColor; 
+                fillColorForm.value = this.fillColor; 
+                fillOpacityForm.value = this.fillOpacity; 
+            }
+            editSave()
+            {
+                // update the selected shape with the new attribute values 
+                // - convert ft/in to pixels
+                this.label     = labelForm.value;
+                this.x         = (Number(xCenterFtForm.value) * 12) + 
+                                 (Number(xCenterInForm.value) % 12) +
+                                 extBorder;
+                this.y         = (Number(yCenterFtForm.value) * 12) + 
+                                 (Number(yCenterInForm.value) % 12) +
+                                 extBorder;
+                this.xRadius   = (Number(xRadiusFtForm.value) * 12) + 
+                                 (Number(xRadiusInForm.value) % 12);
+                this.yRadius   = (Number(yRadiusFtForm.value) * 12) + 
+                                 (Number(yRadiusInForm.value) % 12);
+                this.lineWidth = Number(lineWidthForm.value);
+                this.lineStyle = lineStyleForm.value;
+                this.lineColor = lineColorForm.value;
+                this.fillColor = fillColorForm.value;
+                this.fillOpacity = fillOpacityForm.value;
+                // update the handles
+                this.createHandles();
+            }
+            duplicate(id)
+            {
+                const newEllipse = new Ellipse(
+                    this.type,
+                    id,
+                    false,
+                    this.label,
+                    this.layer,
+                    this.lineWidth,
+                    this.lineStyle,
+                    this.lineColor,
+                    this.fill,
+                    this.fillColor,
+                    this.fillOpacity,
+                    this.x + 20,
+                    this.y + 20,
+                    this.xRadius,
+                    this.yRadius,
+                    this.rotation
+                    );
+                    return(newEllipse);
+            }
+            showAttributes()
+            {
+                let xCenter = this.x - extBorder;
+                let yCenter = this.y - extBorder;
+
+                let attributes = "<p>" + this.label + ": " +
+                                 "center: (" + pix2ft(xCenter) + ", " + pix2ft(yCenter)+ ") " +
+                                 "x radius: "  + pix2ft(this.xRadius) +
+                                 "y radius: "  + pix2ft(this.yRadius) +
+                                 "</p>";
+                return(attributes);
+            }
+            draw()
+            {
+                // setup the drawing parameters
+                ctx.lineWidth   = this.lineWidth;
+                if(this.lineStyle == 'solid')
+                {
+                    ctx.setLineDash([]);
+                }
+                else if(this.lineStyle == 'dashed')
+                {
+                    ctx.setLineDash([5, 5]);
+                }
+                else if(this.lineStyle == 'dotted')
+                {
+                    ctx.setLineDash([2, 4]);
+                }
+                ctx.strokeStyle = this.lineColor;
+                ctx.fillStyle   = this.fillColor;
+                ctx.globalAlpha = this.fillOpacity;
+
+                // draw the ellipse
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.xRadius, this.yRadius, this.rotation, 
+                            this.startAngle, this.endAngle, false);
+                ctx.fillStyle = this.color;
+                ctx.stroke();
+                if(this.fill)
+                {
+                    ctx.fill();
+                }
+
+                // add the label
+                const maxWidth = this.xRadius * 2;
+                ctx.font         = '16px chalkboard';
+                ctx.fillStyle    = 'black';
+                ctx.textAlign    = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.label, this.x, this.y, maxWidth);
+
+                // draw the handles only if this is currently selected and is not a grouped shape
+                if(!this.grouped && this.handles.length > 0)
+                {
+                    super.drawHandles(this.handles);
+                }
+            }
+            restore(shape_JSON)
+            {
+                this.type      = shape_JSON.type;
+                this.id        = shape_JSON.id;
+                this.grouped   = shape_JSON.grouped;
+                this.label     = shape_JSON.label;
+                this.layer     = shape_JSON.layer;
+                this.lineColor = shape_JSON.lineColor;
+                this.lineStyle = shape_JSON.lineStyle;
+                this.lineWidth = shape_JSON.lineWidth;
+                this.fill      = shape_JSON.fill;
+                this.fillColor = shape_JSON.fillColor;
+                this.fillOpacity = shape_JSON.fillOpacity;
+                this.x         = shape_JSON.x;
+                this.y         = shape_JSON.y;
+                this.xRadius   = shape_JSON.xRadius;
+                this.yRadius   = shape_JSON.yRadius;
+                this.rotation  = shape_JSON.rotation;
             }
         }
         class Polygon   extends Shape 
@@ -2576,6 +2878,13 @@
                         xMax = Math.max(xMax, this.shapes[i].x + this.shapes[i].radius);
                         yMax = Math.max(yMax, this.shapes[i].y + this.shapes[i].radius);
                     }
+                    else if(this.shapes[i].type == "ellipse")
+                    {
+                        xMin = Math.min(xMin, this.shapes[i].x - this.shapes[i].xRadius);
+                        yMin = Math.min(yMin, this.shapes[i].y - this.shapes[i].yRadius);
+                        xMax = Math.max(xMax, this.shapes[i].x + this.shapes[i].xRadius);
+                        yMax = Math.max(yMax, this.shapes[i].y + this.shapes[i].yRadius);
+                    }
                     else if(this.shapes[i].type == "polygon")
                     {
                         for(let j = 0; j < this.shapes[i].vertices.length; j++)
@@ -2731,7 +3040,8 @@
                 id_line_width_div.style.display  = 'inline';
                 id_line_style_div.style.display  = 'inline';
                 id_line_color_div.style.display  = 'inline';
-                if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
+                if (shapeOption == "rectangle" || shapeOption == "circle" || 
+                    shapeOption == "ellipse"   || shapeOption == "polygon")
                 {
                     id_fill_div.style.display         = 'inline';
                     id_fill_color_div.style.display   = 'inline';
@@ -2819,7 +3129,8 @@
         {
             target = e.target;
             shapeOption = target.value;
-            if (shapeOption == "rectangle" || shapeOption == "circle" || shapeOption == "polygon")
+            if (shapeOption == "rectangle" || shapeOption == "circle" || 
+                shapeOption == "ellipse"   || shapeOption == "polygon")
             {
                 id_fill_div.style.display       = 'inline';
             }
@@ -2980,7 +3291,7 @@
         const xInForm       = document.getElementById('xInForm');
         const yFtForm       = document.getElementById('yFtForm');
         const yInForm       = document.getElementById('yInForm');
-        // circle coordinates
+        // circle and ellipse coordinates
         const xCenterFtForm = document.getElementById('xCenterFtForm');
         const xCenterInForm = document.getElementById('xCenterInForm');
         const yCenterFtForm = document.getElementById('yCenterFtForm');
@@ -2996,6 +3307,11 @@
         const radiusFtForm  = document.getElementById('radiusFtForm');
         const radiusInForm  = document.getElementById('radiusInForm');
         //
+        const xRadiusFtForm  = document.getElementById('xRadiusFtForm');
+        const xRadiusInForm  = document.getElementById('xRadiusInForm');
+        const yRadiusFtForm  = document.getElementById('yRadiusFtForm');
+        const yRadiusInForm  = document.getElementById('yRadiusInForm');
+        //
         const rotationForm  = document.getElementById('rotationForm');
         //
         const lineWidthForm = document.getElementById('lineWidthForm');
@@ -3009,6 +3325,7 @@
         const curve     = document.getElementsByClassName('curve');
         const rectangle = document.getElementsByClassName('rectangle');
         const circle    = document.getElementsByClassName('circle');
+        const ellipse   = document.getElementsByClassName('ellipse');
         const polygon   = document.getElementsByClassName('polygon');
 
         //************************************************************//
@@ -3230,6 +3547,14 @@
                                              lineWidth, lineStyle, lineColor, 
                                              fill, fillColor, fillOpacity,
                                              xSelectAbs, ySelectAbs, 0);
+                    nextShapeID++;
+                }
+                else if (shapeOption == "ellipse")
+                {
+                    activeShape = new Ellipse('ellipse', nextShapeID, false, 'ellipse', layer,
+                                             lineWidth, lineStyle, lineColor, 
+                                             fill, fillColor, fillOpacity,
+                                             xSelectAbs, ySelectAbs, 0, 0, 0);
                     nextShapeID++;
                 }
                 else if (shapeOption == "polygon")
@@ -3950,6 +4275,12 @@
                 else if (shapes_JSON[i].type == "circle")
                 {
                     shapes.push(new Circle());
+                    shapes.at(-1).restore(shapes_JSON[i]);
+                    maxShapeID = Math.max(maxShapeID, shapes.at(-1).id); 
+                }
+                else if (shapes_JSON[i].type == "ellipse")
+                {
+                    shapes.push(new Ellipse());
                     shapes.at(-1).restore(shapes_JSON[i]);
                     maxShapeID = Math.max(maxShapeID, shapes.at(-1).id); 
                 }
