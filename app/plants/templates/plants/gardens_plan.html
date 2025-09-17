@@ -288,9 +288,9 @@
                     <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
                 </div>
 
-                <div id="id_fill_opacity_select_div" style="display: none;">
-                    <label for="fill_opacity_select" style="display: inline-block;">Opacity: </label>
-                    <select id="id_fill_opacity_select" name="fill_opacity_select">
+                <div id="id_opacity_select_div" style="display: none;">
+                    <label for="opacity_select" style="display: inline-block;">Opacity: </label>
+                    <select id="id_opacity_select" name="opacity_select">
                         <option value=0.0>  0%</option>
                         <option value=0.1> 10%</option>
                         <option value=0.2> 20%</option>
@@ -305,8 +305,8 @@
                     </select>
                 </div>
 
-                <div id="id_fill_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
-                    <input type="range" id="id_fill_opacity_slider" class="slider" min="0" max="100" value="50">
+                <div id="id_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
+                    <input type="range" id="id_opacity_slider" class="slider" min="0" max="100" value="50">
                 </div>
                 
                 <div id="id_zoom_select_div" style="display: none;">
@@ -581,32 +581,13 @@
         let xSelectAbs,     ySelectAbs;     // mouse selection coordinates - absolute
         let xSelectAbsSave, ySelectAbsSave; // mouse selection coordinates - absolute
         let xTransAbs,      yTransAbs;      // translated mouse selection coordinates
-        let xShapeCenter,   yShapeCenter;   // center of selected object
         let xMouse,         yMouse;         // current mouse position - relative to viewport
         let xMouseAbs,      yMouseAbs;      // current mouse position - absolute
         let xDelta,         yDelta;         // change in mouse position
         let xDeltaAcc = 0,  yDeltaAcc = 0;  //
-        let xPlot,          yPlot;          // Plot size
         let nextShapeID = 0;                // 
         let nextPlantID = 0;                //
         let zIndex;                         // current maximum z-index
-        let lineWidthDefault   = 1;         //
-        let strokeStyleDefault = "black";   //
-        let target = "";                    // selected menu item choice
-
-        // set menu defaults
-        let action      = "select";
-        let shapeOption = "line";
-        let lineWidth   = 1;
-        let lineStyle   = "solid";
-        let lineColor   = "black";
-        let fill        = false
-        let fillColor   = "white";
-        let fillOpacity = 1.0   ;
-        let zoomSelect  = "full view";
-        let zoomSlider  = 0;
-
-        let shapeIndex;
 
         // Initilize global action flags
         let createShape    = false;
@@ -617,7 +598,8 @@
         let moveGroup      = false;
         let panning        = false;
         let selectShapeCtx = false;
-        let polygonWIP     = false; // actively drawing the polygoon
+        let polygonWIP     = false; // actively drawing the polygon
+        let polygonCurve   = false; // indicates whether or not the segment is a curve
 
         // setup global objects
         let activeShape  = null;
@@ -2573,8 +2555,8 @@
                         sumY += this.vertices[i].y;
                     }
 
-                    xShapeCenter = sumX / this.vertices.length;
-                    yShapeCenter = sumY / this.vertices.length;
+                    const xShapeCenter = sumX / this.vertices.length;
+                    const yShapeCenter = sumY / this.vertices.length;
 
                     const maxWidth = 100;
 
@@ -2624,26 +2606,27 @@
                 this.grouped = grouped;
                 this.label   = label;
                 this.layer   = "tbd";
-                // Plant details downloded from server
+                // Plant details downloaded from server
                 this.commonName  = "";
                 this.height_feet = 0;
                 this.height_inch = 0;
                 this.width_feet  = 0;
                 this.width_inch  = 0;
                 // 
-                this.shape   = new Circle('circle', 
-                                          99, 
-                                          false, 
-                                          'circle', 
-                                          "ground",
-                                          2, 
-                                          "dashed", 
-                                          "green", 
-                                          true, 
-                                          "green",
-                                          200, 
-                                          200, 
-                                          40); 
+                this.shape   = new Circle('circle', // type
+                                          99,       // id
+                                          false,    // grouped
+                                          '',       // label
+                                          "ground", // layer
+                                          2,        // linewidth
+                                          "dashed", // linestyle
+                                          "green",  // line color
+                                          true,     // fill
+                                          "green",  // fill color
+                                          1,        // opacity
+                                          200,      // x center
+                                          200,      // y center
+                                          40);      // radius placeholder
 
                 // console.log("DEBUG: plant constructor - id =", this.id);
             }
@@ -2965,7 +2948,6 @@
         let backgrounds = [];
 
         // plant variables
-        let requestedPlant;
         let activePlant = null;
         let selectPlantCtx = false;
 
@@ -2979,10 +2961,10 @@
         // keep track of our panning and zooming
         let viewportTransform = { x : 0, y : 0, scale : 1 }
 
-        // Draw landscape border
-        let extBorder = 120; // 10 ft exterior plot border in pixels
-        xPlot = 3600;        // 300 ft at 12 px per foot
-        yPlot = 2400;        // 200 ft at 12 px per foot
+        // Set drawing parameters for landscape border
+        const xPlot     = 3600; // 300 ft at 12 px per foot
+        const yPlot     = 2400; // 200 ft at 12 px per foot
+        const extBorder =  120; //  10 ft exterior plot border in pixels
 
         // restore the canvas from the server db
         restore();
@@ -2993,44 +2975,42 @@
         // Connect javascript to the level 1 menu items
         //************************************************************//
         // setup the garden planner action
-        formElement = document.getElementById("id_action");
-	    formElement.addEventListener("change", (e) =>
+        const actionID = document.getElementById("id_action");
+	    actionID.addEventListener("change", (e) =>
         {
-            target = e.target;
-            action = target.value;
+            action = actionID.value;
             //
             if (action == 'select')
             {
-                id_layer_div.style.display        = 'inline';
-                id_plant_div.style.display        = 'none';
-                id_shape_div.style.display        = 'none';
-                id_line_width_div.style.display   = 'none';
-                id_line_style_div.style.display   = 'none';
-                id_line_color_div.style.display   = 'none';
-                id_fill_div.style.display         = 'none';
-                id_fill_color_div.style.display   = 'none';
-                id_fill_opacity_select_div.style.display = 'none';
-                id_fill_opacity_slider_div.style.display = 'none';
-                id_zoom_select_div.style.display  = 'none';
-                id_zoom_slider_div.style.display  = 'none';
-                id_shape_attributes.style.display = 'inline';
-                
+                id_layer_div.style.display          = 'inline';
+                id_plant_div.style.display          = 'none';
+                id_shape_div.style.display          = 'none';
+                id_line_width_div.style.display     = 'none';
+                id_line_style_div.style.display     = 'none';
+                id_line_color_div.style.display     = 'none';
+                id_fill_div.style.display           = 'none';
+                id_fill_color_div.style.display     = 'none';
+                id_opacity_select_div.style.display = 'none';
+                id_opacity_slider_div.style.display = 'none';
+                id_zoom_select_div.style.display    = 'none';
+                id_zoom_slider_div.style.display    = 'none';
+                id_shape_attributes.style.display   = 'inline';
             }
             else if(action == 'add plant')
             {
-                id_layer_div.style.display        = 'none';
-                id_plant_div.style.display        = 'inline';
-                id_shape_div.style.display        = 'inline';
-                id_line_width_div.style.display   = 'inline';
-                id_line_style_div.style.display   = 'inline';
-                id_line_color_div.style.display   = 'inline';
-                id_fill_div.style.display         = 'inline';
-                id_fill_color_div.style.display   = 'inline';
-                id_fill_opacity_select_div.style.display = 'inline';
-                id_fill_opacity_slider_div.style.display = 'inline';
-                id_zoom_select_div.style.display  = 'none';
-                id_zoom_slider_div.style.display  = 'none';
-                id_shape_attributes.style.display = 'none';
+                id_layer_div.style.display          = 'none';
+                id_plant_div.style.display          = 'inline';
+                id_shape_div.style.display          = 'inline';
+                id_line_width_div.style.display     = 'inline';
+                id_line_style_div.style.display     = 'inline';
+                id_line_color_div.style.display     = 'inline';
+                id_fill_div.style.display           = 'inline';
+                id_fill_color_div.style.display     = 'inline';
+                id_opacity_select_div.style.display = 'inline';
+                id_opacity_slider_div.style.display = 'inline';
+                id_zoom_select_div.style.display    = 'none';
+                id_zoom_slider_div.style.display    = 'none';
+                id_shape_attributes.style.display   = 'none';
             }
             else if(action == 'draw')
             {
@@ -3040,13 +3020,15 @@
                 id_line_width_div.style.display  = 'inline';
                 id_line_style_div.style.display  = 'inline';
                 id_line_color_div.style.display  = 'inline';
-                if (shapeOption == "rectangle" || shapeOption == "circle" || 
-                    shapeOption == "ellipse"   || shapeOption == "polygon")
+                if (shapeOption.value == "rectangle" || 
+                    shapeOption.value == "circle"    || 
+                    shapeOption.value == "ellipse"   || 
+                    shapeOption.value == "polygon")
                 {
-                    id_fill_div.style.display         = 'inline';
-                    id_fill_color_div.style.display   = 'inline';
-                    id_fill_opacity_select_div.style.display = 'inline';
-                    id_fill_opacity_slider_div.style.display = 'inline-block';
+                    id_fill_div.style.display           = 'inline';
+                    id_fill_color_div.style.display     = 'inline';
+                    id_opacity_select_div.style.display = 'inline';
+                    id_opacity_slider_div.style.display = 'inline-block';
                 }
                 id_zoom_select_div.style.display  = 'none';
                 id_zoom_slider_div.style.display  = 'none';
@@ -3060,35 +3042,35 @@
             }
             else if(action == 'pan')
             {
-                id_layer_div.style.display        = 'none';
-                id_plant_div.style.display        = 'none';
-                id_shape_div.style.display        = 'none';
-                id_line_width_div.style.display   = 'none';
-                id_line_style_div.style.display   = 'none';
-                id_line_color_div.style.display   = 'none';
-                id_fill_div.style.display         = 'none';
-                id_fill_color_div.style.display   = 'none';
-                id_fill_opacity_select_div.style.display = 'none';
-                id_fill_opacity_slider_div.style.display = 'none';
-                id_zoom_select_div.style.display  = 'none';
-                id_zoom_slider_div.style.display  = 'none';
-                id_shape_attributes.style.display = 'none';
+                id_layer_div.style.display          = 'none';
+                id_plant_div.style.display          = 'none';
+                id_shape_div.style.display          = 'none';
+                id_line_width_div.style.display     = 'none';
+                id_line_style_div.style.display     = 'none';
+                id_line_color_div.style.display     = 'none';
+                id_fill_div.style.display           = 'none';
+                id_fill_color_div.style.display     = 'none';
+                id_opacity_select_div.style.display = 'none';
+                id_opacity_slider_div.style.display = 'none';
+                id_zoom_select_div.style.display    = 'none';
+                id_zoom_slider_div.style.display    = 'none';
+                id_shape_attributes.style.display   = 'none';
             }
             else if(action == 'zoom')
             {
-                id_layer_div.style.display        = 'none';
-                id_plant_div.style.display        = 'none';
-                id_shape_div.style.display        = 'none';
-                id_line_width_div.style.display   = 'none';
-                id_line_style_div.style.display   = 'none';
-                id_line_color_div.style.display   = 'none';
-                id_fill_div.style.display         = 'none';
-                id_fill_color_div.style.display   = 'none';
-                id_fill_opacity_select_div.style.display = 'none';
-                id_fill_opacity_slider_div.style.display = 'none';
-                id_zoom_select_div.style.display  = 'inline';
-                id_zoom_slider_div.style.display  = 'inline-block';
-                id_shape_attributes.style.display = 'none';
+                id_layer_div.style.display          = 'none';
+                id_plant_div.style.display          = 'none';
+                id_shape_div.style.display          = 'none';
+                id_line_width_div.style.display     = 'none';
+                id_line_style_div.style.display     = 'none';
+                id_line_color_div.style.display     = 'none';
+                id_fill_div.style.display           = 'none';
+                id_fill_color_div.style.display     = 'none';
+                id_opacity_select_div.style.display = 'none';
+                id_opacity_slider_div.style.display = 'none';
+                id_zoom_select_div.style.display    = 'inline';
+                id_zoom_slider_div.style.display    = 'inline-block';
+                id_shape_attributes.style.display   = 'none';
             }
         });
 
@@ -3099,143 +3081,87 @@
         // Connect javascript to the level 2 menu items
         //************************************************************//
         // Setup layer selections
-        formElement = document.getElementById("id_layer_div");
+        let layer = document.getElementById("id_layer_div");
         
         // Retrieve the selected plant from the server db
-        formElement = document.getElementById("id_plant");
-        formElement.addEventListener("change", (e) =>
+        let requestedPlant = document.getElementById("id_plant");
+        requestedPlant.addEventListener("change", (e) =>
         {
-            target = e.target;
-            requestedPlant = target.value;
             // create the new plant object
-            const newPlant = new Plant(requestedPlant, // plant to be fetched from server
-                                       "plant",        // type of object
-                                       nextPlantID,    // id
-                                       false,          // grouped flag
-                                       "plant",        // label for drawn shape
-                                       "tbd",          // layer there the plant resides
-                                       "circle");      // type of shape representing plant
+            const newPlant = new Plant(requestedPlant.value,    // plant to be fetched from server
+                                       "plant",                 // type of object
+                                       nextPlantID,             // id
+                                       false,                   // grouped flag
+                                       "plant",                 // label for drawn shape
+                                       "tbd",                   // layer there the plant resides
+                                       "circle");               // type of shape representing plant
             // add plant to shapes array and get details from server
             shapes.push(newPlant);
             nextPlantID++;
             shapes[shapes.length - 1].fetchDetails();
             // Reset the type of plant to be added - this is necessary to immediately add the same plant 
-            target.value = "--";           
+            requestedPlant.value = "--";           
         });
 
         // Setup the shape to be drawn
-        formElement = document.getElementById("id_shape");
-	    formElement.addEventListener("change", (e) =>
+        const shapeOption = document.getElementById("id_shape");
+        const lineWidthInput = document.getElementById("id_line_width");
+        const lineStyleInput = document.getElementById("id_line_style");
+        const lineColorInput = document.getElementById("id_line_color");
+        const fillCheckbox   = document.getElementById("id_fill");
+        const fillColorInput = document.getElementById("id_fill_color");
+        const fillOpacityInput = document.getElementById("id_opacity_select");
+        
+        // actions to be take when menu items are changed
+        shapeOption.addEventListener("change", (e) =>
         {
-            target = e.target;
-            shapeOption = target.value;
-            if (shapeOption == "rectangle" || shapeOption == "circle" || 
-                shapeOption == "ellipse"   || shapeOption == "polygon")
+            if (shapeOption.value == "rectangle" || shapeOption.value == "circle" || 
+                shapeOption.value == "ellipse"   || shapeOption.value == "polygon")
             {
                 id_fill_div.style.display       = 'inline';
             }
         });
-
-        // Setup the shape line width
-        formElement = document.getElementById("id_line_width");
-        formElement.addEventListener('change', (e) =>
+        fillCheckbox.addEventListener('change', (e) =>
         {
-            target = e.target;
-            lineWidth = target.value;
-        });
-
-        // Setup the shape line style
-        formElement = document.getElementById("id_line_style");
-        formElement.addEventListener('change', (e) =>
-        {
-            target = e.target;
-            lineStyle = target.value;
-        });
-
-        // Setup the shape line color
-        formElement = document.getElementById("id_line_color");
-        formElement.addEventListener('change', (e) =>
-        {
-            target = e.target;
-            lineColor = target.value;
-        });
-
-        // Setup the shape fill checkbox
-        const fill_checkbox = document.getElementById("id_fill");
-        fill_checkbox.addEventListener('change', (e) =>
-        {
-            if(fill_checkbox.checked)
+            if(fillCheckbox.checked)
             {
                 id_fill_color_div.style.display   = 'inline';
-                id_fill_opacity_select_div.style.display = 'inline';
+                id_opacity_select_div.style.display = 'inline';
             }
             else
             {
                 id_fill_color_div.style.display   = 'none';
-                id_fill_opacity_select_div.style.display = 'none';
+                id_opacity_select_div.style.display = 'none';
             }
         });
 
-        // Setup the shape fill color
-        formElement = document.getElementById("id_fill_color");
-        formElement.addEventListener('change', (e) =>
-        {
-            target = e.target;
-            fillColor = target.value;
-        });
-
-        // Setup the shape fill opacity select
-        formElement = document.getElementById("id_fill_opacity_select");
-        formElement.addEventListener('change', (e) =>
-        {
-            target = e.target;
-            fillOpacity = target.value;
-        });
-
-        // Setup the shape fill opacity slider
-        formElement = document.getElementById("id_fill_opacity_slider");
-        formElement.addEventListener('input', (e) =>
-        {
-            target = e.target;
-            fillOpacity = target.value;
-        });
-
         // Setup the zoom select
-        formElement = document.getElementById("id_zoom_select");
-        formElement.addEventListener('change', (e) =>
+        zoomSelect = document.getElementById("id_zoom_select");
+        zoomSelect.addEventListener('change', (e) =>
         {
-            target = e.target;
-            zoomSelect = target.value;
-
-            // xPlot = 3600
-            // yPlot = 2400
-            // extBorder = 120
-            // xViewPort = canvas.width
-            // yViewPort = canvas.height
-
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
             const yScale = canvas.height / (yPlot);
             const scale  = Math.min(xScale, yScale);
 
-            if(zoomSelect == "100%")
+            if(zoomSelect.value == "100%")
             {    
                 viewportTransform.scale = xScale * 1.0;
                 viewportTransform.x = 0;
                 viewportTransform.y = 0;
             }
-            else if(zoomSelect == "200%")
+            else if(zoomSelect.value == "200%")
             {
                 viewportTransform.scale = xScale * 2.0;
             }
-            else if(zoomSelect == "300%")
+            else if(zoomSelect.value == "300%")
             {
                 viewportTransform.scale = xScale * 3.0;
             }
-            else if(zoomSelect == "400%")
+            else if(zoomSelect.value == "400%")
             {
                 viewportTransform.scale = xScale * 4.0;
             }
-            else if(zoomSelect == "500%")
+            else if(zoomSelect.value == "500%")
             {
                 viewportTransform.scale = xScale * 5.0;
             }
@@ -3244,15 +3170,15 @@
         });
 
         // Setup the zoom slider
-        formElement = document.getElementById("id_zoom_slider");
-        formElement.addEventListener('input', (e) =>
+        zoomSlider = document.getElementById("id_zoom_slider");
+        zoomSlider.addEventListener('input', (e) =>
         {
-            target = e.target;
-            zoomSlider = target.value;
-
+            // reset the zoom select to slider mode
+            zoomSelect.value = "Slider";
+            // determine the xScale at 100% zoom
             const xScale = canvas.width  / (xPlot - (3 * extBorder));
-
-            viewportTransform.scale = xScale * (zoomSlider / 100);
+            // scale the canvas based upon the slider value
+            viewportTransform.scale = xScale * (zoomSlider.value / 100);
 
             drawScreen();
         });
@@ -3269,64 +3195,6 @@
             canvas.height = window.innerHeight - 300;
             drawScreen();
         });
-        
-        // get edit form fields
-        const labelForm     = document.getElementById('labelForm');
-        // line and curve coordinates
-        const xStartFtForm  = document.getElementById('xStartFtForm');
-        const xStartInForm  = document.getElementById('xStartInForm');
-        const yStartFtForm  = document.getElementById('yStartFtForm');
-        const yStartInForm  = document.getElementById('yStartInForm');
-        const xEndFtForm    = document.getElementById('xEndFtForm');
-        const xEndInForm    = document.getElementById('xEndInForm');
-        const yEndFtForm    = document.getElementById('yEndFtForm');
-        const yEndInForm    = document.getElementById('yEndInForm');
-        // curve coordinates
-        const xControlFtForm  = document.getElementById('xControlFtForm');
-        const xControlInForm  = document.getElementById('xControlInForm');
-        const yControlFtForm  = document.getElementById('yControlFtForm');
-        const yControlInForm  = document.getElementById('yControlInForm');
-        // rectangle coordinates
-        const xFtForm       = document.getElementById('xFtForm');
-        const xInForm       = document.getElementById('xInForm');
-        const yFtForm       = document.getElementById('yFtForm');
-        const yInForm       = document.getElementById('yInForm');
-        // circle and ellipse coordinates
-        const xCenterFtForm = document.getElementById('xCenterFtForm');
-        const xCenterInForm = document.getElementById('xCenterInForm');
-        const yCenterFtForm = document.getElementById('yCenterFtForm');
-        const yCenterInForm = document.getElementById('yCenterInForm');
-        // polygon coordinates
-        const polygonHTML   = document.getElementById('polygonHTML');
-        //
-        const widthFtForm   = document.getElementById('widthFtForm');
-        const widthInForm   = document.getElementById('widthInForm');
-        const heightFtForm  = document.getElementById('heightFtForm');
-        const heightInForm  = document.getElementById('heightInForm');
-        //
-        const radiusFtForm  = document.getElementById('radiusFtForm');
-        const radiusInForm  = document.getElementById('radiusInForm');
-        //
-        const xRadiusFtForm  = document.getElementById('xRadiusFtForm');
-        const xRadiusInForm  = document.getElementById('xRadiusInForm');
-        const yRadiusFtForm  = document.getElementById('yRadiusFtForm');
-        const yRadiusInForm  = document.getElementById('yRadiusInForm');
-        //
-        const rotationForm  = document.getElementById('rotationForm');
-        //
-        const lineWidthForm = document.getElementById('lineWidthForm');
-        const lineStyleForm = document.getElementById('lineStyleForm');
-        const lineColorForm = document.getElementById('lineColorForm');
-        //
-        const fillColorForm   = document.getElementById('fillColorForm');
-        const fillOpacityForm = document.getElementById('fillOpacityForm');
-        // used to create specific context edit menus for each shape type
-        const line      = document.getElementsByClassName('line');
-        const curve     = document.getElementsByClassName('curve');
-        const rectangle = document.getElementsByClassName('rectangle');
-        const circle    = document.getElementsByClassName('circle');
-        const ellipse   = document.getElementsByClassName('ellipse');
-        const polygon   = document.getElementsByClassName('polygon');
 
         //************************************************************//
         // mouse click events
@@ -3509,63 +3377,105 @@
                 createShape = true;
                 let layer = "any";
                 let fill  = false;
-                if(fill_checkbox.checked)
+                if(fillCheckbox.checked)
                 {
                     fill = true;
                 }
 
-                if (shapeOption == "line")
+                if (shapeOption.value == "line")
                 {
                     activeShape = new Line('line', nextShapeID, false, 'line', layer,
-                                           lineWidth, lineStyle, lineColor, 
-                                           fill, fillColor, fillOpacity,
-                                           xSelectAbs, ySelectAbs, xSelectAbs, ySelectAbs);
+                                           lineWidthInput.value, 
+                                           lineStyleInput.value, 
+                                           lineColorInput.value, 
+                                           fillCheckbox.value, 
+                                           fillColorInput.value, 
+                                           fillOpacityInput.value,
+                                           xSelectAbs,                  // x starting point
+                                           ySelectAbs,                  // y starting point point
+                                           xSelectAbs,                  // x ending point
+                                           ySelectAbs);                 // y ending point
                     nextShapeID++;
                 }
-                else if (shapeOption == "curve")
+                else if (shapeOption.value == "curve")
                 {
                     console.log("DEBUG: starting curve creation process");
                     activeShape = new Curve('curve', nextShapeID, false, 'curve', layer,
-                                            lineWidth, lineStyle, lineColor, 
-                                            fill, fillColor, fillOpacity,
-                                            xSelectAbs, ySelectAbs, 
-                                            xSelectAbs, ySelectAbs,
-                                            xSelectAbs, ySelectAbs);
+                                            lineWidthInput.value, 
+                                            lineStyleInput.value, 
+                                            lineColorInput.value, 
+                                            fillCheckbox.value, 
+                                            fillColorInput.value, 
+                                            fillOpacityInput.value,
+                                            xSelectAbs,                 // x starting point
+                                            ySelectAbs,                 // y starting point
+                                            xSelectAbs,                 // x control point
+                                            ySelectAbs,                 // y control point
+                                            xSelectAbs,                 // x ending point
+                                            ySelectAbs);                // y ending point
                     nextShapeID++;
                 }
-                else if (shapeOption == "rectangle")
+                else if (shapeOption.value == "rectangle")
                 {
                     activeShape = new Rectangle('rectangle', nextShapeID, false, 'rectangle', layer,
-                                                lineWidth, lineStyle, lineColor, 
-                                                fill, fillColor, fillOpacity,
-                                                xSelectAbs, ySelectAbs, 0, 0, 0);
+                                                lineWidthInput.value, 
+                                                lineStyleInput.value, 
+                                                lineColorInput.value, 
+                                                fillCheckbox.value, 
+                                                fillColorInput.value, 
+                                                fillOpacityInput.value,
+                                                xSelectAbs,             // x origin
+                                                ySelectAbs,             // y origin
+                                                0,                      // width
+                                                0,                      // height
+                                                0);                     // rotation
                     nextShapeID++;
                 }
-                else if (shapeOption == "circle")
+                else if (shapeOption.value == "circle")
                 {
                     activeShape = new Circle('circle', nextShapeID, false, 'circle', layer,
-                                             lineWidth, lineStyle, lineColor, 
-                                             fill, fillColor, fillOpacity,
-                                             xSelectAbs, ySelectAbs, 0);
+                                             lineWidthInput.value, 
+                                             lineStyleInput.value, 
+                                             lineColorInput.value, 
+                                             fillCheckbox.value, 
+                                             fillColorInput.value, 
+                                             fillOpacityInput.value,
+                                             xSelectAbs,                // x center
+                                             ySelectAbs,                // y center
+                                             0);                        // radius
                     nextShapeID++;
                 }
-                else if (shapeOption == "ellipse")
+                else if (shapeOption.value == "ellipse")
                 {
                     activeShape = new Ellipse('ellipse', nextShapeID, false, 'ellipse', layer,
-                                             lineWidth, lineStyle, lineColor, 
-                                             fill, fillColor, fillOpacity,
-                                             xSelectAbs, ySelectAbs, 0, 0, 0);
+                                             lineWidthInput.value, 
+                                             lineStyleInput.value, 
+                                             lineColorInput.value, 
+                                             fillCheckbox.value, 
+                                             fillColorInput.value, 
+                                             fillOpacityInput.value,
+                                             xSelectAbs,                // x center
+                                             ySelectAbs,                // y center
+                                             0,                         // x radius
+                                             0,                         // y radius
+                                             0);                        // rotation
                     nextShapeID++;
                 }
-                else if (shapeOption == "polygon")
+                else if (shapeOption.value == "polygon")
                 {
                     if (polygonWIP == false)
                     {
                         // Create polygon object
                         activeShape = new Polygon('polygon', nextShapeID, false, 'polygon', layer,
-                                                  lineWidth, lineStyle, lineColor, 
-                                                  fill, fillColor, fillOpacity,
-                                                  [], 0, status);
+                                                  lineWidthInput.value, 
+                                                  lineStyleInput.value, 
+                                                  lineColorInput.value, 
+                                                  fillCheckbox.value, 
+                                                  fillColorInput.value, 
+                                                  fillOpacityInput.value,
+                                                  [], 
+                                                  0, 
+                                                  status);
 
                         // Set polygon starting point
                         activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
@@ -3578,6 +3488,15 @@
                     activeShape.xPolygonVertex = xSelectAbs;
                     activeShape.yPolygonVertex = ySelectAbs;
                     activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
+                    if(e.shiftKey)
+                    {
+                        console.log("DEBUG: Drawing a curve");
+                        polygonCurve = true;
+                    }
+                    else
+                    {
+                        polygonCurve = false;
+                    }
                 }
 
                 xSelectAbsSave = xSelectAbs;
@@ -3798,6 +3717,66 @@
         //************************************************************//
         // mouse right click (context menu) events
         //************************************************************//
+        // get edit form fields
+        const labelForm     = document.getElementById('labelForm');
+        // line and curve coordinates
+        const xStartFtForm  = document.getElementById('xStartFtForm');
+        const xStartInForm  = document.getElementById('xStartInForm');
+        const yStartFtForm  = document.getElementById('yStartFtForm');
+        const yStartInForm  = document.getElementById('yStartInForm');
+        const xEndFtForm    = document.getElementById('xEndFtForm');
+        const xEndInForm    = document.getElementById('xEndInForm');
+        const yEndFtForm    = document.getElementById('yEndFtForm');
+        const yEndInForm    = document.getElementById('yEndInForm');
+        // curve coordinates
+        const xControlFtForm  = document.getElementById('xControlFtForm');
+        const xControlInForm  = document.getElementById('xControlInForm');
+        const yControlFtForm  = document.getElementById('yControlFtForm');
+        const yControlInForm  = document.getElementById('yControlInForm');
+        // rectangle coordinates
+        const xFtForm       = document.getElementById('xFtForm');
+        const xInForm       = document.getElementById('xInForm');
+        const yFtForm       = document.getElementById('yFtForm');
+        const yInForm       = document.getElementById('yInForm');
+        // circle and ellipse coordinates
+        const xCenterFtForm = document.getElementById('xCenterFtForm');
+        const xCenterInForm = document.getElementById('xCenterInForm');
+        const yCenterFtForm = document.getElementById('yCenterFtForm');
+        const yCenterInForm = document.getElementById('yCenterInForm');
+        // polygon coordinates
+        const polygonHTML   = document.getElementById('polygonHTML');
+        //
+        const widthFtForm   = document.getElementById('widthFtForm');
+        const widthInForm   = document.getElementById('widthInForm');
+        const heightFtForm  = document.getElementById('heightFtForm');
+        const heightInForm  = document.getElementById('heightInForm');
+        //
+        const radiusFtForm  = document.getElementById('radiusFtForm');
+        const radiusInForm  = document.getElementById('radiusInForm');
+        //
+        const xRadiusFtForm  = document.getElementById('xRadiusFtForm');
+        const xRadiusInForm  = document.getElementById('xRadiusInForm');
+        const yRadiusFtForm  = document.getElementById('yRadiusFtForm');
+        const yRadiusInForm  = document.getElementById('yRadiusInForm');
+        //
+        const rotationForm  = document.getElementById('rotationForm');
+        //
+        const lineWidthForm = document.getElementById('lineWidthForm');
+        const lineStyleForm = document.getElementById('lineStyleForm');
+        const lineColorForm = document.getElementById('lineColorForm');
+        //
+        const fillColorForm   = document.getElementById('fillColorForm');
+        const fillOpacityForm = document.getElementById('fillOpacityForm');
+        // used to create specific context edit menus for each shape type
+        const line      = document.getElementsByClassName('line');
+        const curve     = document.getElementsByClassName('curve');
+        const rectangle = document.getElementsByClassName('rectangle');
+        const circle    = document.getElementsByClassName('circle');
+        const ellipse   = document.getElementsByClassName('ellipse');
+        const polygon   = document.getElementsByClassName('polygon');
+        // selected shape's index in the shape array
+        let shapeIndex;
+
         // Context menu: Open the context menu
         canvas.addEventListener("contextmenu", (e) => 
         {
