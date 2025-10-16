@@ -65,7 +65,7 @@ class Garden(models.Model):
                           default=["Common Name", "Type", "Height", "Width", 
                                    "Bloom Color", "Bloom Season", "Pollinators"],)
     # JSON array of shapes for garden design
-    shapes_JSON = models.JSONField(default=list)
+    shapes_JSON = models.JSONField(default=list, blank=True)
     # AR: Implement slug field
     slug                = models.SlugField(default="tbd", null=False, blank=True)
         

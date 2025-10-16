@@ -679,7 +679,7 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity) 
+                        fill, fillColor, fillPattern, fillOpacity) 
             {
                 this.type        = type;
                 this.id          = id;
@@ -693,6 +693,7 @@
                 this.lineOpacity = lineOpacity;
                 this.fill        = fill;
                 this.fillColor   = fillColor;
+                this.fillPattern = fillPattern;
                 this.fillOpacity = fillOpacity;
             }
             editMenuClear()
@@ -785,12 +786,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         xStart, yStart, xEnd, yEnd) 
             {
                 super(type, id, grouped, label, layer, zIndex,
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.xStart  = xStart;
                 this.yStart  = yStart;
                 this.xEnd    = xEnd;
@@ -964,6 +965,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     this.xStart + 20,
                     this.yStart + 20,
@@ -1057,12 +1059,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         xStart, yStart, xControl, yControl, xEnd, yEnd) 
             {
                 super(type, id, grouped, label, layer, zIndex,
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.xStart   = xStart;
                 this.yStart   = yStart;
                 this.xControl = xControl;
@@ -1252,6 +1254,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     this.xStart + 20,
                     this.yStart + 20,
@@ -1352,12 +1355,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         x, y, width, height, rotation) 
             {
                 super(type, id, grouped, label, layer, zIndex, 
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.x          = x;
                 this.y          = y;
                 this.width      = width;
@@ -1723,6 +1726,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     this.x + 20,
                     this.y + 20,
@@ -1844,12 +1848,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         x, y, radius) 
             {
                 super(type, id, grouped, label, layer, zIndex, 
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.x          = x;
                 this.y          = y;
                 this.radius     = radius;
@@ -2038,6 +2042,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     this.x + 20,
                     this.y + 20,
@@ -2137,12 +2142,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         x, y, xRadius, yRadius, rotation) 
             {
                 super(type, id, grouped, label, layer, zIndex, 
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.x          = x;
                 this.y          = y;
                 this.xRadius    = xRadius;
@@ -2342,6 +2347,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     this.x + 20,
                     this.y + 20,
@@ -2435,12 +2441,12 @@
         {
             constructor(type, id, grouped, label, layer, zIndex,
                         lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         vertices = [], rotation, status) 
             {
                 super(type, id, grouped, label, layer, zIndex, 
                       lineWidth, lineStyle, lineColor, lineOpacity,
-                      fill, fillColor, fillOpacity);
+                      fill, fillColor, fillPattern, fillOpacity);
                 this.vertices   = vertices;
                 this.rotation   = rotation;
                 this.status     = status;
@@ -2646,6 +2652,7 @@
                     this.lineOpacity,
                     this.fill,
                     this.fillColor,
+                    this.fillPattern,
                     this.fillOpacity,
                     [],
                     this.rotation,
@@ -2770,7 +2777,7 @@
         {
             constructor(plant, type, id, grouped = false, label, layer, zIndex,
                         shape, lineWidth, lineStyle, lineColor, lineOpacity,
-                        fill, fillColor, fillOpacity,
+                        fill, fillColor, fillPattern, fillOpacity,
                         x, y)
             {
                 //
@@ -2800,6 +2807,7 @@
                                           lineOpacity, // line opacity
                                           fill,        // fill
                                           fillColor,   // fill color
+                                          fillPattern, // fill pattern
                                           fillOpacity, // fill opacity
                                           200,         // x center
                                           200,         // y center
@@ -3307,6 +3315,7 @@
                                        lineOpacityInput.value,
                                        fillCheckbox.value, 
                                        fillColorInput.value, 
+                                       "fillPattern",
                                        fillOpacityInput.value);
             // add plant to shapes array and get details from server
             shapes.push(newPlant);
@@ -3702,6 +3711,7 @@
                                            lineOpacityInput.value,
                                            fillCheckbox.value, 
                                            fillColorInput.value, 
+                                           "fillPattern",
                                            fillOpacityInput.value,
                                            xSelectAbs,                  // x starting point
                                            ySelectAbs,                  // y starting point point
@@ -3725,6 +3735,7 @@
                                             lineOpacityInput.value,
                                             fillCheckbox.value, 
                                             fillColorInput.value, 
+                                            "fillPattern", 
                                             fillOpacityInput.value,
                                             xSelectAbs,                 // x starting point
                                             ySelectAbs,                 // y starting point
@@ -3749,6 +3760,7 @@
                                                 lineOpacityInput.value, 
                                                 fillCheckbox.value, 
                                                 fillColorInput.value, 
+                                                "fillPattern", 
                                                 fillOpacityInput.value,
                                                 xSelectAbs,             // x origin
                                                 ySelectAbs,             // y origin
@@ -3772,6 +3784,7 @@
                                              lineOpacityInput.value, 
                                              fillCheckbox.value, 
                                              fillColorInput.value, 
+                                             "fillPattern", 
                                              fillOpacityInput.value,
                                              xSelectAbs,                // x center
                                              ySelectAbs,                // y center
@@ -3793,6 +3806,7 @@
                                              lineOpacityInput.value, 
                                              fillCheckbox.value, 
                                              fillColorInput.value, 
+                                             "fillPattern", 
                                              fillOpacityInput.value,
                                              xSelectAbs,                // x center
                                              ySelectAbs,                // y center
@@ -3819,6 +3833,7 @@
                                                   lineOpacityInput.value, 
                                                   fillCheckbox.value, 
                                                   fillColorInput.value, 
+                                                  "fillPattern", 
                                                   fillOpacityInput.value,
                                                   [], 
                                                   0, 
@@ -4388,7 +4403,6 @@
                     highestLayer = 7;
                     layer = "all";
                 }
-
             }
             // create the bounding box for the newly created group
             wipGroup.createBoundingBox();
