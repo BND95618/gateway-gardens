@@ -29,7 +29,7 @@
     <div class="w3-row-padding">
       <div class="w3-col s4">
         <header class="w3-container w3-green w3-border">
-          <h3>Characteristics</h3>
+          <h4>Characteristics</h4>
         </header>
         <div class="w3-container w3-border">
           <p>Date Planted:        {{ my_plant.date_planted }}</p>
@@ -44,38 +44,188 @@
       </div>
     </div>
   </div>
+  <!------------------------------------->
+  <!-- My Plant To Do List Summary     -->
+  <!------------------------------------->
+  <div class="w3-margin">
+    <!-- To Do section -->
+    <div class="w3-card-4 w3-margin-top">
+      <header class="w3-container  w3-green">
+        <h4>
+          <span>My To Do List:</span>
+          <span class="w3-dropdown-hover w3-right">
+            <!-- AR: menu - add, hide/show completed -->
+            <button class="w3-button w3-green" style="z-index:21">
+              <i class="material-icons">
+                menu
+              </i>
+            </button>
+              <div class="w3-dropdown-content w3-bar-block w3-card-4">
+                <button onclick="todo_add()"       class="w3-bar-item w3-button">Add          </button>
 
+                <!-- AR: Hide/show completed items -->
+                <button onclick="todo_hide_done()" class="w3-bar-item w3-button">Hide Complete</button>
+                
+              </div>
+          </span>
+        </h4>
+      </header>
+      <!-- To Do table -->
+      <div class="w3-container" id="main">
+        <table class="w3-table-all w3-hoverable w3-margin-top w3-margin-bottom" id="plantTable">
+          <thead>
+            <tr class="w3-light-grey">
+              <th style="cursor:pointer; width:5%;"  >Status  </th>
+              <th style="cursor:pointer; width:15%;" >Date    </th>
+              <th style="cursor:pointer; width:10%;" >Action  </th>
+              <th style="cursor:pointer; width:60%;" >Details </th>
+              <th style="cursor:pointer; width:10%;" >Repeat  </th>
+              <!-- Button Placeholders -->
+              <th class="w3-center" style="width:5%;">        </th>
+              <th class="w3-center" style="width:5%;">        </th>
+            </tr>
+          </thead>
+          {% for todo in myplant_todo  %}  
+            {% if my_plant.complete == false %}
+              <tr class="w3-hover-green">
+                <!-- AR: complete checkbox -->
+                <td>{{ todo.complete }}</td>
+                <td>{{ todo.date     }}</td>
+                <td>{{ todo.action   }}</td>
+                <td>{{ todo.details  }}</td>
+                <td>{{ todo.repeat   }}</td>
+                <!-- AR: edit -->
+                <td class="w3-center" 
+                style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                  <div class="w3-tooltip">
+                    <button onclick="todo_edit({{ todo.id }})">
+                      <i class="material-icons">
+                      edit
+                      </i>
+                      <span style="position:absolute; left:0; bottom:34px;" 
+                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        Edit
+                      </span>
+                    </button>
+                  </div>
+                </td>
+                <!-- AR: delete -->
+                <td class="w3-center" 
+                style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                  <div class="w3-tooltip">
+                    <button onclick="todo_delete({{ todo.id }})">
+                      <i class="material-icons">
+                      delete
+                      </i>
+                      <span style="position:absolute; left:0; bottom:34px;" 
+                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        Delete
+                      </span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr>
+
+  <!-- To Do add modal - html to be inserted by Javascript -->
+  <div id="todo_add_modal" class="w3-modal">
+    <p> To Do add form HTML to be Inserted Here! </p>
+  </div>
+
+  <!-- To Do edit modal - html to be inserted by Javascript -->
+  <div id="todo_edit_modal" class="w3-modal">
+    <p> To Do edit form HTML to be Inserted Here! </p>
+  </div>
+
+  <!-- To Do delete modal - html to be inserted by Javascript -->
+  <div id="todo_del_modal" class="w3-modal">
+    <p> To Do delete form HTML to be Inserted Here! </p>
+  </div>
+
+  <!------------------------------------->
+  <!-- My Plant Gardener Notes         -->
+  <!------------------------------------->
   <div class="w3-margin">
     <div class="w3-card-4 w3-margin-top">
       <header class="w3-container w3-green">
-        <h3>My Notes:</h3>
+        <h4>My Notes:</h4>
       </header>
       <div class="w3-container">
         {{ my_plant.notes.html|safe|escape }}
       </div>
     </div>
   </div>
-
   <hr>
-
-  <!-- Comments -->
+  <!------------------------------------->
+  <!-- My Plant Comments               -->
+  <!------------------------------------->
   <div class="w3-margin">
-    <fieldset>
-      <legend>Comments</legend>
-      {% for comment in myplant_comments %}
-        <p>Subject: {{ comment.subject }}</p>
-        <p>Author:  {{ comment.author  }}</p>
-        {{ comment.comment.html|safe|escape }}
-        <hr>
-      {% endfor %}
-      <p><a href="{% url 'plants:myplants_comment' my_plant.id %}">Add comment</a></p>
-    </fieldset>
+    <div class="w3-card-4 w3-margin-top">
+      <header class="w3-container w3-green">
+        <h4>Fellow Gardener Comments:</h4>
+      </header>
+      <div class="w3-margin">
+        {% for comment in myplant_comments %}
+          <p>Subject: {{ comment.subject }}</p>
+          <p>Author:  {{ comment.author  }}</p>
+          {{ comment.comment.html|safe|escape }}
+          <hr>
+          {% endfor %}
+      </div>
+      <div>
+        <p><a href="{% url 'plants:myplants_comment' my_plant.id %}">Add comment</a></p>
+      </div>
+    </div>
   </div>
-
   <hr>
+  <!------------------------------------->
+  <!-- Plant Details                   -->
+  <!------------------------------------->
   {% include "plants/plants_details_insert.html" %}
 {% endblock content %}
 
 {% block js %}
-  <!-- Insert template Javascript here -->
+<script>
+    function todo_add()
+    {
+        url = "{% url 'plants:myplants_todo_add' my_plant.id %}"
+        fetch(url) 
+        .then(response => response.text())
+        .then(html => {todo_add_modal.innerHTML = html;})
+        todo_add_modal.style.display='block';
+    }
+    function todo_edit(id)
+    {
+        // AR: fix url approach
+        // url = "{x% url 'plants:myplants_todo_edit' %x}" + "/" + id;
+
+        url = "/myplants_todo_edit/" + id;
+        fetch(url) 
+        .then(response => response.text())
+        .then(html => {todo_edit_modal.innerHTML = html;})
+        todo_edit_modal.style.display='block';
+    }
+    function todo_delete(id)
+    {
+        // AR: fix url approach
+        // url = "{x% url 'plants:myplants_todo_del' %x}" + "/" + id;
+
+        url = "/myplants_todo_del/" + id;
+        fetch(url) 
+        .then(response => response.text())
+        .then(html => {todo_del_modal.innerHTML = html;})
+        todo_del_modal.style.display='block';
+    }
+    function todo_hide_done()
+    {
+        console.log("hide_done");
+    }
+    
+</script>
 {% endblock js %}

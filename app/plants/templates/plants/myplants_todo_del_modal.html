@@ -1,0 +1,26 @@
+<!-- /plants/templates/plants/myplants_todo_del_modal.html -->
+<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px">
+    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+      <h4>Delete To Do Item</h4>
+    </div>
+    <!-- To Do delete - create form -->
+    <form action="{% url 'plants:myplants_todo_del' my_plant_todo.id %}" method="post">
+      {% csrf_token %}
+      <div class="w3-container">
+        <p>Are you sure?</p>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <!-- To Do delete - submit -->
+        <button type="submit" 
+                class="w3-button w3-round-large w3-green">
+          Submit
+        </button>
+        <!-- To Do delete - cancel -->
+        <button type="button"
+                onclick="document.getElementById('todo_del_modal').style.display='none'"
+                class="w3-button w3-round-large w3-red">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>

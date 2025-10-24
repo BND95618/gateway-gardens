@@ -168,18 +168,18 @@ depends on core.js for utility functions like removeChildren or quickElement
         this.callback = callback;
         this.today = new Date();
         this.currentMonth = this.today.getMonth() + 1;
-        this.yCurrentear = this.today.getFullYear();
+        this.currentYear = this.today.getFullYear();
         if (typeof selected !== 'undefined') {
             this.selected = selected;
         }
     }
     Calendar.prototype = {
         drawCurrent: function() {
-            CalendarNamespace.draw(this.currentMonth, this.yCurrentear, this.div_id, this.callback, this.selected);
+            CalendarNamespace.draw(this.currentMonth, this.currentYear, this.div_id, this.callback, this.selected);
         },
         drawDate: function(month, year, selected) {
             this.currentMonth = month;
-            this.yCurrentear = year;
+            this.currentYear = year;
 
             if(selected) {
                 this.selected = selected;
@@ -190,7 +190,7 @@ depends on core.js for utility functions like removeChildren or quickElement
         drawPreviousMonth: function() {
             if (this.currentMonth === 1) {
                 this.currentMonth = 12;
-                this.yCurrentear--;
+                this.currentYear--;
             }
             else {
                 this.currentMonth--;
@@ -200,7 +200,7 @@ depends on core.js for utility functions like removeChildren or quickElement
         drawNextMonth: function() {
             if (this.currentMonth === 12) {
                 this.currentMonth = 1;
-                this.yCurrentear++;
+                this.currentYear++;
             }
             else {
                 this.currentMonth++;
@@ -208,11 +208,11 @@ depends on core.js for utility functions like removeChildren or quickElement
             this.drawCurrent();
         },
         drawPreviousYear: function() {
-            this.yCurrentear--;
+            this.currentYear--;
             this.drawCurrent();
         },
         drawNextYear: function() {
-            this.yCurrentear++;
+            this.currentYear++;
             this.drawCurrent();
         }
     };

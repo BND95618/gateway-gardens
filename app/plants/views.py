@@ -1,3 +1,5 @@
+# app/plants/views.py
+
 import json
  
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
@@ -12,9 +14,9 @@ from django.contrib.auth        import authenticate, login, logout # User login/
 
 from email_validator import validate_email
 
-from .models import Garden, MyPlant, Plant, Comment, MyPlantComment, Pest
+from .models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
-from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantCommentForm
+from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm
 from .forms  import PestAddUpdateForm
 
@@ -862,15 +864,89 @@ def myplants_details(request, id):
     plant.sun_exposure = string_display(plant.sun_exposure)
     plant.water_rqmts  = string_display(plant.water_rqmts)
     plant.soil_type    = string_display(plant.soil_type)
+    # get all To Do items related to the plant
+    myplant_todo       = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
-    myplant_comments = MyPlantComment.objects.filter(myplant__pk=id) 
+    myplant_comments   = MyPlantComment.objects.filter(myplant__pk=id) 
+
     template = loader.get_template("plants/myplants_details.html")
-    context  = { "my_plant"          : my_plant, 
+    context  = { "my_plant"         : my_plant, 
                  "plant"            : plant,
+                 "myplant_todo"     : myplant_todo,
                  "myplant_comments" : myplant_comments, 
                }
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
+
+def myplants_todo_add(request, id):
+    """ Add My Plant To Do item """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    myplant = MyPlant.objects.get(id=id)
+    my_plant_todo = MyPlantToDo()
+    if request.POST:
+        form = MyPlantToDoForm(request.POST, request.FILES)
+        if form.is_valid():
+            my_plant_todo.complete = False
+            my_plant_todo.date     = form.cleaned_data.get("date")
+            my_plant_todo.action   = form.cleaned_data.get("action")
+            my_plant_todo.details  = form.cleaned_data.get("details")
+            my_plant_todo.repeat   = form.cleaned_data.get("repeat")
+            # link the To Do item to the specific plant
+            my_plant_todo.myplant = myplant
+            my_plant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
+    else:
+        form = MyPlantToDoForm()
+        context = { 'myplant' : myplant,
+                    'form'    : form,
+                  }
+        return render(request, 'plants/myplants_todo_add_modal.html', context)
+    
+def myplants_todo_edit(request, id):
+    """ Edit My Plant To Do item """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get To Do item to be edited
+    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    #
+    if request.POST:
+        form = MyPlantToDoForm(request.POST, request.FILES)
+        if form.is_valid():
+            my_plant_todo.date     = form.cleaned_data.get("date")
+            my_plant_todo.action   = form.cleaned_data.get("action")
+            my_plant_todo.details  = form.cleaned_data.get("details")
+            my_plant_todo.repeat   = form.cleaned_data.get("repeat")
+            my_plant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+    # Populate the edit modal fields and render the modal
+    else:
+        #
+        form = MyPlantToDoForm(initial={ 'date'    : my_plant_todo.date,
+                                         'action'  : my_plant_todo.action,
+                                         'details' : my_plant_todo.details,
+                                         'repeat'  : my_plant_todo.repeat 
+                                        })
+        context = {     
+                    'my_plant_todo' : my_plant_todo,
+                    'form'          : form,
+                  }
+        return render(request, 'plants/myplants_todo_edit_modal.html', context)
+    
+def myplants_todo_del(request, id):
+    """ Delete My Plant To Do item"""
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get to To Do item to be deleted
+    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    # Delete the To Do item
+    if request.POST:
+        my_plant_todo.delete()
+        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+    # Populate the delete modal fields and render the modal
+    else:
+        context = { 'my_plant_todo' : my_plant_todo }
+        return render(request, 'plants/myplants_todo_del_modal.html', context)
 
 def myplants_comment(request, id):
     """ Associate a comment to a myplant """

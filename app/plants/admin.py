@@ -1,5 +1,5 @@
 from django.contrib import admin
-from plants.models import Garden, MyPlant, Plant, Comment, Pest
+from plants.models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
 
 # Register your models here.
 class GardenAdmin(admin.ModelAdmin):
@@ -13,6 +13,20 @@ class MyPlantAdmin(admin.ModelAdmin):
                     "owner",
                     "sun_exposure",)
     prepopulated_fields = {"slug": ("plant",) }
+
+class MyPlantToDoAdmin(admin.ModelAdmin):
+    list_display = ("complete",
+                    "date",
+                    "action",
+                    "details",)
+    prepopulated_fields = {"slug": ("myplant",) }
+
+class MyPlantCommentAdmin(admin.ModelAdmin):
+    list_display = ("author",
+                    "date",
+                    "subject",
+                    "comment",)
+    prepopulated_fields = {"slug": ("myplant",) }
     
 class PlantAdmin(admin.ModelAdmin):
     list_display = ("commonName", 
@@ -30,8 +44,10 @@ class PestAdmin(admin.ModelAdmin):
                     "pest_type",
                     "pest_url")
   
-admin.site.register(Garden,  GardenAdmin)
-admin.site.register(MyPlant, MyPlantAdmin)
-admin.site.register(Plant,   PlantAdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(Pest,     PestAdmin)
+admin.site.register(Garden,         GardenAdmin)
+admin.site.register(MyPlant,        MyPlantAdmin)
+admin.site.register(MyPlantToDo,    MyPlantToDoAdmin)
+admin.site.register(MyPlantComment, MyPlantCommentAdmin)
+admin.site.register(Plant,          PlantAdmin)
+admin.site.register(Comment,        CommentAdmin)
+admin.site.register(Pest,           PestAdmin)

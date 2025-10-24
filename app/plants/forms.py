@@ -148,6 +148,19 @@ HAPPINESS_CHOICES = (
 	("Unhappy",      "Unhappy"),
 	("Very Unhappy", "Very Unhappy"),
 )
+TODO_ACTION_CHOICES = (
+	(" ",         " "),
+	("Plant",     "Plant"),
+	("Prune",     "Prune"),
+	("Fertilize", "Fertilize"),
+)
+TODO_REPEAT_CHOICES = (
+	(" ",       " "),
+	("Daily",   "Daily"),
+	("Weekly",  "Weekly"),
+	("Monthly", "Monthly"),
+	("Yearly",  "Yearly"),
+)
 MONTH_CHOICES = (
 	("tbd",  "tbd"),
 	("Jan",  "Jan"),
@@ -495,6 +508,28 @@ class MyPlantAddUpdateForm(forms.Form):
 		initial="tbd",
 		required=False,
 	)
+
+class MyPlantToDoForm(forms.Form):
+	date = forms.DateField(
+		required=True,
+		)
+	action = forms.ChoiceField(
+		label="Action",
+		initial=' ',
+		choices = TODO_ACTION_CHOICES, 
+		required=True,
+		)
+	details = forms.CharField(
+		label="Details", 
+		max_length=64, 
+		required=True,
+		)
+	repeat = forms.ChoiceField(
+		label="Repeat",
+		initial=' ',
+		choices = TODO_REPEAT_CHOICES, 
+		required=True,
+		)
 
 class MyPlantCommentForm(forms.Form):
 	subject = forms.CharField(
