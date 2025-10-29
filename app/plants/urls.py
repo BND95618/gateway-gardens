@@ -26,10 +26,12 @@ urlpatterns = [
     path('myplants_summary',          views.myplants_summary,    name='myplants_summary'),
     path('my_column_chooser',         views.my_column_chooser,   name='my_column_chooser'),
     path('myplants_details/<int:id>', views.myplants_details,    name='myplants_details'),
+    
     path('myplants_todo_add/<int:id>',  views.myplants_todo_add,  name='myplants_todo_add'),
-
     path('myplants_todo_edit/<int:id>', views.myplants_todo_edit, name='myplants_todo_edit'),
-    path('myplants_todo_del/<int:id>',  views.myplants_todo_del, name='myplants_todo_del'),
+    path('myplants_todo_del/<int:id>',  views.myplants_todo_del,  name='myplants_todo_del'),
+    path('myplants_todo_done/<int:id>', views.myplants_todo_done, name='myplants_todo_done'),
+    path('myplants_todo_save/<int:id>', views.myplants_todo_save, name='myplants_todo_save'),
 
     path('myplants_comment/<int:id>', views.myplants_comment,    name='myplants_comment'),
     path('plant2garden/<int:id>',     views.plant2garden,        name='plant2garden'),

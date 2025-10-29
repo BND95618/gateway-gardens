@@ -947,6 +947,48 @@ def myplants_todo_del(request, id):
     else:
         context = { 'my_plant_todo' : my_plant_todo }
         return render(request, 'plants/myplants_todo_del_modal.html', context)
+    
+def myplants_todo_done(request, id):
+    """ My Plant To Do item - toggle conpletion status """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get the To Do item to have completion status toggled
+    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    if request.method == 'POST':
+        print("DEBUG: request =", request)
+        # Parses the JSON data from the request body
+        data_JSON = json.loads(request.body)
+        print("DEBUG: data_JSON =", data_JSON)
+
+        
+        if(my_plant_todo.complete == True):
+            my_plant_todo.complete = False
+        else:
+            my_plant_todo.complete = True
+        my_plant_todo.save()
+        # return JsonResponse({'test' : 'test' })
+        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+
+def myplants_todo_save(request, id):
+    """ My Plant To Do items - save sort column and direction """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    print("DEBUG: Got to To Do sort parameter save")
+    myplant = MyPlant.objects.get(id=id)
+    if request.method == 'POST':
+
+        # Parses the JSON data from the request body
+        data_JSON_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        data_dict= json.loads(data_JSON_string)
+        print("DEBUG: data_dict =", data_dict)
+
+        # Get the sort parameters and save to db
+        myplant.lastToDoSortCol = data_dict["lastToDoSortCol"]
+        myplant.lastToDoSortDir = data_dict["lastToDoSortDir"]
+        myplant.save()
+        
+    return JsonResponse({'test' : 'test' })
 
 def myplants_comment(request, id):
     """ Associate a comment to a myplant """

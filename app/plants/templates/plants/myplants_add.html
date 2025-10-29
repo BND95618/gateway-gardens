@@ -22,7 +22,7 @@
 {% block content %}
   <!-- Add Plant to My Plants -->
   <div class="w3-container" style="margin-top:140px;">
-    <!-- Required for django_flatpickr -->
+    <!-- Required for django_flatpickr - date input widget -->
     {{ form.media }}
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}

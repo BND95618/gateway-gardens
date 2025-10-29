@@ -511,8 +511,10 @@ class MyPlantAddUpdateForm(forms.Form):
 
 class MyPlantToDoForm(forms.Form):
 	date = forms.DateField(
+		widget=DatePickerInput(),
+		label="Due Date",
 		required=True,
-		)
+	)
 	action = forms.ChoiceField(
 		label="Action",
 		initial=' ',

@@ -191,6 +191,10 @@ class MyPlant(models.Model):
     # Tags a plant for display/hidden in a summary table
     show         = models.CharField(max_length=8,   default="no", blank=True)
     # Administrative stuff
+
+    lastToDoSortCol = models.IntegerField(default=1, blank=True, null=True)
+    lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
+
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 
     def __str__(self):
@@ -204,7 +208,7 @@ class MyPlantToDo(models.Model):
     # Many-to-one relationship 
     # - many "To Do items" can be associated with each "My Plant" record
     complete = models.BooleanField(default=False)
-    date     = models.DateField(auto_now_add=True)
+    date     = models.DateField(default="2000-01-01", null=True, blank=True)
     action   = models.CharField(max_length=16, default="", blank=True)
     details  = models.CharField(max_length=64, default="", blank=True)
     repeat   = models.CharField(max_length=16, default="", blank=True)
