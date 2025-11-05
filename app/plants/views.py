@@ -50,9 +50,14 @@ sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7", 
 happiness_opt    = ["tbd", "Very Happy", "Happy", "Neutral", "Unhappy", "Very Unhappy"]
 month_opt        = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "Other"]
+todo_repeat_opt  = ["Daily", "Weekly", "Monthly", "Yearly", "Never"]
+
 def index(request):
     """ Render the landing page for Gateway Gardens app """
     return render(request, 'plants/index.html')
+
+#
 
 def gardens_summary(request):
     """ Render the individual user's garden summary for Gateway Gardens app """
@@ -329,6 +334,8 @@ def plant_fetch(request):
         print("DEBUG: Error!")
         return HttpResponseRedirect(reverse('plants:index'))
 
+# 
+
 def myplants_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -390,70 +397,70 @@ def myplants_summary(request):
                 my_column_selection_list  = string2list(garden.column_selection)
 
         # Obtain the plants that the current user has claimed for their garden
-        my_plants = MyPlant.objects.filter(owner = request.user.username)
+        myplants = MyPlant.objects.filter(owner = request.user.username)
 
         # Execute the search
-        for my_plant in my_plants:
+        for myplant in myplants:
             # format multiselect attributes to remove [, ', and ]
-            my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
-            my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
-            my_plant.bloom_months       = string_display(my_plant.bloom_months)
-            my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
-            my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
-            my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
-            my_plant.plant.soil_type    = string_display(my_plant.plant.soil_type)
+            myplant.plant.bloom_color  = string_display(myplant.plant.bloom_color)
+            myplant.plant.bloom_season = string_display(myplant.plant.bloom_season)
+            myplant.bloom_months       = string_display(myplant.bloom_months)
+            myplant.plant.pollinators  = string_display(myplant.plant.pollinators)
+            myplant.plant.sun_exposure = string_display(myplant.plant.sun_exposure)
+            myplant.plant.water_rqmts  = string_display(myplant.plant.water_rqmts)
+            myplant.plant.soil_type    = string_display(myplant.plant.soil_type)
             # clean up the list display
-            my_plant.sun_exposure = string_display(my_plant.sun_exposure)
-            my_plant.water_level  = string_display(my_plant.water_level)
-            my_plant.soil_type    = string_display(my_plant.soil_type)
+            myplant.sun_exposure = string_display(myplant.sun_exposure)
+            myplant.water_level  = string_display(myplant.water_level)
+            myplant.soil_type    = string_display(myplant.soil_type)
             # Run through the search criteria to select the plants to show
-            pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
-            usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
-            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.bloom_start, my_plant.bloom_end, month_opt)
-            if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
+            pH_hit = pH_check(pH_search, myplant.plant.pH_min, myplant.plant.pH_max)
+            usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
+            if  ( ( (type_x_search               == myplant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
-                    (my_plant.plant.type_x       == "tbd")                          \
+                    (myplant.plant.type_x       == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_color_search          in my_plant.plant.bloom_color)  or \
+                  ( (bloom_color_search          in myplant.plant.bloom_color)  or \
                     (bloom_color_search          == "Any")                       or \
-                    (my_plant.plant.bloom_color  == "tbd")                          \
+                    (myplant.plant.bloom_color  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_season_search         in my_plant.plant.bloom_season) or \
+                  ( (bloom_season_search         in myplant.plant.bloom_season) or \
                     (bloom_season_search         == "Any")                       or \
-                    (my_plant.plant.bloom_season == "tbd")                          \
+                    (myplant.plant.bloom_season == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (pollinators_search          in my_plant.plant.pollinators)  or \
+                  ( (pollinators_search          in myplant.plant.pollinators)  or \
                     (pollinators_search          == "Any")                       or \
-                    (my_plant.plant.pollinators  == "tbd")                          \
+                    (myplant.plant.pollinators  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (ca_native_search             == my_plant.plant.ca_native)   or \
+                  ( (ca_native_search             == myplant.plant.ca_native)   or \
                     (ca_native_search             == "Any")                      or \
-                    (my_plant.plant.ca_native     == "tbd")                         \
+                    (myplant.plant.ca_native     == "tbd")                         \
                    )                                                                \
                   and                                                               \
-                  ( (ucd_all_star_search         == my_plant.plant.ucd_all_star) or \
+                  ( (ucd_all_star_search         == myplant.plant.ucd_all_star) or \
                     (ucd_all_star_search         == "Any")                       or \
-                    (my_plant.plant.ucd_all_star == "tbd")                          \
+                    (myplant.plant.ucd_all_star == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (sun_exposure_search         in my_plant.plant.sun_exposure) or \
+                  ( (sun_exposure_search         in myplant.plant.sun_exposure) or \
                     (sun_exposure_search         == "Any")                       or \
-                    (my_plant.plant.sun_exposure == "tbd")                          \
+                    (myplant.plant.sun_exposure == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (water_rqmts_search         in my_plant.plant.water_rqmts)   or \
+                  ( (water_rqmts_search         in myplant.plant.water_rqmts)   or \
                     (water_rqmts_search         == "Any")                        or \
-                    (my_plant.plant.water_rqmts == "tbd")                           \
+                    (myplant.plant.water_rqmts == "tbd")                           \
                   )                                                                 \
                   and                                                               \
-                  ( (soil_type_search            in my_plant.plant.soil_type)    or \
+                  ( (soil_type_search            in myplant.plant.soil_type)    or \
                     (soil_type_search            == "Any")                       or \
-                    (my_plant.plant.soil_type    == "tbd")                          \
+                    (myplant.plant.soil_type    == "tbd")                          \
                   )                                                                 \
                   and                                                               \
                   ( pH_hit )                                                        \
@@ -464,29 +471,29 @@ def myplants_summary(request):
                   and                                                               \
                   (bloom_month_hit)                                                 \
                   and                                                               \
-                  ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
+                  ( (my_sun_exposure_search      == myplant.sun_exposure)       or \
                     (my_sun_exposure_search      == "Any")                       or \
-                    (my_plant.sun_exposure       == "tbd")                          \
+                    (myplant.sun_exposure       == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (my_water_level_search      == my_plant.water_level)         or \
+                  ( (my_water_level_search      == myplant.water_level)         or \
                     (my_water_level_search      == "Any")                        or \
-                    (my_plant.water_level       == "tbd")                           \
+                    (myplant.water_level       == "tbd")                           \
                   )                                                                 \
                   and                                                               \
-                  ( (my_soil_type_search         == my_plant.soil_type)          or \
+                  ( (my_soil_type_search         == myplant.soil_type)          or \
                     (my_soil_type_search         == "Any")                       or \
-                    (my_plant.soil_type          == "tbd")                          \
+                    (myplant.soil_type          == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (my_happiness_search         == my_plant.happiness)          or \
+                  ( (my_happiness_search         == myplant.happiness)          or \
                     (my_happiness_search         == "Any")                       or \
-                    (my_plant.happiness          == "tbd")                          \
+                    (myplant.happiness          == "tbd")                          \
                   )                                                                 \
                 ):
-                my_plant.show = "yes"
+                myplant.show = "yes"
             else:
-                my_plant.show = "no"
+                myplant.show = "no"
 
             gardens = Garden.objects.filter(owner = request.user.username)
             # Get the user's previously stored column display sections
@@ -521,7 +528,7 @@ def myplants_summary(request):
             if (user_garden_found == False):
                 return HttpResponseRedirect(reverse('plants:gardens_add'))
 
-            context = { "my_plants"        : my_plants,
+            context = { "myplants"        : myplants,
                         # search field options - plant attributes
                         "plant_types"      : plant_types,
                         "bloom_color_opt"  : bloom_color_opt,
@@ -602,70 +609,70 @@ def myplants_summary(request):
             return HttpResponseRedirect(reverse('plants:gardens_add'))
 
         # Obtain the plants that the current user has claimed for their garden
-        my_plants = MyPlant.objects.filter(owner = request.user.username)
+        myplants = MyPlant.objects.filter(owner = request.user.username)
 
         # Execute the search
-        for my_plant in my_plants:
+        for myplant in myplants:
             # format multiselect attributes to remove [, ', and ]
-            my_plant.plant.bloom_color  = string_display(my_plant.plant.bloom_color)
-            my_plant.plant.bloom_season = string_display(my_plant.plant.bloom_season)
-            my_plant.bloom_months       = string_display(my_plant.plant.bloom_months)
-            my_plant.plant.pollinators  = string_display(my_plant.plant.pollinators)
-            my_plant.plant.sun_exposure = string_display(my_plant.plant.sun_exposure)
-            my_plant.plant.water_rqmts  = string_display(my_plant.plant.water_rqmts)
-            my_plant.plant.soil_type    = string_display(my_plant.plant.soil_type)
+            myplant.plant.bloom_color  = string_display(myplant.plant.bloom_color)
+            myplant.plant.bloom_season = string_display(myplant.plant.bloom_season)
+            myplant.bloom_months       = string_display(myplant.plant.bloom_months)
+            myplant.plant.pollinators  = string_display(myplant.plant.pollinators)
+            myplant.plant.sun_exposure = string_display(myplant.plant.sun_exposure)
+            myplant.plant.water_rqmts  = string_display(myplant.plant.water_rqmts)
+            myplant.plant.soil_type    = string_display(myplant.plant.soil_type)
             # clean up the list display
-            my_plant.sun_exposure = string_display(my_plant.sun_exposure)
-            my_plant.water_level  = string_display(my_plant.water_level)
-            my_plant.soil_type    = string_display(my_plant.soil_type)
+            myplant.sun_exposure = string_display(myplant.sun_exposure)
+            myplant.water_level  = string_display(myplant.water_level)
+            myplant.soil_type    = string_display(myplant.soil_type)
             # Run through the search criteria to select the plants to show
-            pH_hit = pH_check(pH_search, my_plant.plant.pH_min, my_plant.plant.pH_max)
-            usda_zone_hit = usda_zone_check(usda_zone_search, my_plant.plant.usda_zone_min, my_plant.plant.usda_zone_max)
-            sunset_zone_hit = sunset_zone_check(sunset_zone_search, my_plant.plant.sunset_zones, sunset_zones_opt)
-            bloom_month_hit = bloom_month_check(bloom_month_search, my_plant.bloom_start, my_plant.bloom_end, month_opt)
-            if  ( ( (type_x_search               == my_plant.plant.type_x)       or \
+            pH_hit = pH_check(pH_search, myplant.plant.pH_min, myplant.plant.pH_max)
+            usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
+            sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
+            bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
+            if  ( ( (type_x_search               == myplant.plant.type_x)       or \
                     (type_x_search               == "Any")                       or \
-                    (my_plant.plant.type_x       == "tbd")                          \
+                    (myplant.plant.type_x       == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_color_search          in my_plant.plant.bloom_color)  or \
+                  ( (bloom_color_search          in myplant.plant.bloom_color)  or \
                     (bloom_color_search          == "Any")                       or \
-                    (my_plant.plant.bloom_color  == "tbd")                          \
+                    (myplant.plant.bloom_color  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_season_search         in my_plant.plant.bloom_season) or \
+                  ( (bloom_season_search         in myplant.plant.bloom_season) or \
                     (bloom_season_search         == "Any")                       or \
-                    (my_plant.plant.bloom_season == "tbd")                          \
+                    (myplant.plant.bloom_season == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (pollinators_search          in my_plant.plant.pollinators)  or \
+                  ( (pollinators_search          in myplant.plant.pollinators)  or \
                     (pollinators_search          == "Any")                       or \
-                    (my_plant.plant.pollinators  == "tbd")                          \
+                    (myplant.plant.pollinators  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (ca_native_search             == my_plant.plant.ca_native)   or \
+                  ( (ca_native_search             == myplant.plant.ca_native)   or \
                     (ca_native_search             == "Any")                      or \
-                    (my_plant.plant.ca_native     == "tbd")                         \
+                    (myplant.plant.ca_native     == "tbd")                         \
                    )                                                                \
                   and                                                               \
-                  ( (ucd_all_star_search         == my_plant.plant.ucd_all_star) or \
+                  ( (ucd_all_star_search         == myplant.plant.ucd_all_star) or \
                     (ucd_all_star_search         == "Any")                       or \
-                    (my_plant.plant.ucd_all_star == "tbd")                          \
+                    (myplant.plant.ucd_all_star == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (sun_exposure_search         in my_plant.plant.sun_exposure) or \
+                  ( (sun_exposure_search         in myplant.plant.sun_exposure) or \
                     (sun_exposure_search         == "Any")                       or \
-                    (my_plant.plant.sun_exposure == "tbd")                          \
+                    (myplant.plant.sun_exposure == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (water_rqmts_search         in my_plant.plant.water_rqmts)   or \
+                  ( (water_rqmts_search         in myplant.plant.water_rqmts)   or \
                     (water_rqmts_search         == "Any")                        or \
-                    (my_plant.plant.water_rqmts == "tbd")                           \
+                    (myplant.plant.water_rqmts == "tbd")                           \
                   )                                                                 \
                   and                                                               \
-                  ( (soil_type_search            in my_plant.plant.soil_type)    or \
+                  ( (soil_type_search            in myplant.plant.soil_type)    or \
                     (soil_type_search            == "Any")                       or \
-                    (my_plant.plant.soil_type    == "tbd")                          \
+                    (myplant.plant.soil_type    == "tbd")                          \
                   )                                                                 \
                   and                                                               \
                   ( pH_hit )                                                        \
@@ -676,35 +683,35 @@ def myplants_summary(request):
                   and                                                               \
                   (bloom_month_hit)                                                 \
                   and                                                               \
-                  ( (my_sun_exposure_search      == my_plant.sun_exposure)       or \
+                  ( (my_sun_exposure_search      == myplant.sun_exposure)       or \
                     (my_sun_exposure_search      == "Any")                       or \
-                    (my_plant.sun_exposure       == "tbd")                          \
+                    (myplant.sun_exposure       == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (my_water_level_search      == my_plant.water_level)         or \
+                  ( (my_water_level_search      == myplant.water_level)         or \
                     (my_water_level_search      == "Any")                        or \
-                    (my_plant.water_level       == "tbd")                           \
+                    (myplant.water_level       == "tbd")                           \
                   )                                                                 \
                   and                                                               \
-                  ( (my_soil_type_search         == my_plant.soil_type)          or \
+                  ( (my_soil_type_search         == myplant.soil_type)          or \
                     (my_soil_type_search         == "Any")                       or \
-                    (my_plant.soil_type          == "tbd")                          \
+                    (myplant.soil_type          == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (my_happiness_search         == my_plant.happiness)          or \
+                  ( (my_happiness_search         == myplant.happiness)          or \
                     (my_happiness_search         == "Any")                       or \
-                    (my_plant.happiness          == "tbd")                          \
+                    (myplant.happiness          == "tbd")                          \
                   )                                                                 \
                 ):
-                my_plant.show = "yes"
+                myplant.show = "yes"
             else:
-                my_plant.show = "no"
+                myplant.show = "no"
 
         gardens = Garden.objects.filter(owner = request.user.username)
         # Get the user's previously stored column display sections
         for garden in gardens:       
             my_column_selection_list  = string2list(garden.my_column_selection)
-        context = { 'my_plants'           : my_plants,
+        context = { 'myplants'           : myplants,
                     # search field options - plant attributes
                     "plant_types"      : plant_types,
                     "bloom_color_opt"  : bloom_color_opt,
@@ -746,30 +753,30 @@ def myplants_summary(request):
         return HttpResponse(template.render(context, request))
 
 def myplants_add(request, id):
-    """ Associate a 'plant' to 'my_plant' """
+    """ Associate a 'plant' to 'myplant' """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
-    my_plant = MyPlant()
+    myplant = MyPlant()
     if request.POST:
         form = MyPlantAddUpdateForm(request.POST)
         if form.is_valid():
-            my_plant.owner        = request.user.username                 #
-            my_plant.date_planted = form.cleaned_data.get("date_planted") #
-            my_plant.location     = form.cleaned_data.get("location")     #
-            my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
-            my_plant.water_level  = form.cleaned_data.get("water_level")  #
-            my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
-            my_plant.pH           = form.cleaned_data.get("pH")           #
-            my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
-            my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
-            my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
-            my_plant.happiness    = form.cleaned_data.get("happiness")    #
-            my_plant.notes        = form.cleaned_data.get("notes")        #
-            my_plant.plant        = plant                                 # link my_plant to the specific plant
+            myplant.owner        = request.user.username                 #
+            myplant.date_planted = form.cleaned_data.get("date_planted") #
+            myplant.location     = form.cleaned_data.get("location")     #
+            myplant.sun_exposure = form.cleaned_data.get("sun_exposure") #
+            myplant.water_level  = form.cleaned_data.get("water_level")  #
+            myplant.soil_type    = form.cleaned_data.get("soil_type")    #
+            myplant.pH           = form.cleaned_data.get("pH")           #
+            myplant.bloom_color  = form.cleaned_data.get("bloom_color")  #
+            myplant.bloom_start  = form.cleaned_data.get("bloom_start")  #
+            myplant.bloom_end    = form.cleaned_data.get("bloom_end")    #
+            myplant.happiness    = form.cleaned_data.get("happiness")    #
+            myplant.notes        = form.cleaned_data.get("notes")        #
+            myplant.plant        = plant                                 # link myplant to the specific plant
             # Build list of bloom months
-            my_plant.bloom_months = bloom_month_list(my_plant.bloom_start, my_plant.bloom_end, month_opt)   
-            my_plant.save()
+            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt)   
+            myplant.save()
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         form = MyPlantAddUpdateForm()
@@ -780,45 +787,45 @@ def myplants_update(request, id):
     """ Update details related a specific My Plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    my_plant = MyPlant.objects.get(id=id)
+    myplant = MyPlant.objects.get(id=id)
     if request.POST:
         # print("DEBUG: request =", request)
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
-            my_plant.date_planted = form.cleaned_data.get("date_planted") #
-            my_plant.location     = form.cleaned_data.get("location")     #
-            my_plant.sun_exposure = form.cleaned_data.get("sun_exposure") #
-            my_plant.water_level  = form.cleaned_data.get("water_level")  #
-            my_plant.soil_type    = form.cleaned_data.get("soil_type")    #
-            my_plant.pH           = form.cleaned_data.get("pH")           #
-            my_plant.bloom_color  = form.cleaned_data.get("bloom_color")  #
-            my_plant.bloom_start  = form.cleaned_data.get("bloom_start")  #
-            my_plant.bloom_end    = form.cleaned_data.get("bloom_end")    #
-            my_plant.happiness    = form.cleaned_data.get("happiness")    #
-            my_plant.notes        = form.cleaned_data.get("notes")        #
+            myplant.date_planted = form.cleaned_data.get("date_planted") #
+            myplant.location     = form.cleaned_data.get("location")     #
+            myplant.sun_exposure = form.cleaned_data.get("sun_exposure") #
+            myplant.water_level  = form.cleaned_data.get("water_level")  #
+            myplant.soil_type    = form.cleaned_data.get("soil_type")    #
+            myplant.pH           = form.cleaned_data.get("pH")           #
+            myplant.bloom_color  = form.cleaned_data.get("bloom_color")  #
+            myplant.bloom_start  = form.cleaned_data.get("bloom_start")  #
+            myplant.bloom_end    = form.cleaned_data.get("bloom_end")    #
+            myplant.happiness    = form.cleaned_data.get("happiness")    #
+            myplant.notes        = form.cleaned_data.get("notes")        #
             # Build list of bloom months
-            my_plant.bloom_months = bloom_month_list(my_plant.bloom_start, my_plant.bloom_end, month_opt)   
-            my_plant.save()
+            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt)   
+            myplant.save()
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
     else:
         # convert string-based lists (retrieved from db) to true Python lists
-        sun_exposure_list = string2list(my_plant.sun_exposure)
-        water_level_list = string2list(my_plant.water_level)
+        sun_exposure_list = string2list(myplant.sun_exposure)
+        water_level_list = string2list(myplant.water_level)
         # set the update form with the current db values
-        form = MyPlantAddUpdateForm(initial={ 'date_planted' : my_plant.date_planted,
-                                              'location'     : my_plant.location,
+        form = MyPlantAddUpdateForm(initial={ 'date_planted' : myplant.date_planted,
+                                              'location'     : myplant.location,
                                               'sun_exposure' : sun_exposure_list,
                                               'water_level'  : water_level_list,
-                                              'soil_type'    : my_plant.soil_type,
-                                              'pH'           : my_plant.pH,
-                                              'bloom_color'  : my_plant.bloom_color,
-                                              'bloom_start'  : my_plant.bloom_start,
-                                              'bloom_end'    : my_plant.bloom_end,
-                                              'happiness'    : my_plant.happiness,
-                                              'notes'        : my_plant.notes,
+                                              'soil_type'    : myplant.soil_type,
+                                              'pH'           : myplant.pH,
+                                              'bloom_color'  : myplant.bloom_color,
+                                              'bloom_start'  : myplant.bloom_start,
+                                              'bloom_end'    : myplant.bloom_end,
+                                              'happiness'    : myplant.happiness,
+                                              'notes'        : myplant.notes,
                                             })
         context = { 'form' : form }
-        return render(request, 'plants/myplants_update.html', context)
+        return render(request, 'plants/myplant_update.html', context)
 
 def myplants_delete(request, id):
     """ Delete selected plant from the MyPlants database table """
@@ -839,24 +846,161 @@ def myplants_remove(request, id):
     #
     plant = Plant.objects.get(id=id)
     if request.POST:
-        my_plants = MyPlant.objects.filter(owner = request.user.username) 
-        for my_plant in my_plants:
-            if my_plant.plant == plant:
-                my_plant.delete()
+        myplants = MyPlant.objects.filter(owner = request.user.username) 
+        for myplant in myplants:
+            if myplant.plant == plant:
+                myplant.delete()
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         context = { 'plant' : plant }
         return render(request, 'plants/myplants_remove_modal.html', context)
 
-def myplants_details(request, id):
+#
+
+def myplants_todo(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # AR: Determine if this is really necessary
+    template = loader.get_template("plants/myplants_todo.html")
+    # Obtain the user's garden
+    gardens = Garden.objects.all()
+    for garden in gardens:
+        if (request.user.username == garden.owner):
+            myGarden = garden
+
+    # Obtain all of the To Do items for the current user
+    myplants_todo = MyPlantToDo.objects.filter(owner = request.user.username)
+
+    context = { 'myGarden'    : myGarden,
+                "myplants_todo" : myplants_todo, }
+    return HttpResponse(template.render(context, request))
+
+def myplants_todo_add(request, id):
+    """ Add My Plant To Do item """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    if request.POST:
+        print("DEBUG: Got to myplants_todo_add - POST")
+        myplant_todo = MyPlantToDo()
+
+        common_name   = request.POST["common_name"]
+        myplants = MyPlant.objects.filter(owner = request.user.username)
+        for myplant in myplants:
+            if myplant.plant.commonName == common_name:
+                myplant_todo.myplant = myplant
+        # Get the rest of the To Do item attributes
+        myplant_todo.owner    = request.user.username
+        myplant_todo.complete = False
+        myplant_todo.date     = request.POST["date"]
+        myplant_todo.action   = request.POST["action"]
+        myplant_todo.repeat   = request.POST["repeat"]
+        myplant_todo.details  = request.POST["details"]
+        
+        myplant_todo.save()
+
+        return HttpResponseRedirect(reverse('plants:myplants_todo'))
+    else:
+        myGarden = Garden.objects.get(id=id)
+        myPlants = MyPlant.objects.filter(owner = request.user.username)
+        context = { 'myGarden'        : myGarden,
+                    'myPlants'        : myPlants,
+                    'todo_action_opt' : todo_action_opt,
+                    'todo_repeat_opt' : todo_repeat_opt,
+                  }
+        return render(request, 'plants/myplants_todo_add_modal.html', context)
+    
+def myplants_todo_edit(request, id):
+    """ edit My Plant To Do item """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    myplants = MyPlant.objects.filter(owner = request.user.username)
+    myplant_todo = MyPlantToDo.objects.get(id=id)
+
+    if request.POST:
+        common_name   = request.POST["common_name"]
+        for myplant in myplants:
+            if myplant.plant.commonName == common_name:
+                myplant_todo.myplant = myplant
+        # Get the rest of the To Do item attributes
+        myplant_todo.owner    = request.user.username
+        myplant_todo.complete = False
+        myplant_todo.date     = request.POST["date"]
+        myplant_todo.action   = request.POST["action"]
+        myplant_todo.repeat   = request.POST["repeat"]
+        myplant_todo.details  = request.POST["details"]
+        myplant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplants_todo'))
+    else:
+        context = { 'myplants'        : myplants,
+                    'myplant_todo'    : myplant_todo,
+                    'todo_action_opt' : todo_action_opt,
+                    'todo_repeat_opt' : todo_repeat_opt,
+                  }
+        return render(request, 'plants/myplants_todo_edit_modal.html', context)    
+    
+def myplants_todo_del(request, id):
+    """ Delete My Plant To Do item"""
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get to To Do item to be deleted
+    myplant_todo = MyPlantToDo.objects.get(id=id)
+    # Delete the To Do item
+    if request.POST:
+        myplant_todo.delete()
+        return HttpResponseRedirect(reverse('plants:myplants_todo',))
+    # Populate the delete modal fields and render the modal
+    else:
+        context = { 'myplant_todo' : myplant_todo }
+        return render(request, 'plants/myplants_todo_del_modal.html', context)
+
+def myplants_todo_done(request, id):
+    """ My Plant To Do item - toggle conpletion status """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get the To Do item to have completion status toggled
+    myplant_todo = MyPlantToDo.objects.get(id=id)
+    if request.method == 'POST':
+        if(myplant_todo.complete == True):
+            myplant_todo.complete = False
+        else:
+            myplant_todo.complete = True
+        myplant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
+
+def myplants_todo_save(request, id):
+    """ My Plant To Do items - save sort column and direction """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    print("DEBUG: Got to To Do sort parameter save")
+    mygarden = Garden.objects.get(id=id)
+    if request.method == 'POST':
+
+        # Parses the JSON data from the request body
+        data_JSON_string = request.body.decode('utf-8')
+        # Convert the JSON string into a dictionary
+        data_dict= json.loads(data_JSON_string)
+        print("DEBUG: data_dict =", data_dict)
+
+        # Get the sort parameters and save to db
+        mygarden.lastToDoSortCol = data_dict["lastToDoSortCol"]
+        mygarden.lastToDoSortDir = data_dict["lastToDoSortDir"]
+        mygarden.save()
+        
+    return JsonResponse({'test' : 'test' })
+
+#
+
+def myplant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     # Uses the id to locate the correct record in the MyPlant table
-    my_plant = MyPlant.objects.get(id=id)
+    myplant = MyPlant.objects.get(id=id)
     # format multiselect attributes to remove [, ', and ]
-    my_plant.sun_exposure = string_display(my_plant.sun_exposure)
-    plant   = Plant.objects.get(id=my_plant.plant.id)
+    myplant.sun_exposure = string_display(myplant.sun_exposure)
+    plant   = Plant.objects.get(id=myplant.plant.id)
     # format multiselect attributes to remove [, ', and ] 
     plant.bloom_color  = string_display(plant.bloom_color)
     plant.bloom_season = string_display(plant.bloom_season)
@@ -869,8 +1013,8 @@ def myplants_details(request, id):
     # get all comments related to the plant                
     myplant_comments   = MyPlantComment.objects.filter(myplant__pk=id) 
 
-    template = loader.get_template("plants/myplants_details.html")
-    context  = { "my_plant"         : my_plant, 
+    template = loader.get_template("plants/myplant_details.html")
+    context  = { "myplant"         : myplant, 
                  "plant"            : plant,
                  "myplant_todo"     : myplant_todo,
                  "myplant_comments" : myplant_comments, 
@@ -878,82 +1022,84 @@ def myplants_details(request, id):
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
 
-def myplants_todo_add(request, id):
+def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
-    my_plant_todo = MyPlantToDo()
+    myplant_todo = MyPlantToDo()
     if request.POST:
+        print("DEBUG: Got to myplant_todo_add - POST")
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
-            my_plant_todo.complete = False
-            my_plant_todo.date     = form.cleaned_data.get("date")
-            my_plant_todo.action   = form.cleaned_data.get("action")
-            my_plant_todo.details  = form.cleaned_data.get("details")
-            my_plant_todo.repeat   = form.cleaned_data.get("repeat")
+            myplant_todo.owner    = request.user.username
+            myplant_todo.complete = False
+            myplant_todo.date     = form.cleaned_data.get("date")
+            myplant_todo.action   = form.cleaned_data.get("action")
+            myplant_todo.details  = form.cleaned_data.get("details")
+            myplant_todo.repeat   = form.cleaned_data.get("repeat")
             # link the To Do item to the specific plant
-            my_plant_todo.myplant = myplant
-            my_plant_todo.save()
-        return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
+            myplant_todo.myplant = myplant
+            myplant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 
     else:
         form = MyPlantToDoForm()
         context = { 'myplant' : myplant,
                     'form'    : form,
                   }
-        return render(request, 'plants/myplants_todo_add_modal.html', context)
+        return render(request, 'plants/myplant_todo_add_modal.html', context)
     
-def myplants_todo_edit(request, id):
+def myplant_todo_edit(request, id):
     """ Edit My Plant To Do item """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     # Get To Do item to be edited
-    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    myplant_todo = MyPlantToDo.objects.get(id=id)
     #
     if request.POST:
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
-            my_plant_todo.date     = form.cleaned_data.get("date")
-            my_plant_todo.action   = form.cleaned_data.get("action")
-            my_plant_todo.details  = form.cleaned_data.get("details")
-            my_plant_todo.repeat   = form.cleaned_data.get("repeat")
-            my_plant_todo.save()
-        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+            myplant_todo.date     = form.cleaned_data.get("date")
+            myplant_todo.action   = form.cleaned_data.get("action")
+            myplant_todo.details  = form.cleaned_data.get("details")
+            myplant_todo.repeat   = form.cleaned_data.get("repeat")
+            myplant_todo.save()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
     # Populate the edit modal fields and render the modal
     else:
         #
-        form = MyPlantToDoForm(initial={ 'date'    : my_plant_todo.date,
-                                         'action'  : my_plant_todo.action,
-                                         'details' : my_plant_todo.details,
-                                         'repeat'  : my_plant_todo.repeat 
+        form = MyPlantToDoForm(initial={ 'date'    : myplant_todo.date,
+                                         'action'  : myplant_todo.action,
+                                         'details' : myplant_todo.details,
+                                         'repeat'  : myplant_todo.repeat 
                                         })
         context = {     
-                    'my_plant_todo' : my_plant_todo,
-                    'form'          : form,
+                    'myplant_todo' : myplant_todo,
+                    'form'         : form,
                   }
-        return render(request, 'plants/myplants_todo_edit_modal.html', context)
+        return render(request, 'plants/myplant_todo_edit_modal.html', context)
     
-def myplants_todo_del(request, id):
+def myplant_todo_del(request, id):
     """ Delete My Plant To Do item"""
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     # Get to To Do item to be deleted
-    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
     if request.POST:
-        my_plant_todo.delete()
-        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+        myplant_todo.delete()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
     # Populate the delete modal fields and render the modal
     else:
-        context = { 'my_plant_todo' : my_plant_todo }
-        return render(request, 'plants/myplants_todo_del_modal.html', context)
+        context = { 'myplant_todo' : myplant_todo }
+        return render(request, 'plants/myplant_todo_del_modal.html', context)
     
-def myplants_todo_done(request, id):
+def myplant_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     # Get the To Do item to have completion status toggled
-    my_plant_todo = MyPlantToDo.objects.get(id=id)
+    myplant_todo = MyPlantToDo.objects.get(id=id)
     if request.method == 'POST':
         print("DEBUG: request =", request)
         # Parses the JSON data from the request body
@@ -961,15 +1107,15 @@ def myplants_todo_done(request, id):
         print("DEBUG: data_JSON =", data_JSON)
 
         
-        if(my_plant_todo.complete == True):
-            my_plant_todo.complete = False
+        if(myplant_todo.complete == True):
+            myplant_todo.complete = False
         else:
-            my_plant_todo.complete = True
-        my_plant_todo.save()
+            myplant_todo.complete = True
+        myplant_todo.save()
         # return JsonResponse({'test' : 'test' })
-        return HttpResponseRedirect(reverse('plants:myplants_details', args=(my_plant_todo.myplant.id,)))
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
 
-def myplants_todo_save(request, id):
+def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -990,27 +1136,29 @@ def myplants_todo_save(request, id):
         
     return JsonResponse({'test' : 'test' })
 
-def myplants_comment(request, id):
+def myplant_comment(request, id):
     """ Associate a comment to a myplant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
-    my_plant_comment = MyPlantComment()
+    myplant_comment = MyPlantComment()
     if request.POST:
         form = MyPlantCommentForm(request.POST, request.FILES)
         if form.is_valid():
-            my_plant_comment.author  = request.user.username            #
-            my_plant_comment.subject = form.cleaned_data.get("subject") #
-            my_plant_comment.comment = form.cleaned_data.get("comment") #
-            my_plant_comment.myplant = myplant                          # link the comment to the specific plant
-            my_plant_comment.save()
-        return HttpResponseRedirect(reverse('plants:myplants_details', args=(myplant.id,))) 
+            myplant_comment.author  = request.user.username            #
+            myplant_comment.subject = form.cleaned_data.get("subject") #
+            myplant_comment.comment = form.cleaned_data.get("comment") #
+            myplant_comment.myplant = myplant                          # link the comment to the specific plant
+            myplant_comment.save()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 
     else:
         form = MyPlantCommentForm()
         context = { 'myplant' : myplant,
                     'form'    : form,
                   }
-        return render(request, 'plants/myplants_comment.html', context)
+        return render(request, 'plants/myplant_comment.html', context)
+
+#
 
 def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
@@ -1063,7 +1211,7 @@ def plants_summary(request):
                 column_selection_list  = string2list(garden.column_selection)
 
         # Obtain the plants that the current user has claimed for their garden - needed to populate the table
-        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+        myplants = MyPlant.objects.filter(owner = request.user.username) 
 
         # Plant query -> Plants claimed by the current user or all plants in the database
         if garden_search == "Mine":
@@ -1106,8 +1254,8 @@ def plants_summary(request):
             plant.water_rqmts  = string_display(plant.water_rqmts)
             plant.soil_type    = string_display(plant.soil_type)
             # check to determine if the current user has claimed the plant
-            for my_plant in my_plants:
-                if my_plant.plant == plant:
+            for myplant in myplants:
+                if myplant.plant == plant:
                     plant.plant_mine = "yes"
                     break # Found the plant in my plants
                 else:
@@ -1179,7 +1327,7 @@ def plants_summary(request):
             return HttpResponseRedirect(reverse('plants:gardens_add'))
         
         # Obtain the plants that the current user has claimed for their garden
-        my_plants = MyPlant.objects.filter(owner = request.user.username) 
+        myplants = MyPlant.objects.filter(owner = request.user.username) 
         # Execute the search
         plants   = Plant.objects.all()
         for plant in plants:
@@ -1218,8 +1366,8 @@ def plants_summary(request):
             plant.water_rqmts  = string_display(plant.water_rqmts)
             plant.soil_type    = string_display(plant.soil_type)
             # Check to see if the current user has claimed the plant
-            for my_plant in my_plants:
-                if my_plant.plant == plant:
+            for myplant in myplants:
+                if myplant.plant == plant:
                     plant.plant_mine = "yes"
                     break # Found the plant in my plants
                 else:
@@ -1228,7 +1376,7 @@ def plants_summary(request):
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
         context = { "plants"             : plants,
-                    "my_plants"          : my_plants,
+                    "myplants"          : myplants,
                     # search field options
                     "plant_types"        : plant_types,
                     "bloom_color_opt"    : bloom_color_opt,
@@ -1603,6 +1751,8 @@ def plants_delete(request, id):
         context = {'plant': plant}
         return render(request, 'plants/plants_delete_modal.html', context)
 
+#
+
 def plants_glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
     if not request.user.is_authenticated:
@@ -1620,6 +1770,8 @@ def plants_about(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_about.html')
+
+#
 
 def pest_summary(request):
     """ Render the page to show all pests for Gateway Gardens app """
@@ -1684,6 +1836,8 @@ def pest_delete(request, id):
     else:
         context = {'pest': pest}
         return render(request, 'plants/pest_delete_modal.html', context)
+
+#
 
 def user_signup(request):
     """ Render the User Signup Page for Gateway Gardens app """
@@ -1923,6 +2077,8 @@ def user_logout(request):
     """ User Logout function for Gateway Gardens app """
     logout(request)
     return render(request, 'plants/index.html')
+
+# 
 
 def my_column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """

@@ -1,4 +1,4 @@
-<!-- /plants/templates/plnts/myplants_details.html -->
+<!-- /plants/templates/plnts/myplant_details.html -->
 {% extends "plants/master.html" %}
 
 {% block title %}
@@ -13,12 +13,12 @@
     <!-- complete the header from master.html -->
     <div class="w3-bar w3-green">
       <h1 class="w3-bar-item">
-        {{ my_plant.plant.commonName }} 
+        {{ myplant.plant.commonName }} 
         <span style="font-style: italic;">
-          ( {{ my_plant.plant.genus }} {{ my_plant.plant.species }} {{ my_plant.plant.variety }} )
+          ( {{ myplant.plant.genus }} {{ myplant.plant.species }} {{ myplant.plant.variety }} )
         </span>
       </h1>
-      <a href="{% url 'plants:myplants_update' my_plant.id %}" class="w3-button">update</a>
+      <a href="{% url 'plants:myplants_update' myplant.id %}" class="w3-button">update</a>
     </div>
   </div>
 {% endblock header-completion %}
@@ -32,14 +32,14 @@
           <h4>Characteristics</h4>
         </header>
         <div class="w3-container w3-border">
-          <p>Date Planted:        {{ my_plant.date_planted }}</p>
-          <p>Location:            {{ my_plant.location     }}</p>
-          <p>Sun Exposure:        {{ my_plant.sun_exposure }}</p>
-          <p>pH:                  {{ my_plant.pH           }}</p>
-          <p>Soil Type:           {{ my_plant.soil_type    }}</p>
-          <p>Bloom Color:         {{ my_plant.bloom_color  }}</p>
-          <p>Bloom Start:         {{ my_plant.bloom_start  }}</p>
-          <p>Bloom End:           {{ my_plant.bloom_end    }}</p>
+          <p>Date Planted:        {{ myplant.date_planted }}</p>
+          <p>Location:            {{ myplant.location     }}</p>
+          <p>Sun Exposure:        {{ myplant.sun_exposure }}</p>
+          <p>pH:                  {{ myplant.pH           }}</p>
+          <p>Soil Type:           {{ myplant.soil_type    }}</p>
+          <p>Bloom Color:         {{ myplant.bloom_color  }}</p>
+          <p>Bloom Start:         {{ myplant.bloom_start  }}</p>
+          <p>Bloom End:           {{ myplant.bloom_end    }}</p>
         </div> 
       </div>
     </div>
@@ -75,10 +75,10 @@
             <tr class="w3-light-grey">
               <th style="cursor:pointer; width:5%;"  onclick="todo_sort(1)">Status  </th>
               <th style="display:none"  onclick="todo_sort(1)">Status  </th>
-              <th style="cursor:pointer; width:15%;" onclick="todo_sort(2)">Date    </th>
+              <th style="cursor:pointer; width:10%;" onclick="todo_sort(2)">Date    </th>
               <th style="cursor:pointer; width:10%;" onclick="todo_sort(3)">Action  </th>
-              <th style="cursor:pointer; width:60%;" onclick="todo_sort(4)">Details </th>
-              <th style="cursor:pointer; width:10%;" onclick="todo_sort(5)">Repeat  </th>
+              <th style="cursor:pointer; width:10%;" onclick="todo_sort(4)">Repeat  </th>
+              <th style="cursor:pointer; width:60%;" onclick="todo_sort(5)">Details </th>
               <!-- Button Placeholders -->
               <th class="w3-center" style="width:5%;">        </th>
               <th class="w3-center" style="width:5%;">        </th>
@@ -108,10 +108,10 @@
                 </td>
                 <!-- To Do fields -->
                 <td style="display:none">{{ todo.complete }}</td>
-                <td>{{ todo.date     }}</td>
+                <td>{{ todo.date|date:"Y-m-d" }}</td>
                 <td>{{ todo.action   }}</td>
-                <td>{{ todo.details  }}</td>
                 <td>{{ todo.repeat   }}</td>
+                <td>{{ todo.details  }}</td>
                 <!-- To Do edit -->
                 <td class="w3-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
@@ -175,7 +175,7 @@
         <h4>My Notes:</h4>
       </header>
       <div class="w3-container">
-        {{ my_plant.notes.html|safe|escape }}
+        {{ myplant.notes.html|safe|escape }}
       </div>
     </div>
   </div>
@@ -197,7 +197,7 @@
           {% endfor %}
       </div>
       <div>
-        <p><a href="{% url 'plants:myplants_comment' my_plant.id %}">Add comment</a></p>
+        <p><a href="{% url 'plants:myplant_comment' myplant.id %}">Add comment</a></p>
       </div>
     </div>
   </div>
@@ -211,14 +211,14 @@
 {% block js %}
 <script>
     // Get the current my plant ID when Django renders the page
-    const myPlantID = {{ my_plant.id }};
+    const myPlantID = {{ myplant.id }};
     // set initial sort column and direction from db
-    let lastToDoSortCol =  {{ my_plant.lastToDoSortCol }};
-    let lastToDoSortDir = "{{ my_plant.lastToDoSortDir }}";
+    let lastToDoSortCol =  {{ myplant.lastToDoSortCol }};
+    let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
           
     function todo_add()
     {
-        url = "{% url 'plants:myplants_todo_add' my_plant.id %}"
+        url = "{% url 'plants:myplant_todo_add' myplant.id %}"
         fetch(url) 
         .then(response => response.text())
         .then(html => {todo_add_modal.innerHTML = html;})
@@ -228,9 +228,9 @@
     function todo_edit(id)
     {
         // AR: fix url approach
-        // url = "{x% url 'plants:myplants_todo_edit' %x}" + "/" + id;
+        // url = "{x% url 'plants:myplant_todo_edit' %x}" + "/" + id;
 
-        url = "/myplants_todo_edit/" + id;
+        url = "/myplant_todo_edit/" + id;
         fetch(url) 
         .then(response => response.text())
         .then(html => {todo_edit_modal.innerHTML = html;})
@@ -240,9 +240,9 @@
     function todo_delete(id)
     {
         // AR: fix url approach
-        // url = "{x% url 'plants:myplants_todo_del' %x}" + "/" + id;
+        // url = "{x% url 'plants:myplant_todo_del' %x}" + "/" + id;
 
-        url = "/myplants_todo_del/" + id;
+        url = "/myplant_todo_del/" + id;
         fetch(url) 
         .then(response => response.text())
         .then(html => {todo_del_modal.innerHTML = html;})
@@ -252,10 +252,10 @@
     function todo_done(id)
     {
         // AR: fix url approach
-        // url = "{x% url 'plants:myplants_todo_done' %x}" + "/" + id;
+        // url = "{x% url 'plants:myplant_todo_done' %x}" + "/" + id;
 
         // 
-        const url = "/myplants_todo_done/" + id;
+        const url = "/myplant_todo_done/" + id;
         const requestMethod = "POST";
         const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const postData = { lastToDoSortCol : lastToDoSortCol,
@@ -321,7 +321,7 @@
         sortDirection(column);
 
         // Save sort column and direction to the server db
-        const url = "/myplants_todo_save/" + myPlantID;
+        const url = "/myplant_todo_save/" + myPlantID;
         const requestMethod = "POST";
         const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const postData = { lastToDoSortCol : lastToDoSortCol,

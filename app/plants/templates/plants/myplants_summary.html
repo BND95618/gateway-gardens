@@ -333,8 +333,8 @@
         {% with table_name="bloomTable" %}
           <table id="bloomTable" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
-            {% for my_plant in my_plants %}
-              {% if my_plant.show == "yes" and my_plant.bloom_months != '' %} 
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
                 {% include "plants/myplants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
@@ -350,8 +350,8 @@
         {% with table_name="beeTable" %}
           <table id="beeTable" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
-            {% for my_plant in my_plants %}
-              {% if my_plant.show == "yes" and "Bees" in my_plant.plant.pollinators and my_plant.bloom_months != '' %} 
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
                 {% include "plants/myplants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
@@ -367,8 +367,8 @@
         {% with table_name="butterflyTable" %}
           <table id="butterflyTable" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
-            {% for my_plant in my_plants %}
-              {% if my_plant.show == "yes" and "Butterflies" in my_plant.plant.pollinators and my_plant.bloom_months != '' %} 
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
                 {% include "plants/myplants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
@@ -384,8 +384,8 @@
         {% with table_name="hummingbirdTable" %}
           <table id="hummingbirdTable" class="w3-table-all w3-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
-            {% for my_plant in my_plants %}
-              {% if my_plant.show == "yes" and "Hummingbirds" in my_plant.plant.pollinators and my_plant.bloom_months != '' %} 
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
                 {% include "plants/myplants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
@@ -442,55 +442,55 @@
           <th class="w3-center"></th>
         </tr>
       </thead>
-      {% for my_plant in my_plants %}  
-        {% if my_plant.show == "yes" %}
+      {% for myplant in myplants %}  
+        {% if myplant.show == "yes" %}
           <tr class="w3-hover-green">
             <!-- Plant Attributes -->
-            <td>{{ my_plant.plant.commonName }}</td>
-            <td style="font-style: italic;">{{ my_plant.plant.genus }} {{ my_plant.plant.species }}</td>
-            <td>{{ my_plant.plant.variety }}                                    </td>
-            <td>{{ my_plant.plant.type_x }}                                     </td>
-            <td>{{ my_plant.plant.height_feet }} ft {{ plant.height_inch }} in  </td>
-            <td>{{ my_plant.plant.width_feet  }} ft {{ plant.width_inch  }} in  </td>
-            <td>{{ my_plant.plant.bloom_color |cut:"["|cut:"]"   }}             </td>
-            <td>{{ my_plant.plant.bloom_season|cut:"["|cut:"]"   }}             </td>
-            <td>{{ my_plant.plant.bloom_start }}-{{ my_plant.plant.bloom_end }} </td>
-            <td>{{ my_plant.plant.pollinators |cut:"["|cut:"]"   }}             </td>
+            <td>{{ myplant.plant.commonName }}</td>
+            <td style="font-style: italic;">{{ myplant.plant.genus }} {{ myplant.plant.species }}</td>
+            <td>{{ myplant.plant.variety }}                                    </td>
+            <td>{{ myplant.plant.type_x }}                                     </td>
+            <td>{{ myplant.plant.height_feet }} ft {{ plant.height_inch }} in  </td>
+            <td>{{ myplant.plant.width_feet  }} ft {{ plant.width_inch  }} in  </td>
+            <td>{{ myplant.plant.bloom_color |cut:"["|cut:"]"   }}             </td>
+            <td>{{ myplant.plant.bloom_season|cut:"["|cut:"]"   }}             </td>
+            <td>{{ myplant.plant.bloom_start }}-{{ myplant.plant.bloom_end }} </td>
+            <td>{{ myplant.plant.pollinators |cut:"["|cut:"]"   }}             </td>
             <td class="w3-center">{{ plant.ca_native    }}                      </td>
             <td class="w3-center">{{ plant.ucd_all_star }}                      </td>
             <!-- Plant Requirements -->
-            <td>{{ my_plant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
-            <td>{{ my_plant.plant.water_rqmts                                 }}</td>
-            <td>{{ my_plant.plant.soil_type                                   }}</td>
-            <td>{{ my_plant.plant.pH_min }} to {{ my_plant.plant.pH_max }}              </td>
-            <td>{{ my_plant.plant.usda_zone_min }} to {{ my_plant.plant.usda_zone_max }}</td>
-            <td>{{ my_plant.plant.sunset_zones }}                              </td>
+            <td>{{ myplant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
+            <td>{{ myplant.plant.water_rqmts                                 }}</td>
+            <td>{{ myplant.plant.soil_type                                   }}</td>
+            <td>{{ myplant.plant.pH_min }} to {{ myplant.plant.pH_max }}              </td>
+            <td>{{ myplant.plant.usda_zone_min }} to {{ myplant.plant.usda_zone_max }}</td>
+            <td>{{ myplant.plant.sunset_zones }}                              </td>
             <!-- Garden Environment -->
-            <td>{{ my_plant.location         }}</td>
-            <td>{{ my_plant.sun_exposure     }}</td>
-            <td>{{ my_plant.water_level      }}</td>
-            <td>{{ my_plant.soil_type        }}</td>
-            <td>{{ my_plant.pH               }}</td>
-            <td>{{ my_plant.bloom_color      }}</td>
-            <td>{{ my_plant.bloom_start }} - {{ my_plant.bloom_end }}</td>
+            <td>{{ myplant.location         }}</td>
+            <td>{{ myplant.sun_exposure     }}</td>
+            <td>{{ myplant.water_level      }}</td>
+            <td>{{ myplant.soil_type        }}</td>
+            <td>{{ myplant.pH               }}</td>
+            <td>{{ myplant.bloom_color      }}</td>
+            <td>{{ myplant.bloom_start }} - {{ myplant.bloom_end }}</td>
             <!-- Implement Happy function -->
-            {% if my_plant.happiness == "Very Happy" %}
+            {% if myplant.happiness == "Very Happy" %}
               <td class="w3-center">
                 <i class="material-icons">sentiment_very_satisfied</i>
               </td>
-            {% elif my_plant.happiness == "Happy" %}
+            {% elif myplant.happiness == "Happy" %}
               <td class="w3-center">
                 <i class="material-icons">sentiment_satisfied</i>
               </td>
-            {% elif my_plant.happiness == "Neutral" %}
+            {% elif myplant.happiness == "Neutral" %}
               <td class="w3-center">
                 <i class="material-icons">sentiment_neutral</i>
               </td>
-            {% elif my_plant.happiness == "Unhappy" %}
+            {% elif myplant.happiness == "Unhappy" %}
               <td class="w3-center">
                 <i class="material-icons">sentiment_dissatisfied</i>
               </td>
-            {% elif my_plant.happiness == "Very Unhappy" %}
+            {% elif myplant.happiness == "Very Unhappy" %}
               <td class="w3-center">
                 <i class="material-icons">sentiment_very_dissatisfied</i>
               </td>
@@ -501,7 +501,7 @@
             <td class="w3-center"
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
               <div class="w3-tooltip">
-                <a href="{% url 'plants:myplants_details' my_plant.id %}">
+                <a href="{% url 'plants:myplant_details' myplant.id %}">
                   <i class="material-icons">
                     library_books
                   </i>
@@ -516,7 +516,7 @@
             <td class="w3-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
-                <a href="{% url 'plants:myplants_update' my_plant.id %}">
+                <a href="{% url 'plants:myplants_update' myplant.id %}">
                   <i class="material-icons">
                     edit
                   </i>
@@ -531,7 +531,7 @@
             <td class="w3-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
-                <button onclick="myplants_delete({{ my_plant.id }})" class="w3-transparent w3-border-0">
+                <button onclick="myplants_delete({{ myplant.id }})" class="w3-transparent w3-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
@@ -547,10 +547,6 @@
       {% endfor %}
     </table>
   </div>
-
-  <!------------------------------------->
-  <!--   My Plant To Do List Summary   -->
-  <!------------------------------------->
 
 {% endblock content %}
 

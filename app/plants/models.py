@@ -64,6 +64,9 @@ class Garden(models.Model):
     column_selection    = models.CharField(max_length=256,  blank=True,
                           default=["Common Name", "Type", "Height", "Width", 
                                    "Bloom Color", "Bloom Season", "Pollinators"],)
+    # Save the user's most recent To Do table sort column and direction
+    lastToDoSortCol = models.IntegerField(default=1, blank=True, null=True)
+    lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
     # JSON array of shapes for garden design
     shapes_JSON = models.JSONField(default=list, blank=True)
     # AR: Implement slug field
@@ -77,7 +80,7 @@ class Garden(models.Model):
 
 class Plant(models.Model):
     """ Plant description table """
-    commonName    = models.CharField(max_length=255)
+    commonName        = models.CharField(max_length=255)
     # Attributes
     type_x            = models.CharField(max_length=32,  default="tbd", blank=True)
     height_feet       = models.IntegerField(default=0,   blank=True, null=True)
@@ -190,11 +193,10 @@ class MyPlant(models.Model):
     notes        = QuillField(blank=True, null=True)
     # Tags a plant for display/hidden in a summary table
     show         = models.CharField(max_length=8,   default="no", blank=True)
-    # Administrative stuff
-
+    # Save the user's most recent To Do table sort column and direction
     lastToDoSortCol = models.IntegerField(default=1, blank=True, null=True)
     lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
-
+    # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 
     def __str__(self):
@@ -206,9 +208,10 @@ class MyPlant(models.Model):
 class MyPlantToDo(models.Model):
     """ My Plant To Do """
     # Many-to-one relationship 
+    owner    = models.CharField(max_length=64, default="tbd", blank=True)
     # - many "To Do items" can be associated with each "My Plant" record
     complete = models.BooleanField(default=False)
-    date     = models.DateField(default="2000-01-01", null=True, blank=True)
+    date     = models.DateField(default="2025-01-01", null=True, blank=True)
     action   = models.CharField(max_length=16, default="", blank=True)
     details  = models.CharField(max_length=64, default="", blank=True)
     repeat   = models.CharField(max_length=16, default="", blank=True)
@@ -221,7 +224,7 @@ class MyPlantToDo(models.Model):
         return self.action
     
     def get_absolute_url(self):
-        return reverse("myplants_details")
+        return reverse("myplant_details")
 
 class MyPlantComment(models.Model):
     """ My Plant comments """
@@ -240,7 +243,7 @@ class MyPlantComment(models.Model):
         return self.author
     
     def get_absolute_url(self):
-        return reverse("myplants_details")
+        return reverse("myplant_details")
 
 class Pest(models.Model):
     pest_name = models.CharField(max_length=32)

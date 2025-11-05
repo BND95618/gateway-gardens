@@ -3,7 +3,10 @@
 from django import forms 
 from django_quill.forms       import QuillFormField
 from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
+import datetime
 from django.core.validators   import URLValidator
+
+## from .models import Plant, MyPlant
 
 TYPE_CHOICES = (
 	("tbd",         "tbd"),
@@ -149,17 +152,20 @@ HAPPINESS_CHOICES = (
 	("Very Unhappy", "Very Unhappy"),
 )
 TODO_ACTION_CHOICES = (
-	(" ",         " "),
+	("Fertilize", "Fertilize"),
+	("Harvest",   "Harvest"),
+	("Mow",       "Mow"),
 	("Plant",     "Plant"),
 	("Prune",     "Prune"),
-	("Fertilize", "Fertilize"),
+	("Spray",     "Spray"),
+	("Other",     "Other"),
 )
 TODO_REPEAT_CHOICES = (
-	(" ",       " "),
 	("Daily",   "Daily"),
 	("Weekly",  "Weekly"),
 	("Monthly", "Monthly"),
 	("Yearly",  "Yearly"),
+	("None",    "None"),
 )
 MONTH_CHOICES = (
 	("tbd",  "tbd"),
@@ -511,28 +517,37 @@ class MyPlantAddUpdateForm(forms.Form):
 
 class MyPlantToDoForm(forms.Form):
 	date = forms.DateField(
-		widget=DatePickerInput(),
 		label="Due Date",
 		required=True,
-	)
+		widget=forms.DateInput( 
+			attrs=
+				{'type'        : 'date',
+	 			 'min'         : datetime.date.today(),
+				},
+				format='%Y-%m-%d'
+			),
+        )
 	action = forms.ChoiceField(
 		label="Action",
 		initial=' ',
 		choices = TODO_ACTION_CHOICES, 
 		required=True,
-		)
-	details = forms.CharField(
-		label="Details", 
-		max_length=64, 
-		required=True,
+		widget=forms.RadioSelect
 		)
 	repeat = forms.ChoiceField(
 		label="Repeat",
 		initial=' ',
 		choices = TODO_REPEAT_CHOICES, 
 		required=True,
+		widget=forms.RadioSelect
 		)
-
+	details = forms.CharField(
+		label="Details", 
+		max_length=128, 
+		required=True,
+		widget=forms.TextInput(attrs={'class' : 'w3-input w3-border'}),
+		)
+	
 class MyPlantCommentForm(forms.Form):
 	subject = forms.CharField(
 		label='Subject', 
