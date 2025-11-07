@@ -10,18 +10,17 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
-        Adding: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} {{ plant.variety }} to My Garden
-      </h1>
-    </div>
+  <!-- complete the header from master.html -->
+  <div class="w3-bar w3-green">
+    <h1 class="w3-bar-item">
+      Adding: {{ plant.commonName }} / {{ plant.genus }} {{ plant.species }} {{ plant.variety }} to My Garden
+    </h1>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- Add Plant to My Plants -->
-  <div class="w3-container" style="margin-top:140px;">
+  <div class="w3-container" style="margin-top:100px;">
     <!-- Required for django_flatpickr - date input widget -->
     {{ form.media }}
     <form action="" method="post" enctype="multipart/form-data">

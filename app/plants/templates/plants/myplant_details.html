@@ -10,22 +10,29 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
-        {{ myplant.plant.commonName }} 
-        <span style="font-style: italic;">
-          ( {{ myplant.plant.genus }} {{ myplant.plant.species }} {{ myplant.plant.variety }} )
+  <!-- complete the header from master.html -->
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+      <h3 class="w3-bar-item">
+        {{ myplant.plant.commonName }}
+        <span class="w3-dropdown-hover w3-right">
+          <!-- AR: menu - add, hide/show completed -->
+          <button class="w3-button w3-green" style="z-index:21">
+            <i class="material-icons">
+              menu
+            </i>
+          </button>
+          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
+            <a href="{% url 'plants:myplant_update' myplant.id %}" class="w3-button">update</a>
         </span>
-      </h1>
-      <a href="{% url 'plants:myplants_update' myplant.id %}" class="w3-button">update</a>
-    </div>
+      </h3>
+    </header>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- My Plant Attributes -->
-  <div style="margin-top:140px;">
+  <div style="margin-top:100px;">
     <div class="w3-row-padding">
       <div class="w3-col s4">
         <header class="w3-container w3-green w3-border">
@@ -205,7 +212,7 @@
   <!------------------------------------->
   <!-- Plant Details                   -->
   <!------------------------------------->
-  {% include "plants/plants_details_insert.html" %}
+  {% include "plants/plant_details_insert.html" %}
 {% endblock content %}
 
 {% block js %}

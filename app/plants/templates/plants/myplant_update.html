@@ -1,4 +1,4 @@
-<!-- app/plants/templates/plants/myplants_update.html -->
+<!-- app/plants/templates/plants/myplant_update.html -->
 {% extends "plants/master.html" %}
 
 {% block title %}
@@ -10,20 +10,21 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
-        Updating: {{ plant.commonName }} / 
-        {{ plant.genus }} {{ plant.species }} {{ plant.variety }}
+  <!-- complete the header from master.html -->
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+      <h3 class="w3-bar-item">
+        Updating: {{ myplant.plant.commonName }} / 
+        {{ myplant.plant.genus }} {{ myplant.plant.species }} {{ myplant.plant.variety }}
         in My Garden
-      </h1>
-    </div>
+      </h3>
+    </header>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- Update Plant in My Plants -->
-  <div class="w3-container" style="margin-top:140px;">
+  <div class="w3-container" style="margin-top:100px;">
     <!-- Required for django_flatpickr -->
     {{ form.media }}
     <form action="" method="post" enctype="multipart/form-data">

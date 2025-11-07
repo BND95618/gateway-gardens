@@ -1,10 +1,10 @@
-<!-- /app/plants/templates/plants/plants_details_insert.html -->
+<!-- /app/plants/templates/plants/plant_details_insert.html -->
 
 <!-- Plant Attributes -->
 <div class="w3-row-padding">
   <div class="w3-col s4">
     <header class="w3-container w3-green w3-border">
-      <h3>Characteristics</h3>
+      <h4>Characteristics</h4>
     </header>
     <div class="w3-container w3-border">
       <p>Type:               {{ plant.type_x }}</p>
@@ -21,7 +21,7 @@
 
   <div class="w3-col s4">
     <header class="w3-container w3-green w3-border">
-      <h3>Environmental Needs</h3>
+      <h4>Environmental Needs</h4>
     </header>
     <div class="w3-container w3-border">
       <p>Sun Exposure:       {{ plant.sun_exposure }}</p>
@@ -35,7 +35,7 @@
 
   <div class="w3-col s4">
     <header class="w3-container w3-green w3-border">
-      <h3>Scientific Naming Taxonomy</h3>
+      <h4>Scientific Naming Taxonomy</h4>
     </header>
     <div class="w3-container w3-border">
       <p>Kingdom:           {{ plant.kingdom }}</p>
@@ -58,7 +58,7 @@
 <div class="w3-margin">
   <div class="w3-card-4 w3-margin-top">
     <header class="w3-container w3-green">
-      <h3>Description</h3>
+      <h4>Description</h4>
     </header>
     <div class="w3-container">
       {{ plant.description.html|safe|escape }}
@@ -67,7 +67,7 @@
 
   <div class="w3-card-4 w3-margin-top">
     <header class="w3-container w3-green">
-      <h3>Pruning</h3>
+      <h4>Pruning</h4>
     </header>
     <div class="w3-container">
       {{ plant.pruning.html|safe|escape }}
@@ -76,7 +76,7 @@
 
   <div class="w3-card-4 w3-section">
     <header class="w3-container w3-green">
-      <h3>Fertilization</h3>
+      <h4>Fertilization</h4>
     </header>
     <div class="w3-container">
       {{ plant.fertilization.html|safe|escape }}
@@ -85,7 +85,7 @@
 
   <div class="w3-card-4 w3-section">
     <header class="w3-container w3-green">
-      <h3>Propagation</h3>
+      <h4>Propagation</h4>
     </header>
     <div class="w3-container">
       {{ plant.propagation.html|safe|escape }}
@@ -94,7 +94,7 @@
 
   <div class="w3-card-4 w3-section">
     <header class="w3-container w3-green">
-      <h3>Pests and Diseases</h3>
+      <h4>Pests and Diseases</h4>
     </header>
     <div class="w3-container">
       {{ plant.pests_diseases.html|safe|escape }}
@@ -107,7 +107,6 @@
       {% endfor %}
     </div>
   </div>
-  
 </div>
 
 <!-- Plant images -->

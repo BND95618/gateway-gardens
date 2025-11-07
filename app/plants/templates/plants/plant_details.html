@@ -1,4 +1,4 @@
-<!-- /plants/templates/plants_details.html -->
+<!-- /plants/templates/plant_details.html -->
 {% extends "plants/master.html" %}
 
 {% block title %}
@@ -10,50 +10,52 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
-        {{ plant.commonName }} 
+  <!-- complete the header from master.html -->
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+
+      <!-- Banner text -->
+      <h3 class="w3-bar-item">
+        {{ plant.commonName }}
         <span style="font-style: italic;">
           ( {{ plant.genus }} {{ plant.species }} {{ plant.variety }} )
         </span>
+
         <!-- Scientific Name Pronunciation -->
         {% if plant.audio_name %}
-        <span class="w3-tooltip">
-          <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
-          <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
-            <i class="material-icons w3-green">volume_up</i>
-          </span>
-          <!-- Tool Tip -->
-          <span style="font-size:16px; position:absolute; left:0; bottom:34px;" 
-                class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
-            Pronounce
-          </span>
-        </span>
-        {% endif %}
-        {% if perms.plants.add_plant %}
           <span class="w3-tooltip">
-            <a href="{% url 'plants:plants_update' plant.id %}">
-              <i class="material-icons">
-                edit
-              </i>
-              <!-- Tool Tip -->
-              <span style="font-size:16px; position:absolute; left:0; bottom:34px;" 
-                    class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
-                Edit
-              </span>
-            </a>
+            <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
+            <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
+              <i class="material-icons w3-green">volume_up</i>
+            </span>
+            <!-- Tool Tip -->
+            <span style="font-size:16px; position:absolute; left:0; bottom:34px;" 
+                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+              Pronounce
+            </span>
           </span>
         {% endif %}
-      </h1>
-    </div>
+
+        <!-- Drop-down menu -->
+        <span class="w3-dropdown-hover w3-right">
+          <button class="w3-button w3-green" style="z-index:21">
+            <i class="material-icons">
+              menu
+            </i>
+          </button>
+          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
+            <a href="{% url 'plants:plant_update' plant.id %}" class="w3-button">Update</a>
+          </div>
+        </span>
+      </h3>
+    </header>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- Plant Attributes -->
-  <div style="margin-top: 150px;">
-    {% include "plants/plants_details_insert.html" %}
+  <div style="margin-top: 120px;">
+    {% include "plants/plant_details_insert.html" %}
   </div>
 
   <!-- Comments -->

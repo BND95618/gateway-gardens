@@ -783,7 +783,7 @@ def myplants_add(request, id):
         context = { 'form' : form }
         return render(request, 'plants/myplants_add.html', context)
     
-def myplants_update(request, id):
+def myplant_update(request, id):
     """ Update details related a specific My Plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -824,7 +824,8 @@ def myplants_update(request, id):
                                               'happiness'    : myplant.happiness,
                                               'notes'        : myplant.notes,
                                             })
-        context = { 'form' : form }
+        context = { 'myplant' : myplant,
+                    'form'    : form }
         return render(request, 'plants/myplant_update.html', context)
 
 def myplants_delete(request, id):
@@ -1014,7 +1015,7 @@ def myplant_details(request, id):
     myplant_comments   = MyPlantComment.objects.filter(myplant__pk=id) 
 
     template = loader.get_template("plants/myplant_details.html")
-    context  = { "myplant"         : myplant, 
+    context  = { "myplant"          : myplant, 
                  "plant"            : plant,
                  "myplant_todo"     : myplant_todo,
                  "myplant_comments" : myplant_comments, 
@@ -1420,7 +1421,7 @@ def plants_chart(request):
     context = { 'plants' : plants }
     return render(request, 'plants/plants_chart_modal.html', context)
 
-def plants_details(request, id):
+def plant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1442,7 +1443,7 @@ def plants_details(request, id):
         width_adj = plant.width_feet + (plant.width_inch / 12)
         plant.width_feet = math.floor(width_adj)
         plant.width_inch = plant.width_inch%12
-    template = loader.get_template("plants/plants_details.html")  # loads the plant_details.html template
+    template = loader.get_template("plants/plant_details.html")  # loads the plant_details.html template
     # Get the pests associated with this plant & sort by pest name
     pests = Pest.objects.filter(plants__id=plant.id).order_by('pest_name')
     context = { "plant"    : plant, 
@@ -1538,7 +1539,7 @@ def plants_add(request):
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plants_add.html', context)
 
-def plants_update(request, id):
+def plant_update(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1703,7 +1704,7 @@ def plants_update(request, id):
                     'form'             : form,
                     'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
-        return render(request, 'plants/plants_update.html', context)
+        return render(request, 'plants/plant_update.html', context)
 
 def plants_comment(request, id):
     """ Associate a comment to a plant """
@@ -1719,7 +1720,7 @@ def plants_comment(request, id):
             comment.comment = form.cleaned_data.get("comment") #
             comment.plant = plant                              # link the comment to the specific plant
             comment.save()
-        return HttpResponseRedirect(reverse('plants:plants_details', args=(plant.id,))) 
+        return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,))) 
     else:
         form = PlantCommentForm()
         context = { 'plant' : plant,

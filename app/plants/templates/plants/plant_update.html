@@ -1,4 +1,4 @@
-<!-- app/plants/templates/plants/plants_update.html -->
+<!-- app/plants/templates/plants/plant_update.html -->
 {% extends "plants/master.html" %}
 
 <!-- Required in order to load static files -->
@@ -13,22 +13,23 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
+  <!-- complete the header from master.html -->
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+      <h3 class="w3-bar-item">
         Update Plant: {{ plant.commonName }} 
         <span style="font-style: italic;">
           ( {{ plant.genus }} {{ plant.species }} {{ plant.variety }} )
         </span>
-      </h1>
-    </div>
+      </h3>
+    </header>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
 
   <!-- Main content-->
-  <div class="w3-container" style="margin-top:150px;">
+  <div class="w3-container" style="margin-top:100px;">
     <form name     = "plantForm"
           id       = "id_plantForm"
           action   = "" 

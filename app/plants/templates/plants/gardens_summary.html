@@ -30,25 +30,31 @@
 {% endblock css %}
 
 {% block header-completion %}
-<!-- complete the header from master.html -->
-<div class="w3-bar w3-green">
-  <h1 class="w3-bar-item">My Garden: {{ garden.name }}</h1>
-  <div class="w3-dropdown-hover">
-    <button class="w3-button w3-green">
-      <i class="material-icons">
-        menu
-      </i>
-    </button>
-    <div class="w3-dropdown-content w3-bar-block w3-card-4">
-      <a href="{% url 'plants:gardens_update' garden.id %}" class="w3-bar-item w3-button">Update</a> 
-    </div>
+  <!-- complete the header from master.html -->
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+      <h3 class="w3-bar-item">
+        My Garden: {{ garden.name }}
+        <span class="w3-dropdown-hover w3-right">
+          <!-- AR: menu - add, hide/show completed -->
+          <button class="w3-button w3-green" style="z-index:21">
+            <i class="material-icons">
+              menu
+            </i>
+          </button>
+            <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
+              <a href="{% url 'plants:gardens_update' garden.id %}" class="w3-bar-item w3-button">Update</a> 
+            </div>
+        </span>
+      </h3>
+    </header>
   </div>
-</div> 
 {% endblock header-completion %}
 
 {% block content %}
 <!-- main content -->
-  <div class="w3-container" style="margin-top:150px; margin-bottom:32px;">
+  <div class="w3-container" style="margin-top:100px; margin-bottom:32px;">
+    <h3>My garden phones:</h3>
     <!-- Check to see it there are any images to display -->
     {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
       <h3>

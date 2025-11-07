@@ -10,20 +10,19 @@
 {% endblock css %}
 
 {% block header-completion %}
-    <!-- complete the header from master.html -->
-    <div class="w3-bar w3-green">
-      <h1 class="w3-bar-item">
-        Comments related to: 
-        {{ plant.commonName }} / 
-        {{ plant.genus }} {{ plant.species }} {{ plant.variety }}
-      </h1>
-    </div>
+  <!-- complete the header from master.html -->
+  <div class="w3-bar w3-green">
+    <h1 class="w3-bar-item">
+      Comments related to: 
+      {{ plant.commonName }} / 
+      {{ plant.genus }} {{ plant.species }} {{ plant.variety }}
+    </h1>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- Add Comment -->
-  <div class="w3-container" style="margin-top:140px;">
+  <div class="w3-container" style="margin-top:100px;">
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
