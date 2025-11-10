@@ -196,6 +196,19 @@
       </select>
       <br>
 
+      <label for="id_heat_tolerance_search">Heat Tolerance:</label><br>
+      <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for x in heat_tolerance_opt %}
+          {% if x == heat_tolerance_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+
       <label for="id_usda_zone_search">USDA Zone:</label><br>
       <select id="id_usda_zone_search" name="usda_zone_search" class="w3-select w3-margin-bottom">
         <option value="Any" >Any</option>
@@ -430,17 +443,18 @@
           <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')">Water Rqmts    </th>
           <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Soil Type      </th>
           <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">pH Range       </th>
-          <th style="cursor:pointer" onclick="sortTable(16, 'plantTable')">USDA Zones     </th>
-          <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">Sunset Zones   </th>
+          <th style="cursor:pointer" onclick="sortTable(16, 'plantTable')">Heat Tolerance </th>
+          <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">USDA Zones     </th>
+          <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">Sunset Zones   </th>
           <!-- Garden Environment -->
-          <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">Location           </th>
-          <th style="cursor:pointer" onclick="sortTable(19, 'plantTable')">My Sun Exposure    </th>
-          <th style="cursor:pointer" onclick="sortTable(20, 'plantTable')">My Water Level     </th>
-          <th style="cursor:pointer" onclick="sortTable(21, 'plantTable')">My Soil Type       </th>
-          <th style="cursor:pointer" onclick="sortTable(22, 'plantTable')">My pH              </th>
-          <th style="cursor:pointer" onclick="sortTable(23, 'plantTable')">My Bloom Color     </th>
-          <th style="cursor:pointer" onclick="sortTable(24, 'plantTable')">My Bloom Start/End </th>
-          <th style="cursor:pointer" onclick="sortTable(25, 'plantTable')" class="w3-center">Happy?</th>
+          <th style="cursor:pointer" onclick="sortTable(19, 'plantTable')">Location           </th>
+          <th style="cursor:pointer" onclick="sortTable(20, 'plantTable')">My Sun Exposure    </th>
+          <th style="cursor:pointer" onclick="sortTable(21, 'plantTable')">My Water Level     </th>
+          <th style="cursor:pointer" onclick="sortTable(22, 'plantTable')">My Soil Type       </th>
+          <th style="cursor:pointer" onclick="sortTable(23, 'plantTable')">My pH              </th>
+          <th style="cursor:pointer" onclick="sortTable(24, 'plantTable')">My Bloom Color     </th>
+          <th style="cursor:pointer" onclick="sortTable(25, 'plantTable')">My Bloom Start/End </th>
+          <th style="cursor:pointer" onclick="sortTable(26, 'plantTable')" class="w3-center">Happy?</th>
           <!-- Button Placeholders -->
           <th class="w3-center"></th>
           <th class="w3-center"></th>
@@ -467,7 +481,8 @@
             <td>{{ myplant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
             <td>{{ myplant.plant.water_rqmts                                 }}</td>
             <td>{{ myplant.plant.soil_type                                   }}</td>
-            <td>{{ myplant.plant.pH_min }} to {{ myplant.plant.pH_max }}              </td>
+            <td>{{ myplant.plant.pH_min }} to {{ myplant.plant.pH_max }}       </td>
+            <td>{{ myplant.plant.heat_tolerance                              }}</td>
             <td>{{ myplant.plant.usda_zone_min }} to {{ myplant.plant.usda_zone_max }}</td>
             <td>{{ myplant.plant.sunset_zones }}                              </td>
             <!-- Garden Environment -->
@@ -565,7 +580,7 @@
                               'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season', 'Bloom Range',
                               'Pollinators', 'CA Native', 'UCD All-Star', 
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
-                              'USDA Zones', 'Sunset Zones',
+                              'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
                               'My Location', 'My Sun Exposure', 'My Water Level', 'My Soil Type', 'My pH', 
                               'My Bloom Color', 'My Bloom Range', 'Happy?',
                              ];
@@ -595,17 +610,18 @@
         else if (column_options[i] == "Water Rqmts")     { column_index = 13; } 
         else if (column_options[i] == "Soil Type")       { column_index = 14; }
         else if (column_options[i] == "pH Range")        { column_index = 15; }
-        else if (column_options[i] == "USDA Zones")      { column_index = 16; }
-        else if (column_options[i] == "Sunset Zones")    { column_index = 17; }
+        else if (column_options[i] == "Heat Tolerance")  { column_index = 16; }
+        else if (column_options[i] == "USDA Zones")      { column_index = 17; }
+        else if (column_options[i] == "Sunset Zones")    { column_index = 18; }
 
-        else if (column_options[i] == "My Location")        { column_index = 18; } 
-        else if (column_options[i] == "My Sun Exposure")    { column_index = 19; } 
-        else if (column_options[i] == "My Water Level")     { column_index = 20; } 
-        else if (column_options[i] == "My Soil Type")       { column_index = 21; }
-        else if (column_options[i] == "My pH")              { column_index = 22; }
-        else if (column_options[i] == "My Bloom Color")     { column_index = 23; }
-        else if (column_options[i] == "My Bloom Range")     { column_index = 24; }
-        else if (column_options[i] == "Happy?")             { column_index = 25; }
+        else if (column_options[i] == "My Location")        { column_index = 19; } 
+        else if (column_options[i] == "My Sun Exposure")    { column_index = 20; } 
+        else if (column_options[i] == "My Water Level")     { column_index = 21; } 
+        else if (column_options[i] == "My Soil Type")       { column_index = 22; }
+        else if (column_options[i] == "My pH")              { column_index = 23; }
+        else if (column_options[i] == "My Bloom Color")     { column_index = 24; }
+        else if (column_options[i] == "My Bloom Range")     { column_index = 25; }
+        else if (column_options[i] == "Happy?")             { column_index = 26; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection.includes(column_options[i])){
@@ -650,6 +666,7 @@
       document.getElementById("id_water_rqmts_search"    ).value = "Any";
       document.getElementById("id_soil_type_search"      ).value = "Any";
       document.getElementById("id_pH_search"             ).value = "Any";
+      document.getElementById("id_heat_tolerance_search" ).value = "Any";
       document.getElementById("id_usda_zone_search"      ).value = "Any";
       document.getElementById("id_sunset_zone_search"    ).value = "Any";
       document.getElementById("id_my_sun_exposure_search").value = "Any";

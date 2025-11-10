@@ -2864,6 +2864,7 @@
                     this.pH_min       = downloadedPlant.pH_min;
                     this.pH_max       = downloadedPlant.pH_max;
                     this.soil_type    = downloadedPlant.soil_type;
+                    this.heat_tolerance = downloadedPlant.heat_tolerance;
                     // Populate the plant shape fields
                     this.shape.label  = this.commonName;
                     this.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
@@ -2951,6 +2952,7 @@
                 duplicatePlant.pH_min       = this.pH_min;
                 duplicatePlant.pH_max       = this.pH_max;
                 duplicatePlant.soil_type    = this.soil_type;
+                duplicatePlant.heat_tolerance = this.heat_tolerance;
                 // Populate the plant shape fields
                 duplicatePlant.shape.label  = this.commonName;
                 duplicatePlant.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;

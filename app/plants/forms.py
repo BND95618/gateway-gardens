@@ -114,6 +114,12 @@ SOIL_TYPE_CHOICES = (
 	("Loamy",  "Loamy"),
 	("Clay",   "Clay"),
 )
+HEAT_TOLERANCE_CHOICES = (
+	("tbd",       "tbd"),
+	("Poor",      "Poor"),
+	("Good",      "Good"),
+	("Excellent", "Excellent"),
+)
 USDA_ZONE_CHOICES = (
 	("tbd",               "tbd"),
 	("1a (-60F to -55F)", "1a (-60F to -55F)"),
@@ -202,6 +208,7 @@ COLUMN_CHOICES = (
 	("Water Rqmts",     "Water Rqmts"),
 	("Soil Type",       "Soil Type"),
 	("pH Range",        "pH Range"),
+	("Heat Tolerance",  "Heat Tolerance"),
 	("USDA Zones",      "USDA Zones"),
 	("Sunset Zones",    "Sunset Zones"), 
 )
@@ -224,6 +231,7 @@ MY_COLUMN_CHOICES = (
 	("Water Rqmts",     "Water Rqmts"),
 	("Soil Type",       "Soil Type"),
 	("pH Range",        "pH Range"),
+	("Heat Tolerance",  "Heat Tolerance"),
 	("USDA Zones",      "USDA Zones"),
 	("Sunset Zones",    "Sunset Zones"), 
 	# Garden Environment
@@ -667,6 +675,11 @@ class PlantAddUpdateForm(forms.Form):
 		widget=forms.CheckboxSelectMultiple,
 		required=False,
 		)
+	heat_tolerance = forms.ChoiceField(
+		label="Heat Tolerance",
+		choices = HEAT_TOLERANCE_CHOICES, 
+		required=False,
+		)
 	usda_zone_min = forms.ChoiceField(
 		label="USDA Zone (min)",
 		choices = USDA_ZONE_CHOICES, 
@@ -779,7 +792,7 @@ class PlantAddUpdateForm(forms.Form):
 	phonetic_spelling = forms.CharField(
 		label="Phonetic Spelling",
 		initial="tbd", 
-		max_length=32, 
+		max_length=64, 
 		required=False
 		)
 	# plant images

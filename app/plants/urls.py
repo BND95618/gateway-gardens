@@ -23,11 +23,7 @@ urlpatterns = [
     path('plant_details_modal',       views.plant_details_modal, name='plant_details_modal'),
     path('planner_edit_modal',        views.planner_edit_modal,  name='planner_edit_modal'),
     #
-    path('pest_summary',              views.pest_summary,        name="pest_summary"),
-    path('pest_add',                  views.pest_add,            name="pest_add"),
-    path('pest_update/<int:id>',      views.pest_update,         name="pest_update"),
-    path('pest_delete/<int:id>',      views.pest_delete,         name="pest_delete"),
-    #
+
     path('myplants_add/<int:id>',     views.myplants_add,        name='myplants_add'),
     path('myplants_delete/<int:id>',  views.myplants_delete,     name='myplants_delete'),
     path('myplants_remove/<int:id>',  views.myplants_remove,     name='myplants_remove'),
@@ -56,6 +52,11 @@ urlpatterns = [
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
     path('plants_chart',              views.plants_chart,        name='plants_chart'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
+    #
+    path('pest_summary',              views.pest_summary,        name="pest_summary"),
+    path('pest_add',                  views.pest_add,            name="pest_add"),
+    path('pest_update/<int:id>',      views.pest_update,         name="pest_update"),
+    path('pest_delete/<int:id>',      views.pest_delete,         name="pest_delete"),
     #
     path('user_signup',               views.user_signup,         name='user_signup'),
     path('user_login',                views.user_login,          name='user_login'),
