@@ -3,7 +3,9 @@
 from django.db   import models
 from django.conf import settings
 from django.urls import reverse
-
+# Store Django uploaded files as UUID files or inside UUID directories
+from django_uuid_upload import upload_to_uuid
+# Integrate Quill editor with Django project
 from django_quill.fields import QuillField
 
 # from uuid import uuid4 - youtube tutorial used this for image uniqueness (1:36:00)
@@ -18,21 +20,21 @@ class Garden(models.Model):
     sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
     question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
-    image_1       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_1       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_2       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_3       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_4       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_5       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_5       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_6       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_6       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_7       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_7       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_8       = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_8       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     # Save the user's selection for plant search criteria
@@ -124,15 +126,15 @@ class Plant(models.Model):
     species           = models.CharField(max_length=64, default="tbd", blank=True)
     variety           = models.CharField(max_length=64, default="tbd", blank=True)
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)
-    audio_name        = models.FileField(upload_to='audio/', blank=True, null=True)
+    audio_name        = models.FileField(upload_to=upload_to_uuid('audio/'), blank=True, null=True)
     # Images
-    image_1           = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_1           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_1         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2           = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_2           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_2         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3           = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_3           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_3         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4           = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_4           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
     caption_4         = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     creator           = models.CharField(max_length=64, default="tbd", blank=True)

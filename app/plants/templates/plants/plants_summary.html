@@ -27,6 +27,11 @@
             <button onclick="column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
             <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
                     class="w3-bar-item w3-button">Bloom Charts
+            </button>
+            {% if perms.plants.add_plant %}
+              <a href="{% url 'plants:plants_add' %}"  class="w3-bar-item w3-button">Add Plant</a>
+            {% endif %}
+          </div>
         </span>
       </h3>
     </header>

@@ -40,7 +40,7 @@ pH_opt           = ["tbd",
                     "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
                     "8.0"]
 soil_type_opt      = ["tbd", "Sandy", "Loamy", "Clay"]
-heat_tolerance_opt = ["tbd", "Poor", "Good", "Excellent"]
+heat_tolerance_opt = ["tbd", "Poor", "fair", "Good", "Excellent"]
 usda_zones_opt     = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
                              "5a", "5b",  "6a",  "6b",  "7a",  "7b", "8a", "8b",
                              "9a", "9b", "10a", "10b", "11a", "11b"]

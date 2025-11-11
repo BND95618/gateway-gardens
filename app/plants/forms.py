@@ -117,6 +117,7 @@ SOIL_TYPE_CHOICES = (
 HEAT_TOLERANCE_CHOICES = (
 	("tbd",       "tbd"),
 	("Poor",      "Poor"),
+	("Fair",      "Fair"),
 	("Good",      "Good"),
 	("Excellent", "Excellent"),
 )
