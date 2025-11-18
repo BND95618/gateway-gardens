@@ -1790,6 +1790,21 @@ def plants_delete(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
+        # Check for and delete audio file
+        if (plant.audio_name):
+            plant.audio_name.delete(save=False)
+        # Check for and delete image files
+        if (plant.image_1):
+            plant.image_1.delete(save=False)
+        if (plant.image_2):
+            plant.image_2.delete(save=False)
+        if (plant.image_3):
+            plant.image_3.delete(save=False)
+        if (plant.image_4):
+            plant.image_4.delete(save=False)
+        # AR: Delete any associated 'My Plants' audio and images
+
+        # Delete the plant
         plant.delete()
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
