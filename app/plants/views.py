@@ -148,42 +148,42 @@ def gardens_update(request, id):
 
             if 'image_1' in request.FILES:
                 if (garden.image_1):
-                    os.remove(garden.image_1.path)
+                    garden.image_1.delete(save=False)
                 garden.image_1   = request.FILES['image_1']
             garden.caption_1 = form.cleaned_data.get('caption_1')
             if 'image_2' in request.FILES:
                 if (garden.image_2):
-                    os.remove(garden.image_2.path)
+                    garden.image_2.delete(save=False)
                 garden.image_2   = request.FILES['image_2']
             garden.caption_2 = form.cleaned_data.get('caption_2')
             if 'image_3' in request.FILES:
                 if (garden.image_3):
-                    os.remove(garden.image_3.path)
+                    garden.image_3.delete(save=False)
                 garden.image_3   = request.FILES['image_3']
             garden.caption_3 = form.cleaned_data.get('caption_3')
             if 'image_4' in request.FILES:
                 if (garden.image_4):
-                    os.remove(garden.image_4.path)
+                    garden.image_4.delete(save=False)
                 garden.image_4   = request.FILES['image_4']
             garden.caption_4 = form.cleaned_data.get('caption_4')
             if 'image_5' in request.FILES:
                 if (garden.image_5):
-                    os.remove(garden.image_5.path)
+                    garden.image_5.delete(save=False)
                 garden.image_5   = request.FILES['image_5']
             garden.caption_5 = form.cleaned_data.get('caption_5')
             if 'image_6' in request.FILES:
                 if (garden.image_6):
-                    os.remove(garden.image_6.path)
+                    garden.image_6.delete(save=False)
                 garden.image_6   = request.FILES['image_6']
             garden.caption_6 = form.cleaned_data.get('caption_6')
             if 'image_7' in request.FILES:
                 if (garden.image_7):
-                    os.remove(garden.image_7.path)
+                    garden.image_7.delete(save=False)
                 garden.image_7   = request.FILES['image_7']
             garden.caption_7 = form.cleaned_data.get('caption_7')
             if 'image_8' in request.FILES:
                 if (garden.image_8):
-                    os.remove(garden.image_8.path)
+                    garden.image_8.delete(save=False)
                 garden.image_8   = request.FILES['image_8']
             garden.caption_8 = form.cleaned_data.get('caption_8')
 
@@ -1617,10 +1617,16 @@ def plant_update(request, id):
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
+
+            # Check to see if the request includes an audio filefor genus/species
             if 'blob' in request.FILES:
+                # Check to if there is an exiting audio file for the plant in the db
                 if (plant.audio_name):
-                    os.remove(plant.audio_name.path)
+                    # Delete old audio file
+                    plant.audio_name.delete(save=False)
+                # Save new audio file
                 plant.audio_name = request.FILES['blob']
+                
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
@@ -1629,25 +1635,25 @@ def plant_update(request, id):
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
                 if (plant.image_1):
-                    os.remove(plant.image_1.path)
+                    plant.image_1.delete(save=False)
                 plant.image_1 = request.FILES['image_1']
             plant.caption_1 = form.cleaned_data.get('caption_1')
             
             if 'image_2' in request.FILES:
                 if (plant.image_2):
-                    os.remove(plant.image_2.path)
+                    plant.image_2.delete(save=False)
                 plant.image_2 = request.FILES['image_2']
             plant.caption_2 = form.cleaned_data.get('caption_2')
 
             if 'image_3' in request.FILES:
                 if (plant.image_3):
-                    os.remove(plant.image_3.path)
+                    plant.image_3.delete(save=False)
                 plant.image_3 = request.FILES['image_3']
             plant.caption_3 = form.cleaned_data.get('caption_3') 
 
             if 'image_4' in request.FILES:
                 if (plant.image_4):
-                    os.remove(plant.image_4.path)
+                    plant.image_4.delete(save=False)
                 plant.image_4 = request.FILES['image_4']
             plant.caption_4 = form.cleaned_data.get('caption_4') 
 

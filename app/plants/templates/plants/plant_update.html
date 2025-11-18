@@ -344,7 +344,7 @@
           let formData  = new FormData(id_plantForm);
           formData.append('blob', blob, 'audio_file');
           // Send the form plus the audio recording data entered by the user
-          // NOTE: The url  must be set for add versus update
+          // NOTE: The url must be set for add versus update
           const postURL = window.location.pathname;
           // Make the POST request and return a promise
           fetch(postURL, 

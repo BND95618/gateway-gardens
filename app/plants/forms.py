@@ -6,8 +6,6 @@ from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimeP
 import datetime
 from django.core.validators   import URLValidator
 
-## from .models import Plant, MyPlant
-
 TYPE_CHOICES = (
 	("tbd",         "tbd"),
 	("Annual",      "Annual"),
