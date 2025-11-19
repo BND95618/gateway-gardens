@@ -1,10 +1,16 @@
 # app/plants/models.py
 
-from django.db   import models
-from django.conf import settings
-from django.urls import reverse
+from django.db           import models
+from django.conf         import settings
+from django.urls         import reverse
+
+# Process uploaded images to ensure reasonable sizes for storaging and rendering performance
+from imagekit.models     import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
 # Store Django uploaded files as UUID files or inside UUID directories
-from django_uuid_upload import upload_to_uuid
+from django_uuid_upload  import upload_to_uuid
+
 # Integrate Quill editor with Django project
 from django_quill.fields import QuillField
 
@@ -20,21 +26,68 @@ class Garden(models.Model):
     sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
     question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
-    image_1       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+    image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_5       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_6       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_7       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
-    image_8       = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+
+    image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [ResizeToFill(600, 600)],
+                                        format     = 'JPEG',
+                                        options    = {'quality': 100},
+                                        blank      = True, 
+                                        null       = True)
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     # Save the user's selection for plant search criteria
@@ -128,13 +181,33 @@ class Plant(models.Model):
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)
     audio_name        = models.FileField(upload_to=upload_to_uuid('audio/'), blank=True, null=True)
     # Images
-    image_1           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+    image_1           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                            processors = [ResizeToFill(400, 400)],
+                                            format     = 'JPEG',
+                                            options    = {'quality': 100},
+                                            blank      = True, 
+                                            null       = True)
     caption_1         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+    image_2           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                            processors = [ResizeToFill(400, 400)],
+                                            format     = 'JPEG',
+                                            options    = {'quality': 100},
+                                            blank      = True, 
+                                            null       = True)
     caption_2         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+    image_3           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                            processors = [ResizeToFill(400, 400)],
+                                            format     = 'JPEG',
+                                            options    = {'quality': 100},
+                                            blank      = True, 
+                                            null       = True)
     caption_3         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4           = models.ImageField(upload_to=upload_to_uuid('images/'), blank=True, null=True)
+    image_4           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                            processors = [ResizeToFill(400, 400)],
+                                            format     = 'JPEG',
+                                            options    = {'quality': 100},
+                                            blank      = True, 
+                                            null       = True)
     caption_4         = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     creator           = models.CharField(max_length=64, default="tbd", blank=True)

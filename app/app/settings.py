@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'plants',
+    # Image processing
+    'imagekit',
     # Rich text editor
     'django_quill',
     # Calendar for selecting dates

@@ -1802,7 +1802,7 @@ def plants_delete(request, id):
             plant.image_3.delete(save=False)
         if (plant.image_4):
             plant.image_4.delete(save=False)
-        # AR: Delete any associated 'My Plants' audio and images
+        # AR: Once 'My Plants' images are implemented, delete any associated 'My Plants' images
 
         # Delete the plant
         plant.delete()

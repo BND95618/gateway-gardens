@@ -18,6 +18,10 @@ boto3==1.26.33
 # Python image processing library
 pillow==10.4.0
 
+# Python: Automated image processing for Django models
+# https://pypi.org/project/django-imagekit/
+django-imagekit==6.0.0
+
 # Rich Text Editor package
 django-quill-editor==0.1.42
 
