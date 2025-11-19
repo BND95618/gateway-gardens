@@ -224,10 +224,8 @@ def gardens_plan(request):
         return HttpResponseRedirect(reverse('plants:index'))
     plants = Plant.objects.all()
     if request.method == 'POST':
-        # print("DEBUG: request =", request)
         # Parses the JSON data from the request body
         shapes_JSON = json.loads(request.body)
-        # print("DEBUG: if - shapes_JSON =", shapes_JSON)
         # Save the garden design to db
         gardens = Garden.objects.filter(owner = request.user.username)
         for garden in gardens:
@@ -242,7 +240,6 @@ def gardens_plan(request):
         for garden in gardens:
             if (garden.owner == request.user.username):
                 shapes_JSON = json.dumps(garden.shapes_JSON)
-        # print("DEBUG: else - shapes_JSON =", shapes_JSON)
         context = { 'plants'      : plants,
                     'shapes_JSON' : shapes_JSON }
         return render(request, 'plants/gardens_plan.html', context)
@@ -309,8 +306,6 @@ def plant_fetch(request):
     """ """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    
-    print("DEBUG: Got to view plant_fetch - request;", request)
 
     if request.method == 'POST':
         # Get the JSON sring with the common name of the requested plant
@@ -319,23 +314,13 @@ def plant_fetch(request):
         requestedPlant_dict = json.loads(requestedPlant_json_string)
         # Get the Common Name of the plant requested
         requestedPlant = requestedPlant_dict["requestedPlant"]
-
         # Retrieve the requested plant from the db and convert to a dictionary
-        # AR: this currently returns a single object in an array - need a standalone object
         plant_json = list(Plant.objects.filter(commonName = requestedPlant).values())
-
-        # plant = Plant.objects.get(commonName = requestedPlant)
-        # print("DEBUG: plant_test.commonName:", plant_test.commonName)
-        # requestedPlantData_json = json.dumps(requestedPlantData_test)
-        # print("DEBUG: requestedPlantData_json:", requestedPlantData_json)
-
         # safe=False is needed if returning a list directly
         return JsonResponse(plant_json, safe=False)
-    
     else:
         print("DEBUG: Error!")
         return HttpResponseRedirect(reverse('plants:index'))
-
 # 
 
 def myplants_summary(request):
@@ -1957,11 +1942,11 @@ def user_signup(request):
                     messages.error(request, "invalid e-mail address'")
             if (signup_input_error == "yes"):
                 # AR: Prepopulate fields - the initialization is not working correctly
-                form = UserSignupForm(initial={'signup_username'   : signup_username,
-                                               'signup_password'   : signup_password,
-                                               'email'      : email,
-                                               'first_name' : first_name,
-                                               'last_name'  : last_name,
+                form = UserSignupForm(initial={'signup_username' : signup_username,
+                                               'signup_password' : signup_password,
+                                               'email'           : email,
+                                               'first_name'      : first_name,
+                                               'last_name'       : last_name,
                                        })
                 context = { 'form'               : form,
                             'signup_input_error' : signup_input_error }
