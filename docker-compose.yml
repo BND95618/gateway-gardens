@@ -21,9 +21,9 @@ services:
         condition: service_healthy
              
   database:
-    image: postgres:12-alpine
+    image: postgres:16-alpine
     volumes:
-      - db-dev-data:/var/lib/postgresql/data
+      - db-dev-data_16:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=django-dev-db
       - POSTGRES_USER=devuser
@@ -35,4 +35,4 @@ services:
       retries: 5
 
 volumes:
-  db-dev-data:
+  db-dev-data_16:

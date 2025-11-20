@@ -166,3 +166,6 @@ app/plants/migrations
 
 # Uploaded images
 app/media/
+
+# My stuff
+app/app/README
