@@ -1,32 +1,53 @@
-Django==4.1.5
-
-# PostgreSQL adapter for Python
-psycopg2==2.9.5
+# https://www.djangoproject.com/
+# Django==4.1.5
+# Django==4.2.26
+Django==5.2.8
 
 # Python WSGI HTTP Server for UNIX
-gunicorn==20.1.0
+# https://gunicorn.org/
+# gunicorn==20.1.0
+gunicorn==23.0.0
 
 # Collection of custom storage backends for Django - used for AWS S3
-django-storages==1.13.1
-
-# Uniqifies uploded images and captured audio
-django-uuid-upload==1.0.0
+# https://django-storages.readthedocs.io/en/latest/
+# django-storages==1.13.1
+django-storages==1.14.6
 
 # Python API for AWS infrastructure services
-boto3==1.26.33
+# https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html
+# boto3==1.26.33
+boto3==1.41.0
 
-# Python image processing library
-pillow==10.4.0
+# Simplified static file serving for Python web apps
+# https://pypi.org/project/whitenoise/
+whitenoise==6.11.0
+
+# PostgreSQL adapter for Python
+# https://pypi.org/project/psycopg2/
+# psycopg2==2.9.5
+psycopg2==2.9.11
+
+# Python: image processing library
+# https://pypi.org/project/pillow/
+# pillow==10.4.0
+pillow==12.0.0
+
+# Python: Uniqifies uploded images and captured audio
+# https://pypi.org/project/django-uuid-upload/
+django-uuid-upload==1.0.0
 
 # Python: Automated image processing for Django models
 # https://pypi.org/project/django-imagekit/
 django-imagekit==6.0.0
 
-# Rich Text Editor package
+# Python: Rich Text Editor package
+# https://pypi.org/project/django-quill-editor/
 django-quill-editor==0.1.42
 
-# Graphical date/time entry package
+# Python: Graphical date/time entry package
+# https://pypi.org/project/django-flatpickr/
 django-flatpickr==2.0.3
 
-#
-email-validator==2.2.0
+# Python: E-mail address syntax and deliverability validation library
+# https://pypi.org/project/email-validator/
+email-validator==2.3.0 # 2.2.0

@@ -169,3 +169,7 @@ app/media/
 
 # My stuff
 app/app/README
+
+# Clean-up
+.DS_Store
+app/.DS_Store

@@ -53,6 +53,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # Whitenoise is used to serve static files on AWS Lightsail - required after Django 5.2.8 upgrade
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -152,7 +154,9 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Determine if the container/image is running on AWS Lightsail (1) or locally (0)
 # If so, setup AWS S3 storage
+# It is unclear if this code is being used since whitenoise has been installed and configured
 if (os.environ.get('IS_ON_AWS', '0') == '1'):
+    print("DEBUG: Running AWS Lightsail")
     DEFAULT_FILE_STORAGE    = 'app.s3_backends.MediaS3Storage'
     STATICFILES_STORAGE     = 'app.s3_backends.StaticS3Storage'
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
@@ -161,6 +165,7 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     # Added to resolve issue running on AWS Lightsail
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
+    print("DEBUG: Running in a local environment")
     STATIC_ROOT  = '/app/static/'
     MEDIA_ROOT   = '/app/media/'
 
