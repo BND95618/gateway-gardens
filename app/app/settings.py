@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Added for Dajango 5.2.8 S3 static/media file access
+    'storages',
+    # Main app
     'plants',
     # Image processing
     'imagekit',
@@ -53,8 +56,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
     # Whitenoise is used to serve static files on AWS Lightsail - required after Django 5.2.8 upgrade
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,10 +97,10 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         #
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
+        'ENGINE'  : 'django.db.backends.postgresql',
+        'HOST'    : os.environ.get('DB_HOST'),
+        'NAME'    : os.environ.get('DB_NAME'),
+        'USER'    : os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
@@ -111,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
     # checks whether the password meets a minimum length
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        "OPIONS": {
+        "OPTIONS": {
             "min_length": 9,
         }
     },
@@ -129,20 +134,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# STATIC_URL defines the URL prefix used to access static files in your templates
-STATIC_URL = 'static/'
-# MEDIA_URL defines the URL prefix used to access media files in your templates
-MEDIA_URL  = 'media/'
+TIME_ZONE     = 'UTC'
+USE_I18N      = True
+USE_TZ        = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -155,19 +149,73 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Determine if the container/image is running on AWS Lightsail (1) or locally (0)
 # If so, setup AWS S3 storage
 # It is unclear if this code is being used since whitenoise has been installed and configured
+
 if (os.environ.get('IS_ON_AWS', '0') == '1'):
-    print("DEBUG: Running AWS Lightsail")
-    DEFAULT_FILE_STORAGE    = 'app.s3_backends.MediaS3Storage'
-    STATICFILES_STORAGE     = 'app.s3_backends.StaticS3Storage'
+    print("DEBUG: Running on AWS Lightsail")
+    #############################################################################
+    # AWS/S3 setup for serving static and media files when using Django 4.2.8   #
+    #############################################################################
+    # DEFAULT_FILE_STORAGE    = 'app.s3_backends.MediaS3Storage'
+    # STATICFILES_STORAGE     = 'app.s3_backends.StaticS3Storage'
+    # AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    # AWS_DEFAULT_ACL         = 'public-read'
+    # AWS_QUERYSTRING_AUTH    = False
+    # # STATIC_URL defines the URL prefix used to access static files in your templates
+    # STATIC_URL = 'static/'
+    # # MEDIA_URL defines the URL prefix used to access media files in your templates
+    # MEDIA_URL  = 'media/'
+    # # Added to resolve issue running on AWS Lightsail
+    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    #############################################################################
+    # AWS/S3 setup for serving static and media files when using Django 5.2.8   #
+    #############################################################################
+
+    # AWS S3 Settings
+    AWS_ACCESS_KEY_ID       = os.environ.get('AWS_S3_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY   = os.environ.get('AWS_S3_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_REGION_NAME      = 'us-east-1'
+    AWS_S3_CUSTOM_DOMAIN    = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+
+    # Optional: Control ACLs and query string authentication
     AWS_DEFAULT_ACL         = 'public-read'
     AWS_QUERYSTRING_AUTH    = False
-    # Added to resolve issue running on AWS Lightsail
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    # Storage backends for Django 4.2+
+    STORAGES = {
+        "default": {
+            "BACKEND": "app.storage_backends.PublicMediaStorage",
+            # Options can be passed here if not defined in the class
+        },
+        "staticfiles": {
+            "BACKEND": "app.storage_backends.StaticStorage",
+            # Options can be passed here if not defined in the class
+        }
+    }
+
+    # URLs for static and media files
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    MEDIA_URL  = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+    # Good static url example
+    # https://bucket-jgoc3p.s3.amazonaws.com/static/plants/img/sunset-zone-14-map.png
+    
+    # Good media url example
+    # https://bucket-jgoc3p.s3.amazonaws.com/media/images/619920cb-16f1-40de-a099-5449ac158c25.jpg
+    
+    #############################################################################
 else:
-    print("DEBUG: Running in a local environment")
+    #############################################################################
+    # Setup for serving static and media files in local development environment #
+    #############################################################################
+    print("DEBUG: Running in local development environment")
+    # STATIC_URL defines the URL prefix used to access static files in your templates
+    STATIC_URL   = '/static/'
     STATIC_ROOT  = '/app/static/'
+    # MEDIA_URL defines the URL prefix used to access media files in your templates
+    MEDIA_URL    = '/media/'
     MEDIA_ROOT   = '/app/media/'
+    #############################################################################
 
 # Directs user to login page when login is required
 # AR: Login redirection should be fixed
