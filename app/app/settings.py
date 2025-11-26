@@ -26,6 +26,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 # DEBUG=1
 
+# The ALLOWED_HOSTS setting in Django is a security measure designed to prevent 
+# HTTP Host header attacks. It is a list of strings representing the host/domain 
+# names that a Django site can serve. 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
     filter(
@@ -56,10 +59,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    # Whitenoise is used to serve static files on AWS Lightsail - required after Django 5.2.8 upgrade
-    # "whitenoise.middleware.WhiteNoiseMiddleware",
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -93,10 +92,6 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        #
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        #
         'ENGINE'  : 'django.db.backends.postgresql',
         'HOST'    : os.environ.get('DB_HOST'),
         'NAME'    : os.environ.get('DB_NAME'),
@@ -153,20 +148,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 if (os.environ.get('IS_ON_AWS', '0') == '1'):
     print("DEBUG: Running on AWS Lightsail")
     #############################################################################
-    # AWS/S3 setup for serving static and media files when using Django 4.2.8   #
-    #############################################################################
-    # DEFAULT_FILE_STORAGE    = 'app.s3_backends.MediaS3Storage'
-    # STATICFILES_STORAGE     = 'app.s3_backends.StaticS3Storage'
-    # AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
-    # AWS_DEFAULT_ACL         = 'public-read'
-    # AWS_QUERYSTRING_AUTH    = False
-    # # STATIC_URL defines the URL prefix used to access static files in your templates
-    # STATIC_URL = 'static/'
-    # # MEDIA_URL defines the URL prefix used to access media files in your templates
-    # MEDIA_URL  = 'media/'
-    # # Added to resolve issue running on AWS Lightsail
-    # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    #############################################################################
     # AWS/S3 setup for serving static and media files when using Django 5.2.8   #
     #############################################################################
 
@@ -193,16 +174,27 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
         }
     }
 
-    # URLs for static and media files
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
-    MEDIA_URL  = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    # STATIC_URL is a crucial setting that defines the URL prefix for accessing static files 
+    # (like CSS, JavaScript, and images) in your project. It specifies the base URL from 
+    # which these files will be served to the client's browser.
+    #
+    # STATIC_ROOT is a setting that defines the absolute file system path to a directory 
+    # where all static files (CSS, JavaScript, images, etc.) from your Django project and
+    # its installed apps will be collected during deployment.
+    #
+    # STATICFILES_DIRS in is a setting used to specify additional directories where Django's 
+    # collectstatic command should look for static files, beyond the default static/ directories
+    # found within each installed app
 
-    # Good static url example
-    # https://bucket-jgoc3p.s3.amazonaws.com/static/plants/img/sunset-zone-14-map.png
-    
-    # Good media url example
-    # https://bucket-jgoc3p.s3.amazonaws.com/media/images/619920cb-16f1-40de-a099-5449ac158c25.jpg
-    
+    STATIC_URL         = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    STATIC_ROOT        = os.path.join(BASE_DIR, 'staticfiles')
+    # STATICFILES_DIRS = [   ]
+
+    # MEDIA_URL defines the base URL from which your Django application serves user-uploaded files. 
+    # This means that when a user uploads an image or a file, the URL used to access that file in a 
+    # web browser will start with the value defined in MEDIA_URL
+
+    MEDIA_URL  = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
     #############################################################################
 else:
     #############################################################################

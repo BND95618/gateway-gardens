@@ -18,7 +18,11 @@
       <h3 class="w3-bar-item">
         {{ plant.commonName }}
         <span style="font-style: italic;">
-          ( {{ plant.genus }} {{ plant.species }} {{ plant.variety }} )
+          {% if plant.variety != "tbd" %}
+            ( {{ plant.genus }} {{ plant.species }} '{{ plant.variety }}' )
+          {% else %}
+            ( {{ plant.genus }} {{ plant.species }} )
+          {% endif %}
         </span>
 
         <!-- Scientific Name Pronunciation -->

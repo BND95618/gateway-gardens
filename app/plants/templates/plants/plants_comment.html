@@ -11,12 +11,19 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-bar w3-green">
-    <h1 class="w3-bar-item">
-      Comments related to: 
-      {{ plant.commonName }} / 
-      {{ plant.genus }} {{ plant.species }} {{ plant.variety }}
-    </h1>
+  <div class="w3-card-4">
+    <header class="w3-container  w3-green">
+      <h3 class="w3-bar-item">
+        Comments related to: {{ plant.commonName }} 
+        <span style="font-style: italic;">
+          {% if plant.variety != "tbd" %}
+            ({{ plant.genus }} {{ plant.species }} '{{ plant.variety }}')
+          {% else %}
+            ({{ plant.genus }} {{ plant.species }})
+          {% endif %}
+        </span>
+      </h3>
+    </header>
   </div>
 {% endblock header-completion %}
 

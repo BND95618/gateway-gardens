@@ -57,6 +57,11 @@ UCD_ALL_STAR_CHOICES = (
 	("Yes", "Yes"),
 	("No",  "No"),
 )
+SUNSET_Z14_CHOICES = (
+	("tbd", "tbd"),
+	("Yes", "Yes"),
+	("No",  "No"),
+)
 SUN_EXPOSURE_CHOICES = (
 	("tbd",           "tbd"),
 	("Full Sun",      "Full Sun"),
@@ -202,6 +207,7 @@ COLUMN_CHOICES = (
 	("Pollinators",     "Pollinators"),
 	("CA Native",       "CA Native"),
 	("UCD All-Star",    "UCD All-Star"),
+	("Sunset Z14",      "Sunset Z14"),
 	# Plant Requirements
 	("Sun Exposure",    "Sun Exposure"),
 	("Water Rqmts",     "Water Rqmts"),
@@ -225,6 +231,7 @@ MY_COLUMN_CHOICES = (
 	("Pollinators",     "Pollinators"),
 	("CA Native",       "CA Native"),
 	("UCD All-Star",    "UCD All-Star"),
+	("Sunset Z14",      "Sunset Z14"),
 	# Plant Requirements
 	("Sun Exposure",    "Sun Exposure"),
 	("Water Rqmts",     "Water Rqmts"),
@@ -642,6 +649,13 @@ class PlantAddUpdateForm(forms.Form):
 		label="UCD All-Star",
 		initial = 'tbd',
 		choices = UCD_ALL_STAR_CHOICES, 
+		widget=forms.RadioSelect,
+		required=False,
+		)
+	sunset_z14 = forms.ChoiceField(
+		label="Sunset Zone 14 Recommendation",
+		initial = 'tbd',
+		choices = SUNSET_Z14_CHOICES, 
 		widget=forms.RadioSelect,
 		required=False,
 		)

@@ -288,7 +288,6 @@
             const firstRowCells = firstRow.getElementsByTagName('td');
             const firstRowCellContents = firstRowCells[lastToDoSortCol].textContent.trim();
             const firstRowCellValue    = firstRowCellContents .split('\n')[0];
-            console.log("DEBUG: firstRowCellValue =", firstRowCellValue);
 
             const lastRow = rows[rows.length - 1];
             const lastRowCells = lastRow.getElementsByTagName('td');
@@ -337,11 +336,6 @@
         {
             lastToDoSortDir = "down";
         }
-
-        console.log("DEBUG: firstRowCellValue =", firstRowCellValue);
-        console.log("DEBUG: lastRowCellValue  =", lastRowCellValue);
-        console.log("DEBUG: lastToDoSortCol   =", lastToDoSortCol);
-        console.log("DEBUG: lastToDoSortDir   =", lastToDoSortDir);
     }
     // Sort My Plants table by previous sort criteria
     window.onload = restoreToDoSort();

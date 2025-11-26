@@ -1,4 +1,4 @@
-/* app/plants/static/plants/css/global.css
+/* app/plants/static/plants/css/style.css
    Element Selectors = tag
    Class Selectors   = '.'
    ID Selectors      = '#'
@@ -9,14 +9,17 @@
    > adjacent sibling selector (+)
    > general sibling selector (~)
 */
-body {
+body 
+{
     font-family: chalkboard, verdana, sans-serif;
 }
-h1 h2{ 
-    color: white; 
-    font-family: chalkboard, verdana, sans-serif;
-}
-p {
+p 
+{
     font-family: chalkboard, verdana, sans-serif;
     font-size: large;
+}
+.bnd-banner
+{
+    color: white; 
+    font-family: chalkboard, verdana, sans-serif;
 }

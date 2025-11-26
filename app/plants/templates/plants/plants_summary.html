@@ -141,6 +141,19 @@
       </select>
       <br>
 
+      <label for="id_sunset_z14_search">Sunset Z14:</label><br>
+      <select id="id_sunset_z14_search" name="sunset_z14_search" class="w3-select w3-margin-bottom">
+        <option value="Any" >Any</option>
+        {% for x in sunset_z14_opt %}
+          {% if x == sunset_z14_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br>
+
       <!-- Environmental Needs -->
       <p class="w3-center"><i>Environmental Needs</i></p>
 
@@ -402,14 +415,15 @@
           <th style="cursor:pointer" onclick="sortTable(9, 'plantTable')" >Pollinators  </th>
           <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="w3-center">CA Native</th>
           <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="w3-center">UCD All-Star</th>
-           <!-- Plant Requirements -->
-          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')">Sun Exposure   </th>
-          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')">Water Rqmts    </th>
-          <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Soil Type      </th>
-          <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">pH Range       </th>
-          <th style="cursor:pointer" onclick="sortTable(16, 'plantTable')">Heat Tolerance </th>
-          <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">USDA Zones     </th>
-          <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">Sunset Zones   </th>
+          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')" class="w3-center">Sunset Z14</th>
+          <!-- Plant Requirements -->
+          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')">Sun Exposure   </th>
+          <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Water Rqmts    </th>
+          <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">Soil Type      </th>
+          <th style="cursor:pointer" onclick="sortTable(16, 'plantTable')">pH Range       </th>
+          <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">Heat Tolerance </th>
+          <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">USDA Zones     </th>
+          <th style="cursor:pointer" onclick="sortTable(19, 'plantTable')">Sunset Zones   </th>
           <!-- Plant Detail header placeholder -->
           <th class="w3-center"></th>
           <!-- Plant Update header placeholder -->
@@ -440,6 +454,7 @@
             <td>{{ plant.pollinators |cut:"["|cut:"]"   }}</td>
             <td class="w3-center">{{ plant.ca_native    }}</td>
             <td class="w3-center">{{ plant.ucd_all_star }}</td>
+            <td class="w3-center">{{ plant.sunset_z14   }}</td>
             <!-- Plant Requirements -->
             <td>{{ plant.sun_exposure|cut:"["|cut:"]"   }}</td>
             <td>{{ plant.water_rqmts                    }}</td>
@@ -542,7 +557,7 @@
       // 
       const column_options = ['Common Name', 'Genus/Species', 'Variety',
                               'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season', 'Bloom Range',
-                              'Pollinators', 'CA Native', 'UCD All-Star', 
+                              'Pollinators', 'CA Native', 'UCD All-Star', 'Sunset Z14',
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
                               'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
       ]
@@ -566,13 +581,14 @@
         else if (column_options[i] == "Pollinators")    { column_index =  9; }
         else if (column_options[i] == "CA Native")      { column_index = 10; } 
         else if (column_options[i] == "UCD All-Star")   { column_index = 11; }
-        else if (column_options[i] == "Sun Exposure")   { column_index = 12; } 
-        else if (column_options[i] == "Water Rqmts")    { column_index = 13; } 
-        else if (column_options[i] == "Soil Type")      { column_index = 14; }
-        else if (column_options[i] == "pH Range")       { column_index = 15; }
-        else if (column_options[i] == "Heat Tolerance") { column_index = 16; }
-        else if (column_options[i] == "USDA Zones")     { column_index = 17; }
-        else if (column_options[i] == "Sunset Zones")   { column_index = 18; }
+        else if (column_options[i] == "Sunset Z14")     { column_index = 12; }
+        else if (column_options[i] == "Sun Exposure")   { column_index = 13; } 
+        else if (column_options[i] == "Water Rqmts")    { column_index = 14; } 
+        else if (column_options[i] == "Soil Type")      { column_index = 15; }
+        else if (column_options[i] == "pH Range")       { column_index = 16; }
+        else if (column_options[i] == "Heat Tolerance") { column_index = 17; }
+        else if (column_options[i] == "USDA Zones")     { column_index = 18; }
+        else if (column_options[i] == "Sunset Zones")   { column_index = 19; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection.includes(column_options[i])){
@@ -615,6 +631,7 @@
       document.getElementById("id_pollinators_search"   ).value = "Any";
       document.getElementById("id_ca_native_search"     ).value = "Any";
       document.getElementById("id_ucd_all_star_search"  ).value = "Any";
+      document.getElementById("id_sunset_z14_search"    ).value = "Any";
       document.getElementById("id_sun_exposure_search"  ).value = "Any";
       document.getElementById("id_water_rqmts_search"   ).value = "Any";
       document.getElementById("id_soil_type_search"     ).value = "Any";
@@ -704,7 +721,6 @@
         tabContents[i].style.display = "none";
       }
       // Get selected tab
-      console.log("DEBUG: selectedTabContent", selectedTabContent);
       selTabContent=document.getElementById(selectedTabContent);
       // Highlight selected tab
       event.currentTarget.classList.add("w3-light-green");
@@ -712,12 +728,10 @@
       selTabContent.style.display = "block";
       // Sort table
       table = selTabContent.firstElementChild;
-      console.log("DEBUG: table:", table.id);
       sortTable(0, table.id);
     }
     // Select the first tab and sort by Common Name
     bloomTab = document.getElementsByClassName("tab")[0];
-    console.log("DEBUG: bloomTab:", bloomTab);
     bloomTab.click();
   </script>
 

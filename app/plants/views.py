@@ -32,6 +32,7 @@ bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
+sunset_z14_opt   = ["tbd", "Yes", "No"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
 pH_opt           = ["tbd", 
@@ -46,7 +47,7 @@ usda_zones_opt     = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
                              "9a", "9b", "10a", "10b", "11a", "11b"]
 sunset_zones_opt = ["1A", "1B", "2A", "2B", "3A", "3B",  "4",  "5",  "6",  "7",  "8",  "9", "10", 
                     "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", 
-                    "21", "22", "23", "24",
+                    "21", "22", "23", "24", "28", "29", "30", "31", "32", "33", "34", "35",
                     "A1", "A2", "A3", "H1", "H2"]
 happiness_opt    = ["tbd", "Very Happy", "Happy", "Neutral", "Unhappy", "Very Unhappy"]
 month_opt        = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -249,8 +250,6 @@ def planner_edit_modal(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
-    print("DEBUG: Got to planner_edit_modal view")
-    
     if request.method == 'POST':
         # Get the JSON sring with the selected shape attributes
         shape_JSON_string = request.body.decode('utf-8')
@@ -284,8 +283,6 @@ def plant_details_modal(request):
         requestedPlant = requestedPlant_dict["requestedPlant"]
         # Retrieve the requested plant from the db
         plant = Plant.objects.get(commonName = requestedPlant)
-
-        print("DEBUG: plant:", plant)
 
         plant.sun_exposure   = string_display(plant.sun_exposure)
         plant.water_rqmts    = string_display(plant.water_rqmts)
@@ -321,6 +318,7 @@ def plant_fetch(request):
     else:
         print("DEBUG: Error!")
         return HttpResponseRedirect(reverse('plants:index'))
+
 # 
 
 def myplants_summary(request):
@@ -342,6 +340,7 @@ def myplants_summary(request):
         pollinators_search      = request.POST["pollinators_search"]
         ca_native_search        = request.POST["ca_native_search"]
         ucd_all_star_search     = request.POST["ucd_all_star_search"]
+        sunset_z14_search       = request.POST["sunset_z14_search"]
         # Plant Requirements
         sun_exposure_search     = request.POST["sun_exposure_search"]
         water_rqmts_search      = request.POST["water_rqmts_search"]
@@ -368,6 +367,7 @@ def myplants_summary(request):
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
+                garden.sunset_z14_search   = sunset_z14_search
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
                 garden.pH_search           = pH_search
@@ -418,29 +418,34 @@ def myplants_summary(request):
                     (myplant.plant.bloom_color  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_season_search         in myplant.plant.bloom_season) or \
-                    (bloom_season_search         == "Any")                       or \
+                  ( (bloom_season_search        in myplant.plant.bloom_season) or \
+                    (bloom_season_search        == "Any")                       or \
                     (myplant.plant.bloom_season == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (pollinators_search          in myplant.plant.pollinators)  or \
-                    (pollinators_search          == "Any")                       or \
+                  ( (pollinators_search         in myplant.plant.pollinators)  or \
+                    (pollinators_search         == "Any")                       or \
                     (myplant.plant.pollinators  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (ca_native_search             == myplant.plant.ca_native)   or \
-                    (ca_native_search             == "Any")                      or \
+                  ( (ca_native_search            == myplant.plant.ca_native)   or \
+                    (ca_native_search            == "Any")                      or \
                     (myplant.plant.ca_native     == "tbd")                         \
                    )                                                                \
                   and                                                               \
-                  ( (ucd_all_star_search         == myplant.plant.ucd_all_star) or \
+                  ( (ucd_all_star_search         == myplant.plant.ucd_all_star)  or \
                     (ucd_all_star_search         == "Any")                       or \
-                    (myplant.plant.ucd_all_star == "tbd")                          \
+                    (myplant.plant.ucd_all_star  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (sun_exposure_search         in myplant.plant.sun_exposure) or \
+                  ( (sunset_z14_search           == myplant.plant.sunset_z14)    or \
+                    (sunset_z14_search           == "Any")                       or \
+                    (myplant.plant.sunset_z14    == "tbd")                          \
+                  )                                                                 \
+                  and                                                               \
+                  ( (sun_exposure_search         in myplant.plant.sun_exposure)  or \
                     (sun_exposure_search         == "Any")                       or \
-                    (myplant.plant.sun_exposure == "tbd")                          \
+                    (myplant.plant.sun_exposure  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
                   ( (water_rqmts_search         in myplant.plant.water_rqmts)   or \
@@ -504,6 +509,7 @@ def myplants_summary(request):
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
+                sunset_z14_search     = garden.sunset_z14_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
                 pH_search             = garden.pH_search
@@ -531,6 +537,7 @@ def myplants_summary(request):
                         "bloom_season_opt"   : bloom_season_opt,
                         "pollinators_opt"    : pollinators_opt,
                         "ucd_all_star_opt"   : ucd_all_star_opt,
+                        "sunset_z14_opt"     : sunset_z14_opt,
                         "ca_native_opt"      : ca_native_opt,
                         # search field options - plant requirements & garden environment
                         "sun_exposure_opt"   : sun_exposure_opt,
@@ -544,18 +551,19 @@ def myplants_summary(request):
                         "month_opt"          : month_opt,
                         
                         # search field defaults - plant attributes
-                        "type_x_search"       : type_x_search,
-                        "bloom_color_search"  : bloom_color_search,
-                        "bloom_season_search" : bloom_season_search,
-                        "bloom_month_search"  : bloom_month_search,
-                        "pollinators_search"  : pollinators_search,
-                        'ca_native_search'    : ca_native_search,
-                        'ucd_all_star_search' : ucd_all_star_search,
+                        "type_x_search"          : type_x_search,
+                        "bloom_color_search"     : bloom_color_search,
+                        "bloom_season_search"    : bloom_season_search,
+                        "bloom_month_search"     : bloom_month_search,
+                        "pollinators_search"     : pollinators_search,
+                        'ca_native_search'       : ca_native_search,
+                        'ucd_all_star_search'    : ucd_all_star_search,
+                        'sunset_z14_search'      : sunset_z14_search,
                         # search field defaults - plant requirements
-                        "sun_exposure_search" : sun_exposure_search,
-                        "water_rqmts_search"  : water_rqmts_search,
-                        "soil_type_search"    : soil_type_search,
-                        "pH_search"           : pH_search,
+                        "sun_exposure_search"    : sun_exposure_search,
+                        "water_rqmts_search"     : water_rqmts_search,
+                        "soil_type_search"       : soil_type_search,
+                        "pH_search"              : pH_search,
                         "heat_tolerance_search"  : heat_tolerance_search,
                         "usda_zone_search"       : usda_zone_search,
                         "sunset_zone_search"     : sunset_zone_search,
@@ -587,6 +595,7 @@ def myplants_summary(request):
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
+                sunset_z14_search     = garden.sunset_z14_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
                 pH_search             = garden.pH_search
@@ -635,13 +644,13 @@ def myplants_summary(request):
                     (myplant.plant.type_x       == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_color_search          in myplant.plant.bloom_color)  or \
-                    (bloom_color_search          == "Any")                       or \
+                  ( (bloom_color_search         in myplant.plant.bloom_color)  or \
+                    (bloom_color_search         == "Any")                       or \
                     (myplant.plant.bloom_color  == "tbd")                          \
                   )                                                                 \
                   and                                                               \
-                  ( (bloom_season_search         in myplant.plant.bloom_season) or \
-                    (bloom_season_search         == "Any")                       or \
+                  ( (bloom_season_search        in myplant.plant.bloom_season) or \
+                    (bloom_season_search        == "Any")                       or \
                     (myplant.plant.bloom_season == "tbd")                          \
                   )                                                                 \
                   and                                                               \
@@ -657,7 +666,12 @@ def myplants_summary(request):
                   and                                                               \
                   ( (ucd_all_star_search         == myplant.plant.ucd_all_star) or \
                     (ucd_all_star_search         == "Any")                       or \
-                    (myplant.plant.ucd_all_star == "tbd")                          \
+                    (myplant.plant.ucd_all_star  == "tbd")                          \
+                  )                                                                 \
+                  and
+                  ( (sunset_z14_search           == myplant.plant.sunset_z14)    or \
+                    (sunset_z14_search           == "Any")                       or \
+                    (myplant.plant.sunset_z14    == "tbd")                          \
                   )                                                                 \
                   and                                                               \
                   ( (sun_exposure_search         in myplant.plant.sun_exposure) or \
@@ -716,18 +730,19 @@ def myplants_summary(request):
         # Get the user's previously stored column display sections
         for garden in gardens:       
             my_column_selection_list  = string2list(garden.my_column_selection)
-        context = { 'myplants'           : myplants,
+        context = { 'myplants'            : myplants,
                     # search field options - plant attributes
-                    "plant_types"      : plant_types,
-                    "bloom_color_opt"  : bloom_color_opt,
-                    "bloom_season_opt" : bloom_season_opt,
-                    "pollinators_opt"  : pollinators_opt,
-                    "ucd_all_star_opt" : ucd_all_star_opt,
-                    "ca_native_opt"    : ca_native_opt,
+                    "plant_types"         : plant_types,
+                    "bloom_color_opt"     : bloom_color_opt,
+                    "bloom_season_opt"    : bloom_season_opt,
+                    "pollinators_opt"     : pollinators_opt,
+                    "ucd_all_star_opt"    : ucd_all_star_opt,
+                    "sunset_z14_opt"      : sunset_z14_opt,
+                    "ca_native_opt"       : ca_native_opt,
                     # search field options - plant requirements & garden environment
-                    "sun_exposure_opt" : sun_exposure_opt,
-                    "water_rqmts_opt"  : water_rqmts_opt,
-                    "soil_type_opt"    : soil_type_opt,
+                    "sun_exposure_opt"    : sun_exposure_opt,
+                    "water_rqmts_opt"     : water_rqmts_opt,
+                    "soil_type_opt"       : soil_type_opt,
                     "pH_opt"              : pH_opt,
                     "heat_tolerance_opt"  : heat_tolerance_opt,
                     "usda_zones_opt"      : usda_zones_opt,
@@ -742,6 +757,7 @@ def myplants_summary(request):
                     "pollinators_search"  : pollinators_search,
                     'ca_native_search'    : ca_native_search,
                     'ucd_all_star_search' : ucd_all_star_search,
+                    'sunset_z14_search'   : sunset_z14_search,
                     # search field defaults - plant requirements
                     "sun_exposure_search" : sun_exposure_search,
                     "water_rqmts_search"  : water_rqmts_search,
@@ -787,7 +803,8 @@ def myplants_add(request, id):
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         form = MyPlantAddUpdateForm()
-        context = { 'form' : form }
+        context = { 'plant' : plant,
+                    'form'  : form }
         return render(request, 'plants/myplants_add.html', context)
     
 def myplant_update(request, id):
@@ -796,7 +813,6 @@ def myplant_update(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
     if request.POST:
-        # print("DEBUG: request =", request)
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             myplant.date_planted = form.cleaned_data.get("date_planted") #
@@ -889,7 +905,6 @@ def myplants_todo_add(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     
     if request.POST:
-        print("DEBUG: Got to myplants_todo_add - POST")
         myplant_todo = MyPlantToDo()
 
         common_name   = request.POST["common_name"]
@@ -981,7 +996,6 @@ def myplants_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    print("DEBUG: Got to To Do sort parameter save")
     mygarden = Garden.objects.get(id=id)
     if request.method == 'POST':
 
@@ -989,7 +1003,6 @@ def myplants_todo_save(request, id):
         data_JSON_string = request.body.decode('utf-8')
         # Convert the JSON string into a dictionary
         data_dict= json.loads(data_JSON_string)
-        print("DEBUG: data_dict =", data_dict)
 
         # Get the sort parameters and save to db
         mygarden.lastToDoSortCol = data_dict["lastToDoSortCol"]
@@ -1038,7 +1051,6 @@ def myplant_todo_add(request, id):
     myplant = MyPlant.objects.get(id=id)
     myplant_todo = MyPlantToDo()
     if request.POST:
-        print("DEBUG: Got to myplant_todo_add - POST")
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
             myplant_todo.owner    = request.user.username
@@ -1110,11 +1122,8 @@ def myplant_todo_done(request, id):
     # Get the To Do item to have completion status toggled
     myplant_todo = MyPlantToDo.objects.get(id=id)
     if request.method == 'POST':
-        print("DEBUG: request =", request)
         # Parses the JSON data from the request body
         data_JSON = json.loads(request.body)
-        print("DEBUG: data_JSON =", data_JSON)
-
         
         if(myplant_todo.complete == True):
             myplant_todo.complete = False
@@ -1128,7 +1137,6 @@ def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    print("DEBUG: Got to To Do sort parameter save")
     myplant = MyPlant.objects.get(id=id)
     if request.method == 'POST':
 
@@ -1136,7 +1144,6 @@ def myplant_todo_save(request, id):
         data_JSON_string = request.body.decode('utf-8')
         # Convert the JSON string into a dictionary
         data_dict= json.loads(data_JSON_string)
-        print("DEBUG: data_dict =", data_dict)
 
         # Get the sort parameters and save to db
         myplant.lastToDoSortCol = data_dict["lastToDoSortCol"]
@@ -1187,6 +1194,7 @@ def plants_summary(request):
         pollinators_search    = request.POST["pollinators_search"]
         ca_native_search      = request.POST["ca_native_search"]
         ucd_all_star_search   = request.POST["ucd_all_star_search"]
+        sunset_z14_search     = request.POST["sunset_z14_search"]
         # Plant Requirements
         sun_exposure_search   = request.POST["sun_exposure_search"]
         water_rqmts_search    = request.POST["water_rqmts_search"]
@@ -1209,6 +1217,7 @@ def plants_summary(request):
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
+                garden.sunset_z14_search   = sunset_z14_search
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
                 garden.pH_search           = pH_search
@@ -1243,6 +1252,7 @@ def plants_summary(request):
                ((pollinators_search    in plant.pollinators)    or (pollinators_search  == "Any")    or (plant.pollinators    == "tbd")) and \
                ((ca_native_search      == plant.ca_native)      or (ca_native_search    == "Any")    or (plant.ca_native      == "tbd")) and \
                ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search == "Any")    or (plant.ucd_all_star   == "tbd")) and \
+               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search   == "Any")    or (plant.sunset_z14     == "tbd")) and \
                ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search == "Any")    or (plant.sun_exposure   == "tbd")) and \
                ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search  == "Any")    or (plant.water_rqmts    == "tbd")) and \
                ((soil_type_search      in plant.soil_type)      or (soil_type_search == "Any")       or (plant.soil_type      == "tbd")) and \
@@ -1281,6 +1291,7 @@ def plants_summary(request):
                     "bloom_season_opt"   : bloom_season_opt,
                     "pollinators_opt"    : pollinators_opt,
                     "ucd_all_star_opt"   : ucd_all_star_opt,
+                    "sunset_z14_opt"     : sunset_z14_opt,
                     "ca_native_opt"      : ca_native_opt,
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
@@ -1298,6 +1309,7 @@ def plants_summary(request):
                     'pollinators_search'    : pollinators_search,
                     'ca_native_search'      : ca_native_search,
                     'ucd_all_star_search'   : ucd_all_star_search,
+                    'sunset_z14_search'     : sunset_z14_search,
                     "sun_exposure_search"   : sun_exposure_search,
                     "water_rqmts_search"    : water_rqmts_search,
                     "pH_search"             : pH_search,
@@ -1327,6 +1339,7 @@ def plants_summary(request):
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
+                sunset_z14_search     = garden.sunset_z14_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
                 pH_search             = garden.pH_search
@@ -1358,6 +1371,7 @@ def plants_summary(request):
                 ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any") or (plant.pollinators    == "tbd")) and \
                 ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any") or (plant.ca_native      == "tbd")) and \
                 ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (plant.ucd_all_star   == "tbd")) and \
+                ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any") or (plant.sunset_z14     == "tbd")) and \
                 ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any") or (plant.sun_exposure   == "tbd")) and \
                 ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any") or (plant.water_rqmts    == "tbd")) and \
                 ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any") or (plant.soil_type      == "tbd")) and \
@@ -1402,6 +1416,7 @@ def plants_summary(request):
                     "pollinators_opt"    : pollinators_opt,
                     "ca_native_opt"      : ca_native_opt,
                     "ucd_all_star_opt"   : ucd_all_star_opt,
+                    "sunset_z14_opt"     : sunset_z14_opt,
                     "sun_exposure_opt"   : sun_exposure_opt,
                     "water_rqmts_opt"    : water_rqmts_opt,
                     "pH_opt"             : pH_opt,
@@ -1418,6 +1433,7 @@ def plants_summary(request):
                     "pollinators_search"    : pollinators_search,
                     'ca_native_search'      : ca_native_search,
                     'ucd_all_star_search'   : ucd_all_star_search,
+                    'sunset_z14_search'     : sunset_z14_search,
                     "sun_exposure_search"   : sun_exposure_search,
                     "water_rqmts_search"    : water_rqmts_search,
                     "soil_type_search"      : soil_type_search,
@@ -1480,29 +1496,30 @@ def plants_add(request):
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
-            plant.commonName    = form.cleaned_data.get('commonName')
-            plant.type_x        = form.cleaned_data.get('type_x')
-            plant.bloom_color   = form.cleaned_data.get('bloom_color')
-            plant.bloom_season  = form.cleaned_data.get('bloom_season')
-            plant.bloom_start   = form.cleaned_data.get('bloom_start')
-            plant.bloom_end     = form.cleaned_data.get('bloom_end')
-            plant.pollinators   = form.cleaned_data.get('pollinators')
-            plant.height_feet   = form.cleaned_data.get('height_feet')
-            plant.height_inch   = form.cleaned_data.get('height_inch')
-            plant.width_feet    = form.cleaned_data.get('width_feet')
-            plant.width_inch    = form.cleaned_data.get('width_inch')
-            plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
+            plant.commonName     = form.cleaned_data.get('commonName')
+            plant.type_x         = form.cleaned_data.get('type_x')
+            plant.bloom_color    = form.cleaned_data.get('bloom_color')
+            plant.bloom_season   = form.cleaned_data.get('bloom_season')
+            plant.bloom_start    = form.cleaned_data.get('bloom_start')
+            plant.bloom_end      = form.cleaned_data.get('bloom_end')
+            plant.pollinators    = form.cleaned_data.get('pollinators')
+            plant.height_feet    = form.cleaned_data.get('height_feet')
+            plant.height_inch    = form.cleaned_data.get('height_inch')
+            plant.width_feet     = form.cleaned_data.get('width_feet')
+            plant.width_inch     = form.cleaned_data.get('width_inch')
+            plant.sun_exposure   = form.cleaned_data.get('sun_exposure')
             plant.water_rqmts    = form.cleaned_data.get('water_rqmts')
             plant.pH_min         = form.cleaned_data.get('pH_min')
             plant.pH_max         = form.cleaned_data.get('pH_max')
             plant.soil_type      = form.cleaned_data.get("soil_type")
             plant.heat_tolerance = form.cleaned_data.get('heat_tolerance')
-            plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
-            plant.ca_native     = form.cleaned_data.get('ca_native')
-            plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
-            plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
-            plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
-            plant.kingdom       = form.cleaned_data.get('kingdom')
+            plant.ca_native      = form.cleaned_data.get('ca_native')
+            plant.ucd_all_star   = form.cleaned_data.get('ucd_all_star')
+            plant.sunset_z14     = form.cleaned_data.get('sunset_z14')
+            plant.usda_zone_min  = form.cleaned_data.get('usda_zone_min')
+            plant.usda_zone_max  = form.cleaned_data.get('usda_zone_max')
+            plant.sunset_zones   = form.cleaned_data.get('sunset_zones')
+            plant.kingdom        = form.cleaned_data.get('kingdom')
             plant.subkingdom    = form.cleaned_data.get('subkingdom')
             plant.superdivision = form.cleaned_data.get('superdivision')
             plant.division      = form.cleaned_data.get('division')
@@ -1547,7 +1564,6 @@ def plants_add(request):
             for pest_item in pest_list:
                 for pest in pests:
                     if (pest.pest_name == pest_item):
-                        # print("DEBUG: pest_name =", pest.pest_name)
                         pest.plants.add(plant)
 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
@@ -1581,6 +1597,7 @@ def plant_update(request, id):
             plant.pollinators   = form.cleaned_data.get('pollinators')
             plant.ca_native     = form.cleaned_data.get('ca_native')
             plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
+            plant.sunset_z14    = form.cleaned_data.get('sunset_z14')
             plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
             plant.pH_min        = form.cleaned_data.get('pH_min')
@@ -1653,7 +1670,6 @@ def plant_update(request, id):
             for pest_item in pest_list:
                 for pest in pests:
                     if (pest.pest_name == pest_item):
-                        # print("DEBUG: pest_name =", pest.pest_name)
                         pest.plants.add(plant)
 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
@@ -1674,7 +1690,6 @@ def plant_update(request, id):
             pest_name_list.append(pest.pest_name)
         if pest_name_list:
             pest_tbd_checked = False
-        # print("DEBUG: pest_name_list:", pest_name_list)
         # set the update form with the current db values
         form = PlantAddUpdateForm(initial={ 'commonName'        : plant.commonName,
                                             'type_x'            : plant.type_x,
@@ -1689,6 +1704,7 @@ def plant_update(request, id):
                                             'pollinators'       : pollinators_list,
                                             'ca_native'         : plant.ca_native,
                                             'ucd_all_star'      : plant.ucd_all_star,
+                                            'sunset_z14'        : plant.sunset_z14,
                                             'sun_exposure'      : sun_exposure_list,
                                             'water_rqmts'       : plant.water_rqmts,
                                             'pH_min'            : plant.pH_min,
@@ -1833,7 +1849,6 @@ def pest_add(request):
         return HttpResponseRedirect(reverse('plants:index'))
     pest = Pest()
     if request.POST:
-        # print("DEBUG: Got to pest_add - if")
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name = form.cleaned_data.get('pest_name')
@@ -1842,7 +1857,6 @@ def pest_add(request):
             pest.save()
         return HttpResponseRedirect(reverse('plants:pest_summary'))
     else:
-        # print("DEBUG: Got to pest_add - else")
         form = PestAddUpdateForm()
         context = { 'form' : form }
         return render(request, 'plants/pest_add.html', context)
@@ -1853,7 +1867,6 @@ def pest_update(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     pest = Pest.objects.get(id=id)
     if request.POST:
-        # print("DEBUG: Got to pest_update - if")
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name = form.cleaned_data.get('pest_name')
@@ -1862,7 +1875,6 @@ def pest_update(request, id):
             pest.save()
         return HttpResponseRedirect(reverse('plants:pest_summary'))
     else:
-        # print("DEBUG: Got to pest_update - else")
         form = PestAddUpdateForm(initial={ 'pest_name' : pest.pest_name,
                                            'pest_type' : pest.pest_type,
                                            'pest_url'  : pest.pest_url,

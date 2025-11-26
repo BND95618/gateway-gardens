@@ -1111,7 +1111,6 @@
                 // Perform hit test
                 if (ctx.isPointInStroke(path, x, y)) 
                 {
-                    // console.log("DEBUG: curve has been selected");
                     if(!this.grouped)
                     {
                         this.createHandles();
@@ -1378,9 +1377,6 @@
             }
             createShapeEnd(x, y)
             {
-                console.log("DEBUG: width  =", this.width);
-                console.log("DEBUG: height =", this.height);
-
                 // check for either zero width or zero height
                 if((this.width != 0) && (this.height != 0))
                 {
@@ -1404,9 +1400,6 @@
                     alert("Rectangle not saved - zero width and/or height");
                 }
                 activeShape = null;
-
-                console.log("DEBUG: width  =", this.width);
-                console.log("DEBUG: height =", this.height);
             }
             select(x, y) 
             {
@@ -1677,9 +1670,7 @@
                 fillOpacityForm.value = this.fillOpacity;
             }
             editSave()
-            {
-                console.log("DEBUG: widthFtForm.value", widthFtForm.value);
-                
+            {   
                 // input error checking
                 if(widthFtForm.value == 0 && widthInForm.value == 0)
                 {
@@ -2001,8 +1992,6 @@
             }
             editSave()
             {
-                // console.log("DEBUG: lineColorForm.value:", lineColorForm.value);
-
                 // input error checking
                 if(radiusFtForm.value == 0 && radiusInForm.value == 0)
                 {
@@ -2167,11 +2156,6 @@
             }
             createShape(dx, dy)
             {
-                // console.log("DEBUG: xRadius =", this.xRadius);
-                // console.log("DEBUG: yRadius =", this.yRadius);
-                // console.log("DEBUG: dx =", dx);
-                // console.log("DEBUG: dy =", dy);
-
                 this.dxAcc += dx;
                 this.dyAcc += dy;
                 this.xRadius = Math.abs(this.dxAcc);
@@ -2815,8 +2799,6 @@
                                           200,         // x center
                                           200,         // y center
                                           40);         // radius placeholder
-
-                // console.log("DEBUG: plant constructor - id =", this.id);
             }
             fetchDetails()
             {
@@ -2868,12 +2850,6 @@
                     // Populate the plant shape fields
                     this.shape.label  = this.commonName;
                     this.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
-
-                    // 
-                    // this.getModal();
-
-                    // console.log("DEBUG: plant fetchDetails - id =", this.id)
-
                     // Refresh the screen to show the newly added plant
                     drawScreen();
                 });
@@ -2981,7 +2957,6 @@
             }
             restore(shape_JSON)
             {
-                // console.log("DEBUG: plant", this);
                 // 
                 this.plant       = shape_JSON.plant;
                 this.type        = shape_JSON.type;
@@ -3004,8 +2979,6 @@
                 this.shape.x           = shape_JSON.shape.x;
                 this.shape.y           = shape_JSON.shape.y;
                 this.shape.radius      = shape_JSON.shape.radius;
-
-                // console.log("DEBUG: plant restore - id =", this.id);
             }
         }
 
@@ -3116,13 +3089,10 @@
             }
             select(x, y)
             {
-                // console.log("DEBUG: boundingBox:", this.boundingBox);
                 return(this.boundingBox.select(x, y));
             }
             move(dx, dy)
             {
-                // console.log("DEBUG: got to ShapeGroup move method");
-                // console.log("DEBUG: shapes:", this.shapes);
                 for(let i = 0; i < this.shapes.length; i++)
                 {
                     this.shapes[i].move(dx, dy);
@@ -3351,8 +3321,6 @@
 
         // Setup layers to display
         const viewLayerInput   = document.getElementsByName("view_layer");
-
-        // console.log("DEBUG: drawLayerInput", drawLayerInput);
         
         // actions to be take when menu items are changed
         shapeOption.addEventListener("change", (e) =>
@@ -3544,9 +3512,6 @@
                         if(shapes[i].select(xSelectAbs, ySelectAbs))
                         { 
                             activeShape = shapes[i];
-
-                            // console.log("DEBUG: activeShape (1):", activeShape);
-
                             // Case: selected shape check is not currently a member of a group
                             if(!activeShape.grouped)
                             {
@@ -3632,15 +3597,6 @@
                 // Draw the entire screen
                 drawScreen();
             }
-
-            // console.log("DEBUG: shapes:", shapes);
-            // console.log("DEBUG: selectShape:", selectShape);
-            // console.log("DEBUG: activeShape:", activeShape);
-            // console.log("DEBUG: shapeGroups:", shapeGroups);
-            // console.log("DEBUG: wipGroupFlag:", wipGroupFlag);
-            // console.log("DEBUG: wipGroup:", wipGroup);
-            // console.log("DEBUG: activeGroupFlag:", activeGroupFlag);
-            // console.log("DEBUG: activeGroup:", activeGroup);
         });
 
         //************************************************************//
@@ -3656,13 +3612,6 @@
 
             console.log("DEBUG: *** Mouse down event registered ***");
 
-            // console.log("DEBUG: activeHandle:", activeHandle);
-            // console.log("DEBUG: moveShape   =", moveShape);
-            // console.log("DEBUG: resizeShape =", resizeShape);
-            // console.log("DEBUG: rotateShape =", rotateShape);
-            // console.log("DEBUG: activeGroup (in)=", activeGroup);
-            // console.log("DEBUG: moveGroup (in)=", moveGroup);
-
             // Defiitions:
             //   e.clientX = horizontal coordinate at which a mouse event occurred, 
             //               relative to the viewport's left edge
@@ -3671,9 +3620,6 @@
             //
             //   canvas.offsetLeft = canvas's left offset
             //   canvas.offsetTop  = canvas's top offset
-
-            // console.log("DEBUG: activeShape:", activeShape);
-            // console.log("DEBUG: activeGroup:", activeGroup);
 
             // Canvas selection point - relative position
             xSelectRel = Math.round(e.clientX - canvas.offsetLeft);
@@ -3727,7 +3673,6 @@
                 }
                 else if (shapeOption.value == "curve")
                 {
-                    // console.log("DEBUG: starting curve creation process");
                     activeShape = new Curve('curve', 
                                             nextShapeID, 
                                             false, 
@@ -3858,7 +3803,6 @@
                     activeShape.vertices.push({ x : xSelectAbs, y : ySelectAbs });
                     if(e.shiftKey)
                     {
-                        // console.log("DEBUG: Drawing a curve");
                         polygonCurve = true;
                     }
                     else
@@ -3909,7 +3853,6 @@
             // Move selected group
             else if (action == 'select' && activeGroup)
             {
-                // console.log("DEBUG: got to move group check");
                 if(activeGroup.select(xSelectAbs, ySelectAbs))
                 {
                     moveGroup = true;
@@ -3925,13 +3868,6 @@
                 xSelectRelSav = xSelectRel;
                 ySelectRelSav = ySelectRel;
             } 
-
-            console.log("DEBUG: activeHandle:", activeHandle);
-            console.log("DEBUG: moveShape   =", moveShape);
-            console.log("DEBUG: resizeShape =", resizeShape);
-            console.log("DEBUG: rotateShape =", rotateShape);
-            console.log("DEBUG: moveGroup (out)=", moveGroup);
-
             // Draw the entire screen
             drawScreen();
         });
@@ -3948,14 +3884,6 @@
             } 
 
             console.log("DEBUG: *** Mouse move event registered ***");
-
-            // console.log("DEBUG: activeHandle:", activeHandle);
-            // console.log("DEBUG: moveShape   =", moveShape);
-            // console.log("DEBUG: resizeShape =", resizeShape);
-            // console.log("DEBUG: rotateShape =", rotateShape);
-            // console.log("DEBUG: moveGroup   =", moveGroup);
-
-            // console.log("DEBUG: activeShape:", activeShape);
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -4020,7 +3948,6 @@
             }
 
             // Draw the entire screen
-            // console.log("DEBUG: ready to draw screen");
             drawScreen();
         });
 
@@ -4362,11 +4289,6 @@
             // set the default layer
             let highestLayer       = 1;
 
-            // console.log("DEBUG: Grouping In - nextGroupID:", nextGroupID);
-            // console.log("DEBUG: Grouping In - wipGroup:", wipGroup);
-            // console.log("DEBUG: Grouping In - activeGroup:", activeGroup);
-            // console.log("DEBUG: Grouping In - shapeGroups:", shapeGroups);
-
             // set the group flag for the shapes that are in the group
             // find the highest layer of the shapes in the group
             for(let i = 0; i < wipGroup.shapes.length; i++)
@@ -4435,12 +4357,6 @@
             unGroup.style.display   = "inline";
 
             drawScreen();
-
-            // console.log("DEBUG: Grouping Out - nextGroupID:", nextGroupID);
-            // console.log("DEBUG: Grouping Out - wipGroupFlag:", wipGroupFlag);
-            // console.log("DEBUG: Grouping Out - wipGroup:", wipGroup);
-            // console.log("DEBUG: Grouping Out - activeGroup:", activeGroup);
-            // console.log("DEBUG: Grouping Out - shapeGroups:", shapeGroups);
         }
         
         //************************************************************//
@@ -4470,9 +4386,6 @@
             activeGroupFlag = false;
             unGroup.style.display = "none";
             drawScreen();
-
-            // console.log("DEBUG: after ungroup - shapes:", shapes);
-            // console.log("DEBUG: after ungroup - shapeGroups:", shapeGroups);
         }
 
         //************************************************************//
@@ -4551,22 +4464,15 @@
         function drawScreen() 
         {
             // Get the layers to draw
-
-            // console.log("DEBUG: viewLayerInput:", viewLayerInput);
-
             let viewLayer = [];
 
             for (i = 0; i < viewLayerInput.length; i++) 
             {
                 if (viewLayerInput[i].checked)
                 {
-                    // console.log("DEBUG: view layer:", viewLayerInput[i].value);
                     viewLayer.push(viewLayerInput[i].value);
                 }
             }
-
-            // console.log("DEBUG: viewLayer:", viewLayer);
-
             //
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             //
@@ -4734,27 +4640,18 @@
                     shapeGroups.at(-1).restore(shapes_JSON[i]);
                     maxGroupID = Math.max(maxGroupID, shapeGroups.at(-1).id);
                     maxZIndex  = Math.max(maxZIndex,  shapes.at(-1).zIndex);
-
-                    // console.log("DEBUG: maxGroupID =", maxGroupID);
                 }
             }
-
-            // console.log("DEBUG: maxGroupID =", maxGroupID);
-
             nextPlantID = maxPlantID + 1;
             nextShapeID = maxShapeID + 1;
             nextGroupID = maxGroupID + 1;
             nextZIndex  = maxZIndex  + 1;
 
-            // console.log("DEBUG: nextGroupID =", nextGroupID);
-
             console.log("=======================================");
             console.log("Retrieving landscape design from server");
             console.log("=======================================");
-            // console.log("DEBUG: shapes_JSON:", shapes_JSON);
             console.log("DEBUG: restored shapes:", shapes);
             console.log("DEBUG: restored shapeGroups:", shapeGroups);
-            // console.log("DEBUG: nextGroupID =", nextGroupID);
             console.log("=======================================");
         }         
 
