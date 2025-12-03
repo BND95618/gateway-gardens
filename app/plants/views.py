@@ -1,27 +1,24 @@
 # app/plants/views.py
 
-import json
- 
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render, redirect # Added for images
-from django.template import loader
-from django.urls import reverse
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-#
-from django.contrib.auth.models import User, Group                 # User signup
-from django.contrib.auth        import authenticate, login, logout # User login/logout
-
+import copy, math, json
 from email_validator import validate_email
+ 
+from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
+from django.shortcuts import render, redirect # Added for images
+from django.template  import loader
+from django.urls      import reverse
+from django.contrib   import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models     import User, Group                 # User signup
+from django.contrib.auth            import authenticate, login, logout # User login/logout
 
 from .models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
-from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, ColumnChooserForm, MyColumnChooserForm
-from .forms  import GardenAddUpdateForm, MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm
-from .forms  import PlantAddUpdateForm, PlantCommentForm
-from .forms  import PestAddUpdateForm
 
-import math
-import os
+from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
+from .forms  import GardenAddUpdateForm
+from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
+from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
+from .forms  import PestAddUpdateForm
 
 # Define attribute select option arrays
 plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", 
@@ -53,10 +50,11 @@ happiness_opt    = ["tbd", "Very Happy", "Happy", "Neutral", "Unhappy", "Very Un
 month_opt        = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "Other"]
-todo_repeat_opt  = ["Daily", "Weekly", "Monthly", "Yearly", "Never"]
+todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
+    # DEBUG_print_request(request)
     return render(request, 'plants/index.html')
 
 #
@@ -588,26 +586,26 @@ def myplants_summary(request):
                 # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
                 # Get the user's previously stored search criteria
-                type_x_search         = garden.type_x_search
-                bloom_color_search    = garden.bloom_color_search
-                bloom_season_search   = garden.bloom_season_search
-                bloom_month_search    = garden.bloom_month_search
-                pollinators_search    = garden.pollinators_search
-                ca_native_search      = garden.ca_native_search
-                ucd_all_star_search   = garden.ucd_all_star_search
-                sunset_z14_search     = garden.sunset_z14_search
-                sun_exposure_search   = garden.sun_exposure_search
-                water_rqmts_search    = garden.water_rqmts_search
-                pH_search             = garden.pH_search
-                soil_type_search      = garden.soil_type_search
-                heat_tolerance_search = garden.heat_tolerance_search
-                usda_zone_search      = garden.usda_zone_search
-                sunset_zone_search    = garden.sunset_zone_search
+                type_x_search          = garden.type_x_search
+                bloom_color_search     = garden.bloom_color_search
+                bloom_season_search    = garden.bloom_season_search
+                bloom_month_search     = garden.bloom_month_search
+                pollinators_search     = garden.pollinators_search
+                ca_native_search       = garden.ca_native_search
+                ucd_all_star_search    = garden.ucd_all_star_search
+                sunset_z14_search      = garden.sunset_z14_search
+                sun_exposure_search    = garden.sun_exposure_search
+                water_rqmts_search     = garden.water_rqmts_search
+                pH_search              = garden.pH_search
+                soil_type_search       = garden.soil_type_search
+                heat_tolerance_search  = garden.heat_tolerance_search
+                usda_zone_search       = garden.usda_zone_search
+                sunset_zone_search     = garden.sunset_zone_search
 
-                my_sun_exposure_search   = garden.my_sun_exposure_search
-                my_water_level_search    = garden.my_water_level_search
-                my_soil_type_search      = garden.my_soil_type_search
-                my_happiness_search      = garden.my_happiness_search
+                my_sun_exposure_search = garden.my_sun_exposure_search
+                my_water_level_search  = garden.my_water_level_search
+                my_soil_type_search    = garden.my_soil_type_search
+                my_happiness_search    = garden.my_happiness_search
 
                 user_garden_found     = True
                 break # once the user's garden is found exit the loop
@@ -730,39 +728,39 @@ def myplants_summary(request):
         # Get the user's previously stored column display sections
         for garden in gardens:       
             my_column_selection_list  = string2list(garden.my_column_selection)
-        context = { 'myplants'            : myplants,
+        context = { 'myplants'               : myplants,
                     # search field options - plant attributes
-                    "plant_types"         : plant_types,
-                    "bloom_color_opt"     : bloom_color_opt,
-                    "bloom_season_opt"    : bloom_season_opt,
-                    "pollinators_opt"     : pollinators_opt,
-                    "ucd_all_star_opt"    : ucd_all_star_opt,
-                    "sunset_z14_opt"      : sunset_z14_opt,
-                    "ca_native_opt"       : ca_native_opt,
+                    "plant_types"            : plant_types,
+                    "bloom_color_opt"        : bloom_color_opt,
+                    "bloom_season_opt"       : bloom_season_opt,
+                    "pollinators_opt"        : pollinators_opt,
+                    "ucd_all_star_opt"       : ucd_all_star_opt,
+                    "sunset_z14_opt"         : sunset_z14_opt,
+                    "ca_native_opt"          : ca_native_opt,
                     # search field options - plant requirements & garden environment
-                    "sun_exposure_opt"    : sun_exposure_opt,
-                    "water_rqmts_opt"     : water_rqmts_opt,
-                    "soil_type_opt"       : soil_type_opt,
-                    "pH_opt"              : pH_opt,
-                    "heat_tolerance_opt"  : heat_tolerance_opt,
-                    "usda_zones_opt"      : usda_zones_opt,
-                    "sunset_zones_opt"    : sunset_zones_opt,
-                    "happiness_opt"       : happiness_opt,
-                    "month_opt"           : month_opt,
+                    "sun_exposure_opt"       : sun_exposure_opt,
+                    "water_rqmts_opt"        : water_rqmts_opt,
+                    "soil_type_opt"          : soil_type_opt,
+                    "pH_opt"                 : pH_opt,
+                    "heat_tolerance_opt"     : heat_tolerance_opt,
+                    "usda_zones_opt"         : usda_zones_opt,
+                    "sunset_zones_opt"       : sunset_zones_opt,
+                    "happiness_opt"          : happiness_opt,
+                    "month_opt"              : month_opt,
                     # search field defaults - plant attributes
-                    "type_x_search"       : type_x_search,
-                    "bloom_color_search"  : bloom_color_search,
-                    "bloom_season_search" : bloom_season_search,
-                    "bloom_month_search"  : bloom_month_search,
-                    "pollinators_search"  : pollinators_search,
-                    'ca_native_search'    : ca_native_search,
-                    'ucd_all_star_search' : ucd_all_star_search,
-                    'sunset_z14_search'   : sunset_z14_search,
+                    "type_x_search"          : type_x_search,
+                    "bloom_color_search"     : bloom_color_search,
+                    "bloom_season_search"    : bloom_season_search,
+                    "bloom_month_search"     : bloom_month_search,
+                    "pollinators_search"     : pollinators_search,
+                    'ca_native_search'       : ca_native_search,
+                    'ucd_all_star_search'    : ucd_all_star_search,
+                    'sunset_z14_search'      : sunset_z14_search,
                     # search field defaults - plant requirements
-                    "sun_exposure_search" : sun_exposure_search,
-                    "water_rqmts_search"  : water_rqmts_search,
-                    "soil_type_search"    : soil_type_search,
-                    "pH_search"           : pH_search,
+                    "sun_exposure_search"    : sun_exposure_search,
+                    "water_rqmts_search"     : water_rqmts_search,
+                    "soil_type_search"       : soil_type_search,
+                    "pH_search"              : pH_search,
                     "heat_tolerance_search"  : heat_tolerance_search,
                     "usda_zone_search"       : usda_zone_search,
                     "sunset_zone_search"     : sunset_zone_search,
@@ -893,11 +891,20 @@ def myplants_todo(request):
             myGarden = garden
 
     # Obtain all of the To Do items for the current user
-    myplants_todo = MyPlantToDo.objects.filter(owner = request.user.username)
+    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username)
 
     context = { 'myGarden'    : myGarden,
-                "myplants_todo" : myplants_todo, }
+                "myplants_todo" : myplants_todos, }
     return HttpResponse(template.render(context, request))
+
+def myplants_todo_details(request, id):
+    """  My Plant To Do item details modal """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    myplant_todo = MyPlantToDo.objects.get(id=id)
+    context = { 'myplant_todo' : myplant_todo }
+    return render(request, 'plants/myplants_todo_details_modal.html', context)   
 
 def myplants_todo_add(request, id):
     """ Add My Plant To Do item """
@@ -1011,6 +1018,22 @@ def myplants_todo_save(request, id):
         
     return JsonResponse({'test' : 'test' })
 
+def myplants_todo_fetch(request):
+    """ My Plant To Do items - save sort column and direction """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    # Obtain all of the To Do items for the current user
+    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username)
+    # Add the plant common name to the todo model for calendar display
+    for todo in myplants_todos:
+        todo.commonName = todo.myplant.plant.commonName
+        todo.pruning    = todo.myplant.plant.pruning
+        todo.save() 
+    # Convert queryset to a list of dictionaries
+    todos = list(myplants_todos.values()) 
+    return JsonResponse(todos, safe=False)
+
 #
 
 def myplant_details(request, id):
@@ -1021,24 +1044,24 @@ def myplant_details(request, id):
     myplant = MyPlant.objects.get(id=id)
     # format multiselect attributes to remove [, ', and ]
     myplant.sun_exposure = string_display(myplant.sun_exposure)
-    plant   = Plant.objects.get(id=myplant.plant.id)
+    plant                = Plant.objects.get(id=myplant.plant.id)
     # format multiselect attributes to remove [, ', and ] 
-    plant.bloom_color  = string_display(plant.bloom_color)
-    plant.bloom_season = string_display(plant.bloom_season)
-    plant.pollinators  = string_display(plant.pollinators)
-    plant.sun_exposure = string_display(plant.sun_exposure)
-    plant.water_rqmts  = string_display(plant.water_rqmts)
-    plant.soil_type    = string_display(plant.soil_type)
+    plant.bloom_color    = string_display(plant.bloom_color)
+    plant.bloom_season   = string_display(plant.bloom_season)
+    plant.pollinators    = string_display(plant.pollinators)
+    plant.sun_exposure   = string_display(plant.sun_exposure)
+    plant.water_rqmts    = string_display(plant.water_rqmts)
+    plant.soil_type      = string_display(plant.soil_type)
     plant.heat_tolerance = string_display(plant.heat_tolerance)
     # get all To Do items related to the plant
-    myplant_todo       = MyPlantToDo.objects.filter(myplant__pk=id)
+    myplant_todos        = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
-    myplant_comments   = MyPlantComment.objects.filter(myplant__pk=id) 
+    myplant_comments     = MyPlantComment.objects.filter(myplant__pk=id) 
 
     template = loader.get_template("plants/myplant_details.html")
     context  = { "myplant"          : myplant, 
                  "plant"            : plant,
-                 "myplant_todo"     : myplant_todo,
+                 "myplant_todos"    : myplant_todos,
                  "myplant_comments" : myplant_comments, 
                }
     # Send "context" to template and output the html from the template
@@ -1181,6 +1204,8 @@ def plants_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
+    DEBUG_print_request(request)
+
     # Executed when search request is submitted
     if request.method == 'POST':   
         template = loader.get_template("plants/plants_summary.html")
@@ -1492,6 +1517,9 @@ def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    
+    DEBUG_print_request(request)
+
     plant = Plant()
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -1580,6 +1608,9 @@ def plant_update(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    
+    DEBUG_print_request(request)
+
     plant = Plant.objects.get(id=id)
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -2329,6 +2360,34 @@ def bloom_month_list(start, end, options):
         if begin and option == end:
             return(list)
 
+def DEBUG_print_request(request):
+    """ Utility: print contents of HTTP Request to console """
+    print(f"================================================================")  
+    print(f"DEBUG: Print HTTP request")  
+    print(f"================================================================")  
+    print(f"Request Path:           {request.path}")
+    print(f"Request Method:         {request.method}")
+    if(request.method == 'GET'):
+        print(f"Request GET Parameters: {request.GET}")
+    if request.method == 'POST':
+        print(f"Request POST Parameters:")
+        max_length = 0
+        for key in request.POST:
+            max_length = max(max_length, len(key))
+        for key in request.POST:
+            value = request.POST.getlist(key)
+            spaces_to_align = max_length - len(key)
+            print(f"  Key: {key} {" "*spaces_to_align} Value: {value}")
+            # use following print command to also list the type of the value
+            # print(f"Key: {key} {" "*spaces_to_align} Value: {value} Type: {type(value)}")
+    print(f"================================================================") 
+    # For more complex data structures like request.META, use pprint
+    # print("Request META data:")
+    # pp = pprint.PrettyPrinter(indent=4)
+    # print(pp.pformat(request.META))
+    # print(f"================================================================")  
+    return()
+
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
@@ -2343,3 +2402,31 @@ def debug(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/debug.html')
+
+##################################################################################
+#
+##################################################################################
+# Every view function is responsible for returning an HttpResponse object. This 
+# object contains the content and metadata that will be sent back to the client's 
+# web browser.
+#
+#   template = loader.get_template("plants/gardens_summary.html")
+#   return HttpResponse(template.render(context, request))
+#
+# 'return render' is a common shortcut function used in views to combine a given 
+# template with a context dictionary and return an HttpResponse object containing 
+# the rendered HTML.
+#
+#   return render(request, 'plants/plant_update.html', context)
+#
+# 'HttpResponseRedirect' is a class within django.http that facilitates redirecting
+# a user's browser to a different URL. It is commonly used after processing form
+# data (especially POST requests) to prevent resubmission if the user refreshes
+# the page, a practice known as the "Post/Redirect/Get" pattern.
+#
+#   return HttpResponseRedirect(reverse('plants:myplants_summary'))
+#
+# To return a JSON response in Django, the primary method involves using the 
+# JsonResponse class from django.http
+#
+#   return JsonResponse({'shapes_JSON' : shapes_JSON})

@@ -171,11 +171,12 @@ TODO_ACTION_CHOICES = (
 	("Other",     "Other"),
 )
 TODO_REPEAT_CHOICES = (
-	("Daily",   "Daily"),
-	("Weekly",  "Weekly"),
-	("Monthly", "Monthly"),
-	("Yearly",  "Yearly"),
-	("None",    "None"),
+	("Daily",     "Daily"),
+	("Weekly",    "Weekly"),
+	("Bi-Weekly", "Bi-Weekly"),
+	("Monthly",   "Monthly"),
+	("Yearly",    "Yearly"),
+	("None",      "None"),
 )
 MONTH_CHOICES = (
 	("tbd",  "tbd"),

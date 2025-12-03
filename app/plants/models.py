@@ -288,18 +288,22 @@ class MyPlant(models.Model):
 
 class MyPlantToDo(models.Model):
     """ My Plant To Do """
+    owner      = models.CharField(max_length=64, default="tbd", blank=True)
+    
+    commonName = models.CharField(max_length= 32, default="", blank=True)
+    pruning    = QuillField(blank=True, null=True)
+
+    complete   = models.BooleanField(default=False)
+    date       = models.DateField(default="2025-01-01", null=True, blank=True)
+    action     = models.CharField(max_length= 16, default="", blank=True)
+    details    = models.CharField(max_length=256, default="", blank=True)
+    repeat     = models.CharField(max_length= 16, default="", blank=True)
     # Many-to-one relationship 
-    owner    = models.CharField(max_length=64, default="tbd", blank=True)
     # - many "To Do items" can be associated with each "My Plant" record
-    complete = models.BooleanField(default=False)
-    date     = models.DateField(default="2025-01-01", null=True, blank=True)
-    action   = models.CharField(max_length=16, default="", blank=True)
-    details  = models.CharField(max_length=64, default="", blank=True)
-    repeat   = models.CharField(max_length=16, default="", blank=True)
-    # connection to a specific plant in the MyPlant db table
-    myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+    # - connection to a specific plant in the MyPlant db table
+    myplant    = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
     # Administrative stuff
-    slug    = models.SlugField(default="", null=False, blank=True)
+    slug       = models.SlugField(default="", null=False, blank=True)
 
     def __str__(self):
         return self.action
