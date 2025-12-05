@@ -161,6 +161,13 @@ HAPPINESS_CHOICES = (
 	("Unhappy",      "Unhappy"),
 	("Very Unhappy", "Very Unhappy"),
 )
+STATUS_CHOICES = (
+	("Development", "Development"),
+	("Review",      "Review"),
+	("Published",   "Published"),
+	("Archived",    "Archived"),
+)
+#
 TODO_ACTION_CHOICES = (
 	("Fertilize", "Fertilize"),
 	("Harvest",   "Harvest"),
@@ -216,7 +223,9 @@ COLUMN_CHOICES = (
 	("pH Range",        "pH Range"),
 	("Heat Tolerance",  "Heat Tolerance"),
 	("USDA Zones",      "USDA Zones"),
-	("Sunset Zones",    "Sunset Zones"), 
+	("Sunset Zones",    "Sunset Zones"),
+	# Admin
+	("Status",          "Status"),
 )
 MY_COLUMN_CHOICES = (
 	("Common Name",     "Common Name"),
@@ -356,24 +365,6 @@ class UserRecoveryForm(forms.Form):
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
 		)
-	
-class ColumnChooserForm(forms.Form):
-	column_selection = forms.MultipleChoiceField(
-		label="",
-		initial='',
-		choices = COLUMN_CHOICES, 
-		widget=forms.CheckboxSelectMultiple,
-		required=True,
-		)
-	
-class MyColumnChooserForm(forms.Form):
-	my_column_selection = forms.MultipleChoiceField(
-		label="",
-		initial='',
-		choices = MY_COLUMN_CHOICES, 
-		widget=forms.CheckboxSelectMultiple,
-		required=True,
-		)
 
 class GardenAddUpdateForm(forms.Form):
 	name = forms.CharField(
@@ -461,13 +452,13 @@ class GardenAddUpdateForm(forms.Form):
 		max_length=64, 
 		required=False
 		)
-	
+		
 class MyPlantAddUpdateForm(forms.Form):
 	date_planted = forms.DateField(
 		widget=DatePickerInput(),
 		label="Date Planted",
 		required=False,
-	)
+		)
 	location = forms.CharField(
 		label='Location', 
 		initial='tbd',      	
@@ -528,7 +519,7 @@ class MyPlantAddUpdateForm(forms.Form):
 		label="My Notes",
 		initial="tbd",
 		required=False,
-	)
+		)
 
 class MyPlantToDoForm(forms.Form):
 	date = forms.DateField(
@@ -562,7 +553,7 @@ class MyPlantToDoForm(forms.Form):
 		required=True,
 		widget=forms.TextInput(attrs={'class' : 'w3-input w3-border'}),
 		)
-	
+
 class MyPlantCommentForm(forms.Form):
 	subject = forms.CharField(
 		label='Subject', 
@@ -572,7 +563,16 @@ class MyPlantCommentForm(forms.Form):
 	comment = QuillFormField(
 		label="Comment",
 		required=False,
-	)
+		)
+
+class MyColumnChooserForm(forms.Form):
+	my_column_selection = forms.MultipleChoiceField(
+		label="",
+		initial='',
+		choices = MY_COLUMN_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=True,
+		)
 
 class PlantAddUpdateForm(forms.Form):
 	commonName = forms.CharField(
@@ -581,10 +581,10 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	# Attributes
 	type_x = forms.ChoiceField(
-		label="Type",
-		initial='tbd',
-		choices = TYPE_CHOICES,
-		required=False,
+		label    = "Type",
+		initial  = 'tbd',
+		choices  = TYPE_CHOICES,
+		required = False,
 		)
 	bloom_color = forms.MultipleChoiceField(
 		label="Bloom Color",
@@ -838,8 +838,25 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=64, 
 		required=False,
 		)
+	status = forms.ChoiceField(
+		label    = "Status",
+		initial  = "Development",
+		choices  = STATUS_CHOICES, 
+		required = True,
+		)
 	creator_notes  = QuillFormField(
 		label="Creator Notes:",
+		required=False,
+		)
+	
+class PlantCommentForm(forms.Form):
+	subject = forms.CharField(
+		label='Subject', 
+		max_length=64, 
+		required=False,
+		)
+	comment = QuillFormField(
+		label="Comment",
 		required=False,
 	)
 
@@ -860,15 +877,14 @@ class PestAddUpdateForm(forms.Form):
 		label="UC IPM URL",
 		validators=[URLValidator()],
 		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
-	)
-	
-class PlantCommentForm(forms.Form):
-	subject = forms.CharField(
-		label='Subject', 
-		max_length=64, 
-		required=False,
 		)
-	comment = QuillFormField(
-		label="Comment",
-		required=False,
-	)
+
+class ColumnChooserForm(forms.Form):
+	column_selection = forms.MultipleChoiceField(
+		label="",
+		initial='',
+		choices = COLUMN_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=True,
+		)
+	

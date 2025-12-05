@@ -1,6 +1,9 @@
 <!-- /app/plants/templates/plants/plants_summary.html -->
 {% extends "plants/master.html" %}
 
+<!--  -->
+{% load user_tags %}
+
 {% block title %}
   <title>Plant | Search</title>
 {% endblock title %}
@@ -41,7 +44,6 @@
   <!------------------------->
   <!-- Vertical Search Bar -->
   <!------------------------->
-
   <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" 
        style="display:none; height:80%;" 
        id="mySidebar">
@@ -262,6 +264,31 @@
       </select>
       <br>
 
+      <!-- Admin stuff - Display for group = "Garden-Editor" -->
+      {% if request.user|has_group:"Garden-Editor" %}
+        <div>
+      {% elif request.user|has_group:"Gardener" %}
+        <div style = "display: none">
+      {% endif %}
+
+        <!-- Admin stuff -->
+        <p class="w3-center"><i>Admin stuff</i></p>
+        
+        <label for="id_status_search">Status:</label><br>
+        <select id="id_status_search" name="status_search" class="w3-select w3-margin-bottom">
+          <option value="Any" >Any</option>
+          {% for x in status_opt %}
+            {% if x == status_search %}
+              <option value="{{ x }}" selected>{{ x }}</option>
+            {% elif x != "tbd" %}
+              <option value="{{ x }}"         >{{ x }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <br>
+
+      </div>
+
       <!-- Button to initiate the search based upon the input criteria -->
       <button type="submit" 
               value="Submit" 
@@ -424,6 +451,7 @@
           <th style="cursor:pointer" onclick="sortTable(17, 'plantTable')">Heat Tolerance </th>
           <th style="cursor:pointer" onclick="sortTable(18, 'plantTable')">USDA Zones     </th>
           <th style="cursor:pointer" onclick="sortTable(19, 'plantTable')">Sunset Zones   </th>
+          <th style="cursor:pointer" onclick="sortTable(20, 'plantTable')">Status         </th>
           <!-- Plant Detail header placeholder -->
           <th class="w3-center"></th>
           <!-- Plant Update header placeholder -->
@@ -463,6 +491,8 @@
             <td>{{ plant.heat_tolerance                             }}</td>
             <td>{{ plant.usda_zone_min }} to {{ plant.usda_zone_max }}</td>
             <td>{{ plant.sunset_zones }}                              </td>
+            <!-- Admin -->
+            <td>{{ plant.status }}                                    </td>
             <!-- Plant Details Icon/Link -->
             <td class="w3-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
@@ -560,6 +590,7 @@
                               'Pollinators', 'CA Native', 'UCD All-Star', 'Sunset Z14',
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
                               'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
+                              'Status',
       ]
       let column_index = 0;
       // Get the list of columns to display
@@ -589,6 +620,7 @@
         else if (column_options[i] == "Heat Tolerance") { column_index = 17; }
         else if (column_options[i] == "USDA Zones")     { column_index = 18; }
         else if (column_options[i] == "Sunset Zones")   { column_index = 19; }
+        else if (column_options[i] == "Status")         { column_index = 20; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection.includes(column_options[i])){
@@ -640,6 +672,7 @@
       document.getElementById("id_usda_zone_search"     ).value = "Any";
       document.getElementById("id_sunset_zone_search"   ).value = "Any";
       document.getElementById("id_garden_search"        ).value = "Any";
+      document.getElementById("id_status_search"        ).value = "Any";
     }
   </script>
 

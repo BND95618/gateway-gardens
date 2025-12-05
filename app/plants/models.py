@@ -107,6 +107,8 @@ class Garden(models.Model):
     usda_zone_search       = models.CharField(max_length=32, default="Any", blank=True)
     sunset_zone_search     = models.CharField(max_length=32, default="Any", blank=True)
     garden_search          = models.CharField(max_length=32, default="Any", blank=True)
+    # Admin
+    status_search          = models.CharField(max_length=16, default="Any", blank=True)
     # Save the user's selection for my plant search criteria
     my_sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
     my_water_level_search  = models.CharField(max_length=32, default="Any", blank=True)
@@ -215,6 +217,7 @@ class Plant(models.Model):
     creator           = models.CharField(max_length=64, default="tbd", blank=True)
     creation_date     = models.DateField(auto_now_add=True)
     creator_notes     = QuillField(blank=True, null=True)
+    status            = models.CharField(max_length=16, default="Development", blank=True)
     # Tags a plant for display/hidden in a summary table
     plant_show        = models.CharField(max_length=8,  default="no", blank=True)
     # Indicates if a user has indicated that a particular plant is in their garden
