@@ -29,6 +29,7 @@ bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
+davis_trees_opt  = ["tbd", "Yes", "No"]
 sunset_z14_opt   = ["tbd", "Yes", "No"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
@@ -339,6 +340,7 @@ def myplants_summary(request):
         pollinators_search      = request.POST["pollinators_search"]
         ca_native_search        = request.POST["ca_native_search"]
         ucd_all_star_search     = request.POST["ucd_all_star_search"]
+        davis_trees_search      = request.POST["davis_trees_search"]
         sunset_z14_search       = request.POST["sunset_z14_search"]
         # Plant Requirements
         sun_exposure_search     = request.POST["sun_exposure_search"]
@@ -366,6 +368,7 @@ def myplants_summary(request):
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
+                garden.davis_trees_search  = ucd_davis_trees_search
                 garden.sunset_z14_search   = sunset_z14_search
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
@@ -413,6 +416,7 @@ def myplants_summary(request):
                 ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
                 ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any") or (myplant.plant.ca_native      == "tbd")) and
                 ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (myplant.plant.ucd_all_star   == "tbd")) and
+                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any") or (myplant.plant.davis_trees    == "tbd")) and
                 ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any") or (myplant.plant.sunset_z14     == "tbd")) and
                 ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any") or (myplant.plant.sun_exposure   == "tbd")) and
                 ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any") or (myplant.plant.water_rqmts    == "tbd")) and
@@ -445,6 +449,7 @@ def myplants_summary(request):
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
+                davis_trees_search    = garden.davis_trees_search
                 sunset_z14_search     = garden.sunset_z14_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
@@ -473,6 +478,7 @@ def myplants_summary(request):
                         "bloom_season_opt"   : bloom_season_opt,
                         "pollinators_opt"    : pollinators_opt,
                         "ucd_all_star_opt"   : ucd_all_star_opt,
+                        "davis_trees_opt"    : davis_trees_opt,
                         "sunset_z14_opt"     : sunset_z14_opt,
                         "ca_native_opt"      : ca_native_opt,
                         # search field options - plant requirements & garden environment
@@ -494,6 +500,7 @@ def myplants_summary(request):
                         "pollinators_search"     : pollinators_search,
                         'ca_native_search'       : ca_native_search,
                         'ucd_all_star_search'    : ucd_all_star_search,
+                        'davis_trees_search'     : davis_trees_search,
                         'sunset_z14_search'      : sunset_z14_search,
                         # search field defaults - plant requirements
                         "sun_exposure_search"    : sun_exposure_search,
@@ -531,6 +538,7 @@ def myplants_summary(request):
                 pollinators_search     = garden.pollinators_search
                 ca_native_search       = garden.ca_native_search
                 ucd_all_star_search    = garden.ucd_all_star_search
+                davis_trees_search     = garden.davis_trees_search
                 sunset_z14_search      = garden.sunset_z14_search
                 sun_exposure_search    = garden.sun_exposure_search
                 water_rqmts_search     = garden.water_rqmts_search
@@ -581,6 +589,7 @@ def myplants_summary(request):
                 ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
                 ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any") or (myplant.plant.ca_native      == "tbd")) and
                 ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (myplant.plant.ucd_all_star   == "tbd")) and
+                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any") or (myplant.plant.davis_trees    == "tbd")) and
                 ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any") or (myplant.plant.sunset_z14     == "tbd")) and
                 ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any") or (myplant.plant.sun_exposure   == "tbd")) and
                 ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any") or (myplant.plant.water_rqmts    == "tbd")) and
@@ -610,6 +619,7 @@ def myplants_summary(request):
                     "bloom_season_opt"       : bloom_season_opt,
                     "pollinators_opt"        : pollinators_opt,
                     "ucd_all_star_opt"       : ucd_all_star_opt,
+                    "davis_trees_opt"        : davis_trees_opt,
                     "sunset_z14_opt"         : sunset_z14_opt,
                     "ca_native_opt"          : ca_native_opt,
                     # search field options - plant requirements & garden environment
@@ -630,6 +640,7 @@ def myplants_summary(request):
                     "pollinators_search"     : pollinators_search,
                     'ca_native_search'       : ca_native_search,
                     'ucd_all_star_search'    : ucd_all_star_search,
+                    'davis_trees_search'     : davis_trees_search,
                     'sunset_z14_search'      : sunset_z14_search,
                     # search field defaults - plant requirements
                     "sun_exposure_search"    : sun_exposure_search,
@@ -1125,6 +1136,7 @@ def plants_summary(request):
         pollinators_search    = request.POST["pollinators_search"]
         ca_native_search      = request.POST["ca_native_search"]
         ucd_all_star_search   = request.POST["ucd_all_star_search"]
+        davis_trees_search    = request.POST["davis_trees_search"]
         sunset_z14_search     = request.POST["sunset_z14_search"]
         # Plant Requirements
         sun_exposure_search   = request.POST["sun_exposure_search"]
@@ -1143,18 +1155,19 @@ def plants_summary(request):
         for garden in gardens:
             if (garden.owner == request.user.username):
                 # Store the search criteria in the user's garden db table
-                garden.type_x_search       = type_x_search
-                garden.bloom_color_search  = bloom_color_search
-                garden.bloom_season_search = bloom_season_search
-                garden.bloom_month_search  = bloom_month_search
-                garden.pollinators_search  = pollinators_search
-                garden.ca_native_search    = ca_native_search
-                garden.ucd_all_star_search = ucd_all_star_search
-                garden.sunset_z14_search   = sunset_z14_search
-                garden.sun_exposure_search = sun_exposure_search
-                garden.water_rqmts_search  = water_rqmts_search
-                garden.pH_search           = pH_search
-                garden.soil_type_search    = soil_type_search
+                garden.type_x_search         = type_x_search
+                garden.bloom_color_search    = bloom_color_search
+                garden.bloom_season_search   = bloom_season_search
+                garden.bloom_month_search    = bloom_month_search
+                garden.pollinators_search    = pollinators_search
+                garden.ca_native_search      = ca_native_search
+                garden.ucd_all_star_search   = ucd_all_star_search
+                garden.davis_trees_search    = davis_trees_search
+                garden.sunset_z14_search     = sunset_z14_search
+                garden.sun_exposure_search   = sun_exposure_search
+                garden.water_rqmts_search    = water_rqmts_search
+                garden.pH_search             = pH_search
+                garden.soil_type_search      = soil_type_search
                 garden.heat_tolerance_search = heat_tolerance_search
                 garden.usda_zone_search      = usda_zone_search
                 garden.sunset_zone_search    = sunset_zone_search
@@ -1181,14 +1194,15 @@ def plants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
-            if ((type_x_search         == plant.type_x)         or (type_x_search       == "Any")    or (plant.type_x         == "tbd")) and \
-               ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search  == "Any")    or (plant.bloom_color    == "tbd")) and \
-               ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search == "Any")    or (plant.bloom_season   == "tbd")) and \
-               ((pollinators_search    in plant.pollinators)    or (pollinators_search  == "Any")    or (plant.pollinators    == "tbd")) and \
-               ((ca_native_search      == plant.ca_native)      or (ca_native_search    == "Any")    or (plant.ca_native      == "tbd")) and \
-               ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search == "Any")    or (plant.ucd_all_star   == "tbd")) and \
-               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search   == "Any")    or (plant.sunset_z14     == "tbd")) and \
-               ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search == "Any")    or (plant.sun_exposure   == "tbd")) and \
+            if ((type_x_search         == plant.type_x)         or (type_x_search         == "Any") or (plant.type_x         == "tbd")) and \
+               ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any") or (plant.bloom_color    == "tbd")) and \
+               ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any") or (plant.bloom_season   == "tbd")) and \
+               ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any") or (plant.pollinators    == "tbd")) and \
+               ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any") or (plant.ca_native      == "tbd")) and \
+               ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (plant.ucd_all_star   == "tbd")) and \
+               ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any") or (plant.davis_trees    == "tbd")) and \
+               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any") or (plant.sunset_z14     == "tbd")) and \
+               ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any") or (plant.sun_exposure   == "tbd")) and \
                ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any") or (plant.water_rqmts    == "tbd")) and \
                ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any") or (plant.soil_type      == "tbd")) and \
                ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any") or (plant.heat_tolerance == "tbd")) and \
@@ -1220,23 +1234,24 @@ def plants_summary(request):
                 else:
                     plant.plant_mine = "no"
         # Send selected plant details to template
-        context = { "plants"             : plants,
+        context = { "plants"                : plants,
                     # Search attributes
-                    'plant_types'        : plant_types,
-                    "bloom_color_opt"    : bloom_color_opt,
-                    "bloom_season_opt"   : bloom_season_opt,
-                    "pollinators_opt"    : pollinators_opt,
-                    "ucd_all_star_opt"   : ucd_all_star_opt,
-                    "sunset_z14_opt"     : sunset_z14_opt,
-                    "ca_native_opt"      : ca_native_opt,
-                    "sun_exposure_opt"   : sun_exposure_opt,
-                    "water_rqmts_opt"    : water_rqmts_opt,
-                    "pH_opt"             : pH_opt,
-                    "soil_type_opt"      : soil_type_opt,
-                    "heat_tolerance_opt" : heat_tolerance_opt,
-                    "usda_zones_opt"     : usda_zones_opt,
-                    "sunset_zones_opt"   : sunset_zones_opt,
-                    "month_opt"          : month_opt,
+                    'plant_types'           : plant_types,
+                    "bloom_color_opt"       : bloom_color_opt,
+                    "bloom_season_opt"      : bloom_season_opt,
+                    "pollinators_opt"       : pollinators_opt,
+                    "ucd_all_star_opt"      : ucd_all_star_opt,
+                    "davis_trees_opt"       : davis_trees_opt,
+                    "sunset_z14_opt"        : sunset_z14_opt,
+                    "ca_native_opt"         : ca_native_opt,
+                    "sun_exposure_opt"      : sun_exposure_opt,
+                    "water_rqmts_opt"       : water_rqmts_opt,
+                    "pH_opt"                : pH_opt,
+                    "soil_type_opt"         : soil_type_opt,
+                    "heat_tolerance_opt"    : heat_tolerance_opt,
+                    "usda_zones_opt"        : usda_zones_opt,
+                    "sunset_zones_opt"      : sunset_zones_opt,
+                    "month_opt"             : month_opt,
                     # Admin
                     "status_opt"            : status_opt,
                     # Search option values from previous search if applicable else default of "Any"
@@ -1247,6 +1262,7 @@ def plants_summary(request):
                     'pollinators_search'    : pollinators_search,
                     'ca_native_search'      : ca_native_search,
                     'ucd_all_star_search'   : ucd_all_star_search,
+                    'davis_trees_search'    : davis_trees_search,
                     'sunset_z14_search'     : sunset_z14_search,
                     "sun_exposure_search"   : sun_exposure_search,
                     "water_rqmts_search"    : water_rqmts_search,
@@ -1265,7 +1281,6 @@ def plants_summary(request):
     # Executed when plants summary page is initialized
     else:
         gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column display sections
         user_garden_found = False
         for garden in gardens:
             if (garden.owner == request.user.username):
@@ -1279,6 +1294,7 @@ def plants_summary(request):
                 pollinators_search    = garden.pollinators_search
                 ca_native_search      = garden.ca_native_search
                 ucd_all_star_search   = garden.ucd_all_star_search
+                davis_trees_search    = garden.davis_trees_search
                 sunset_z14_search     = garden.sunset_z14_search
                 sun_exposure_search   = garden.sun_exposure_search
                 water_rqmts_search    = garden.water_rqmts_search
@@ -1320,6 +1336,7 @@ def plants_summary(request):
                 ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any") or (plant.pollinators    == "tbd")) and \
                 ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any") or (plant.ca_native      == "tbd")) and \
                 ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (plant.ucd_all_star   == "tbd")) and \
+                ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any") or (plant.davis_trees    == "tbd")) and \
                 ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any") or (plant.sunset_z14     == "tbd")) and \
                 ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any") or (plant.sun_exposure   == "tbd")) and \
                 ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any") or (plant.water_rqmts    == "tbd")) and \
@@ -1357,24 +1374,25 @@ def plants_summary(request):
 
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
-        context = { "plants"             : plants,
-                    "myplants"          : myplants,
+        context = { "plants"                : plants,
+                    "myplants"              : myplants,
                     # search field options
-                    "plant_types"        : plant_types,
-                    "bloom_color_opt"    : bloom_color_opt,
-                    "bloom_season_opt"   : bloom_season_opt,
-                    "pollinators_opt"    : pollinators_opt,
-                    "ca_native_opt"      : ca_native_opt,
-                    "ucd_all_star_opt"   : ucd_all_star_opt,
-                    "sunset_z14_opt"     : sunset_z14_opt,
-                    "sun_exposure_opt"   : sun_exposure_opt,
-                    "water_rqmts_opt"    : water_rqmts_opt,
-                    "pH_opt"             : pH_opt,
-                    "soil_type_opt"      : soil_type_opt,
-                    "heat_tolerance_opt" : heat_tolerance_opt,
-                    "usda_zones_opt"     : usda_zones_opt,
-                    "sunset_zones_opt"   : sunset_zones_opt,
-                    "month_opt"          : month_opt,
+                    "plant_types"           : plant_types,
+                    "bloom_color_opt"       : bloom_color_opt,
+                    "bloom_season_opt"      : bloom_season_opt,
+                    "pollinators_opt"       : pollinators_opt,
+                    "ca_native_opt"         : ca_native_opt,
+                    "ucd_all_star_opt"      : ucd_all_star_opt,
+                    "davis_trees_opt"       : davis_trees_opt,
+                    "sunset_z14_opt"        : sunset_z14_opt,
+                    "sun_exposure_opt"      : sun_exposure_opt,
+                    "water_rqmts_opt"       : water_rqmts_opt,
+                    "pH_opt"                : pH_opt,
+                    "soil_type_opt"         : soil_type_opt,
+                    "heat_tolerance_opt"    : heat_tolerance_opt,
+                    "usda_zones_opt"        : usda_zones_opt,
+                    "sunset_zones_opt"      : sunset_zones_opt,
+                    "month_opt"             : month_opt,
                     # Admin
                     "status_opt"            : status_opt,
                     # search field defaults
@@ -1385,6 +1403,7 @@ def plants_summary(request):
                     "pollinators_search"    : pollinators_search,
                     'ca_native_search'      : ca_native_search,
                     'ucd_all_star_search'   : ucd_all_star_search,
+                    'davis_trees_search'    : davis_trees_search,
                     'sunset_z14_search'     : sunset_z14_search,
                     "sun_exposure_search"   : sun_exposure_search,
                     "water_rqmts_search"    : water_rqmts_search,
@@ -1473,21 +1492,22 @@ def plants_add(request):
             plant.heat_tolerance = form.cleaned_data.get('heat_tolerance')
             plant.ca_native      = form.cleaned_data.get('ca_native')
             plant.ucd_all_star   = form.cleaned_data.get('ucd_all_star')
+            plant.davis_trees    = form.cleaned_data.get('davis_trees')
             plant.sunset_z14     = form.cleaned_data.get('sunset_z14')
             plant.usda_zone_min  = form.cleaned_data.get('usda_zone_min')
             plant.usda_zone_max  = form.cleaned_data.get('usda_zone_max')
             plant.sunset_zones   = form.cleaned_data.get('sunset_zones')
             plant.kingdom        = form.cleaned_data.get('kingdom')
-            plant.subkingdom    = form.cleaned_data.get('subkingdom')
-            plant.superdivision = form.cleaned_data.get('superdivision')
-            plant.division      = form.cleaned_data.get('division')
-            plant.class_x       = form.cleaned_data.get('class_x')
-            plant.subclass      = form.cleaned_data.get('subclass')
-            plant.order         = form.cleaned_data.get('order')
-            plant.family        = form.cleaned_data.get('family')
-            plant.genus         = form.cleaned_data.get('genus')
-            plant.species       = form.cleaned_data.get('species')
-            plant.variety       = form.cleaned_data.get('variety')
+            plant.subkingdom     = form.cleaned_data.get('subkingdom')
+            plant.superdivision  = form.cleaned_data.get('superdivision')
+            plant.division       = form.cleaned_data.get('division')
+            plant.class_x        = form.cleaned_data.get('class_x')
+            plant.subclass       = form.cleaned_data.get('subclass')
+            plant.order          = form.cleaned_data.get('order')
+            plant.family         = form.cleaned_data.get('family')
+            plant.genus          = form.cleaned_data.get('genus')
+            plant.species        = form.cleaned_data.get('species')
+            plant.variety        = form.cleaned_data.get('variety')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             if 'blob' in request.FILES:
                 audio_name = request.FILES['blob']
@@ -1561,6 +1581,7 @@ def plant_update(request, id):
             plant.pollinators   = form.cleaned_data.get('pollinators')
             plant.ca_native     = form.cleaned_data.get('ca_native')
             plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
+            plant.davis_trees   = form.cleaned_data.get('davis_trees')
             plant.sunset_z14    = form.cleaned_data.get('sunset_z14')
             plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
             plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
@@ -1670,6 +1691,7 @@ def plant_update(request, id):
                                             'pollinators'       : pollinators_list,
                                             'ca_native'         : plant.ca_native,
                                             'ucd_all_star'      : plant.ucd_all_star,
+                                            'davis_trees'       : plant.davis_trees,
                                             'sunset_z14'        : plant.sunset_z14,
                                             'sun_exposure'      : sun_exposure_list,
                                             'water_rqmts'       : plant.water_rqmts,
@@ -2307,31 +2329,3 @@ def debug(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/debug.html')
-
-##################################################################################
-#
-##################################################################################
-# Every view function is responsible for returning an HttpResponse object. This 
-# object contains the content and metadata that will be sent back to the client's 
-# web browser.
-#
-#   template = loader.get_template("plants/gardens_summary.html")
-#   return HttpResponse(template.render(context, request))
-#
-# 'return render' is a common shortcut function used in views to combine a given 
-# template with a context dictionary and return an HttpResponse object containing 
-# the rendered HTML.
-#
-#   return render(request, 'plants/plant_update.html', context)
-#
-# 'HttpResponseRedirect' is a class within django.http that facilitates redirecting
-# a user's browser to a different URL. It is commonly used after processing form
-# data (especially POST requests) to prevent resubmission if the user refreshes
-# the page, a practice known as the "Post/Redirect/Get" pattern.
-#
-#   return HttpResponseRedirect(reverse('plants:myplants_summary'))
-#
-# To return a JSON response in Django, the primary method involves using the 
-# JsonResponse class from django.http
-#
-#   return JsonResponse({'shapes_JSON' : shapes_JSON})

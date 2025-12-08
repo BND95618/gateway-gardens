@@ -57,6 +57,11 @@ UCD_ALL_STAR_CHOICES = (
 	("Yes", "Yes"),
 	("No",  "No"),
 )
+DAVIS_TREE_CHOICES = (
+	("tbd", "tbd"),
+	("Yes", "Yes"),
+	("No",  "No"),
+)
 SUNSET_Z14_CHOICES = (
 	("tbd", "tbd"),
 	("Yes", "Yes"),
@@ -215,6 +220,7 @@ COLUMN_CHOICES = (
 	("Pollinators",     "Pollinators"),
 	("CA Native",       "CA Native"),
 	("UCD All-Star",    "UCD All-Star"),
+	("Davis Trees",     "Davis Trees"),
 	("Sunset Z14",      "Sunset Z14"),
 	# Plant Requirements
 	("Sun Exposure",    "Sun Exposure"),
@@ -241,6 +247,7 @@ MY_COLUMN_CHOICES = (
 	("Pollinators",     "Pollinators"),
 	("CA Native",       "CA Native"),
 	("UCD All-Star",    "UCD All-Star"),
+	("Davis Trees",     "Davis Trees"),
 	("Sunset Z14",      "Sunset Z14"),
 	# Plant Requirements
 	("Sun Exposure",    "Sun Exposure"),
@@ -650,6 +657,13 @@ class PlantAddUpdateForm(forms.Form):
 		label="UCD All-Star",
 		initial = 'tbd',
 		choices = UCD_ALL_STAR_CHOICES, 
+		widget=forms.RadioSelect,
+		required=False,
+		)	
+	davis_trees = forms.ChoiceField(
+		label="Davis Climate-Ready Trees",
+		initial = 'tbd',
+		choices = DAVIS_TREE_CHOICES, 
 		widget=forms.RadioSelect,
 		required=False,
 		)
