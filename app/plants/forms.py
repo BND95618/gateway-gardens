@@ -7,17 +7,18 @@ import datetime
 from django.core.validators   import URLValidator
 
 TYPE_CHOICES = (
-	("tbd",         "tbd"),
-	("Annual",      "Annual"),
-	("Fern",        "Fern"),
-	("Grass",       "Grass"),
-	("Groundcover", "Groundcover"),
-	("Perennial",   "Perennial"),
-	("Shrub",       "Shrub"),
-	("Succulent",   "Succulent"),
-	("Tree",        "Tree"),
-	("Vegetable",   "Vegetable"),
-	("Vine",        "Vine"),
+	("tbd",            "tbd"),
+	("Annual",         "Annual"),
+	("Fern",           "Fern"),
+	("Grass",          "Grass"),
+	("Groundcover",    "Groundcover"),
+	("Perennial",      "Perennial"),
+	("Shrub",          "Shrub"),
+	("Succulent",      "Succulent"),
+	("Tree-Deciduous", "Tree-Deciduous"),
+	("Tree-Evergreen", "Tree-Evergreen"),
+	("Vegetable",      "Vegetable"),
+	("Vine",           "Vine"),
 )
 BLOOM_COLOR_CHOICES = ( 
 	('tbd',       'tbd'),

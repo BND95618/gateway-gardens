@@ -196,9 +196,16 @@
                                 {% endif %}
                             {% endfor %}
                         </optgroup>
-                        <optgroup label="Tree">
+                        <optgroup label="Tree-Deciduous">
                             {% for plant in plants %}
-                                {% if plant.type_x == "Tree" %}
+                                {% if plant.type_x == "Tree-Deciduous" %}
+                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                                {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                        <optgroup label="Tree-Evergreen">
+                            {% for plant in plants %}
+                                {% if plant.type_x == "Tree-Evergreen" %}
                                     <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
                                 {% endif %}
                             {% endfor %}
