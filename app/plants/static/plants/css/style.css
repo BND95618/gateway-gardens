@@ -192,7 +192,7 @@ hr {
     cursor:pointer
 }
 .bnd-dropdown-hover:hover 
-.w3-dropdown-content
+.bnd-dropdown-content
 {
     display:block
 }
@@ -208,7 +208,7 @@ hr {
     background-color:#ccc;
     color:#000
 }
-.w3-dropdown-content
+.bnd-dropdown-content
 {
     cursor:auto;
     color:#000;
@@ -231,8 +231,8 @@ hr {
 {
     width:100%
 }
-.w3-bar-block .w3-dropdown-hover .w3-dropdown-content,
-.w3-bar-block .w3-dropdown-click .w3-dropdown-content
+.w3-bar-block .w3-dropdown-hover .bnd-dropdown-content,
+.w3-bar-block .w3-dropdown-click .bnd-dropdown-content
 {
     min-width:100%
 }
