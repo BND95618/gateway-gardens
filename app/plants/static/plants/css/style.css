@@ -150,9 +150,6 @@ hr {
     color: white; 
     font-family: chalkboard, verdana, sans-serif;
 }
-
-
-
 /* Navigation bar */
 .bnd-top
 {
@@ -180,15 +177,54 @@ hr {
     display:block;
     outline:0
 }
-.bnd-bar .w3-dropdown-hover,
+.bnd-bar .w3-button
+{
+    white-space:normal
+}
+
+/* ----- start 1 ----- */
+
+.bnd-dropdown-hover,
+.w3-dropdown-click
+{
+    position:relative;
+    display:inline-block;
+    cursor:pointer
+}
+.bnd-dropdown-hover:hover 
+.w3-dropdown-content
+{
+    display:block
+}
+.bnd-dropdown-hover:first-child,
+.w3-dropdown-click:hover
+{
+    background-color:#ccc;
+    color:#000
+}
+.bnd-dropdown-hover:hover > .w3-button:first-child,
+.w3-dropdown-click:hover > .w3-button:first-child
+{
+    background-color:#ccc;
+    color:#000
+}
+.w3-dropdown-content
+{
+    cursor:auto;
+    color:#000;
+    background-color:#fff;
+    display:none;
+    position:absolute;
+    min-width:160px;
+    margin:0;
+    padding:0;
+    z-index:1
+}
+.bnd-bar .bnd-dropdown-hover,
 .bnd-bar .w3-dropdown-click
 {
     position:static;
     float:left
-}
-.bnd-bar .w3-button
-{
-    white-space:normal
 }
 .w3-bar-block .w3-dropdown-hover,
 .w3-bar-block .w3-dropdown-click
@@ -200,6 +236,15 @@ hr {
 {
     min-width:100%
 }
+.bnd-bar-block .w3-dropdown-hover .w3-button,
+.bnd-bar-block .w3-dropdown-click .w3-button
+{
+    width:100%;
+    text-align:left;
+    padding:8px 16px
+}
+
+/* ---------- */
 
 .w3-bar-block .bnd-bar-item
 {
@@ -211,12 +256,6 @@ hr {
     white-space:normal;
     float:none;
     outline:0
-}
-.bnd-bar-item.w3-mobile,
-.w3-dropdown-hover.w3-mobile,
-.w3-dropdown-click.w3-mobile
-{
-    text-align:center
 }
 .w3-bar-block.w3-center .bnd-bar-item
 {
@@ -248,25 +287,6 @@ hr {
     -ms-user-select:none;
     user-select:none
 }   
-.w3-bar-block .w3-dropdown-hover .w3-button,
-.w3-bar-block .w3-dropdown-click .w3-button
-{
-    width:100%;
-    text-align:left;
-    padding:8px 16px
-}
-.bnd-dropdown-hover:hover > .w3-button:first-child,
-.bnd-dropdown-click:hover > .w3-button:first-child
-{
-    background-color:#ccc;color:#000
-}
-.bnd-bar-block .w3-dropdown-hover .w3-button,
-.bnd-bar-block .w3-dropdown-click .w3-button
-{
-    width:100%;
-    text-align:left;
-    padding:8px 16px
-}
 .bnd-bar .w3-button
 {
     white-space:normal
