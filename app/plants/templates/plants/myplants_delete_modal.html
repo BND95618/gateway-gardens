@@ -1,17 +1,17 @@
 <!-- app/plants/templates/plants/myplants_delete_modal.html -->
 
-<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
-  <div class="w3-container w3-border-top w3-padding-8 w3-light-grey w3-center">
+<div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:400px">
+  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey w3-center">
     <h4>Remove "{{ myplant.plant.commonName }}" from your garden?</h4>
   </div>
-  <form class="w3-container" action="{% url 'plants:myplants_delete' myplant.id %}" method="post">
+  <form class="bnd-container" action="{% url 'plants:myplants_delete' myplant.id %}" method="post">
     {% csrf_token %}
     <div class="w3-section w3-center">
-      <button type="submit" class="w3-button w3-green w3-round">
+      <button type="submit" class="w3-button bnd-green bnd-round-medium">
         Confirm
       </button>
       <a href="{% url 'plants:myplants_summary' %}">
-        <button type="button" class="w3-button w3-red w3-round">
+        <button type="button" class="w3-button bnd-red bnd-round-medium">
           Cancel
         </button>
       </a>

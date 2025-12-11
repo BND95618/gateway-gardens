@@ -1,8 +1,8 @@
 <!-- /app/plants/templates/plants/planner_edit_modal.html -->
 
-<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px">
+<div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:300px">
 
-    <header class="w3-container w3-green"> 
+    <header class="bnd-container bnd-green"> 
         <!-- Close the shape edit modal -->
         <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
             class="w3-button w3-display-topright">&times;
@@ -10,7 +10,7 @@
         <h3>Edit Shape</h3>
     </header>
         
-    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+    <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
         <div>
             <!-- populate current attribute values from server response -->
             <form id       = "id_edit_form" 
@@ -40,9 +40,9 @@
                 <input type="color" id="fill_color" name="fill_color">
                 <br>
                 <!-- on submit, process attribute value changes in Javascript -->
-                <input type="submit" value="Submit" class="w3-button w3-round-large w3-green">
-                <input type="reset"  value="Reset"  class="w3-button w3-round-large w3-grey">
-                <button type="button"               class="w3-button w3-round-large w3-red"
+                <input type="submit" value="Submit" class="w3-button bnd-round-large bnd-green">
+                <input type="reset"  value="Reset"  class="w3-button bnd-round-large bnd-grey">
+                <button type="button"               class="w3-button bnd-round-large bnd-red"
                         onclick="document.getElementById('planner_edit_modal').style.display='none'">
                         Cancel
                 </button>

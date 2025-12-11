@@ -54,20 +54,20 @@
 
 {% block header-completion %}
 <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         To Do List
-        <span class="w3-dropdown-hover w3-right">
-          <button class="w3-button w3-green" style="z-index:21">
+        <span class="w3-dropdown-hover bnd-right">
+          <button class="w3-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
-            <button onclick="todo_add()"       class="w3-bar-item w3-button">Add          </button>
-            <button onclick="todo_show_all()"  class="w3-bar-item w3-button">Show All     </button>
-            <button onclick="todo_hide_done()" class="w3-bar-item w3-button">Hide Complete</button>
+          <div class="w3-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
+            <button onclick="todo_add()"       class="bnd-bar-item w3-button">Add          </button>
+            <button onclick="todo_show_all()"  class="bnd-bar-item w3-button">Show All     </button>
+            <button onclick="todo_hide_done()" class="bnd-bar-item w3-button">Hide Complete</button>
           </div>
         </span>
       </h3>
@@ -79,10 +79,10 @@
   <!------------------------------------->
   <!-- My Plant To Do List Summary     -->
   <!------------------------------------->
-  <div class="w3-container" style="margin-top:120px;">
+  <div class="bnd-container" style="margin-top:120px;">
     <table id="todoTable" class="w3-table-all w3-hoverable">
       <thead>
-        <tr class="w3-light-grey">
+        <tr class="bnd-light-grey">
           <th style="cursor:pointer; width:5%;"  onclick="todo_sort(1)">Status  </th>
           <th style="display:none"               onclick="todo_sort(1)">Status  </th>
           <th style="cursor:pointer; width:10%;" onclick="todo_sort(2)">Date    </th>
@@ -102,7 +102,7 @@
             <td class="w3-center" 
             style="background-color:transparent; color:white; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip" style="background-color:transparent;">
-                <button onclick="todo_done({{ todo.id }})">
+                <button class="bnd-transparent bnd-border-0" onclick="todo_done({{ todo.id }})">
                   <i class="material-icons" style="background-color:transparent;">
                     {% if todo.complete %}
                       check_box
@@ -111,7 +111,7 @@
                     {% endif %}
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                    class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Complete?
                   </span>
                 </button>
@@ -128,12 +128,12 @@
             <td class="w3-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
-                <button onclick="todo_edit({{ todo.id }})">
+                <button class="bnd-transparent bnd-border-0" onclick="todo_edit({{ todo.id }})">
                   <i class="material-icons">
                   edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                    class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Edit
                   </span>
                 </button>
@@ -143,12 +143,12 @@
             <td class="w3-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
-                <button onclick="todo_delete({{ todo.id }})">
+                <button class="bnd-transparent bnd-border-0" onclick="todo_delete({{ todo.id }})">
                   <i class="material-icons">
                   delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                    class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                    class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Delete
                   </span>
                 </button>
@@ -161,7 +161,7 @@
   </div>
   <hr>
 
-  <div class="w3-container">
+  <div class="bnd-container">
     <div class="calendar-container">
       <div class="calendar-header">
         <button id="prevMonth">&#10094;</button>
@@ -184,22 +184,22 @@
   </div>
 
   <!-- To Do details modal - html to be inserted by Javascript -->
-  <div id="todo_details_modal" class="w3-modal">
+  <div id="todo_details_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
   </div>
 
   <!-- To Do add modal - html to be inserted by Javascript -->
-  <div id="todo_add_modal" class="w3-modal">
+  <div id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
   </div>
 
   <!-- To Do edit modal - html to be inserted by Javascript -->
-  <div id="todo_edit_modal" class="w3-modal">
+  <div id="todo_edit_modal" class="bnd-modal">
     <p> To Do edit form HTML to be Inserted Here! </p>
   </div>
 
   <!-- To Do delete modal - html to be inserted by Javascript -->
-  <div id="myplants_todo_del_modal" class="w3-modal">
+  <div id="myplants_todo_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
   </div>
 

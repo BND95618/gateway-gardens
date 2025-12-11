@@ -11,18 +11,18 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         Pests
-        <span class="w3-dropdown-hover w3-right">
-          <button class="w3-button w3-green" style="z-index:21">
+        <span class="w3-dropdown-hover bnd-right">
+          <button class="w3-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
-            <a href="{% url 'plants:pest_add' %}"  class="w3-bar-item w3-button">Add Pest</a>
+          <div class="w3-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
+            <a href="{% url 'plants:pest_add' %}"  class="bnd-bar-item w3-button">Add Pest</a>
           </div>
         </span>
       </h3>
@@ -37,7 +37,7 @@
   <!------------------------->
   
   <!-- Pest Delete modal - html to be inserted by Javascript -->
-  <div id="pest_delete_modal" class="w3-modal">
+  <div id="pest_delete_modal" class="bnd-modal">
     <p>Pest delete form HTML to be Inserted Here!</p>
   </div>
 
@@ -45,10 +45,10 @@
   <!--     Pest Table     -->
   <!------------------------->
 
-  <div class="w3-container" id="main" style="margin-top:120px;">
+  <div class="bnd-container" id="main" style="margin-top:120px;">
     <table class="w3-table-all w3-hoverable" id="pestTable">
       <thead>
-        <tr class="w3-light-grey">
+        <tr class="bnd-light-grey">
           <!-- Pest Attributes -->
           <th style="cursor:pointer" onclick="sortTable(0, 'pestTable')" >Pest Name </th>
           <th style="cursor:pointer" onclick="sortTable(1, 'pestTable')" >Pest Type </th>
@@ -81,7 +81,7 @@
                     edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                  class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Edit
                   </span>
                 </a>
@@ -93,12 +93,12 @@
             <td class="w3-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
-                <button onclick="pest_delete({{ pest.id }})" class="w3-transparent w3-border-0">
+                <button onclick="pest_delete({{ pest.id }})" class="bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Delete
                   </span>
                 </button>

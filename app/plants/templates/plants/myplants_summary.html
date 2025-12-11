@@ -15,21 +15,21 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         My Plants
-        <span class="w3-dropdown-hover w3-right">
-          <button class="w3-button w3-green" style="z-index:21">
+        <span class="w3-dropdown-hover bnd-right">
+          <button class="w3-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
-            <button onclick="w3_open()" class="w3-bar-item w3-button">Search</button>
-            <button onclick="my_column_chooser()" class="w3-bar-item w3-button">Column Chooser</button>
+          <div class="w3-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
+            <button onclick="w3_open()" class="bnd-bar-item w3-button">Search</button>
+            <button onclick="my_column_chooser()" class="bnd-bar-item w3-button">Column Chooser</button>
             <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
-                    class="w3-bar-item w3-button">Bloom Charts
+                    class="bnd-bar-item w3-button">Bloom Charts
           </div>
         </span>
       </h3>
@@ -41,17 +41,17 @@
   <!------------------------->
   <!-- Vertical Search Bar -->
   <!------------------------->
-  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-margin-left" 
+  <div class="w3-sidebar w3-bar-block w3-card w3-animate-left bnd-margin-left" 
        style="display:none; height:80%;" 
        id="mySidebar">
-    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="w3-container w3-card-4 w3-light-grey">
+    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-container bnd-card-4 bnd-light-grey">
       {% csrf_token %}
 
       <!-- Plant Attributes -->
       <p class="w3-center"><i>Plant Attributes</i></p>
 
       <label for="id_type_x_search">Type:</label><br>
-      <select id="id_type_x_search" name="type_x_search" class="w3-select w3-margin-bottom">
+      <select id="id_type_x_search" name="type_x_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for plant_type in plant_types %}
           {% if plant_type == type_x_search %}
@@ -63,7 +63,7 @@
       </select>
 
       <label for="id_bloom_color_search">Bloom Color:</label><br>
-      <select id="id_bloom_color_search" name="bloom_color_search" class="w3-select w3-margin-bottom">
+      <select id="id_bloom_color_search" name="bloom_color_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in bloom_color_opt %}
           {% if x == bloom_color_search %}
@@ -76,7 +76,7 @@
       <br>
 
       <label for="id_bloom_season_search">Bloom Season:</label><br>
-      <select id="id_bloom_season_search" name="bloom_season_search" class="w3-select w3-margin-bottom">
+      <select id="id_bloom_season_search" name="bloom_season_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in bloom_season_opt %}
           {% if x == bloom_season_search %}
@@ -89,7 +89,7 @@
       <br>
 
       <label for="id_bloom_month_search">Bloom Month:</label><br>
-      <select id="id_bloom_month_search" name="bloom_month_search" class="w3-select w3-margin-bottom">
+      <select id="id_bloom_month_search" name="bloom_month_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for month in month_opt %}
           {% if month == bloom_month_search %}
@@ -102,7 +102,7 @@
       <br>
 
       <label for="id_pollinators_search">Pollinators:</label><br>
-      <select id="id_pollinators_search" name="pollinators_search" class="w3-select w3-margin-bottom">
+      <select id="id_pollinators_search" name="pollinators_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in pollinators_opt %}
           {% if x == pollinators_search %}
@@ -115,7 +115,7 @@
       <br>
 
       <label for="id_ca_native_search">California Native:</label><br>
-      <select id="id_ca_native_search" name="ca_native_search" class="w3-select w3-margin-bottom">
+      <select id="id_ca_native_search" name="ca_native_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in ca_native_opt %}
           {% if x == ca_native_search %}
@@ -128,7 +128,7 @@
       <br>
 
       <label for="id_ucd_all_star_search">UCD All-Star:</label><br>
-      <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="w3-select w3-margin-bottom">
+      <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in ucd_all_star_opt %}
           {% if x == ucd_all_star_search %}
@@ -141,7 +141,7 @@
       <br>
 
       <label for="id_davis_trees_search">Davis Climate-Ready Trees:</label><br>
-      <select id="id_davis_trees_search" name="davis_trees_search" class="w3-select w3-margin-bottom">
+      <select id="id_davis_trees_search" name="davis_trees_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in davis_trees_opt %}
           {% if x == davis_trees_search %}
@@ -154,7 +154,7 @@
       <br>
 
       <label for="id_sunset_z14_search">Sunset Zone 14 Recommendation:</label><br>
-      <select id="id_sunset_z14_search" name="sunset_z14_search" class="w3-select w3-margin-bottom">
+      <select id="id_sunset_z14_search" name="sunset_z14_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in sunset_z14_opt %}
           {% if x == sunset_z14_search %}
@@ -171,7 +171,7 @@
       <p class="w3-center"><i>Environmental Needs</i></p>
 
       <label for="id_sun_exposure_search">Sun Exposure:</label><br>
-      <select id="id_sun_exposure_search" name="sun_exposure_search" class="w3-select w3-margin-bottom">
+      <select id="id_sun_exposure_search" name="sun_exposure_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in sun_exposure_opt %}
           {% if x == sun_exposure_search %}
@@ -184,7 +184,7 @@
       <br>
 
       <label for="id_water_rqmts_search">Water Requirements:</label><br>
-      <select id="id_water_rqmts_search" name="water_rqmts_search" class="w3-select w3-margin-bottom">
+      <select id="id_water_rqmts_search" name="water_rqmts_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in water_rqmts_opt %}
           {% if x == water_rqmts_search %}
@@ -197,7 +197,7 @@
       <br>
 
       <label for="id_soil_type_search">Soil Requirements:</label><br>
-      <select id="id_soil_type_search" name="soil_type_search" class="w3-select w3-margin-bottom">
+      <select id="id_soil_type_search" name="soil_type_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in soil_type_opt %}
           {% if x == soil_type_search %}
@@ -210,7 +210,7 @@
       <br>
 
       <label for="id_pH_search">pH:</label><br>
-      <select id="id_pH_search" name="pH_search" class="w3-select w3-margin-bottom">
+      <select id="id_pH_search" name="pH_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in pH_opt %}
           {% if x == pH_search %}
@@ -223,7 +223,7 @@
       <br>
 
       <label for="id_heat_tolerance_search">Heat Tolerance:</label><br>
-      <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="w3-select w3-margin-bottom">
+      <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in heat_tolerance_opt %}
           {% if x == heat_tolerance_search %}
@@ -236,7 +236,7 @@
       <br>
 
       <label for="id_usda_zone_search">USDA Zone:</label><br>
-      <select id="id_usda_zone_search" name="usda_zone_search" class="w3-select w3-margin-bottom">
+      <select id="id_usda_zone_search" name="usda_zone_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in usda_zones_opt %}
           {% if x == usda_zone_search %}
@@ -249,7 +249,7 @@
       <br>
 
       <label for="id_sunset_zone_search">Sunset Zone:</label><br>
-      <select id="id_sunset_zone_search" name="sunset_zone_search" class="w3-select w3-margin-bottom">
+      <select id="id_sunset_zone_search" name="sunset_zone_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in sunset_zones_opt %}
           {% if x == sunset_zone_search %}
@@ -265,7 +265,7 @@
       <p class="w3-center"><i>Garden Environment</i></p>
 
       <label for="id_my_sun_exposure_search">My Sun Exposure:</label><br>
-      <select id="id_my_sun_exposure_search" name="my_sun_exposure_search" class="w3-select w3-margin-bottom">
+      <select id="id_my_sun_exposure_search" name="my_sun_exposure_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in sun_exposure_opt %}
           {% if x == my_sun_exposure_search %}
@@ -278,7 +278,7 @@
       <br>
 
       <label for="id_my_water_level_search">My Water Level:</label><br>
-      <select id="id_my_water_level_search" name="my_water_level_search" class="w3-select w3-margin-bottom">
+      <select id="id_my_water_level_search" name="my_water_level_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in water_rqmts_opt %}
           {% if x == my_water_level_search %}
@@ -291,7 +291,7 @@
       <br>
 
       <label for="id_my_soil_type_search">My Soil Type:</label><br>
-      <select id="id_my_soil_type_search" name="my_soil_type_search" class="w3-select w3-margin-bottom">
+      <select id="id_my_soil_type_search" name="my_soil_type_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in soil_type_opt %}
           {% if x == my_soil_type_search %}
@@ -304,7 +304,7 @@
       <br>
 
       <label for="id_my_happiness_search">Happiness:</label><br>
-      <select id="id_my_happiness_search" name="my_happiness_search" class="w3-select w3-margin-bottom">
+      <select id="id_my_happiness_search" name="my_happiness_search" class="w3-select bnd-margin-bottom">
         <option value="Any" >Any</option>
         {% for x in happiness_opt %}
           {% if x == my_happiness_search %}
@@ -319,21 +319,21 @@
       <!-- Button to initiate the search based upon the input criteria -->
       <button type="submit" 
               value="Submit" 
-              class="w3-button w3-border w3-green w3-round-large w3-margin-bottom">
+              class="w3-button bnd-border bnd-green bnd-round-large bnd-margin-bottom">
         Submit
       </button>
       <!-- Button to reset all search criteria to 'Any' -->
       <button type="button" 
               onclick="searchReset()"
               value="Reset" 
-              class="w3-button w3-border w3-white w3-round-large w3-margin-bottom">
+              class="w3-button bnd-border bnd-white bnd-round-large bnd-margin-bottom">
         Reset
       </button>
       <!-- Button to hide the search menu -->
       <button type="button" 
               onclick="w3_close()"
               value="Hide" 
-              class="w3-button w3-border w3-red w3-round-large w3-margin-bottom">
+              class="w3-button bnd-border bnd-red bnd-round-large bnd-margin-bottom">
         Hide
       </button>
     </form>
@@ -344,20 +344,20 @@
   <!------------------------->
  
   <!-- MyPlant Delete modal - html to be inserted by Javascript -->
-  <div id="myplants_delete_modal" class="w3-modal">
+  <div id="myplants_delete_modal" class="bnd-modal">
     <p> MyPlant delete form HTML to be Inserted Here! </p>
   </div>
 
   <!-- Column Chooser modal - html to be inserted by Javascript -->
-  <div id="my_column_chooser_modal" class="w3-modal">
+  <div id="my_column_chooser_modal" class="bnd-modal">
     <p> My Column Chooser HTML to be Inserted Here! </p>
   </div>
 
   <!-- Plant Chart modal -->
-   <div id="plants_chart_modal" class="w3-modal">
-    <div class="w3-modal-content w3-animate-zoom" >
+   <div id="plants_chart_modal" class="bnd-modal">
+    <div class="bnd-modal-content bnd-animate-zoom" >
       
-      <header class="w3-container w3-green"> 
+      <header class="bnd-container bnd-green"> 
         <!-- Close the chart modal -->
         <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
           class="w3-button w3-display-topright">&times;</span>
@@ -365,11 +365,11 @@
       </header>
 
       <!-- Create the modal tabs - each chart has a tab -->
-      <div class="w3-bar w3-border-bottom">
-        <button id="bloomTabButton"       class="tab w3-bar-item w3-button">Blooms      </button>
-        <button id="beeTabButton"         class="tab w3-bar-item w3-button">Bees        </button>
-        <button id="butterflyTabButton"   class="tab w3-bar-item w3-button">Butterflies </button>
-        <button id="hummingbirdTabButton" class="tab w3-bar-item w3-button">Hummingbirds</button>
+      <div class="bnd-bar bnd-border-bottom">
+        <button id="bloomTabButton"       class="tab bnd-bar-item w3-button">Blooms      </button>
+        <button id="beeTabButton"         class="tab bnd-bar-item w3-button">Bees        </button>
+        <button id="butterflyTabButton"   class="tab bnd-bar-item w3-button">Butterflies </button>
+        <button id="hummingbirdTabButton" class="tab bnd-bar-item w3-button">Hummingbirds</button>
       </div>
     
       <!-- Create the modal chart - Blooms -->
@@ -383,7 +383,7 @@
               {% endif %}
             {% endfor %}
           </table>
-          <footer class="w3-container w3-green">
+          <footer class="bnd-container bnd-green">
             <p class="w3-center">Garden Blooms</p>
           </footer>
         {% endwith %}
@@ -400,7 +400,7 @@
               {% endif %}
             {% endfor %}
           </table>
-          <footer class="w3-container w3-green">
+          <footer class="bnd-container bnd-green">
             <p class="w3-center">Blooms attracting Bees</p>
           </footer>
         {% endwith %}
@@ -417,7 +417,7 @@
               {% endif %}
             {% endfor %}
           </table>
-          <footer class="w3-container w3-green">
+          <footer class="bnd-container bnd-green">
             <p class="w3-center">Blooms attracting Butterflies</p>
           </footer>
         {% endwith %}
@@ -434,7 +434,7 @@
               {% endif %}
             {% endfor %}
           </table>
-          <footer class="w3-container w3-green">
+          <footer class="bnd-container bnd-green">
             <p class="w3-center">Blooms attracting Hummingbirds</p>
           </footer>
         {% endwith %}
@@ -447,10 +447,10 @@
   <!--   My Plant Table    -->
   <!------------------------->
 
-  <div class="w3-container" id="main" style="margin-top:120px;">
+  <div class="bnd-container" id="main" style="margin-top:120px;">
     <table class="w3-table-all w3-hoverable" id="plantTable">
       <thead>
-        <tr class="w3-light-grey">
+        <tr class="bnd-light-grey">
           <!-- Plant Attributes -->
           <th style="cursor:pointer" onclick="sortTable( 0, 'plantTable')" >Common Name   </th>
           <th style="cursor:pointer" onclick="sortTable( 1, 'plantTable')" >Genus/Species </th>
@@ -556,7 +556,7 @@
                     library_books
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                         Details
                   </span>
                 </a>
@@ -571,7 +571,7 @@
                     edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                  class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Edit
                   </span>
                 </a>
@@ -581,12 +581,12 @@
             <td class="w3-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
-                <button onclick="myplants_delete({{ myplant.id }})" class="w3-transparent w3-border-0">
+                <button onclick="myplants_delete({{ myplant.id }})" class="bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                     Delete
                   </span>
                 </button>
@@ -768,13 +768,13 @@
       // Clear all tab highlighting and all tab content
       for (i = 0; i < tabs.length; i++)
       {
-        tabs[i].classList.remove("w3-light-green");
+        tabs[i].classList.remove("bnd-light-green");
         tabContents[i].style.display = "none";
       }
       // Get selected tab
       selTabContent=document.getElementById(selectedTabContent);
       // Highlight selected tab
-      event.currentTarget.classList.add("w3-light-green");
+      event.currentTarget.classList.add("bnd-light-green");
       // Show tabcontents
       selTabContent.style.display = "block";
       // Sort table

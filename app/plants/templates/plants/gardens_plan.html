@@ -18,7 +18,7 @@
         }
         /* To make the modal background fully transparent */
         /* You may need to add !important depending on other styles affecting the modal */
-        .w3-modal 
+        .bnd-modal 
         {
             background: none !important; 
             /* Allows clicks to pass through */
@@ -26,7 +26,7 @@
         }
 
         /* Ensure the modal content is still interactive */
-        .w3-modal-content 
+        .bnd-modal-content 
         {
             pointer-events: auto; 
         }
@@ -92,9 +92,9 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         My Garden Plan
       </h3>
     </header>
@@ -102,14 +102,14 @@
 {% endblock header-completion %}
 
 {% block content %}
-    <div class="w3-container" style="margin-top:120px;">
+    <div class="bnd-container" style="margin-top:120px;">
         <!-- Canvas -->
         <canvas id="myCanvas">
             Your browser does not support HTML 5 Canvas
         </canvas>
 
         <!-- Canvas tools-->
-        <form class = "w3-light-grey">
+        <form class = "bnd-light-grey">
             <div style="padding: 10px 0px 0px 10px">
                 <label for="action" style="display: inline-block;">Action: </label>
                 <select id="id_action" name="action">
@@ -120,27 +120,27 @@
                     <option value="zoom"     >zoom     </option>
                 </select>
                 <span id="id_group_div" style="display: none;">
-                    <button type="button" id="id_group" class="w3-button w3-padding-small w3-gray w3-round">Group</button>
+                    <button type="button" id="id_group" class="w3-button bnd-padding-small bnd-grey bnd-round-medium">Group</button>
                 </span>
                 <span id="id_ungroup_div" style="display: none;">
-                    <button type="button" id="id_ungroup" class="w3-button w3-padding-small w3-gray w3-round">Ungroup</button>
+                    <button type="button" id="id_ungroup" class="w3-button bnd-padding-small bnd-grey bnd-round-medium">Ungroup</button>
                 </span>
-                <span class="w3-right">
-                    <button type="button" id="id_save"  class="w3-button w3-padding-small w3-gray w3-round">Save</button>
-                    <button type="button" id="id_clear" class="w3-button w3-padding-small w3-gray w3-round">Clear</button>
+                <span class="bnd-right">
+                    <button type="button" id="id_save"  class="w3-button bnd-padding-small bnd-grey bnd-round-medium">Save</button>
+                    <button type="button" id="id_clear" class="w3-button bnd-padding-small bnd-grey bnd-round-medium">Clear</button>
                 </span>
             </div>
         </form>
 
         <!-- Canvas tool options -->
-        <form class = "w3-light-grey w3-text-black">
+        <form class = "bnd-light-grey bnd-text-black">
             <!-- Tool options -->
             <div style="margin: 0px; padding: 0px 0px 0px 10px">
                 <div id="id_plant_div" style="display: none;">
                     <label for="plant" style="display: inline-block;">Plant: </label>
                     <select id="id_plant" name="plant">
                         <option value="--"> -- </option>
-                        <optgroup label="Annual" class = "w3-text-black">
+                        <optgroup label="Annual" class = "bnd-text-black">
                             {% for plant in plants %}
                                 {% if plant.type_x == "Annual" %}
                                     <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
@@ -391,15 +391,15 @@
         </form>
 
         <!-- Plant Details Modal -->
-        <div id="plant_details_modal" class="w3-modal">
+        <div id="plant_details_modal" class="bnd-modal">
             <p> Modal HTML to be Inserted Here! </p>
         </div>
 
         <!-- Shape Edit Modal -->
-        <div id="planner_edit_modal" class="w3-modal">
-            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px;">
+        <div id="planner_edit_modal" class="bnd-modal">
+            <div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:300px;">
 
-                <header class="w3-container w3-green"> 
+                <header class="bnd-container bnd-green"> 
                     <!-- Close the shape edit modal -->
                     <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
                         class="w3-button w3-display-topright">&times;
@@ -407,7 +407,7 @@
                     <h3>Edit Shape</h2>
                 </header>
                     
-                <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+                <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
                     <div>
                         <form id = "id_edit_form" name = "editForm" action = "">
 
@@ -607,9 +607,9 @@
                             </div>
 
                             <!-- on submit, process attribute value changes in Javascript -->
-                            <input type="submit" value="Apply" class="w3-button w3-round-large w3-green">
-                            <input type="reset"  value="Reset"  class="w3-button w3-round-large w3-grey">
-                            <button type="button"               class="w3-button w3-round-large w3-red"
+                            <input type="submit" value="Apply" class="w3-button bnd-round-large bnd-green">
+                            <input type="reset"  value="Reset"  class="w3-button bnd-round-large bnd-grey">
+                            <button type="button"               class="w3-button bnd-round-large bnd-red"
                                     onclick="document.getElementById('planner_edit_modal').style.display='none'">
                                     Exit
                             </button>

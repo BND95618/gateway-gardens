@@ -280,34 +280,34 @@ class UserSignupForm(forms.Form):
 	signup_username = forms.CharField(
 		label="Username", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class' : 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
 	signup_password = forms.CharField(
 		label="Password", 
 		max_length=64,
-		widget=forms.PasswordInput(attrs={'class' : 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
 	signup_password_2 = forms.CharField(
 		label="Password (reconfirm)", 
 		max_length=64,
-		widget=forms.PasswordInput(attrs={'class' : 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
 	email = forms.CharField(
 		label="e-mail address", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'email'}),
 		)
 	first_name = forms.CharField(
 		label="First Name", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'given-name'}),
 		)
 	last_name = forms.CharField(
 		label="Last Name", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'family-name'}),
 		)
 	
@@ -315,50 +315,50 @@ class UserLoginForm(forms.Form):
 	username = forms.CharField(
 		label="Username", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	password = forms.CharField(
 		label="Password", 
 		max_length=64,
-		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	
 class UserUpdateForm(forms.Form):
 	new_username = forms.CharField(
 		label="New Username", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	new_password = forms.CharField(
 		label="New Password", 
 		max_length=64,
 		required=False,
-		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	new_password_2 = forms.CharField(
 		label="New Password (reconfirm)", 
 		max_length=64,
 		required=False,
-		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	new_email = forms.CharField(
 		label="New e-mail address", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'email'}),
 		)
 	new_first_name = forms.CharField(
 		label="New First Name", 
 		max_length=64,
 		required=False,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'given-name'}),
 		)
 	new_last_name = forms.CharField(
 		label="New Last Name", 
 		max_length=64,
 		required=False,
-		widget=forms.TextInput(attrs={'class'        : 'w3-input w3-border', 
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'family-name'}),
 		)
 	
@@ -366,31 +366,31 @@ class UserRecoveryForm(forms.Form):
 	recovery_username = forms.CharField(
 		label="Username", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	recovery_password = forms.CharField(
 		label="Password", 
 		max_length=64,
-		widget=forms.PasswordInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 
 class GardenAddUpdateForm(forms.Form):
 	name = forms.CharField(
 		label="Garden Name", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	city = forms.CharField(
 		label="City", 
 		max_length=64, 
 		required=False,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	state = forms.CharField(
 		label="State", 
 		max_length=64, 
 		required=False,
-		widget=forms.TextInput(attrs={'class': 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	usda_zone = forms.ChoiceField(
 		label="USDA Zone",
@@ -559,7 +559,7 @@ class MyPlantToDoForm(forms.Form):
 		label="Details", 
 		max_length=128, 
 		required=True,
-		widget=forms.TextInput(attrs={'class' : 'w3-input w3-border'}),
+		widget=forms.TextInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
 
 class MyPlantCommentForm(forms.Form):

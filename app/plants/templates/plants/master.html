@@ -29,38 +29,38 @@
 <body>
   <header>
     <!-- Navigation Bar -->
-    <div class="w3-top">
-      <div class="w3-bar w3-light-grey">
-        <a href="{% url 'plants:index' %}"            class="w3-bar-item w3-button">Home</a>
-        <a href="{% url 'plants:gardens_summary' %}"  class="w3-bar-item w3-button">My Garden</a>
-        <a href="{% url 'plants:myplants_summary' %}" class="w3-bar-item w3-button">My Plants</a>
-        <a href="{% url 'plants:myplants_todo' %}"    class="w3-bar-item w3-button">My ToDo's</a>
-        <a href="{% url 'plants:gardens_plan' %}"     class="w3-bar-item w3-button">My Garden Plan</a>
-        <a href="{% url 'plants:plants_summary' %}"   class="w3-bar-item w3-button">All Plants</a>
-        <a href="{% url 'plants:pest_summary' %}"     class="w3-bar-item w3-button">Pests</a>
-        <a href="{% url 'plants:plants_glossary' %}"  class="w3-bar-item w3-button">Glossary</a>
-        <a href="{% url 'plants:plants_reference' %}" class="w3-bar-item w3-button">Reference</a>
-        <a href="{% url 'plants:plants_about' %}"     class="w3-bar-item w3-button">About</a>
+    <div class="bnd-top">
+      <div class="bnd-bar bnd-light-grey">
+        <a href="{% url 'plants:index' %}"            class="bnd-bar-item w3-button">Home</a>
+        <a href="{% url 'plants:gardens_summary' %}"  class="bnd-bar-item w3-button">My Garden</a>
+        <a href="{% url 'plants:myplants_summary' %}" class="bnd-bar-item w3-button">My Plants</a>
+        <a href="{% url 'plants:myplants_todo' %}"    class="bnd-bar-item w3-button">My ToDo's</a>
+        <a href="{% url 'plants:gardens_plan' %}"     class="bnd-bar-item w3-button">My Garden Plan</a>
+        <a href="{% url 'plants:plants_summary' %}"   class="bnd-bar-item w3-button">All Plants</a>
+        <a href="{% url 'plants:pest_summary' %}"     class="bnd-bar-item w3-button">Pests</a>
+        <a href="{% url 'plants:plants_glossary' %}"  class="bnd-bar-item w3-button">Glossary</a>
+        <a href="{% url 'plants:plants_reference' %}" class="bnd-bar-item w3-button">Reference</a>
+        <a href="{% url 'plants:plants_about' %}"     class="bnd-bar-item w3-button">About</a>
         <!-- drop down account menu item -->
-        <div class="w3-dropdown-hover w3-right">
+        <div class="w3-dropdown-hover bnd-right">
           {% if user.is_authenticated %}
             <button class="w3-button">{{ user.username }}</button>
           {% else %}
             <button class="w3-button">Account</button>
           {% endif %}
-          <div class="w3-dropdown-content w3-bar-block w3-card-4 ">
+          <div class="w3-dropdown-content w3-bar-block bnd-card-4 ">
             {% if user.is_authenticated %}
-              <button id="update_button" class="w3-bar-item w3-button">Update </button>
+              <button id="update_button" class="bnd-bar-item w3-button">Update </button>
               <!-- AR -->
               <form action="{% url 'plants:user_logout' %}" method="post">
                 {% csrf_token %}
-                <input type="submit" value="Logout" class="w3-bar-item w3-button">
+                <input type="submit" value="Logout" class="bnd-bar-item w3-button">
               </form>
             {% else %}
               <!-- AR -->
-              <button id="login_button"  class="w3-bar-item w3-button">Login    </button>
-              <button id="signup_button" class="w3-bar-item w3-button">Sign Up  </button>
-              <button id="recovery_button" class="w3-bar-item w3-button">Recovery </button>
+              <button id="login_button"    class="bnd-bar-item w3-button">Login    </button>
+              <button id="signup_button"   class="bnd-bar-item w3-button">Sign Up  </button>
+              <button id="recovery_button" class="bnd-bar-item w3-button">Recovery </button>
             {% endif %}
           </div>
         </div>
@@ -72,19 +72,19 @@
   </header>
 
     <!-- User Sign Up modal - html to be inserted by Javascript -->
-    <div id="signup_modal" class="w3-modal">
+    <div id="signup_modal" class="bnd-modal">
       <p> Sign Up form HTML to be Inserted Here! </p>
     </div>
     <!-- User Login modal - html to be inserted by Javascript -->
-    <div id="login_modal" class="w3-modal">
+    <div id="login_modal" class="bnd-modal">
       <p> Login form HTML to be Inserted Here! </p>
     </div>
     <!-- User Update modal - html to be inserted by Javascript -->
-    <div id="update_modal" class="w3-modal">
+    <div id="update_modal" class="bnd-modal">
       <p> Update form HTML to be Inserted Here! </p>
     </div>
     <!-- User Recovery modal - html to be inserted by Javascript -->
-    <div id="recovery_modal" class="w3-modal">
+    <div id="recovery_modal" class="bnd-modal">
       <p> Recovery form HTML to be Inserted Here! </p>
     </div>
   
@@ -166,7 +166,7 @@
     {% endif %}
   
     <!-- Footer -->
-    <footer class="w3-container w3-green w3-margin-top">
+    <footer class="bnd-container bnd-green bnd-margin-top">
       <h4 class="w3-center">Footer - Under Construction</h4>
     </footer>
 

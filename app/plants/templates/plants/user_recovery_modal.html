@@ -1,20 +1,20 @@
 <!-- /app/plants/templates/plants/user_login_modal.html -->
 
-<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:400px">
-  <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+<div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:400px">
+  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
     <h3>User Recovery - Under Construction</h3>
   </div>
-  <form class="w3-container" action="{% url 'plants:user_recovery' %}" method="post">
+  <form class="bnd-container" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
     <div class="w3-section">
       {{ form.as_p }}
-      <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Login</button>
+      <button class="w3-button w3-block bnd-green w3-section w3-padding" type="submit">Login</button>
     </div>
   </form>
-  <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+  <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">
     <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
-    <button onclick="location.reload();" type="button" class="w3-button w3-red">Cancel</button>
+    <button onclick="location.reload();" type="button" class="w3-button bnd-red">Cancel</button>
     <!-- AR: Go to reset password page -->
-    <span class="w3-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
+    <span class="bnd-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
   </div>
 </div>

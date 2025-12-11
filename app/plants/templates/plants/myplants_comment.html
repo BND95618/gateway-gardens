@@ -11,8 +11,8 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-bar w3-green">
-    <h1 class="w3-bar-item">
+  <div class="bnd-bar bnd-green">
+    <h1 class="bnd-bar-item">
       Comments related to: 
       {{ myplant.plant.commonName }} / 
       {{ myplant.plant.genus }} {{ myplant.plant.species }} {{ myplant.plant.variety }}
@@ -22,7 +22,7 @@
 
 {% block content %}
   <!-- Add Comment -->
-  <div class="w3-container" style="margin-top:100px;">
+  <div class="bnd-container" style="margin-top:100px;">
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}

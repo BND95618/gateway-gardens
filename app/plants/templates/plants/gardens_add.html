@@ -11,9 +11,9 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         Add My Garden
       </h3>
     </header>
@@ -22,14 +22,14 @@
 
 {% block content %}
 <!-- Garden add form -->
-  <div class="w3-container" style="margin-top:100px;">
+  <div class="bnd-container" style="margin-top:100px;">
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="w3-button w3-green w3-round">Submit</button>
-      <button type="reset"  class="w3-button w3-gray  w3-round">Reset</button>
+      <button type="submit" class="w3-button bnd-green bnd-round-medium">Submit</button>
+      <button type="reset"  class="w3-button bnd-grey  bnd-round-medium">Reset</button>
       <a href="{% url 'plants:index' %}">
-        <button type="button" class="w3-button w3-red w3-round">
+        <button type="button" class="w3-button bnd-red bnd-round-medium">
           Cancel
         </button>
       </a>

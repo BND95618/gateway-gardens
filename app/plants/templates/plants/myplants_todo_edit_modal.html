@@ -1,6 +1,6 @@
 <!-- /plants/templates/plants/myplants_todo_edit_modal.html -->
-<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:300px">
-    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+<div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:300px">
+    <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
       <h4>Edit To Do Item</h4>
     </div>
     <!-- To Do add - create form -->
@@ -9,9 +9,9 @@
     <form action="{% url 'plants:myplants_todo_edit' myplant_todo.id%}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
 
-      <div class="w3-container">
+      <div class="bnd-container">
         <label for="id_common_name">Common Name:</label><br>
-        <select id="id_common_name" name="common_name" class="w3-select w3-margin-bottom">
+        <select id="id_common_name" name="common_name" class="w3-select bnd-margin-bottom">
           {% for myplant in myplants %}
             {% if myplant.plant.commonName == myplant_todo.myplant.plant.commonName %}
               <option value="{{ myplant.plant.commonName }}" selected>{{ myplant.plant.commonName }}</option>
@@ -23,15 +23,15 @@
       <br>
       </div>
 
-      <div class="w3-container">
+      <div class="bnd-container">
         <label for="date">Date:</label>
         <input type="date" id="id_date" name="date" value="{{ myplant_todo.date|date:'Y-m-d' }}">
         <br>
       </div>
 
-      <div class="w3-container">
+      <div class="bnd-container">
         <label for="id_action">Action:</label><br>
-        <select id="id_action" name="action" class="w3-select w3-margin-bottom">
+        <select id="id_action" name="action" class="w3-select bnd-margin-bottom">
           {% for action in todo_action_opt %}
             {% if action == myplant_todo.action %}
               <option value="{{ action }}" selected>{{ action }}</option>
@@ -43,9 +43,9 @@
         <br>
       </div>
 
-      <div class="w3-container">
+      <div class="bnd-container">
         <label for="id_repeat">Repeat:</label><br>
-        <select id="id_repeat" name="repeat" class="w3-select w3-margin-bottom">
+        <select id="id_repeat" name="repeat" class="w3-select bnd-margin-bottom">
           {% for repeat in todo_repeat_opt %}
             {% if repeat == myplant_todo.repeat %}
               <option value="{{ repeat }}" selected>{{ repeat }}</option>
@@ -57,23 +57,25 @@
         <br>
       </div>
 
-      <div class="w3-container">
+      <div class="bnd-container">
         <label for="id_details">Details:</label>
-        <input type="text" id="id_details" class="w3-margin-bottom" name="details" value="{{myplant_todo.details}}">
+        <input type="text" id="id_details" class="bnd-margin-bottom" name="details" value="{{myplant_todo.details}}">
         <br>
-      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+      </div>
 
+      <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">
         <!-- To Do add - submit -->
         <button type="submit" 
-                class="w3-button w3-round-large w3-green">
+                class="w3-button bnd-round-large bnd-green">
           Submit
         </button>
         <!-- To Do add - cancel -->
         <button type="button"
                 onclick="document.getElementById('todo_edit_modal').style.display='none'"
-                class="w3-button w3-round-large w3-red">
+                class="w3-button bnd-round-large bnd-red">
           Cancel
         </button>
       </div>
+      
     </form>
   </div>

@@ -1,24 +1,24 @@
 <!-- /plants/templates/plants/myplants_todo_details_modal.html -->
-<div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:800px">
-    <div class="w3-container w3-border-top w3-padding-8 w3-light-grey">
+<div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:800px">
+    <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
         <h4>To Do Item Details</h4>
         <!-- Close the modal -->
         <span onclick="document.getElementById('todo_details_modal').style.display='none'" 
             class="w3-button w3-display-topright">&times;
         </span>
     </div>
-    <div class="w3-container">
+    <div class="bnd-container">
         <p>Date:        {{ myplant_todo.date       }}</p>
         <p>Common Name: {{ myplant_todo.commonName }}</p>
         <p>Action:      {{ myplant_todo.action     }}</p>
         <p>Details:     {{ myplant_todo.details    }}</p>
         <p>Repeat :     {{ myplant_todo.repeat     }}</p>
     </div>
-    <div class="w3-card-4 w3-margin-top">
-        <header class="w3-container w3-light-grey">
+    <div class="bnd-card-4 bnd-margin-top">
+        <header class="bnd-container bnd-light-grey">
             <h4>Pruning Guidelines:</h4>
         </header>
-        <div class="w3-container">
+        <div class="bnd-container">
             {{ myplant_todo.pruning.html|safe|escape }}
         </div>
     </div>

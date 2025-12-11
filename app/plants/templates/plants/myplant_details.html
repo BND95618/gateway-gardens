@@ -11,17 +11,17 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="w3-card-4">
-    <header class="w3-container  w3-green">
-      <h3 class="w3-bar-item">
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
         {{ myplant.plant.commonName }}
-        <span class="w3-dropdown-hover w3-right">
-          <button class="w3-button w3-green" style="z-index:21">
+        <span class="w3-dropdown-hover bnd-right">
+          <button class="w3-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="w3-dropdown-content w3-bar-block w3-card-4" style="right:0; font-size: 16px">
+          <div class="w3-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
             <a href="{% url 'plants:myplant_update' myplant.id %}" class="w3-button">update</a>
         </span>
       </h3>
@@ -34,10 +34,10 @@
   <div style="margin-top:120px;">
     <div class="w3-row-padding">
       <div class="w3-col s4">
-        <header class="w3-container w3-green w3-border">
+        <header class="bnd-container bnd-green bnd-border">
           <h4>Characteristics</h4>
         </header>
-        <div class="w3-container w3-border">
+        <div class="bnd-container bnd-border">
           <p>Date Planted:        {{ myplant.date_planted }}</p>
           <p>Location:            {{ myplant.location     }}</p>
           <p>Sun Exposure:        {{ myplant.sun_exposure }}</p>
@@ -53,31 +53,31 @@
   <!------------------------------------->
   <!-- My Plant To Do List Summary     -->
   <!------------------------------------->
-  <div class="w3-margin">
+  <div class="bnd-margin">
     <!-- To Do section -->
-    <div class="w3-card-4 w3-margin-top">
-      <header class="w3-container  w3-green">
+    <div class="bnd-card-4 bnd-margin-top">
+      <header class="bnd-container  bnd-green">
         <h4>
           <span>My To Do List:</span>
-          <span class="w3-dropdown-hover w3-right">
-            <button class="w3-button w3-green" style="z-index:21">
+          <span class="w3-dropdown-hover bnd-right">
+            <button class="w3-button bnd-green" style="z-index:21">
               <i class="material-icons">
                 menu
               </i>
             </button>
-              <div class="w3-dropdown-content w3-bar-block w3-card-4">
-                <button onclick="todo_add()"       class="w3-bar-item w3-button">Add          </button>
-                <button onclick="todo_show_all()"  class="w3-bar-item w3-button">Show All     </button>
-                <button onclick="todo_hide_done()" class="w3-bar-item w3-button">Hide Complete</button>
+              <div class="w3-dropdown-content w3-bar-block bnd-card-4">
+                <button onclick="todo_add()"       class="bnd-bar-item w3-button">Add          </button>
+                <button onclick="todo_show_all()"  class="bnd-bar-item w3-button">Show All     </button>
+                <button onclick="todo_hide_done()" class="bnd-bar-item w3-button">Hide Complete</button>
               </div>
           </span>
         </h4>
       </header>
       <!-- To Do table -->
-      <div class="w3-container">
-        <table id="todoTable" class="w3-table-all w3-hoverable w3-margin-top w3-margin-bottom">
+      <div class="bnd-container">
+        <table id="todoTable" class="w3-table-all w3-hoverable bnd-margin-top bnd-margin-bottom">
           <thead>
-            <tr class="w3-light-grey">
+            <tr class="bnd-light-grey">
               <th style="cursor:pointer; width:5%;"  onclick="todo_sort(1)">Status  </th>
               <th style="display:none"  onclick="todo_sort(1)">Status  </th>
               <th style="cursor:pointer; width:10%;" onclick="todo_sort(2)">Date    </th>
@@ -105,7 +105,7 @@
                         {% endif %}
                       </i>
                       <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                         Complete?
                       </span>
                     </button>
@@ -126,7 +126,7 @@
                       edit
                       </i>
                       <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                         Edit
                       </span>
                     </button>
@@ -141,7 +141,7 @@
                       delete
                       </i>
                       <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text w3-tag w3-round-xlarge w3-animate-opacity">
+                        class="w3-text w3-tag bnd-round-xlarge w3-animate-opacity">
                         Delete
                       </span>
                     </button>
@@ -157,29 +157,29 @@
   <hr>
 
   <!-- To Do add modal - html to be inserted by Javascript -->
-  <div id="todo_add_modal" class="w3-modal">
+  <div id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
   </div>
 
   <!-- To Do edit modal - html to be inserted by Javascript -->
-  <div id="todo_edit_modal" class="w3-modal">
+  <div id="todo_edit_modal" class="bnd-modal">
     <p> To Do edit form HTML to be Inserted Here! </p>
   </div>
 
   <!-- To Do delete modal - html to be inserted by Javascript -->
-  <div id="todo_del_modal" class="w3-modal">
+  <div id="todo_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
   </div>
 
   <!------------------------------------->
   <!-- My Plant Gardener Notes         -->
   <!------------------------------------->
-  <div class="w3-margin">
-    <div class="w3-card-4 w3-margin-top">
-      <header class="w3-container w3-green">
+  <div class="bnd-margin">
+    <div class="bnd-card-4 bnd-margin-top">
+      <header class="bnd-container bnd-green">
         <h4>My Notes:</h4>
       </header>
-      <div class="w3-container">
+      <div class="bnd-container">
         {{ myplant.notes.html|safe|escape }}
       </div>
     </div>
@@ -188,12 +188,12 @@
   <!------------------------------------->
   <!-- My Plant Comments               -->
   <!------------------------------------->
-  <div class="w3-margin">
-    <div class="w3-card-4 w3-margin-top">
-      <header class="w3-container w3-green">
+  <div class="bnd-margin">
+    <div class="bnd-card-4 bnd-margin-top">
+      <header class="bnd-container bnd-green">
         <h4>Fellow Gardener Comments:</h4>
       </header>
-      <div class="w3-margin">
+      <div class="bnd-margin">
         {% for comment in myplant_comments %}
           <p>Subject: {{ comment.subject }}</p>
           <p>Author:  {{ comment.author  }}</p>
