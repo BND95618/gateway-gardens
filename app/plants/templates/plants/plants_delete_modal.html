@@ -1,12 +1,12 @@
 <!-- /app/plants/templates/plants/plants_delete_modal.html -->
 
 <div class="bnd-modal-content bnd-card-4 bnd-animate-zoom" style="max-width:400px">
-  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey w3-center">
+  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey bnd-center">
     <h3>Delete "{{ plant.commonName }}"?</h3>
   </div>
   <form class="bnd-container" action="{% url 'plants:plants_delete' plant.id %}" method="post">
     {% csrf_token %}
-    <div class="w3-section w3-center">
+    <div class="w3-section bnd-center">
       <button type="submit" class="bnd-button bnd-green bnd-round-medium">
         Confirm
       </button>

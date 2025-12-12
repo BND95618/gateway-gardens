@@ -91,15 +91,15 @@
           <th style="cursor:pointer; width:10%;" onclick="todo_sort(5)">Repeat  </th>
           <th style="cursor:pointer; width:45%;" onclick="todo_sort(6)">Details </th>
           <!-- Button Placeholders -->
-          <th class="w3-center" style="width:5%;">        </th>
-          <th class="w3-center" style="width:5%;">        </th>
+          <th class="bnd-center" style="width:5%;">        </th>
+          <th class="bnd-center" style="width:5%;">        </th>
         </tr>
       </thead>
       {% for todo in myplants_todo  %}  
         <tbody>
           <tr class="w3-hover-green">
             <!-- To Do complete -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
             style="background-color:transparent; color:white; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip" style="background-color:transparent;">
                 <button class="bnd-transparent bnd-border-0" onclick="todo_done({{ todo.id }})">
@@ -125,7 +125,7 @@
             <td>{{ todo.repeat   }}</td>
             <td>{{ todo.details  }}</td>
             <!-- To Do edit -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <button class="bnd-transparent bnd-border-0" onclick="todo_edit({{ todo.id }})">
@@ -140,7 +140,7 @@
               </div>
             </td>
             <!-- To Do delete -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <button class="bnd-transparent bnd-border-0" onclick="todo_delete({{ todo.id }})">

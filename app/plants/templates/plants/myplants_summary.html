@@ -48,7 +48,7 @@
       {% csrf_token %}
 
       <!-- Plant Attributes -->
-      <p class="w3-center"><i>Plant Attributes</i></p>
+      <p class="bnd-center"><i>Plant Attributes</i></p>
 
       <label for="id_type_x_search">Type:</label><br>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select bnd-margin-bottom">
@@ -168,7 +168,7 @@
 
       <!-- Environmental Needs -->
 
-      <p class="w3-center"><i>Environmental Needs</i></p>
+      <p class="bnd-center"><i>Environmental Needs</i></p>
 
       <label for="id_sun_exposure_search">Sun Exposure:</label><br>
       <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select bnd-margin-bottom">
@@ -262,7 +262,7 @@
       <br>
 
       <!-- Garden Environment -->
-      <p class="w3-center"><i>Garden Environment</i></p>
+      <p class="bnd-center"><i>Garden Environment</i></p>
 
       <label for="id_my_sun_exposure_search">My Sun Exposure:</label><br>
       <select id="id_my_sun_exposure_search" name="my_sun_exposure_search" class="bnd-select bnd-margin-bottom">
@@ -384,7 +384,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Garden Blooms</p>
+            <p class="bnd-center">Garden Blooms</p>
           </footer>
         {% endwith %}
       </div>
@@ -401,7 +401,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Bees</p>
+            <p class="bnd-center">Blooms attracting Bees</p>
           </footer>
         {% endwith %}
       </div>
@@ -418,7 +418,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Butterflies</p>
+            <p class="bnd-center">Blooms attracting Butterflies</p>
           </footer>
         {% endwith %}
       </div>
@@ -435,7 +435,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Hummingbirds</p>
+            <p class="bnd-center">Blooms attracting Hummingbirds</p>
           </footer>
         {% endwith %}
       </div>
@@ -462,10 +462,10 @@
           <th style="cursor:pointer" onclick="sortTable( 7, 'plantTable')" >Bloom Season  </th>
           <th style="cursor:pointer" onclick="sortTable( 8, 'plantTable')" >Bloom Range   </th>
           <th style="cursor:pointer" onclick="sortTable( 9, 'plantTable')" >Pollinators   </th>
-          <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="w3-center">CA Native   </th>
-          <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="w3-center">UCD All-Star</th>
-          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')" class="w3-center">Davis Trees</th>
-          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')" class="w3-center">Sunset Z14</th>
+          <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="bnd-center">CA Native   </th>
+          <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="bnd-center">UCD All-Star</th>
+          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')" class="bnd-center">Davis Trees</th>
+          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')" class="bnd-center">Sunset Z14</th>
           <!-- Plant Requirements -->
           <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Sun Exposure   </th>
           <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">Water Rqmts    </th>
@@ -482,11 +482,11 @@
           <th style="cursor:pointer" onclick="sortTable(25, 'plantTable')">My pH              </th>
           <th style="cursor:pointer" onclick="sortTable(26, 'plantTable')">My Bloom Color     </th>
           <th style="cursor:pointer" onclick="sortTable(27, 'plantTable')">My Bloom Start/End </th>
-          <th style="cursor:pointer" onclick="sortTable(28, 'plantTable')" class="w3-center">Happy?</th>
+          <th style="cursor:pointer" onclick="sortTable(28, 'plantTable')" class="bnd-center">Happy?</th>
           <!-- Button Placeholders -->
-          <th class="w3-center"></th>
-          <th class="w3-center"></th>
-          <th class="w3-center"></th>
+          <th class="bnd-center"></th>
+          <th class="bnd-center"></th>
+          <th class="bnd-center"></th>
         </tr>
       </thead>
       {% for myplant in myplants %}  
@@ -503,10 +503,10 @@
             <td>{{ myplant.plant.bloom_season|cut:"["|cut:"]"   }}             </td>
             <td>{{ myplant.plant.bloom_start }}-{{ myplant.plant.bloom_end }} </td>
             <td>{{ myplant.plant.pollinators |cut:"["|cut:"]"   }}             </td>
-            <td class="w3-center">{{ plant.ca_native    }}                      </td>
-            <td class="w3-center">{{ plant.ucd_all_star }}                      </td>
-            <td class="w3-center">{{ plant.davis_trees  }}                      </td>
-            <td class="w3-center">{{ plant.sunset_z14   }}                      </td>
+            <td class="bnd-center">{{ plant.ca_native    }}                      </td>
+            <td class="bnd-center">{{ plant.ucd_all_star }}                      </td>
+            <td class="bnd-center">{{ plant.davis_trees  }}                      </td>
+            <td class="bnd-center">{{ plant.sunset_z14   }}                      </td>
             <!-- Plant Requirements -->
             <td>{{ myplant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
             <td>{{ myplant.plant.water_rqmts                                 }}</td>
@@ -525,30 +525,30 @@
             <td>{{ myplant.bloom_start }} - {{ myplant.bloom_end }}</td>
             <!-- Implement Happy function -->
             {% if myplant.happiness == "Very Happy" %}
-              <td class="w3-center">
+              <td class="bnd-center">
                 <i class="material-icons">sentiment_very_satisfied</i>
               </td>
             {% elif myplant.happiness == "Happy" %}
-              <td class="w3-center">
+              <td class="bnd-center">
                 <i class="material-icons">sentiment_satisfied</i>
               </td>
             {% elif myplant.happiness == "Neutral" %}
-              <td class="w3-center">
+              <td class="bnd-center">
                 <i class="material-icons">sentiment_neutral</i>
               </td>
             {% elif myplant.happiness == "Unhappy" %}
-              <td class="w3-center">
+              <td class="bnd-center">
                 <i class="material-icons">sentiment_dissatisfied</i>
               </td>
             {% elif myplant.happiness == "Very Unhappy" %}
-              <td class="w3-center">
+              <td class="bnd-center">
                 <i class="material-icons">sentiment_very_dissatisfied</i>
               </td>
             {% else %}
-              <td class="w3-center">tbd</td>
+              <td class="bnd-center">tbd</td>
             {% endif %}
             <!-- MyPlant Details Icon/Link -->
-            <td class="w3-center"
+            <td class="bnd-center"
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:myplant_details' myplant.id %}">
@@ -563,7 +563,7 @@
               </div>
             </td>
             <!-- MyPlant Update Icon/Link -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:myplant_update' myplant.id %}">
@@ -578,7 +578,7 @@
               </div>
             </td>
             <!-- MyPlant Delete Icon/Link -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
                 <button onclick="myplants_delete({{ myplant.id }})" class="bnd-transparent bnd-border-0">

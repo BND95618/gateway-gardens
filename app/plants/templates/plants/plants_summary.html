@@ -50,7 +50,7 @@
     <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-container bnd-card-4 bnd-light-grey">
       {% csrf_token %}
       <!-- Plant Attributes -->
-      <p class="w3-center"><i>Plant Details</i></p>
+      <p class="bnd-center"><i>Plant Details</i></p>
 
       <label for="id_type_x_search">Type:</label><br>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select bnd-margin-bottom">
@@ -170,7 +170,7 @@
       <br>
 
       <!-- Environmental Needs -->
-      <p class="w3-center"><i>Environmental Needs</i></p>
+      <p class="bnd-center"><i>Environmental Needs</i></p>
 
       <label for="id_sun_exposure_search">Sun Exposure:</label><br>
       <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select bnd-margin-bottom">
@@ -263,7 +263,7 @@
       </select>
       <br>
       <!-- In My Garden? -->
-      <p class="w3-center"><i>In My Garden?</i></p>
+      <p class="bnd-center"><i>In My Garden?</i></p>
 
       <label for="id_garden_search">All plants / My plants</label><br>
       <select id="id_garden_search" name="garden_search" class="bnd-select bnd-margin-bottom">
@@ -285,7 +285,7 @@
       {% endif %}
 
         <!-- Admin stuff -->
-        <p class="w3-center"><i>Admin stuff</i></p>
+        <p class="bnd-center"><i>Admin stuff</i></p>
         
         <label for="id_status_search">Status:</label><br>
         <select id="id_status_search" name="status_search" class="bnd-select bnd-margin-bottom">
@@ -375,7 +375,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Garden Blooms</p>
+            <p class="bnd-center">Garden Blooms</p>
           </footer>
         {% endwith %}
       </div>
@@ -392,7 +392,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Bees</p>
+            <p class="bnd-center">Blooms attracting Bees</p>
           </footer>
         {% endwith %}
       </div>
@@ -409,7 +409,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Butterflies</p>
+            <p class="bnd-center">Blooms attracting Butterflies</p>
           </footer>
         {% endwith %}
       </div>
@@ -426,7 +426,7 @@
             {% endfor %}
           </table>
           <footer class="bnd-container bnd-green">
-            <p class="w3-center">Blooms attracting Hummingbirds</p>
+            <p class="bnd-center">Blooms attracting Hummingbirds</p>
           </footer>
         {% endwith %}
       </div>
@@ -453,10 +453,10 @@
           <th style="cursor:pointer" onclick="sortTable(7, 'plantTable')" >Bloom Season </th>
           <th style="cursor:pointer" onclick="sortTable(8, 'plantTable')" >Bloom Range  </th>
           <th style="cursor:pointer" onclick="sortTable(9, 'plantTable')" >Pollinators  </th>
-          <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="w3-center">CA Native</th>
-          <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="w3-center">UCD All-Star</th>
-          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')" class="w3-center">Davis trees</th>
-          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')" class="w3-center">Sunset Z14</th>
+          <th style="cursor:pointer" onclick="sortTable(10, 'plantTable')" class="bnd-center">CA Native</th>
+          <th style="cursor:pointer" onclick="sortTable(11, 'plantTable')" class="bnd-center">UCD All-Star</th>
+          <th style="cursor:pointer" onclick="sortTable(12, 'plantTable')" class="bnd-center">Davis trees</th>
+          <th style="cursor:pointer" onclick="sortTable(13, 'plantTable')" class="bnd-center">Sunset Z14</th>
           <!-- Plant Requirements -->
           <th style="cursor:pointer" onclick="sortTable(14, 'plantTable')">Sun Exposure   </th>
           <th style="cursor:pointer" onclick="sortTable(15, 'plantTable')">Water Rqmts    </th>
@@ -467,17 +467,17 @@
           <th style="cursor:pointer" onclick="sortTable(20, 'plantTable')">Sunset Zones   </th>
           <th style="cursor:pointer" onclick="sortTable(21, 'plantTable')">Status         </th>
           <!-- Plant Detail header placeholder -->
-          <th class="w3-center"></th>
+          <th class="bnd-center"></th>
           <!-- Plant Update header placeholder -->
           {% if perms.plants.change_plant %}
-            <th class="w3-center"></th>
+            <th class="bnd-center"></th>
           {% endif %}
           <!-- Plant Delete header placeholder -->
           {% if perms.plants.delete_plant %}
-            <th class="w3-center"></th>
+            <th class="bnd-center"></th>
           {% endif %}
           <!-- My plant add/remove header placeholder -->
-          <th class="w3-center"></th>
+          <th class="bnd-center"></th>
         </tr>
       </thead>
       {% for plant in plants %}
@@ -494,10 +494,10 @@
             <td>{{ plant.bloom_season|cut:"["|cut:"]"   }}</td>
             <td>{{ plant.bloom_start }}-{{ plant.bloom_end }}</td>
             <td>{{ plant.pollinators |cut:"["|cut:"]"   }}</td>
-            <td class="w3-center">{{ plant.ca_native    }}</td>
-            <td class="w3-center">{{ plant.ucd_all_star }}</td>
-            <td class="w3-center">{{ plant.davis_trees  }}</td>
-            <td class="w3-center">{{ plant.sunset_z14   }}</td>
+            <td class="bnd-center">{{ plant.ca_native    }}</td>
+            <td class="bnd-center">{{ plant.ucd_all_star }}</td>
+            <td class="bnd-center">{{ plant.davis_trees  }}</td>
+            <td class="bnd-center">{{ plant.sunset_z14   }}</td>
             <!-- Plant Requirements -->
             <td>{{ plant.sun_exposure|cut:"["|cut:"]"   }}</td>
             <td>{{ plant.water_rqmts                    }}</td>
@@ -509,7 +509,7 @@
             <!-- Admin -->
             <td>{{ plant.status }}                                    </td>
             <!-- Plant Details Icon/Link -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:plant_details' plant.id %}">
@@ -525,7 +525,7 @@
             </td>
             <!-- Plant Update Icon/Link -->
             {% if perms.plants.change_plant %}
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:plant_update' plant.id %}">
@@ -542,7 +542,7 @@
             {% endif %}
             <!-- Plant Delete Icon/Link -->
             {% if perms.plants.delete_plant %}
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="bnd-transparent bnd-border-0">
@@ -558,7 +558,7 @@
             </td>
             {% endif %}
             <!-- Add/remove plant to/from My Plants Icon/Link -->
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="w3-tooltip">
                 {% if plant.plant_mine == "yes" %}

@@ -55,11 +55,11 @@
           <th style="cursor:pointer" onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
           <!-- Pest Update header placeholder -->
           {% if perms.plants.change_plant %}
-            <th class="w3-center"></th>
+            <th class="bnd-center"></th>
           {% endif %}
           <!-- Pest Delete header placeholder -->
           {% if perms.plants.delete_plant %}
-            <th class="w3-center"></th>
+            <th class="bnd-center"></th>
           {% endif %}
         </tr>
       </thead>
@@ -73,7 +73,7 @@
           </td>
           <!-- Pest Update Icon/Link -->
           {% if perms.plants.change_plant %}
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <a href="{% url 'plants:pest_update' pest.id %}">
@@ -90,7 +90,7 @@
           {% endif %}
           <!-- Pest Delete Icon/Link -->
           {% if perms.plants.delete_plant %}
-            <td class="w3-center" 
+            <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="w3-tooltip">
                 <button onclick="pest_delete({{ pest.id }})" class="bnd-transparent bnd-border-0">

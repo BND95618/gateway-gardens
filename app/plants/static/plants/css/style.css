@@ -32,7 +32,8 @@ hr {
 {
     padding:0.01em 16px
 }
-.bnd-container:after, .bnd-container:before
+.bnd-container:after, 
+.bnd-container:before
 {
     content:"";
     display:table;
@@ -41,6 +42,14 @@ hr {
 .bnd-left
 {
     float:left!important
+}
+.bnd-center
+{
+    text-align:center!important
+}
+.w3-bar-block.bnd-center
+{
+    text-align:center
 }
 .bnd-right
 {
@@ -167,12 +176,13 @@ hr {
     z-index:1;
     top:0
 }
+/* bnd-bar */
 .bnd-bar
 {
     width:100%;
     overflow:hidden
 }
-.w3-center .bnd-bar
+.bnd-center .bnd-bar
 {
     display:inline-block;
     width:auto
@@ -251,7 +261,7 @@ hr {
     float:none;
     outline:0
 }
-.w3-bar-block.w3-center .bnd-bar-item
+.w3-bar-block.bnd-center .bnd-bar-item
 {
     text-align:center
 }
