@@ -115,7 +115,7 @@
 <!-- Plant images -->
 <div class="w3-row-padding">
   {% if plant.image_1 %}
-  <div class="bnd-container w3-quarter">
+  <div class="bnd-container bnd-quarter">
       <img src="{{ plant.image_1.url }}" alt="No plant image found" style="width:100%; cursor:pointer" 
       onclick="onClick(this)" class="bnd-hover-opacity">
       <footer class="bnd-green bnd-center w3-large">{{ plant.caption_1 }}</footer>
@@ -123,7 +123,7 @@
   {% endif %}
 
   {% if plant.image_2 %}
-  <div class="bnd-container w3-quarter">
+  <div class="bnd-container bnd-quarter">
       <img src="{{ plant.image_2.url }}" alt="No plant image found" style="width:100%; cursor:pointer" 
       onclick="onClick(this)" class="bnd-hover-opacity">
       <footer class="bnd-green bnd-center w3-large">{{ plant.caption_2 }}</footer>
@@ -131,7 +131,7 @@
   {% endif %}
 
   {% if plant.image_3 %}
-  <div class="bnd-container w3-quarter">
+  <div class="bnd-container bnd-quarter">
       <img src="{{ plant.image_3.url }}" alt="No plant image found" style="width:100%; cursor:pointer" 
       onclick="onClick(this)" class="bnd-hover-opacity">
       <footer class="bnd-green bnd-center w3-large">{{ plant.caption_3 }}</footer>
@@ -139,7 +139,7 @@
   {% endif %}
 
   {% if plant.image_4 %}
-    <div class="bnd-container w3-quarter">
+    <div class="bnd-container bnd-quarter">
       <img src="{{ plant.image_4.url }}" alt="No plant image found" style="width:100%; cursor:pointer" 
       onclick="onClick(this)" class="bnd-hover-opacity">
       <footer class="bnd-green bnd-center w3-large">{{ plant.caption_4 }}</footer>
