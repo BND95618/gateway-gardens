@@ -8,12 +8,12 @@
     {% csrf_token %}
     <div class="w3-section">
       {{ form.as_p }}
-      <button class="w3-button w3-block bnd-green w3-section w3-padding" type="submit">Login</button>
+      <button class="bnd-button w3-block bnd-green w3-section w3-padding" type="submit">Login</button>
     </div>
   </form>
   <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">
     <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
-    <button onclick="location.reload();" type="button" class="w3-button bnd-red">Cancel</button>
+    <button onclick="location.reload();" type="button" class="bnd-button bnd-red">Cancel</button>
     <!-- AR: Go to reset password page -->
     <span class="bnd-right w3-padding w3-hide-small">Forgot <a href="#">password?</a></span>
   </div>

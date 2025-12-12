@@ -26,10 +26,10 @@
     <form action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="w3-button bnd-green bnd-round-medium">Submit</button>
-      <button type="reset"  class="w3-button bnd-grey  bnd-round-medium">Reset</button>
+      <button type="submit" class="bnd-button bnd-green bnd-round-medium">Submit</button>
+      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
       <a href="{% url 'plants:index' %}">
-        <button type="button" class="w3-button bnd-red bnd-round-medium">
+        <button type="button" class="bnd-button bnd-red bnd-round-medium">
           Cancel
         </button>
       </a>

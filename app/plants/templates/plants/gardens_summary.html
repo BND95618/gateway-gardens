@@ -36,13 +36,13 @@
       <h3 class="bnd-bar-item">
         My Garden: {{ garden.name }}
         <span class="bnd-dropdown-hover w3-right">
-          <button class="w3-button w3-green" style="z-index:21">
+          <button class="bnd-button w3-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
             <div class="bnd-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
-              <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-bar-item w3-button">Update</a> 
+              <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-bar-item bnd-button">Update</a> 
             </div>
         </span>
       </h3>

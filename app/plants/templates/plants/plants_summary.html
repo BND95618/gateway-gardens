@@ -19,19 +19,19 @@
       <h3 class="bnd-bar-item">
         Plant Finder
         <span class="bnd-dropdown-hover bnd-right">
-          <button class="w3-button bnd-green" style="z-index:21">
+          <button class="bnd-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
           <div class="bnd-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
-            <button onclick="w3_open()"        class="bnd-bar-item w3-button">Plant Search  </button>
-            <button onclick="column_chooser()" class="bnd-bar-item w3-button">Column Chooser</button>
+            <button onclick="w3_open()"        class="bnd-bar-item bnd-button">Plant Search  </button>
+            <button onclick="column_chooser()" class="bnd-bar-item bnd-button">Column Chooser</button>
             <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
-                    class="bnd-bar-item w3-button">Bloom Charts
+                    class="bnd-bar-item bnd-button">Bloom Charts
             </button>
             {% if perms.plants.add_plant %}
-              <a href="{% url 'plants:plants_add' %}"  class="bnd-bar-item w3-button">Add Plant</a>
+              <a href="{% url 'plants:plants_add' %}"  class="bnd-bar-item bnd-button">Add Plant</a>
             {% endif %}
           </div>
         </span>
@@ -305,21 +305,21 @@
       <!-- Button to initiate the search based upon the input criteria -->
       <button type="submit" 
               value="Submit" 
-              class="w3-button bnd-border bnd-green bnd-round-large bnd-margin-bottom">
+              class="bnd-button bnd-border bnd-green bnd-round-large bnd-margin-bottom">
         Submit
       </button>
       <!-- Button to reset all search criteria to 'Any' -->
       <button type="button" 
               onclick="searchReset()"
               value="Reset" 
-              class="w3-button bnd-border bnd-white bnd-round-large bnd-margin-bottom">
+              class="bnd-button bnd-border bnd-white bnd-round-large bnd-margin-bottom">
         Reset
       </button>
       <!-- Button to hide the search menu -->
       <button type="button" 
               onclick="w3_close()"
               value="Hide" 
-              class="w3-button bnd-border bnd-red bnd-round-large bnd-margin-bottom">
+              class="bnd-button bnd-border bnd-red bnd-round-large bnd-margin-bottom">
         Hide
       </button>
     </form>
@@ -351,16 +351,16 @@
       <header class="bnd-container bnd-green"> 
         <!-- Close the chart modal -->
         <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
-          class="w3-button w3-display-topright">&times;</span>
+          class="bnd-button w3-display-topright">&times;</span>
           <h2>Bloom Chart - Blooms by Month</h2>
       </header>
 
       <!-- Create the modal tabs - each chart has a tab -->
       <div class="bnd-bar bnd-border-bottom">
-        <button id="bloomTabButton"       class="tab bnd-bar-item w3-button">Blooms      </button>
-        <button id="beeTabButton"         class="tab bnd-bar-item w3-button">Bees        </button>
-        <button id="butterflyTabButton"   class="tab bnd-bar-item w3-button">Butterflies </button>
-        <button id="hummingbirdTabButton" class="tab bnd-bar-item w3-button">Hummingbirds</button>
+        <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
+        <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
+        <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
+        <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
       </div>
     
       <!-- Create the modal chart - Blooms -->

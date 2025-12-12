@@ -7,11 +7,11 @@
     <form class="bnd-container" action="{% url 'plants:myplants_remove' plant.id %}" method="post">
         {% csrf_token %}
         <div class="w3-section w3-center">
-          <button type="submit" class="w3-button bnd-green bnd-round-medium">
+          <button type="submit" class="bnd-button bnd-green bnd-round-medium">
             Confirm
           </button>
           <a href="{% url 'plants:plants_summary' %}">
-            <button type="button" class="w3-button bnd-red bnd-round-medium">
+            <button type="button" class="bnd-button bnd-red bnd-round-medium">
               Cancel
             </button>
           </a>

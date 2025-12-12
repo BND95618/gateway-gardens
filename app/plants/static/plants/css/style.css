@@ -177,13 +177,7 @@ hr {
     display:block;
     outline:0
 }
-.bnd-bar .w3-button
-{
-    white-space:normal
-}
-
-/* ----- start 1 ----- */
-
+/* Dropdown */
 .bnd-dropdown-hover,
 .w3-dropdown-click
 {
@@ -202,8 +196,8 @@ hr {
     background-color:#ccc;
     color:#000
 }
-.bnd-dropdown-hover:hover > .w3-button:first-child,
-.w3-dropdown-click:hover > .w3-button:first-child
+.bnd-dropdown-hover:hover > .bnd-button:first-child,
+.w3-dropdown-click:hover > .bnd-button:first-child
 {
     background-color:#ccc;
     color:#000
@@ -236,16 +230,7 @@ hr {
 {
     min-width:100%
 }
-.bnd-bar-block .w3-dropdown-hover .w3-button,
-.bnd-bar-block .w3-dropdown-click .w3-button
-{
-    width:100%;
-    text-align:left;
-    padding:8px 16px
-}
-
-/* ---------- */
-
+/* bnd-bar-item */
 .w3-bar-block .bnd-bar-item
 {
     width:100%;
@@ -261,8 +246,6 @@ hr {
 {
     text-align:center
 }
-
-
 /* Button */
 .bnd-button
 {
@@ -286,8 +269,20 @@ hr {
     -moz-user-select:none;
     -ms-user-select:none;
     user-select:none
-}   
-.bnd-bar .w3-button
+}
+.bnd-button:disabled
+{
+    cursor:not-allowed;
+    opacity:0.3
+}
+.bnd-bar-block .bnd-dropdown-hover .bnd-button,
+.bnd-bar-block .bnd-dropdown-click .bnd-button
+{
+    width:100%;
+    text-align:left;
+    padding:8px 16px
+}
+.bnd-bar .bnd-button
 {
     white-space:normal
 }
@@ -295,9 +290,4 @@ hr {
 {
     color:#000!important;
     background-color:#ccc!important
-}
-.bnd-button:disabled
-{
-    cursor:not-allowed;
-    opacity:0.3
 }
