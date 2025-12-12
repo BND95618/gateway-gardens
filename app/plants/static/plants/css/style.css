@@ -143,6 +143,16 @@ hr {
     outline:0;
     width:1000px
 }
+/* animation */
+.bnd-animate-opacity
+{
+    animation:opac 0.8s
+}
+@keyframes opac
+{
+    from{opacity:0} 
+    to  {opacity:1}
+}
 .bnd-animate-zoom
 {
     animation:animatezoom 0.6s
