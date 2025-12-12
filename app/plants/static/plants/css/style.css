@@ -50,6 +50,7 @@ hr {
 {
     opacity:0.60
 }
+/* bnd-input */
 .bnd-input
 {
     padding:8px;
@@ -57,7 +58,15 @@ hr {
     border:1px solid #ccc!important;
     width:100%;
 }
-
+/* bnd-select */
+.bnd-select
+{
+    padding:9px 0;
+    width:100%;
+    border:none;
+    border-bottom:1px solid #ccc
+}
+/* bnd-badge */
 .bnd-badge
 {
     height:13px;
@@ -65,13 +74,12 @@ hr {
     padding:0;
     cursor:pointer
 }
-
+/* bnd-card-4 */
 .bnd-card-4
 {
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
 }
-
-/* */
+/* bnd-modal */
 .bnd-modal
 {
     z-index:     1;      /* Sit on top */
@@ -87,6 +95,7 @@ hr {
     background-color:rgba(0,0,0,0.4); /* Black w/ opacity */
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
 }
+/* bnd-modal-content */
 .bnd-modal-content
 {
     margin:auto;

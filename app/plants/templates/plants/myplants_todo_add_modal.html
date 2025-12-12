@@ -11,7 +11,7 @@
 
       <div class="bnd-container">
         <label for="id_common_name">Common Name:</label><br>
-        <select id="id_common_name" name="common_name" class="w3-select bnd-margin-bottom">
+        <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for myPlant in myPlants %}
             <option value="{{ myPlant.plant.commonName }}">{{ myPlant.plant.commonName }}</option>
@@ -28,7 +28,7 @@
 
       <div class="bnd-container">
         <label for="id_action">Action:</label><br>
-        <select id="id_action" name="action" class="w3-select bnd-margin-bottom">
+        <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for action in todo_action_opt %}
             <option value="{{ action }}" >{{ action }}</option>
@@ -39,7 +39,7 @@
 
       <div class="bnd-container">
         <label for="id_repeat">Repeat:</label><br>
-        <select id="id_repeat" name="repeat" class="w3-select bnd-margin-bottom">
+        <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for repeat in todo_repeat_opt %}
             <option value="{{ repeat }}" >{{ repeat }}</option>
