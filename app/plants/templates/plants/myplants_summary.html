@@ -550,13 +550,13 @@
             <!-- MyPlant Details Icon/Link -->
             <td class="bnd-center"
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <a href="{% url 'plants:myplant_details' myplant.id %}">
                   <i class="material-icons">
                     library_books
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                         Details
                   </span>
                 </a>
@@ -565,13 +565,13 @@
             <!-- MyPlant Update Icon/Link -->
             <td class="bnd-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <a href="{% url 'plants:myplant_update' myplant.id %}">
                   <i class="material-icons">
                     edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                  class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Edit
                   </span>
                 </a>
@@ -580,13 +580,13 @@
             <!-- MyPlant Delete Icon/Link -->
             <td class="bnd-center" 
                 style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <button onclick="myplants_delete({{ myplant.id }})" class="bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Delete
                   </span>
                 </button>

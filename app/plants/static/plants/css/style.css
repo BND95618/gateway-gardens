@@ -143,6 +143,11 @@ hr {
     outline:0;
     width:1000px
 }
+/* bnd-tooltip */
+.bnd-tooltip{position:relative}
+/* bnd-text */
+.bnd-tooltip       .bnd-text{display:none}
+.bnd-tooltip:hover .bnd-text{display:inline-block}
 /* animation */
 .bnd-animate-opacity
 {

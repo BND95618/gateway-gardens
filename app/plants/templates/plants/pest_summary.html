@@ -75,13 +75,13 @@
           {% if perms.plants.change_plant %}
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <a href="{% url 'plants:pest_update' pest.id %}">
                   <i class="material-icons">
                     edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                  class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Edit
                   </span>
                 </a>
@@ -92,13 +92,13 @@
           {% if perms.plants.delete_plant %}
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <button onclick="pest_delete({{ pest.id }})" class="bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Delete
                   </span>
                 </button>

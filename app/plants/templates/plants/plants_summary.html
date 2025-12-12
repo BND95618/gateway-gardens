@@ -511,13 +511,13 @@
             <!-- Plant Details Icon/Link -->
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:10px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_details' plant.id %}">
                   <i class="material-icons">
                     library_books
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                            class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                            class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Details
                   </span>
                 </a>
@@ -527,13 +527,13 @@
             {% if perms.plants.change_plant %}
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_update' plant.id %}">
                   <i class="material-icons">
                     edit
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                  class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                  class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Edit
                   </span>
                 </a>
@@ -544,13 +544,13 @@
             {% if perms.plants.delete_plant %}
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
                   <span style="position:absolute; left:0; bottom:34px;" 
-                        class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                     Delete
                   </span>
                 </button>
@@ -560,12 +560,12 @@
             <!-- Add/remove plant to/from My Plants Icon/Link -->
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
-              <div class="w3-tooltip">
+              <div class="bnd-tooltip">
                 {% if plant.plant_mine == "yes" %}
                   <button onclick="myplant_remove({{ plant.id }})" class="bnd-transparent bnd-border-0">
                     <i class="material-icons">check</i>
                     <span style="position:absolute; left:0; bottom:34px;" 
-                          class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                          class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                       My Plant
                     </span>
                   </button>
@@ -573,7 +573,7 @@
                   <a href="{% url 'plants:myplants_add' plant.id %}">
                     <i class="material-icons">add</i>
                     <span style="position:absolute; left:0; bottom:34px;" 
-                          class="w3-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
+                          class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
                       Add to My Plants
                     </span>
                   </a>
