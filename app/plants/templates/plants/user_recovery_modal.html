@@ -6,9 +6,9 @@
   </div>
   <form class="bnd-container" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
-    <div class="w3-section">
+    <div class="bnd-section">
       {{ form.as_p }}
-      <button class="bnd-button w3-block bnd-green w3-section w3-padding" type="submit">Login</button>
+      <button class="bnd-button w3-block bnd-green bnd-section w3-padding" type="submit">Login</button>
     </div>
   </form>
   <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">

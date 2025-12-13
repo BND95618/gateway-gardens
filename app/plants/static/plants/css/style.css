@@ -39,6 +39,15 @@ hr {
     display:table;
     clear:both
 }
+/* bnd-display-container */
+.bnd-display-container      {position:relative}
+.bnd-display-container:hover{display:block}
+/* bnd-section */
+.bnd-section
+{
+    margin-top:16px!important;
+    margin-bottom:16px!important
+}
 /* bnd-content */
 .bnd-content
 {
@@ -228,6 +237,7 @@ hr {
 
 .bnd-text-white  { color:#fff !important }
 .bnd-text-black  { color:#000 !important }
+.bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
 /* Font Sizes */
 .bnd-tiny     {font-size:10px!important}
 .bnd-small    {font-size:12px!important}
