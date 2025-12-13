@@ -17,7 +17,7 @@
   </div>
 
   <div id="blooms_tab_content" class="chart">
-    <table class="w3-table-all w3-hoverable" id="plantChart">
+    <table class="bnd-table-all w3-hoverable" id="plantChart">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Common Name -->
@@ -39,7 +39,7 @@
       </thead>
       {% for plant in plants %}
         {% if plant.plant_show == "yes" and "None" not in plant.bloom_season and "tbd" not in plant.bloom_season %} 
-          <tr class="w3-hover-green">
+          <tr class="bnd-hover-light-green">
             <!-- Plant Attributes -->
             <td>{{ plant.commonName }}</td>
             <!-- Jan -->
@@ -121,7 +121,7 @@
   </div>
 
   <div id="bees_tab_content" class="chart">
-    <table class="w3-table-all w3-hoverable" id="plantChart">
+    <table class="bnd-table-all w3-hoverable" id="plantChart">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Common Name -->
@@ -146,7 +146,7 @@
   </div>
 
   <div id="butterflies_tab_content" class="chart">
-    <table class="w3-table-all w3-hoverable" id="plantChart">
+    <table class="bnd-table-all w3-hoverable" id="plantChart">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Common Name -->
@@ -171,7 +171,7 @@
   </div>
 
   <div id="hummingbirds_tab_content" class="chart">
-    <table class="w3-table-all w3-hoverable" id="plantChart">
+    <table class="bnd-table-all w3-hoverable" id="plantChart">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Common Name -->

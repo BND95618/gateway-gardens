@@ -46,7 +46,7 @@
   <!------------------------->
 
   <div class="bnd-container" id="main" style="margin-top:120px;">
-    <table class="w3-table-all w3-hoverable" id="pestTable">
+    <table class="bnd-table-all w3-hoverable" id="pestTable">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Pest Attributes -->
@@ -64,7 +64,7 @@
         </tr>
       </thead>
       {% for pest in pests %} 
-        <tr class="w3-hover-green">
+        <tr class="bnd-hover-light-green">
           <!-- Pest Attributes -->
           <td>{{ pest.pest_name     }}</td>
           <td>{{ pest.pest_type     }}</td>
