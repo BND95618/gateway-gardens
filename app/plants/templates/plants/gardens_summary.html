@@ -9,7 +9,7 @@
   <!-- Insert template css here -->
   <style>
     .mySlides {display:none}
-    .w3-left, .w3-right {cursor:pointer}
+    .bnd-left, .bnd-right {cursor:pointer}
     .header {
       position: fixed;
       top: 0;
@@ -31,16 +31,16 @@
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <div class="bnd-card-4">
-    <header class="bnd-container  w3-green">
+    <header class="bnd-container  bnd-green">
       <h3 class="bnd-bar-item">
         My Garden: {{ garden.name }}
-        <span class="bnd-dropdown-hover w3-right">
-          <button class="bnd-button w3-green" style="z-index:21">
+        <span class="bnd-dropdown-hover bnd-right">
+          <button class="bnd-button bnd-green" style="z-index:21">
             <i class="material-icons">
               menu
             </i>
           </button>
-            <div class="bnd-dropdown-content w3-bar-block bnd-card-4" style="right:0; font-size: 16px">
+            <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
               <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-bar-item bnd-button">Update</a> 
             </div>
         </span>
@@ -63,7 +63,7 @@
       </h3>
     {% else %}
       <!-- Load images for display -->
-      <div class="w3-content w3-display-container" style="max-width:900px">
+      <div class="bnd-content w3-display-container" style="max-width:900px">
         <!-- Load the images -->
         {% if garden.image_1 %}
           <div class="mySlides">
@@ -138,9 +138,9 @@
           </div>
         {% endif %}
         <!-- Slide show -->
-        <div class="bnd-center bnd-container w3-section w3-large bnd-text-white bnd-display-bottommiddle" style="width:100%">
-          <div class="w3-left  w3-xxlarge w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-          <div class="w3-right w3-xxlarge w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+        <div class="bnd-center bnd-container w3-section bnd-large bnd-text-white bnd-display-bottommiddle" style="width:100%">
+          <div  class="bnd-left  bnd-xxlarge w3-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+          <div  class="bnd-right bnd-xxlarge w3-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(1)"></span>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(2)"></span>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(3)"></span>
