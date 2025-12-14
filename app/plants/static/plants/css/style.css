@@ -392,6 +392,8 @@ hr {
 .bnd-table-all tr                 {border-bottom:1px solid #ddd}
 .bnd-table-all tr:nth-child(odd)  {background-color:#fff}
 .bnd-table-all tr:nth-child(even) {background-color:#f1f1f1}
+.bnd-hoverable tbody tr:hover     {background-color:#ccc}
+
 /* td */
 .bnd-table-all td 
 {
