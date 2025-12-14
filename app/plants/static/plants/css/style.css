@@ -77,6 +77,12 @@ hr {
 {
     float:left!important
 }
+/*  */
+.bnd-block
+{
+    display:block;
+    width:100%
+}
 /* bnd-center */
 .bnd-center
 {
@@ -152,6 +158,11 @@ hr {
 .bnd-row-padding > .bnd-quarter { padding: 0 8px }
 
 /* bnd-card-4 */
+.bnd-card,
+.bnd-card-2
+{
+    box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
+}
 .bnd-card-4
 {
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
@@ -218,6 +229,40 @@ hr {
     from{transform:scale(0)} 
     to  {transform:scale(1)}
 }
+.bnd-animate-left
+{
+    position:relative;
+    animation:animateleft 0.4s
+}
+@keyframes animateleft
+{
+    from{left:-300px;opacity:0} 
+    to  {left:0;opacity:1}
+}
+/* bnd-sidebar */
+.bnd-sidebar
+{
+    height:100%;
+    width:200px;
+    background-color:#fff;
+    position:fixed!important;
+    z-index:1;
+    overflow:auto
+}
+/* Padding */
+.bnd-padding-small  {padding:4px 8px!important}
+.bnd-padding-medium {padding:8px 16px!important}
+.bnd-padding-large  {padding:12px 24px!important}
+.bnd-padding-16     {padding-top:16px!important;padding-bottom:16px!important}
+.bnd-padding-24     {padding-top:24px!important;padding-bottom:24px!important}
+.bnd-padding-32     {padding-top:32px!important;padding-bottom:32px!important}
+.bnd-padding-48     {padding-top:48px!important;padding-bottom:48px!important}
+.bnd-padding-64     {padding-top:64px!important;padding-bottom:64px!important}
+.bnd-padding-top-64 {padding-top:64px!important}
+.bnd-padding-top-48 {padding-top:48px!important}
+.bnd-padding-top-32 {padding-top:32px!important}
+.bnd-padding-top-24 {padding-top:24px!important}
+
 /* Border formating */
 .bnd-border        { border:        1px solid #ccc!important }
 .bnd-border-0      { border:        0               !important}
@@ -231,10 +276,6 @@ hr {
 .bnd-round-medium { border-radius:4px  }
 .bnd-round-large  { border-radius:8px  }
 .bnd-round-xlarge { border-radius:16px }
-/* Padding */
-.bnd-padding-small  { padding:4px 8px   !important }
-.bnd-padding-medium { padding:8px 16px  !important }
-.bnd-padding-large  { padding:12px 24px !important }
 /* Margins */
 .bnd-margin        { margin:16px        !important }
 .bnd-margin-top    { margin-top:16px    !important }
@@ -453,4 +494,20 @@ hr {
 {
     background-color:#ccc;
     color:#000
+}
+/* */
+@media (max-width:600px)
+{
+    .bnd-modal-content
+    {
+        margin:0 10px;width:auto!important
+    }
+    .bnd-modal
+    {
+        padding-top:30px
+    }
+    .bnd-hide-small
+    {
+        display:none!important
+    }
 }
