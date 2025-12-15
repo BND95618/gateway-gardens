@@ -71,8 +71,13 @@ hr {
     display:table;
     clear:both
 }
-.bnd-row-padding { padding: 0 8px }
-/*  */
+.bnd-row-padding,
+.bnd-row-padding>.bnd-quarter,
+.bnd-row-padding>.bnd-col
+{
+    padding:0 8px
+}
+/* bnd-col */
 .bnd-col{float:left;width:100%}
 .bnd-col.s4{width:33.33333%}
 /* bnd-left */
