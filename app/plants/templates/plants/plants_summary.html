@@ -545,7 +545,7 @@
             <td class="bnd-center" 
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="bnd-tooltip">
-                <button onclick="plants_delete({{ plant.id }})" class="bnd-transparent bnd-border-0">
+                <button onclick="plants_delete({{ plant.id }})" class="bnd-button bnd-transparent bnd-border-0">
                   <i class="material-icons" style="color:black;">
                     delete
                   </i>
@@ -562,7 +562,7 @@
               style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:8px;">
               <div class="bnd-tooltip">
                 {% if plant.plant_mine == "yes" %}
-                  <button onclick="myplant_remove({{ plant.id }})" class="bnd-transparent bnd-border-0">
+                  <button onclick="myplant_remove({{ plant.id }})" class="bnd-button bnd-transparent bnd-border-0">
                     <i class="material-icons">check</i>
                     <span style="position:absolute; left:0; bottom:34px;" 
                           class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">

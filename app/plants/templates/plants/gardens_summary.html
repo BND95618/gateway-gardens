@@ -7,25 +7,6 @@
 
 {% block css %}
   <!-- Insert template css here -->
-  <style>
-    .mySlides {display:none}
-    .bnd-left, .bnd-right {cursor:pointer}
-    .header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      color: white;
-      text-align: left;
-    }
-    .footer {
-      position: fixed;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      color: white;
-      text-align: center;
-    }
-  </style>
 {% endblock css %}
 
 {% block header-completion %}
@@ -139,8 +120,8 @@
         {% endif %}
         <!-- Slide show -->
         <div class="bnd-center bnd-container bnd-section bnd-large bnd-text-white bnd-display-bottommiddle" style="width:100%">
-          <div  class="bnd-left  bnd-xxlarge bnd-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
-          <div  class="bnd-right bnd-xxlarge bnd-hover-text-khaki" onclick="plusDivs(1)">&#10095;</div>
+          <div  class="bnd-cursor-hand bnd-left  bnd-xxlarge bnd-hover-text-khaki" onclick="plusDivs(-1)">&#10094;</div>
+          <div  class="bnd-cursor-hand bnd-right bnd-xxlarge bnd-hover-text-khaki" onclick="plusDivs( 1)">&#10095;</div>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(1)"></span>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(2)"></span>
           <span class="bnd-badge demo bnd-border bnd-transparent bnd-hover-white" onclick="currentDiv(3)"></span>

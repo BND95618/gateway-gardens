@@ -102,7 +102,7 @@
             <td class="bnd-center" 
             style="background-color:transparent; color:white; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="bnd-tooltip" style="background-color:transparent;">
-                <button class="bnd-transparent bnd-border-0" onclick="todo_done({{ todo.id }})">
+                <button class="bnd-button bnd-text-black bnd-transparent bnd-border-0" onclick="todo_done({{ todo.id }})">
                   <i class="material-icons" style="background-color:transparent;">
                     {% if todo.complete %}
                       check_box
@@ -128,7 +128,7 @@
             <td class="bnd-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="bnd-tooltip">
-                <button class="bnd-transparent bnd-border-0" onclick="todo_edit({{ todo.id }})">
+                <button class="bnd-button bnd-transparent bnd-border-0" onclick="todo_edit({{ todo.id }})">
                   <i class="material-icons">
                   edit
                   </i>
@@ -143,7 +143,7 @@
             <td class="bnd-center" 
             style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
               <div class="bnd-tooltip">
-                <button class="bnd-transparent bnd-border-0" onclick="todo_delete({{ todo.id }})">
+                <button class="bnd-button bnd-transparent bnd-border-0" onclick="todo_delete({{ todo.id }})">
                   <i class="material-icons">
                   delete
                   </i>

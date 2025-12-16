@@ -9,14 +9,54 @@
    > adjacent sibling selector (+)
    > general sibling selector (~)
 */
-body 
+/* ----------------------- */
+/* Global formatting */
+/* ----------------------- */
+*, *:before, *:after{box-sizing:inherit}
+/* ----------------------- */
+/* HTML element formatting */
+/* ----------------------- */
+html
+{
+    box-sizing:border-box;
+    font-family:Verdana,sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    overflow-x:hidden
+}
+body
+{
+    font-family:chalkboard, verdana, sans-serif;
+    font-size:15px;
+    line-height:1.5
+}
+h1,h2,h3,h4,h5,h6
 {
     font-family: chalkboard, verdana, sans-serif;
+    font-weight:400;
+    margin:10px 0
 }
+h1{font-size:36px}
+h2{font-size:30px}
+h3{font-size:24px}
+h4{font-size:20px}
+h5{font-size:18px}
+h6{font-size:16px}
 p 
 {
     font-family: chalkboard, verdana, sans-serif;
     font-size: large;
+}
+a 
+{
+    cursor:pointer
+}
+button
+{
+    font:inherit;
+    margin:0;
+    overflow:visible;
+    text-transform:none
 }
 hr {
     display: block;
@@ -27,6 +67,14 @@ hr {
     border-style: inset;
     border-width: 1px;
   }
+img
+{
+    vertical-align:middle;
+    border-style:none
+}
+/* ----------------------- */
+/* Class formatting        */
+/* ----------------------- */
 /* bnd-container */
 .bnd-container
 {
@@ -72,18 +120,32 @@ hr {
     clear:both
 }
 .bnd-row-padding,
-.bnd-row-padding>.bnd-quarter,
-.bnd-row-padding>.bnd-col
+.bnd-row-padding > .bnd-quarter,
+.bnd-row-padding > .bnd-col
 {
     padding:0 8px
 }
 /* bnd-col */
-.bnd-col{float:left;width:100%}
+.bnd-col
+{
+    float:left;
+    width:100%
+}
 .bnd-col.s4{width:33.33333%}
 /* bnd-left */
 .bnd-left
 {
     float:left!important
+}
+/* bnd-center */
+.bnd-center
+{
+    text-align:center!important
+}
+/* bnd-right */
+.bnd-right
+{
+    float:right!important
 }
 /*  */
 .bnd-block
@@ -91,19 +153,9 @@ hr {
     display:block;
     width:100%
 }
-/* bnd-center */
-.bnd-center
-{
-    text-align:center!important
-}
 .bnd-bar-block.bnd-center
 {
     text-align:center
-}
-/* bnd-right */
-.bnd-right
-{
-    float:right!important
 }
 /* bnd-hover-opacity */
 .bnd-hover-opacity:hover
@@ -117,6 +169,7 @@ hr {
     display:block;
     border:1px solid #ccc!important;
     width:100%;
+    cursor:pointer
 }
 /* bnd-select */
 .bnd-select
@@ -145,9 +198,7 @@ hr {
     padding-left:8px;
     padding-right:8px;
     text-align:center;
-
     border-radius:50%;
-
     height:13px;
     width:13px;
     padding:0;
@@ -467,15 +518,6 @@ hr {
     cursor:pointer;
     white-space:nowrap
 }
-.bnd-button
-{
-    -webkit-touch-callout:none;
-    -webkit-user-select:none;
-    -khtml-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select:none;
-    user-select:none
-}
 .bnd-button:hover
 {
     color:#000!important;
@@ -498,7 +540,7 @@ hr {
     padding:8px 16px
 }
 .bnd-dropdown-hover:hover > .bnd-button:first-child,
-.bnd-dropdown-click:hover  > .bnd-button:first-child
+.bnd-dropdown-click:hover > .bnd-button:first-child
 {
     background-color:#ccc;
     color:#000
@@ -519,3 +561,6 @@ hr {
         display:none!important
     }
 }
+/*  */
+.bnd-cursor-hand:hover {cursor:pointer}
+.bnd-cursor-help:hover {cursor:help}
