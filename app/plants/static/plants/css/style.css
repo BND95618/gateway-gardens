@@ -20,14 +20,14 @@ html
 {
     box-sizing:border-box;
     font-family:Verdana,sans-serif;
-    font-size:15px;
+    font-size:16px;
     line-height:1.5;
     overflow-x:hidden
 }
 body
 {
     font-family:chalkboard, verdana, sans-serif;
-    font-size:15px;
+    font-size:16px;
     line-height:1.5
 }
 h1,h2,h3,h4,h5,h6
@@ -263,11 +263,37 @@ img
     outline:0;
     width:1000px
 }
-/* bnd-tooltip */
-.bnd-tooltip{position:relative}
-/* bnd-text */
-.bnd-tooltip       .bnd-text{display:none}
-.bnd-tooltip:hover .bnd-text{display:inline-block}
+
+/* Tool Tip */
+.bnd-tooltip 
+{
+    position: relative;
+    display: inline-block;
+    cursor: pointer;  
+}
+.bnd-tooltip-text 
+{
+    visibility: hidden;
+    background-color: black;
+    font-size:16px;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -30px;
+    opacity: 0;
+    transition: opacity 2s;
+}
+
+.bnd-tooltip:hover .bnd-tooltip-text 
+{
+    visibility: visible;
+    opacity: 1;
+}
 /* bnd-animate-opacity */
 .bnd-animate-opacity
 {
@@ -309,6 +335,7 @@ img
     overflow:auto
 }
 /* Padding */
+.bnd-padding-none   {padding:0!important}
 .bnd-padding-small  {padding:4px 8px!important}
 .bnd-padding-medium {padding:8px 16px!important}
 .bnd-padding-large  {padding:12px 24px!important}
@@ -336,6 +363,7 @@ img
 .bnd-round-large  { border-radius:8px  }
 .bnd-round-xlarge { border-radius:16px }
 /* Margins */
+.bnd-margin-none   { margin:0          !important }
 .bnd-margin        { margin:16px        !important }
 .bnd-margin-top    { margin-top:16px    !important }
 .bnd-margin-left   { margin-left:16px   !important }
@@ -509,6 +537,21 @@ img
     border:none;
     display:inline-block;
     padding:8px 16px;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap
+}
+.bnd-button-small
+{
+    border:none;
+    display:inline-block;
+    padding:0;
+    margin:0;
     vertical-align:middle;
     overflow:hidden;
     text-decoration:none;

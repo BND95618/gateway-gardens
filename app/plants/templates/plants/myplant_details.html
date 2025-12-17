@@ -93,21 +93,17 @@
             <tbody>
               <tr class="bnd-hover-light-green">
                 <!-- To Do complete -->
-                <td class="bnd-center" 
-                style="background-color:transparent; color:white; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-                  <div class="bnd-tooltip" style="background-color:transparent;">
+                <td class="bnd-center">
+                  <div class="bnd-tooltip">
                     <button onclick="todo_done({{ todo.id }})">
-                      <i class="material-icons" style="background-color:transparent;">
+                      <i class="material-icons">
                         {% if todo.complete %}
                           check_box
                         {% else %}
                           check_box_outline_blank
                         {% endif %}
                       </i>
-                      <span style="position:absolute; left:0; bottom:34px;" 
-                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
-                        Complete?
-                      </span>
+                      <span class="bnd-tooltip-text">Complete?</span>
                     </button>
                   </div>
                 </td>
@@ -118,32 +114,20 @@
                 <td>{{ todo.repeat   }}</td>
                 <td>{{ todo.details  }}</td>
                 <!-- To Do edit -->
-                <td class="bnd-center" 
-                style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
+                <td class="bnd-center">
                   <div class="bnd-tooltip">
                     <button onclick="todo_edit({{ todo.id }})">
-                      <i class="material-icons">
-                      edit
-                      </i>
-                      <span style="position:absolute; left:0; bottom:34px;" 
-                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
-                        Edit
-                      </span>
+                      <i class="material-icons">edit</i>
+                      <span class="bnd-tooltip-text">Edit</span>
                     </button>
                   </div>
                 </td>
                 <!-- To Do delete -->
-                <td class="bnd-center" 
-                style="color:black; margin-left:0px; padding-left:0px; margin-right:0px; padding-right:0px;">
-                  <div class="bnd-tooltip">
+                <td class="bnd-center">
+                <div class="bnd-tooltip">
                     <button onclick="todo_delete({{ todo.id }})">
-                      <i class="material-icons">
-                      delete
-                      </i>
-                      <span style="position:absolute; left:0; bottom:34px;" 
-                        class="bnd-text bnd-tag bnd-round-xlarge bnd-animate-opacity">
-                        Delete
-                      </span>
+                      <i class="material-icons">delete</i>
+                      <span class="bnd-tooltip-text">Delete</span>
                     </button>
                   </div>
                 </td>
