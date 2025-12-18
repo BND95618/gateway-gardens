@@ -13,112 +13,19 @@
   <!-- complete the header from master.html -->
   <div class="bnd-card-4">
     <header class="bnd-container  bnd-green">
-      <h3 class="">
-        Weekly Calendar
+      <h3>
+        Fiddle
       </h3>
     </header>
   </div>
 {% endblock header-completion %}
 
 {% block content %}
-<div class="bnd-container" style="margin-top:140px;">
-    <div class="calendar-container">
-        <div class="calendar-header">
-            <button id="prevMonth">&#10094;</button>
-            <h2 id="monthYear"></h2>
-            <button id="nextMonth">&#10095;</button>
-        </div>
-        <div class="calendar-weekdays">
-            <div>Sun</div>
-            <div>Mon</div>
-            <div>Tue</div>
-            <div>Wed</div>
-            <div>Thu</div>
-            <div>Fri</div>
-            <div>Sat</div>
-        </div>
-        <div class="calendar-dates" id="calendarDates">
-            <!-- Dates will be dynamically inserted here by JavaScript -->
-        </div>
-    </div>
+<div class="bnd-container bnd-content-main">
+    <h3>Fiddle</h3>
 </div>
 {% endblock content %}
 
 {% block js %}
-<script>
-    const monthYearDisplay = document.getElementById('monthYear');
-    const calendarDates    = document.getElementById('calendarDates');
-    const prevMonthBtn     = document.getElementById('prevMonth');
-    const nextMonthBtn     = document.getElementById('nextMonth');
-
-    let currentDate = new Date(); // Stores the currently displayed date
-
-    // On page load fetch the user's To Do items and put into list of todo objects
-    
-
-    function renderCalendar() {
-        calendarDates.innerHTML = ''; // Clear previous dates
-
-        const year  = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-
-        console.log("DEBUG: month = ", month);
-        console.log("DEBUG: year = ",  year);
-
-        monthYearDisplay.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
-
-        const firstDayOfMonth = new Date(year, month, 1);
-        const lastDayOfMonth  = new Date(year, month + 1, 0);
-        const daysInMonth     = lastDayOfMonth.getDate();
-        const firstDayIndex   = firstDayOfMonth.getDay(); // 0 for Sunday, 1 for Monday, etc.
-
-        // Fill in leading empty cells for days before the 1st of the month
-        for (let i = 0; i < firstDayIndex; i++) 
-        {
-            const emptyDiv = document.createElement('div');
-            calendarDates.appendChild(emptyDiv);
-        }
-
-        // Populate dates
-        for (let day = 1; day <= daysInMonth; day++) 
-        {
-            const dateDiv = document.createElement('div');
-            let date_text = "";
-            date_text = day;
-
-            // Check if and todo items correspond to the date being processed
-            if(day === 15 && month === 11 && year === 2025)
-            {
-                date_text = date_text + "</br>" + "Prune: Crepe Myrtle"
-                date_text = date_text + "</br>" + "Plant: bulbs"
-            }
-            dateDiv.innerHTML = date_text;
-
-            console.log("DEBUG:", dateDiv.textContent)
-
-            // Highlight today's date
-            if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) 
-            {
-                dateDiv.classList.add('today');
-            }
-            calendarDates.appendChild(dateDiv);
-        }
-    }
-
-    // Event listeners for month navigation
-    prevMonthBtn.addEventListener('click', () => 
-    {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderCalendar();
-    });
-
-    nextMonthBtn.addEventListener('click', () => 
-    {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    });
-
-    // Initial calendar render
-    renderCalendar();
-</script>
+<!-- Insert template javascri[t] here -->
 {% endblock js %}

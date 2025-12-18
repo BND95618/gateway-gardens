@@ -51,6 +51,10 @@ a
 {
     cursor:pointer
 }
+th 
+{
+    cursor:pointer
+}
 button
 {
     font:inherit;
@@ -96,6 +100,9 @@ img
     margin-top:16px!important;
     margin-bottom:16px!important
 }
+/* bnd-content-main */
+.bnd-content-main-100 { margin-top: 100px; }
+.bnd-content-main-120 { margin-top: 120px; }
 /* bnd-content */
 .bnd-content
 {
