@@ -19,7 +19,7 @@
           <button class="bnd-button-small">
             <i class="material-icons">menu</i>
           </button>
-            <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
+            <div class="bnd-dropdown-content bnd-bar-block bnd-card-4 bnd-banner-menu">
               <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-bar-item bnd-button">Update</a> 
             </div>
         </span>
@@ -46,73 +46,65 @@
         <!-- Load the images -->
         {% if garden.image_1 %}
           <div class="mySlides">
-            <img src="{{ garden.image_1.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_1 }}</h2>
+            <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_1 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_2 %}
-          <div class="mySlides">
-            <img src="{{ garden.image_2.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_2 }}</h2>
-            </div>
+        <div class="mySlides">
+          <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_3 }}</h2>
           </div>
+        </div>
         {% endif %}
         {% if garden.image_3 %}
           <div class="mySlides">
-            <img src="{{ garden.image_3.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_3 }}</h2>
+            <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_3 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_4 %}
           <div class="mySlides">
-            <img src="{{ garden.image_4.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_4 }}</h2>
+            <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_4 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_5 %}
           <div class="mySlides">
-            <img src="{{ garden.image_5.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_5 }}</h2>
+            <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_5 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_6 %}
           <div class="mySlides">
-            <img src="{{ garden.image_6.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_6 }}</h2>
+            <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_6 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_7 %}
           <div class="mySlides">
-            <img src="{{ garden.image_7.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_7 }}</h2>
+            <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_7 }}</h2>
             </div>
           </div>
         {% endif %}
         {% if garden.image_8 %}
           <div class="mySlides">
-            <img src="{{ garden.image_8.url }}" alt="No garden image found" style="width:100%">
-            <div class="bnd-container bnd-display-topmiddle bnd-white bnd-round-xlarge" 
-                 style="border:4px solid green">
-              <h2 style="font-family: chalkboard, verdana, sans-serif;">{{ garden.caption_8 }}</h2>
+            <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ garden.caption_8 }}</h2>
             </div>
           </div>
         {% endif %}

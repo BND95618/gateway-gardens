@@ -1421,14 +1421,6 @@ def plants_summary(request):
         
     return HttpResponse(template.render(context, request))
 
-def plants_chart(request):
-    """ Create a table for the selected plants on a month-by-month basis """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    plants = Plant.objects.all()
-    context = { 'plants' : plants }
-    return render(request, 'plants/plants_chart_modal.html', context)
-
 def plant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:

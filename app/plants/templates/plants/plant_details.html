@@ -17,7 +17,7 @@
       <!-- Banner text -->
       <h3 class="bnd-bar-item">
         {{ plant.commonName }}
-        <span style="font-style: italic;">
+        <span class="bnd-italic">
           {% if plant.variety != "tbd" %}
             ( {{ plant.genus }} {{ plant.species }} '{{ plant.variety }}' )
           {% else %}
@@ -39,12 +39,12 @@
 
         <!-- Drop-down menu -->
         <span class="bnd-dropdown-hover bnd-right">
-          <button class="bnd-button bnd-green" style="z-index:21">
+          <button class="bnd-button-small">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
+          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4bnd-banner-menu">
             <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-button">Update</a>
           </div>
         </span>

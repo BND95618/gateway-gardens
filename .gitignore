@@ -174,4 +174,5 @@ app/app/README
 .DS_Store
 app/.DS_Store
 
+app/static/plants/css/w3.css
 app/plants/static/plants/css/w3.css

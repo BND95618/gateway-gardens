@@ -22,7 +22,7 @@
           <button class="bnd-button-small">
             <i class="material-icons">menu</i>
           </button>
-          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
+          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4 bnd-banner-menu">
             <button onclick="w3_open()"        class="bnd-bar-item bnd-button">Plant Search  </button>
             <button onclick="column_chooser()" class="bnd-bar-item bnd-button">Column Chooser</button>
             <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
@@ -347,10 +347,14 @@
     <div class="bnd-modal-content bnd-animate-zoom" >
       
       <header class="bnd-container bnd-green"> 
-        <!-- Close the chart modal -->
-        <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
-          class="bnd-button bnd-display-topright">&times;</span>
-          <h2>Bloom Chart - Blooms by Month</h2>
+        <h3>
+          Bloom Chart - Blooms by Month
+          <!-- Close the chart modal -->
+          <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
+                class="bnd-button bnd-display-topright">
+            &times;
+          </span>
+        </h3>
       </header>
 
       <!-- Create the modal tabs - each chart has a tab -->

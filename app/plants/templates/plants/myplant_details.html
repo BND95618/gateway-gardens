@@ -15,13 +15,13 @@
     <header class="bnd-container  bnd-green">
       <h3 class="bnd-bar-item">
         {{ myplant.plant.commonName }}
-        <span class="bnd-dropdown-hover bnd-right">
-          <button class="bnd-button bnd-green" style="z-index:21">
+        <span class="bnd-dropdown-hover bnd-right bnd-green">
+          <button class="bnd-button-small">
             <i class="material-icons">
               menu
             </i>
           </button>
-          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
+          <div class="bnd-dropdown-content bnd-bar-block bnd-card-4 bnd-banner-menu">
             <a href="{% url 'plants:myplant_update' myplant.id %}" class="bnd-button">update</a>
         </span>
       </h3>
@@ -59,13 +59,13 @@
       <header class="bnd-container  bnd-green">
         <h4 class="bnd-bar-item">
           <span>My To Do List:</span>
-          <span class="bnd-dropdown-hover bnd-right">
-            <button class="bnd-button bnd-green" style="z-index:21">
+          <span class="bnd-dropdown-hover bnd-right bnd-green">
+            <button class="bnd-button">
               <i class="material-icons">
                 menu
               </i>
             </button>
-              <div class="bnd-dropdown-content bnd-bar-block bnd-card-4" style="right:0; font-size: 16px">
+              <div class="bnd-dropdown-content bnd-bar-block bnd-card-4 bnd-banner-menu">
                 <button onclick="todo_add()"       class="bnd-bar-item bnd-button">Add          </button>
                 <button onclick="todo_show_all()"  class="bnd-bar-item bnd-button">Show All     </button>
                 <button onclick="todo_hide_done()" class="bnd-bar-item bnd-button">Hide Complete</button>
@@ -95,7 +95,7 @@
                 <!-- To Do complete -->
                 <td class="bnd-center">
                   <div class="bnd-tooltip">
-                    <button onclick="todo_done({{ todo.id }})">
+                    <button class="bnd-button-small" onclick="todo_done({{ todo.id }})">
                       <i class="material-icons">
                         {% if todo.complete %}
                           check_box
@@ -116,7 +116,7 @@
                 <!-- To Do edit -->
                 <td class="bnd-center">
                   <div class="bnd-tooltip">
-                    <button onclick="todo_edit({{ todo.id }})">
+                    <button class="bnd-button-small" onclick="todo_edit({{ todo.id }})">
                       <i class="material-icons">edit</i>
                       <span class="bnd-tooltip-text">Edit</span>
                     </button>
@@ -125,7 +125,7 @@
                 <!-- To Do delete -->
                 <td class="bnd-center">
                 <div class="bnd-tooltip">
-                    <button onclick="todo_delete({{ todo.id }})">
+                    <button class="bnd-button-small" onclick="todo_delete({{ todo.id }})">
                       <i class="material-icons">delete</i>
                       <span class="bnd-tooltip-text">Delete</span>
                     </button>

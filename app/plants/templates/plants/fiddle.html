@@ -1,5 +1,6 @@
 <!-- /app/plants/templates/plants/plants_about.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Fiddle | Weekly Calendar</title>
@@ -21,8 +22,18 @@
 {% endblock header-completion %}
 
 {% block content %}
-<div class="bnd-container bnd-content-main">
+<div class="bnd-container bnd-content-main-100" 
+     style="background-image: url({% static 'plants/img/presence-ii.png'%})">
+     <!-- style="background-image: url('../../static/plants/img/presence-ii.png')"> -->
     <h3>Fiddle</h3>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
 </div>
 {% endblock content %}
 

@@ -52,7 +52,6 @@ urlpatterns = [
     path('plant_details/<int:id>',    views.plant_details,       name='plant_details'),
     path('plants_comment/<int:id>',   views.plants_comment,      name='plants_comment'),
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
-    path('plants_chart',              views.plants_chart,        name='plants_chart'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
     #
     path('pest_summary',              views.pest_summary,        name="pest_summary"),
