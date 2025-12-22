@@ -445,16 +445,16 @@
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Attributes -->
-          <th onclick="sortTable(0, 'plantTable')" >Common Name  </th>
-          <th onclick="sortTable(1, 'plantTable')" >Genus/Species</th>
-          <th onclick="sortTable(2, 'plantTable')" >Variety      </th>
-          <th onclick="sortTable(3, 'plantTable')" >Type         </th>
-          <th onclick="sortTable(4, 'plantTable')" >Height       </th>
-          <th onclick="sortTable(5, 'plantTable')" >Width        </th>
-          <th onclick="sortTable(6, 'plantTable')" >Bloom Color  </th>
-          <th onclick="sortTable(7, 'plantTable')" >Bloom Season </th>
-          <th onclick="sortTable(8, 'plantTable')" >Bloom Range  </th>
-          <th onclick="sortTable(9, 'plantTable')" >Pollinators  </th>
+          <th onclick="sortTable( 0, 'plantTable')" >Common Name  </th>
+          <th onclick="sortTable( 1, 'plantTable')" >Genus/Species</th>
+          <th onclick="sortTable( 2, 'plantTable')" >Variety      </th>
+          <th onclick="sortTable( 3, 'plantTable')" >Type         </th>
+          <th onclick="sortTable( 4, 'plantTable')" >Height       </th>
+          <th onclick="sortTable( 5, 'plantTable')" >Width        </th>
+          <th onclick="sortTable( 6, 'plantTable')" >Bloom Color  </th>
+          <th onclick="sortTable( 7, 'plantTable')" >Bloom Season </th>
+          <th onclick="sortTable( 8, 'plantTable')" >Bloom Range  </th>
+          <th onclick="sortTable( 9, 'plantTable')" >Pollinators  </th>
           <th onclick="sortTable(10, 'plantTable')" class="bnd-center">CA Native</th>
           <th onclick="sortTable(11, 'plantTable')" class="bnd-center">UCD All-Star</th>
           <th onclick="sortTable(12, 'plantTable')" class="bnd-center">Davis trees</th>
@@ -514,7 +514,7 @@
             <td class="bnd-center">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_details' plant.id %}">
-                  <i    class="material-icons">library_books</i>
+                  <i    class="material-icons bnd-text-black">library_books</i>
                   <span class="bnd-tooltip-text">Details</span>
                 </a>
               </div>
@@ -524,7 +524,7 @@
             <td class="bnd-center">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_update' plant.id %}">
-                  <i    class="material-icons">edit</i>
+                  <i    class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>
               </div>
@@ -535,7 +535,7 @@
             <td class="bnd-center ">
               <div class="bnd-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="bnd-button-small">
-                  <i    class="material-icons">delete</i>
+                  <i    class="material-icons bnd-text-black">delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
               </div>
@@ -546,12 +546,12 @@
               <div class="bnd-tooltip">
                 {% if plant.plant_mine == "yes" %}
                   <button onclick="myplant_remove({{ plant.id }})" class="bnd-button-small">
-                    <i    class="material-icons">check</i>
+                    <i    class="material-icons bnd-text-black">check</i>
                     <span class="bnd-tooltip-text">My Plant</span>
                   </button>
                 {% else %}
                   <a href="{% url 'plants:myplants_add' plant.id %}">
-                    <i    class="material-icons">add</i>
+                    <i    class="material-icons bnd-text-black">add</i>
                     <span class="bnd-tooltip-text">Add to My Plant</span>
                   </a>
                 {% endif %}

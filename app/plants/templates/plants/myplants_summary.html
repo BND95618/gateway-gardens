@@ -528,23 +528,23 @@
             <!-- Implement Happy function -->
             {% if myplant.happiness == "Very Happy" %}
               <td class="bnd-center">
-                <i class="material-icons">sentiment_very_satisfied</i>
+                <i class="material-icons bnd-text-black">sentiment_very_satisfied</i>
               </td>
             {% elif myplant.happiness == "Happy" %}
               <td class="bnd-center">
-                <i class="material-icons">sentiment_satisfied</i>
+                <i class="material-icons bnd-text-black">sentiment_satisfied</i>
               </td>
             {% elif myplant.happiness == "Neutral" %}
               <td class="bnd-center">
-                <i class="material-icons">sentiment_neutral</i>
+                <i class="material-icons bnd-text-black">sentiment_neutral</i>
               </td>
             {% elif myplant.happiness == "Unhappy" %}
               <td class="bnd-center">
-                <i class="material-icons">sentiment_dissatisfied</i>
+                <i class="material-icons bnd-text-black">sentiment_dissatisfied</i>
               </td>
             {% elif myplant.happiness == "Very Unhappy" %}
               <td class="bnd-center">
-                <i class="material-icons">sentiment_very_dissatisfied</i>
+                <i class="material-icons bnd-text-black">sentiment_very_dissatisfied</i>
               </td>
             {% else %}
               <td class="bnd-center">tbd</td>
@@ -553,7 +553,7 @@
             <td class="bnd-center">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:myplant_details' myplant.id %}">
-                  <i class="material-icons">library_books</i>
+                  <i class="material-icons bnd-text-black">library_books</i>
                   <span class="bnd-tooltip-text">Details</span>
                 </a>
               </div>
@@ -562,7 +562,7 @@
             <td class="bnd-center">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:myplant_update' myplant.id %}">
-                  <i class="material-icons">edit</i>
+                  <i class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>
               </div>
@@ -571,7 +571,7 @@
             <td class="bnd-center">
               <div class="bnd-tooltip">
                 <button onclick="myplants_delete({{ myplant.id }})" class="bnd-button-small">
-                  <i class="material-icons" >delete</i>
+                  <i class="material-icons bnd-text-black" >delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
               </div>
