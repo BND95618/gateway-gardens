@@ -377,7 +377,7 @@
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
-          <table id="bloomTable" class="bnd-table-all bnd-hoverable">
+          <table id="bloomTable" class="bnd-table bnd-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
@@ -394,7 +394,7 @@
       <!-- Create the modal chart - Bees -->
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
-          <table id="beeTable" class="bnd-table-all bnd-hoverable">
+          <table id="beeTable" class="bnd-table bnd-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
@@ -411,7 +411,7 @@
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
-          <table id="butterflyTable" class="bnd-table-all bnd-hoverable">
+          <table id="butterflyTable" class="bnd-table bnd-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
@@ -428,7 +428,7 @@
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
-          <table id="hummingbirdTable" class="bnd-table-all bnd-hoverable">
+          <table id="hummingbirdTable" class="bnd-table bnd-hoverable">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
@@ -444,13 +444,11 @@
     
     </div>
   </div>
-
   <!------------------------->
   <!--   My Plant Table    -->
   <!------------------------->
-
   <div id="main" class="bnd-container bnd-content-main-120">
-    <table id="plantTable" class="bnd-table-all bnd-hoverable" >
+    <table id="plantTable" class="bnd-table bnd-hoverable" >
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Attributes -->
@@ -484,11 +482,11 @@
           <th onclick="sortTable(25, 'plantTable')">My pH              </th>
           <th onclick="sortTable(26, 'plantTable')">My Bloom Color     </th>
           <th onclick="sortTable(27, 'plantTable')">My Bloom Start/End </th>
-          <th onclick="sortTable(28, 'plantTable')" class="bnd-center">Happy?</th>
+          <th onclick="sortTable(28, 'plantTable')" class="bnd-table-icon">Happy?</th>
           <!-- Button Placeholders -->
-          <th class="bnd-center"></th>
-          <th class="bnd-center"></th>
-          <th class="bnd-center"></th>
+          <th class="bnd-table-icon"></th>
+          <th class="bnd-table-icon"></th>
+          <th class="bnd-table-icon"></th>
         </tr>
       </thead>
       {% for myplant in myplants %}  

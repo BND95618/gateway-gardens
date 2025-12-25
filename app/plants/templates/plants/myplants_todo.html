@@ -35,7 +35,7 @@
   <!-- My Plant To Do List Summary     -->
   <!------------------------------------->
   <div class="bnd-container bnd-content-main-120">
-    <table id="todoTable" class="bnd-table-all bnd-hoverable">
+    <table id="todoTable" class="bnd-table bnd-hoverable">
       <thead>
         <tr class="bnd-light-grey">
           <th style="width:5%;"  onclick="todo_sort(1)">Status  </th>
@@ -46,8 +46,8 @@
           <th style="width:10%;" onclick="todo_sort(5)">Repeat  </th>
           <th style="width:45%;" onclick="todo_sort(6)">Details </th>
           <!-- Button Placeholders -->
-          <th class="bnd-center" style="width:5%;">        </th>
-          <th class="bnd-center" style="width:5%;">        </th>
+          <th class="bnd-table-icon"></th>
+          <th class="bnd-table-icon"></th>
         </tr>
       </thead>
       {% for todo in myplants_todo  %}  

@@ -1,7 +1,7 @@
 <!-- app/plants/templates/plants/myplants_delete_modal.html -->
 
 <div class="bnd-modal-content-300 bnd-card-4 bnd-animate-zoom">
-  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey bnd-center">
+  <div class="bnd-container bnd-border-top bnd-light-grey bnd-center">
     <h4>Remove "{{ myplant.plant.commonName }}" from your garden?</h4>
   </div>
   <form class="bnd-container" action="{% url 'plants:myplants_delete' myplant.id %}" method="post">

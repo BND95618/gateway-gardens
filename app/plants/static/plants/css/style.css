@@ -1,13 +1,18 @@
 /* app/plants/static/plants/css/style.css
-   Element Selectors = tag
-   Class Selectors   = '.'
-   ID Selectors      = '#'
+    Basic Selectors
+    > Element Selectors = tag
+    > Class Selectors   = '.'
+    > ID Selectors      = '#'
 
-   CSS combinators:
-   > descendant selector (space)
-   > child selector (>)
-   > adjacent sibling selector (+)
-   > general sibling selector (~)
+    Combinators:
+    > descendant selector       = space
+    > child selector            = >
+    > adjacent sibling selector = +
+    > general sibling selector  = ~
+
+    Pseudo=classes and Pseudo-elements
+    > Pseudo-classes  = :   current state or position in the document tree
+    > Pseudo-elements = ::  target a specific part of an element
 */
 /* ------------------------------------------------------------ */
 /* Global formatting                                            */
@@ -29,6 +34,11 @@ body
     font-family:chalkboard, verdana, sans-serif;
     font-size:16px;
     line-height:1.5
+}
+section
+{
+    margin-top:16px!important;
+    margin-bottom:16px!important
 }
 h1,h2,h3,h4,h5,h6
 {
@@ -81,10 +91,10 @@ img
     vertical-align:middle;
     border-style:none
 }
-/* ----------------------- */
-/* Class formatting        */
-/* ----------------------- */
-/* bnd-container */
+/* ------------------------------------------------------------ */
+/* bnd-container provides equality for all HTML container       */
+/* elements: margins, paddings, alignments, fonts and colors    */
+/* ------------------------------------------------------------ */
 .bnd-container
 {
     padding:0.01em 16px
@@ -96,6 +106,13 @@ img
     display:table;
     clear:both
 }
+/* ------------------------------------------------------------ */
+/* Place the main content (scrollable) beneath the banner       */
+/* ------------------------------------------------------------ */
+/* bnd-content-main */
+.bnd-content-main-100 { margin-top: 100px; }
+.bnd-content-main-120 { margin-top: 120px; }
+/* ------------------------------------------------------------ */
 /* bnd-display-container */
 .bnd-display-container      {position:relative}
 .bnd-display-container:hover{display:block}
@@ -105,9 +122,6 @@ img
     margin-top:16px!important;
     margin-bottom:16px!important
 }
-/* bnd-content-main */
-.bnd-content-main-100 { margin-top: 100px; }
-.bnd-content-main-120 { margin-top: 120px; }
 /* bnd-content */
 .bnd-content
 {
@@ -246,31 +260,6 @@ img
 
 .bnd-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
 
-/* Tool Tip */
-.bnd-tooltip 
-{
-    position: relative;
-    display: inline-block;
-    cursor: pointer;  
-}
-.bnd-tooltip-text 
-{
-    visibility: hidden;
-    background-color: black;
-    font-size:16px;
-    color: #fff;
-    text-align: center;
-    border-radius: 8px;
-    padding: 4px 8px;
-    position: absolute;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -30px;
-    opacity: 0;
-    transition: opacity 2s;
-}
-
 .bnd-tooltip:hover .bnd-tooltip-text 
 {
     visibility: visible;
@@ -316,6 +305,169 @@ img
     z-index:1;
     overflow:auto
 }
+
+/*  */
+.bnd-transparent { background-color:transparent!important }
+
+/* bnd-banner */
+.bnd-banner
+{
+    color: white; 
+    font-family: chalkboard, verdana, sans-serif;
+}
+/* bnd-top */
+.bnd-top
+{
+    position:fixed;
+    width:100%;
+    z-index:1;
+    top:0
+}
+
+.bnd-banner-menu
+{
+    right:0; 
+    font-size: 16px
+}
+
+/* bnd-dropdown-hover/click */
+.bnd-dropdown-hover,
+.bnd-dropdown-click
+{
+    position:relative;
+    display:inline-block;
+    cursor:pointer
+}
+.bnd-dropdown-hover:hover 
+.bnd-dropdown-content
+{
+    display:block
+}
+.bnd-dropdown-hover:first-child,
+.bnd-dropdown-click:hover
+{
+    background-color:#ccc;
+    color:#000
+}
+/* bnd-dropdown-content */
+.bnd-dropdown-content
+{
+    cursor:auto;
+    color:#000;
+    background-color:#fff;
+    display:none;
+    position:absolute;
+    min-width:160px;
+    margin:0;
+    padding:0;
+    z-index:1
+}
+/* ------------------------------------------------------------ */
+/* Button formating                                               */
+/* ------------------------------------------------------------ */
+.bnd-button
+{
+    border:none;
+    display:inline-block;
+    padding:8px 16px;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap
+}
+.bnd-button-small
+{
+    border:none;
+    display:inline-block;
+    padding:0;
+    margin:0;
+    vertical-align:middle;
+    overflow:hidden;
+    text-decoration:none;
+    color:inherit;
+    background-color:inherit;
+    text-align:center;
+    cursor:pointer;
+    white-space:nowrap
+}
+.bnd-button:hover
+{
+    color:#000!important;
+    background-color:#ccc!important
+}
+.bnd-button:disabled
+{
+    cursor:not-allowed;
+    opacity:0.3
+}
+.bnd-dropdown-hover:hover > .bnd-button:first-child,
+.bnd-dropdown-click:hover > .bnd-button:first-child
+{
+    background-color:#ccc;
+    color:#000
+}
+/*  */
+.bnd-cursor-hand:hover {cursor:pointer}
+.bnd-cursor-help:hover {cursor:help}
+/*  */
+.bnd-hide{display:none!important}
+
+/* ------------------------------------------------------------ */
+/* Text formating                                               */
+/* ------------------------------------------------------------ */
+/* Font Sizes */
+.bnd-tiny     {font-size:10px!important}
+.bnd-small    {font-size:12px!important}
+.bnd-medium   {font-size:15px!important}
+.bnd-large    {font-size:18px!important}
+.bnd-xlarge   {font-size:24px!important}
+.bnd-xxlarge  {font-size:36px!important}
+.bnd-xxxlarge {font-size:48px!important}
+.bnd-jumbo    {font-size:64px!important}
+/* Font styles */
+.bnd-italic   {font-style: italic}
+/* Text Colors */
+.bnd-white       { color:#000 !important; background-color:#fff    !important }
+.bnd-yellow,     .bnd-hover-yellow:hover      { color:#000 !important; background-color:#ffeb3b !important }
+.bnd-light-green,.bnd-hover-light-green:hover { color:#000 !important; background-color:#8bc34a !important }
+.bnd-green,      .bnd-hover-green:hover       { color:#fff !important; background-color:#4CAF50 !important }
+.bnd-red         { color:#fff !important; background-color:#f44336 !important }
+.bnd-grey        { color:#000 !important; background-color:#9e9e9e !important }
+.bnd-light-grey  { color:#000 !important; background-color:#f1f1f1 !important }
+
+.bnd-hover-white:hover { color:#000 !important; background-color:#fff !important }
+
+.bnd-text-white  { color:#fff !important }
+.bnd-text-black  { color:#000 !important }
+.bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
+/* ------------------------------------------------------------ */
+/* Margin Formating                                             */
+/* ------------------------------------------------------------ */
+.bnd-margin-none   { margin:0          !important }
+.bnd-margin        { margin:16px        !important }
+.bnd-margin-top    { margin-top:16px    !important }
+.bnd-margin-left   { margin-left:16px   !important }
+.bnd-margin-bottom { margin-bottom:16px !important }
+.bnd-margin-right  { margin-right:16px  !important }
+/* ------------------------------------------------------------ */
+/* Border formating                                             */
+/* ------------------------------------------------------------ */
+.bnd-border        { border:        1px solid #ccc!important }
+.bnd-border-0      { border:        0               !important}
+
+.bnd-border-top    { border-top:    1px solid #ccc!important }
+.bnd-border-bottom { border-bottom: 1px solid #ccc!important }
+.bnd-border-left   { border-left:   1px solid #ccc!important }
+.bnd-border-right  { border-right:  1px solid #ccc!important }
+
+.bnd-round-small  { border-radius:2px  }
+.bnd-round-medium { border-radius:4px  }
+.bnd-round-large  { border-radius:8px  }
+.bnd-round-xlarge { border-radius:16px }
 /* ------------------------------------------------------------ */
 /* Padding                                                      */
 /* ------------------------------------------------------------ */
@@ -333,73 +485,30 @@ img
 .bnd-padding-top-32 {padding-top:32px!important}
 .bnd-padding-top-24 {padding-top:24px!important}
 /* ------------------------------------------------------------ */
-/* Border formating                                             */
+/* Tool Tip                                                     */
 /* ------------------------------------------------------------ */
-.bnd-border        { border:        1px solid #ccc!important }
-.bnd-border-0      { border:        0               !important}
-
-.bnd-border-top    { border-top:    1px solid #ccc!important }
-.bnd-border-bottom { border-bottom: 1px solid #ccc!important }
-.bnd-border-left   { border-left:   1px solid #ccc!important }
-.bnd-border-right  { border-right:  1px solid #ccc!important }
-
-.bnd-round-small  { border-radius:2px  }
-.bnd-round-medium { border-radius:4px  }
-.bnd-round-large  { border-radius:8px  }
-.bnd-round-xlarge { border-radius:16px }
-/* ------------------------------------------------------------ */
-/* Margin Formating                                             */
-/* ------------------------------------------------------------ */
-.bnd-margin-none   { margin:0          !important }
-.bnd-margin        { margin:16px        !important }
-.bnd-margin-top    { margin-top:16px    !important }
-.bnd-margin-left   { margin-left:16px   !important }
-.bnd-margin-bottom { margin-bottom:16px !important }
-.bnd-margin-right  { margin-right:16px  !important }
-/*  */
-.bnd-transparent { background-color:transparent!important }
-/* ------------------------------------------------------------ */
-/* Text formating                                               */
-/* ------------------------------------------------------------ */
-/* Text Colors */
-.bnd-white       { color:#000 !important; background-color:#fff    !important }
-.bnd-yellow,     .bnd-hover-yellow:hover      { color:#000 !important; background-color:#ffeb3b !important }
-.bnd-light-green,.bnd-hover-light-green:hover { color:#000 !important; background-color:#8bc34a !important }
-.bnd-green,      .bnd-hover-green:hover       { color:#fff !important; background-color:#4CAF50 !important }
-.bnd-red         { color:#fff !important; background-color:#f44336 !important }
-.bnd-grey        { color:#000 !important; background-color:#9e9e9e !important }
-.bnd-light-grey  { color:#000 !important; background-color:#f1f1f1 !important }
-
-.bnd-hover-white:hover { color:#000 !important; background-color:#fff !important }
-
-.bnd-text-white  { color:#fff !important }
-.bnd-text-black  { color:#000 !important }
-.bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
-/* Font Sizes */
-.bnd-tiny     {font-size:10px!important}
-.bnd-small    {font-size:12px!important}
-.bnd-medium   {font-size:15px!important}
-.bnd-large    {font-size:18px!important}
-.bnd-xlarge   {font-size:24px!important}
-.bnd-xxlarge  {font-size:36px!important}
-.bnd-xxxlarge {font-size:48px!important}
-.bnd-jumbo    {font-size:64px!important}
-/* Font styles */
-.bnd-italic   {font-style: italic}
-/* bnd-banner */
-/* ------------------------------------------------------------ */
-.bnd-banner
+.bnd-tooltip 
 {
-    color: white; 
-    font-family: chalkboard, verdana, sans-serif;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;  
 }
-/* bnd-top */
-.bnd-top
+.bnd-tooltip-text 
 {
-    position:fixed;
-    width:100%;
-    z-index:1;
-    top:0
+    visibility: hidden;
+    background-color: black;
+    font-size:16px;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -30px;
+    opacity: 0;
+    transition: opacity 2s;
 }
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar                                    */
@@ -473,46 +582,6 @@ img
     padding:8px 16px
 }
 /* ------------------------------------------------------------ */
-
-.bnd-banner-menu
-{
-    right:0; 
-    font-size: 16px
-}
-
-/* bnd-dropdown-hover/click */
-.bnd-dropdown-hover,
-.bnd-dropdown-click
-{
-    position:relative;
-    display:inline-block;
-    cursor:pointer
-}
-.bnd-dropdown-hover:hover 
-.bnd-dropdown-content
-{
-    display:block
-}
-.bnd-dropdown-hover:first-child,
-.bnd-dropdown-click:hover
-{
-    background-color:#ccc;
-    color:#000
-}
-/* bnd-dropdown-content */
-.bnd-dropdown-content
-{
-    cursor:auto;
-    color:#000;
-    background-color:#fff;
-    display:none;
-    position:absolute;
-    min-width:160px;
-    margin:0;
-    padding:0;
-    z-index:1
-}
-/* ------------------------------------------------------------ */
 /* Image formating                                              */
 /* ------------------------------------------------------------ */
 /* bnd-image */
@@ -566,8 +635,10 @@ img
     transform:translate(-50%,0%);
     -ms-transform:translate(-50%,0%);
 }
-/* bnd-table-all */
-.bnd-table-all
+/* ------------------------------------------------------------ */
+/* Table formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-table
 {
     border-collapse:collapse;
     border-spacing:0;
@@ -575,99 +646,33 @@ img
     display:table;
     border:1px solid #ccc
 }
-/* th */
-.bnd-table-all th 
+.bnd-table th 
 {
     padding:8px 8px;
     display:table-cell;
     text-align:left;
     vertical-align:top
 }
-.bnd-table-all th:first-child     {padding-left:16px}
-/* tr */
-.bnd-table-all tr                 {border-bottom:1px solid #ddd}
-.bnd-table-all tr:nth-child(odd)  {background-color:#fff}
-.bnd-table-all tr:nth-child(even) {background-color:#f1f1f1}
-.bnd-hoverable tbody tr:hover     {background-color:#ccc}
-
-/* td */
-.bnd-table-all td 
+.bnd-table th:first-child     {padding-left:16px}
+.bnd-table tr                 {border-bottom:1px solid #ddd}
+.bnd-table tr:nth-child(odd)  {background-color:#fff}
+.bnd-table tr:nth-child(even) {background-color:#f1f1f1}
+.bnd-hoverable tbody tr:hover {background-color:#ccc}
+.bnd-table td 
 {
     padding:8px 8px;
     display:table-cell;
     text-align:left;
     vertical-align:top
 }
-.bnd-table-all td:first-child      {padding-left:16px}
-/* Button */
-.bnd-button
+.bnd-table td:first-child      {padding-left:16px}
+.bnd-table-icon
 {
-    border:none;
-    display:inline-block;
-    padding:8px 16px;
-    vertical-align:middle;
-    overflow:hidden;
-    text-decoration:none;
-    color:inherit;
-    background-color:inherit;
-    text-align:center;
-    cursor:pointer;
-    white-space:nowrap
+    width:10px;
+    text-align:center
 }
-.bnd-button-small
-{
-    border:none;
-    display:inline-block;
-    padding:0;
-    margin:0;
-    vertical-align:middle;
-    overflow:hidden;
-    text-decoration:none;
-    color:inherit;
-    background-color:inherit;
-    text-align:center;
-    cursor:pointer;
-    white-space:nowrap
-}
-.bnd-button:hover
-{
-    color:#000!important;
-    background-color:#ccc!important
-}
-.bnd-button:disabled
-{
-    cursor:not-allowed;
-    opacity:0.3
-}
-.bnd-dropdown-hover:hover > .bnd-button:first-child,
-.bnd-dropdown-click:hover > .bnd-button:first-child
-{
-    background-color:#ccc;
-    color:#000
-}
-/* */
-@media (max-width:600px)
-{
-    .bnd-modal-content
-    {
-        margin:0 10px;width:auto!important
-    }
-    .bnd-modal
-    {
-        padding-top:30px
-    }
-    .bnd-hide-small
-    {
-        display:none!important
-    }
-}
-/*  */
-.bnd-cursor-hand:hover {cursor:pointer}
-.bnd-cursor-help:hover {cursor:help}
-/*  */
-.bnd-hide{display:none!important}
 /* ------------------------------------------------------------ */
-/* Modal formating                                             */
+/* Modal formatting                                              */
 /* ------------------------------------------------------------ */
 .bnd-modal
 {
@@ -723,7 +728,7 @@ img
     height:auto;
 }
 /* ------------------------------------------------------------ */
-/* Monthyly calendar                                            */
+/* Monthyly calendar formatting                                           */
 /* ------------------------------------------------------------ */
 /* Calendar container */
 .calendar-container {
@@ -828,5 +833,23 @@ img
 .bnd-background-visible
 {
     background: none !important; 
+}
+/* ------------------------------------------------------------ */
+/* */
+/* ------------------------------------------------------------ */
+@media (max-width:600px)
+{
+    .bnd-modal-content
+    {
+        margin:0 10px;width:auto!important
+    }
+    .bnd-modal
+    {
+        padding-top:30px
+    }
+    .bnd-hide-small
+    {
+        display:none!important
+    }
 }
 /* ------------------------------------------------------------ */

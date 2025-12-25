@@ -322,11 +322,9 @@
       </button>
     </form>
   </div>
-  
   <!------------------------->
   <!--        Modals       -->
   <!------------------------->
-  
   <!-- Plant Delete modal - html to be inserted by Javascript -->
   <div id="plants_delete_modal" class="bnd-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
@@ -368,7 +366,7 @@
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
-          <table id="bloomTable" class="bnd-table-all bnd-hoverable">
+          <table id="bloomTable" class="bnd-table bnd-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and plant.bloom_months != '' %} 
@@ -385,7 +383,7 @@
       <!-- Create the modal chart - Bees -->
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
-          <table id="beeTable" class="bnd-table-all bnd-hoverable">
+          <table id="beeTable" class="bnd-table bnd-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and plant.bloom_months != '' %} 
@@ -402,7 +400,7 @@
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
-          <table id="butterflyTable" class="bnd-table-all bnd-hoverable">
+          <table id="butterflyTable" class="bnd-table bnd-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
@@ -419,7 +417,7 @@
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
-          <table id="hummingbirdTable" class="bnd-table-all bnd-hoverable">
+          <table id="hummingbirdTable" class="bnd-table bnd-hoverable">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and plant.bloom_months != '' %} 
@@ -435,13 +433,11 @@
     
     </div>
   </div>
-
   <!------------------------->
   <!--     Plant Table     -->
   <!------------------------->
-
   <div id="main" class="bnd-container bnd-content-main-120">
-    <table id="plantTable" class="bnd-table-all bnd-hoverable">
+    <table id="plantTable" class="bnd-table bnd-hoverable">
       <thead>
         <tr class="bnd-light-grey">
           <!-- Plant Attributes -->
@@ -511,7 +507,7 @@
             <!-- Admin -->
             <td>{{ plant.status }}                                    </td>
             <!-- Plant Details Icon/Link -->
-            <td class="bnd-center">
+            <td class="bnd-table-icon">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_details' plant.id %}">
                   <i    class="material-icons bnd-text-black">library_books</i>
@@ -521,7 +517,7 @@
             </td>
             <!-- Plant Update Icon/Link -->
             {% if perms.plants.change_plant %}
-            <td class="bnd-center">
+            <td class="bnd-table-icon">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_update' plant.id %}">
                   <i    class="material-icons bnd-text-black">edit</i>
@@ -532,7 +528,7 @@
             {% endif %}
             <!-- Plant Delete Icon/Link -->
             {% if perms.plants.delete_plant %}
-            <td class="bnd-center ">
+            <td class="bnd-table-icon">
               <div class="bnd-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="bnd-button-small">
                   <i    class="material-icons bnd-text-black">delete</i>
@@ -542,7 +538,7 @@
             </td>
             {% endif %}
             <!-- Add/remove plant to/from My Plants Icon/Link -->
-            <td class="bnd-center">
+            <td class="bnd-table-icon">
               <div class="bnd-tooltip">
                 {% if plant.plant_mine == "yes" %}
                   <button onclick="myplant_remove({{ plant.id }})" class="bnd-button-small">

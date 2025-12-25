@@ -77,39 +77,41 @@
     </div>
   </div>
 
-  <div class="bnd-card-4 bnd-section">
+  <section class="bnd-card-4">
     <header class="bnd-container bnd-green">
       <h4>Fertilization</h4>
     </header>
     <div class="bnd-container">
       {{ plant.fertilization.html|safe|escape }}
     </div>
-  </div>
+  </section>
 
-  <div class="bnd-card-4 bnd-section">
+  <section class="bnd-card-4">
     <header class="bnd-container bnd-green">
       <h4>Propagation</h4>
     </header>
     <div class="bnd-container">
       {{ plant.propagation.html|safe|escape }}
     </div>
-  </div>
+  </section>
 
-  <div class="bnd-card-4 bnd-section">
+  <section class="bnd-card-4">
     <header class="bnd-container bnd-green">
       <h4>Pests and Diseases</h4>
     </header>
     <div class="bnd-container">
       {{ plant.pests_diseases.html|safe|escape }}
       <!-- Display the pests related to this plant -->
-       <hr>
+      {% if pests %} 
+        <hr>
+      {% endif %}
       {% for pest in pests %}
         <p>
           {{ pest }}: <a href="{{ pest.pest_url }}" target="_blank">UC IPM URL</a>
         </p>
       {% endfor %}
     </div>
-  </div>
+  </section>
 </div>
 
 <!-- Plant images -->
