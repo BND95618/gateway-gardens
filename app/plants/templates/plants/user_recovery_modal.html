@@ -6,15 +6,13 @@
   </div>
   <form class="bnd-container" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
-    <div class="bnd-section">
+    <div class="bnd-modal-button-bar">
       {{ form.as_p }}
-      <button class="bnd-button bnd-block bnd-green bnd-section bnd-padding" type="submit">Login</button>
+      <button class="bnd-button bnd-green bnd-padding" type="submit">Login</button>
+      <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
+      <button onclick="location.reload();" type="button" class="bnd-button bnd-red">Cancel</button>
+      <!-- AR: Go to reset password page -->
+      <span class="bnd-right bnd-padding bnd-hide-small">Forgot <a href="#">password?</a></span>
     </div>
   </form>
-  <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">
-    <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
-    <button onclick="location.reload();" type="button" class="bnd-button bnd-red">Cancel</button>
-    <!-- AR: Go to reset password page -->
-    <span class="bnd-right bnd-padding bnd-hide-small">Forgot <a href="#">password?</a></span>
-  </div>
 </div>

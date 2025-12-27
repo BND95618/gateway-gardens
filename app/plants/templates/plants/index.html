@@ -24,24 +24,26 @@
 {% block content %}
 <!-- Home/Index Page -->
   <div class="bnd-container bnd-content-main-100">
-    <h3>Overview</h3>
-    <p>
-      This webpage has been created to assist gardeners with their gardens in Sunset's Zone 14 
-      with a particular focus on Davis, California.
-      <br/>
-      <ul>
-        <li>
-          Plant database for plants appropriate for Zone 14
-        </li>
-        <li>
-          "My Garden" page to allow members a place to showcase photos of the garden.  
-          Fellow gardeners may comment the posted photos
-        </li>
-      </ul>
-    </p>
+    <section>
+      <h3>Overview</h3>
+      <p>
+        This webpage has been created to assist gardeners with their gardens in Sunset's Zone 14 
+        with a particular focus on Davis, California.
+        <br/>
+        <ul>
+          <li>
+            Plant database for plants appropriate for Zone 14
+          </li>
+          <li>
+            "My Garden" page to allow members a place to showcase photos of the garden.  
+            Fellow gardeners may comment the posted photos
+          </li>
+        </ul>
+      </p>
+    </section>
 
     <section>
-      <h3>Sunset Climate Zone 14 Focus</h3>
+      <h3 class="bnd-endfloat">Sunset Climate Zone 14 Focus</h3>
       <p>
         <img src="{% static 'plants/img/sunset-zone-14-map.png' %}" 
               alt="No sunset map found" 
@@ -65,7 +67,7 @@
     </section>
 
     <section>
-    <h3>Davis Climate (Temperature)</h3>
+    <h3 class="bnd-endfloat">Davis Climate (Temperature)</h3>
       <p>
         <img src="{% static 'plants/img/davis_temperature_history_2024.png' %}" 
         alt="Temperature Chart" 
@@ -84,7 +86,7 @@
     </section>
 
     <section>
-    <h3>Davis Climate (Average Rainfall)</h3>
+    <h3 class="bnd-endfloat">Davis Climate (Average Rainfall)</h3>
       <p>
         <img src="{% static 'plants/img/davis_average_monthly_rainfall.png' %}" 
         alt="Temperature Chart" 
@@ -102,7 +104,7 @@
     </section>
 
     <section>
-    <h3>Davis Climate (Daylight Hours)</h3>
+    <h3 class="bnd-endfloat">Davis Climate (Daylight Hours)</h3>
       <p>
         <img src="{% static 'plants/img/davis_daylight_hours_2024.png' %}" 
         alt="Temperature Chart" 
