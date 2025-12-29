@@ -1,24 +1,18 @@
 <!-- /plants/templates/plants/myplants_todo_del_modal.html -->
-<div class="bnd-modal-content-300 bnd-card-4 bnd-animate-zoom">
+<div class="bnd-modal-content-300">
     <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
-      <h4>Delete To Do Item</h4>
+      <h4>Delete To Do Item?</h4>
     </div>
     <!-- To Do delete - create form -->
-    <form action="{% url 'plants:myplants_todo_del' myplant_todo.id %}" method="post">
+    <form class="bnd-container" action="{% url 'plants:myplants_todo_del' myplant_todo.id %}" method="post">
       {% csrf_token %}
-      <div class="bnd-container">
-        <p>Are you sure?</p>
-      </div>
-      <div class="bnd-container bnd-border-top bnd-padding-large bnd-light-grey">
-        <!-- To Do delete - submit -->
-        <button type="submit" 
-                class="bnd-button bnd-round-large bnd-green">
+      <div class="bnd-modal-button-bar">
+        <button type="submit" class="bnd-button bnd-green bnd-round-medium">
           Submit
         </button>
-        <!-- To Do delete - cancel -->
         <button type="button"
                 onclick="document.getElementById('myplants_todo_del_modal').style.display='none'"
-                class="bnd-button bnd-round-large bnd-red">
+                class="bnd-button bnd-red bnd-round-medium">
           Cancel
         </button>
       </div>

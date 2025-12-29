@@ -118,28 +118,28 @@
 <div class="bnd-row-padding">
   {% if plant.image_1 %}
   <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail bnd-hover-opacity" onclick="onClick(this)" alt="No image found">
+      <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
       <footer class="bnd-center bnd-large">{{ plant.caption_1 }}</footer>
     </div>
   {% endif %}
 
   {% if plant.image_2 %}
   <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail bnd-hover-opacity" onclick="onClick(this)" alt="No image found">
+      <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
       <footer class="bnd-center bnd-large">{{ plant.caption_2 }}</footer>
     </div>
   {% endif %}
 
   {% if plant.image_3 %}
   <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail bnd-hover-opacity" onclick="onClick(this)" alt="No image found">
+      <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
       <footer class="bnd-center bnd-large">{{ plant.caption_3 }}</footer>
     </div>
   {% endif %}
 
   {% if plant.image_4 %}
     <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail bnd-hover-opacity" onclick="onClick(this)" alt="No image found">
+      <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
       <footer class="bnd-center bnd-large">{{ plant.caption_4 }}</footer>
     </div>
   {% endif %}
@@ -147,7 +147,7 @@
 
 <!-- Plant images: modal -->
 <div id="image_modal" class="bnd-modal" onclick="this.style.display='none'">
-  <div class="bnd-modal-content-600 bnd-animate-zoom">
+  <div class="bnd-modal-content-600">
     <img id="image" style="width:100%; height:auto">
   </div>
 </div>

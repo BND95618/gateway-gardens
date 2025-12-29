@@ -69,8 +69,8 @@
         Audio Recording - Scientific Name &nbsp;
         {% if plant.audio_name %}
           <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
-          <span style="cursor:pointer" onclick="document.getElementById('player-2').play()">
-            <i class="material-icons">volume_up</i>
+          <span onclick="document.getElementById('player-2').play()">
+            <i class="material-icons bnd-play-audio">volume_up</i>
           </span> 
         {% endif %}
       </h5> 

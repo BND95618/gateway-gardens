@@ -24,14 +24,14 @@
 html
 {
     box-sizing:border-box;
-    font-family:Verdana,sans-serif;
+    font-family: chalkboard, verdana, sans-serif;
     font-size:16px;
     line-height:1.5;
     overflow-x:hidden
 }
 body
 {
-    font-family:chalkboard, verdana, sans-serif;
+    font-family: chalkboard, verdana, sans-serif;
     font-size:16px;
     line-height:1.5
 }
@@ -145,24 +145,17 @@ img
 }
 .bnd-col.s4{width:33.33333%}
 .bnd-row-padding > .bnd-quarter { padding: 0 8px }
+@media (min-width:601px)
+{
+    .bnd-quarter{width:24.99999%}
+}
 /* ------------------------------------------------------------ */
-
-/* bnd-center */
-.bnd-center
-{
-    text-align:center!important
-}
-/* bnd-right */
-.bnd-right
-{
-    float:right!important
-}
-/* bnd-hover-opacity */
-.bnd-hover-opacity:hover
-{
-    opacity:0.60
-}
-/* bnd-input */
+/* Element positioning                                          */
+/* ------------------------------------------------------------ */
+.bnd-right { float:right!important }
+/* ------------------------------------------------------------ */
+/* Input formating used in Django forms                         */
+/* ------------------------------------------------------------ */
 .bnd-input
 {
     padding:8px;
@@ -171,7 +164,9 @@ img
     width:100%;
     cursor:pointer
 }
-/* bnd-select */
+/* ------------------------------------------------------------ */
+/* Input select formatting                                      */
+/* ------------------------------------------------------------ */
 .bnd-select
 {
     padding:9px 0;
@@ -179,79 +174,9 @@ img
     border:none;
     border-bottom:1px solid #ccc
 }
-/* bnd-tag */
-.bnd-tag
-{
-    background-color:#000;
-    color:#fff;
-    display:inline-block;
-    padding-left:8px;
-    padding-right:8px;
-    text-align:center
-}
-@media (min-width:601px)
-{
-    .bnd-quarter{width:24.99999%}
-}
-
-/* bnd-card-4 */
-.bnd-card,
-.bnd-card-2
-{
-    box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
-}
-.bnd-card-4
-{
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
-}
-/*  */
-.bnd-display-topleft     {position:absolute;left:  0;top:0}
-.bnd-display-topmiddle   {position:absolute;left:50%;top:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
-.bnd-display-topright    {position:absolute;right: 0;top:0}
-.bnd-display-right       {position:absolute;top: 50%;right:0%;transform:translate(0%,-50%);-ms-transform:translate(0%,-50%)}
-.bnd-display-bottomright {position:absolute;right: 0;bottom:0}
-.bnd-display-bottommiddle{position:absolute;left:50%;bottom:0;transform:translate(-50%,0%);-ms-transform:translate(-50%,0%)}
-.bnd-display-bottomleft  {position:absolute;left:  0;bottom:0}
-.bnd-display-left        {position:absolute;top: 50%;left:0%;transform:translate(0%,-50%);-ms-transform:translate(-0%,-50%)}
-
-.bnd-display-middle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)}
-
-.bnd-tooltip:hover .bnd-tooltip-text 
-{
-    visibility: visible;
-    opacity: 1;
-}
-/* bnd-animate-opacity */
-.bnd-animate-opacity
-{
-    animation:opac 0.8s
-}
-@keyframes opac
-{
-    from{opacity:0} 
-    to  {opacity:1}
-}
-/* bnd-animate-zoom */
-.bnd-animate-zoom
-{
-    animation:animatezoom 0.6s
-}
-@keyframes animatezoom
-{
-    from{transform:scale(0)} 
-    to  {transform:scale(1)}
-}
-.bnd-animate-left
-{
-    position:relative;
-    animation:animateleft 0.4s
-}
-@keyframes animateleft
-{
-    from{left:-300px;opacity:0} 
-    to  {left:0;opacity:1}
-}
-/* bnd-sidebar */
+/* ------------------------------------------------------------ */
+/* Sidebar - used for verticle search menu                      */
+/* ------------------------------------------------------------ */
 .bnd-sidebar
 {
     height:100%;
@@ -261,62 +186,15 @@ img
     z-index:1;
     overflow:auto
 }
-
-/*  */
-.bnd-transparent { background-color:transparent!important }
-
-/* bnd-banner */
-.bnd-banner
-{
-    color: white; 
-    font-family: chalkboard, verdana, sans-serif;
-}
-/* bnd-top */
+/* ------------------------------------------------------------ */
+/* Position element at the top                                  */
+/* ------------------------------------------------------------ */
 .bnd-top
 {
     position:fixed;
     width:100%;
     z-index:1;
     top:0
-}
-
-.bnd-banner-menu
-{
-    right:0; 
-    font-size: 16px
-}
-
-/* bnd-dropdown-hover/click */
-.bnd-dropdown-hover,
-.bnd-dropdown-click
-{
-    position:relative;
-    display:inline-block;
-    cursor:pointer
-}
-.bnd-dropdown-hover:hover 
-.bnd-dropdown-content
-{
-    display:block
-}
-.bnd-dropdown-hover:first-child,
-.bnd-dropdown-click:hover
-{
-    background-color:#ccc;
-    color:#000
-}
-/* bnd-dropdown-content */
-.bnd-dropdown-content
-{
-    cursor:auto;
-    color:#000;
-    background-color:#fff;
-    display:none;
-    position:absolute;
-    min-width:160px;
-    margin:0;
-    padding:0;
-    z-index:1
 }
 /* ------------------------------------------------------------ */
 /* Button formating                                               */
@@ -328,12 +206,13 @@ img
     padding:8px 16px;
     vertical-align:middle;
     overflow:hidden;
+    font-size:16px;
     text-decoration:none;
     color:inherit;
     background-color:inherit;
     text-align:center;
     cursor:pointer;
-    white-space:nowrap
+    white-space:nowrap;
 }
 .bnd-button-small
 {
@@ -366,12 +245,10 @@ img
     background-color:#ccc;
     color:#000
 }
-/*  */
-.bnd-cursor-hand:hover {cursor:pointer}
-.bnd-cursor-help:hover {cursor:help}
-/*  */
+/* ------------------------------------------------------------ */
+/* Hide the element                                             */
+/* ------------------------------------------------------------ */
 .bnd-hide{display:none!important}
-
 /* ------------------------------------------------------------ */
 /* Text formating                                               */
 /* ------------------------------------------------------------ */
@@ -400,6 +277,10 @@ img
 .bnd-text-white  { color:#fff !important }
 .bnd-text-black  { color:#000 !important }
 .bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
+/* ------------------------------------------------------------ */
+/* Text positioning                                             */
+/* ------------------------------------------------------------ */
+.bnd-center { text-align:center!important }
 /* ------------------------------------------------------------ */
 /* Margin Formating                                             */
 /* ------------------------------------------------------------ */
@@ -446,8 +327,8 @@ img
 .bnd-tooltip 
 {
     position: relative;
-    display: inline-block;
-    cursor: pointer;  
+    display:  inline-block;
+    cursor:   pointer;  
 }
 .bnd-tooltip-text 
 {
@@ -465,6 +346,11 @@ img
     margin-left: -30px;
     opacity: 0;
     transition: opacity 2s;
+}
+.bnd-tooltip:hover .bnd-tooltip-text 
+{
+    visibility: visible;
+    opacity: 1;
 }
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar                                    */
@@ -497,6 +383,46 @@ img
 .bnd-bar .bnd-button
 {
     white-space:normal
+}
+.bnd-banner-menu
+{
+    right:0; 
+    font-size: 16px;
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+}
+/* ------------------------------------------------------------ */
+/* Drop-down menu formating                                     */
+/* ------------------------------------------------------------ */
+.bnd-dropdown-hover,
+.bnd-dropdown-click
+{
+    position:relative;
+    display:inline-block;
+    cursor:pointer
+}
+.bnd-dropdown-hover:hover 
+.bnd-dropdown-content
+{
+    display:block
+}
+.bnd-dropdown-hover:first-child,
+.bnd-dropdown-click:hover
+{
+    background-color:#ccc;
+    color:#000
+}
+/* bnd-dropdown-content */
+.bnd-dropdown-content
+{
+    cursor:auto;
+    color:#000;
+    background-color:#fff;
+    display:none;
+    position:absolute;
+    min-width:160px;
+    margin:0;
+    padding:0;
+    z-index:1;
 }
 /* ------------------------------------------------------------ */
 /* Vertical navigation bar                                      */
@@ -538,6 +464,17 @@ img
     padding:8px 16px
 }
 /* ------------------------------------------------------------ */
+/* Classes for displaying paper-like cards                      */
+/* ------------------------------------------------------------ */
+.bnd-card
+{
+    box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
+}
+.bnd-card-4
+{
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
+}
+/* ------------------------------------------------------------ */
 /* Image formating                                              */
 /* ------------------------------------------------------------ */
 .bnd-image
@@ -565,6 +502,12 @@ img
     float:left; 
     margin-right:20px;
 }
+.bnd-image-left:hover,
+.bnd-image-right:hover,
+.bnd-image-thumbnail:hover
+{ 
+    opacity:0.60;
+}
 .bnd-image-thumbnail
 {
     width:100%; 
@@ -586,7 +529,13 @@ img
     left:50%;
     top:0;
     transform:translate(-50%,0%);
-    -ms-transform:translate(-50%,0%);
+}
+/* ------------------------------------------------------------ */
+/* Play audio                                                   */
+/* ------------------------------------------------------------ */
+.bnd-play-audio
+{
+    cursor:pointer
 }
 /* ------------------------------------------------------------ */
 /* Slide show formating                                         */
@@ -604,7 +553,6 @@ img
     left:          50%;
     bottom:        0;
     transform:     translate(-50%,0%);
-    -ms-transform: translate(-50%,0%);
 
     font-size:     18px;
     color:       #fff;
@@ -659,14 +607,14 @@ img
     border-spacing:0;
     width:100%;
     display:table;
-    border:1px solid #ccc
+    border:1px solid #ccc;
 }
 .bnd-table th 
 {
     padding:8px 8px;
     display:table-cell;
     text-align:left;
-    vertical-align:top
+    vertical-align:top;
 }
 .bnd-table th:first-child     {padding-left:16px}
 .bnd-table tr                 {border-bottom:1px solid #ddd}
@@ -678,7 +626,7 @@ img
     padding:8px 8px;
     display:table-cell;
     text-align:left;
-    vertical-align:top
+    vertical-align:top;
 }
 .bnd-table td:first-child      {padding-left:16px}
 .bnd-table-icon
@@ -702,7 +650,7 @@ img
     overflow:     auto;  /* Enable scroll if needed */
     background-color:rgb(0,0,0);      /* Fallback color */
     background-color:rgba(0,0,0,0.4); /* Black w/ opacity */
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
 }
 .bnd-modal-content
 {
@@ -711,7 +659,8 @@ img
     position:relative;
     padding:0;
     outline:0;
-    width:1000px
+    width:1000px;
+    animation:animatezoom 0.6s;
 }
 .bnd-modal-content-300,
 .bnd-modal-content-400,
@@ -727,6 +676,7 @@ img
     position:relative;
     padding:0;
     outline:0;
+    animation:animatezoom 0.6s;
 }
 .bnd-modal-content-300  { width:  300px }
 .bnd-modal-content-400  { width:  400px }
@@ -747,6 +697,12 @@ img
     margin-top:16px!important;
     margin-bottom:16px!important;
     text-align:center!important;
+}
+.bnd-modal-close    
+{
+    position: absolute;
+    right:    0;
+    top:      0;
 }
 /* ------------------------------------------------------------ */
 /* Monthyly calendar formatting                                           */
@@ -802,35 +758,17 @@ img
     width: 200px; /* Width of the outside container */
 }
 .slider {
-    -webkit-appearance: none;
     width: 100%;
     height: 15px;
     border-radius: 5px;  
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 /* Mouse-over effects */
 .slider:hover {
      opacity: 1; /* Fully shown on mouse-over */
-}
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%; 
-    background: #04AA6D;
-    cursor: pointer;
-}
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #04AA6D;
-    cursor: pointer;
 }
 /* context menu */
 .ctxMenu
@@ -872,5 +810,28 @@ img
     {
         display:none!important
     }
+}
+/* ------------------------------------------------------------ */
+/* Animation key frames                                         */
+/* ------------------------------------------------------------ */
+.bnd-animate-left
+{
+    position:relative;
+    animation:animateleft 0.4s
+}
+@keyframes opac
+{
+    from{opacity:0} 
+    to  {opacity:1}
+}
+@keyframes animatezoom
+{
+    from{transform: scale(0)} 
+    to  {transform: scale(1)}
+}
+@keyframes animateleft
+{
+    from{left:-300px; opacity:0} 
+    to  {left:     0; opacity:1}
 }
 /* ------------------------------------------------------------ */
