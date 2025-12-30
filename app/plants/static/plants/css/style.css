@@ -92,6 +92,18 @@ img
     border-style:none
 }
 /* ------------------------------------------------------------ */
+/* Container for navigation bar and banner                      */
+/* ------------------------------------------------------------ */
+.bnd-container-top
+{
+    position:fixed;
+    width:100%;
+    z-index:1;
+    top:0;
+    height: 120px; 
+    background-color: white;
+}
+/* ------------------------------------------------------------ */
 /* bnd-container provides equality for all HTML container       */
 /* elements: margins, paddings, alignments, fonts and colors    */
 /* ------------------------------------------------------------ */
@@ -185,16 +197,6 @@ img
     position:fixed!important;
     z-index:1;
     overflow:auto
-}
-/* ------------------------------------------------------------ */
-/* Position element at the top                                  */
-/* ------------------------------------------------------------ */
-.bnd-top
-{
-    position:fixed;
-    width:100%;
-    z-index:1;
-    top:0
 }
 /* ------------------------------------------------------------ */
 /* Button formating                                               */
@@ -603,18 +605,22 @@ img
 /* ------------------------------------------------------------ */
 .bnd-table
 {
-    border-collapse:collapse;
-    border-spacing:0;
-    width:100%;
-    display:table;
-    border:1px solid #ccc;
+    border-collapse: separate; /* Required for sticky headers to work well with borders */
+    border-spacing:  0;
+    width:           100%;
+    display:         table;
+    border:          1px solid #ccc;
 }
 .bnd-table th 
 {
-    padding:8px 8px;
-    display:table-cell;
-    text-align:left;
-    vertical-align:top;
+    position:         sticky;
+    top:              120px;      /* Stick to the bottom edge of the fixed navbar/banner */
+    padding:          8px 8px;
+    display:          table-cell;
+    text-align:       left;
+    vertical-align:   top;
+    background-color: lightgray;
+    z-index:          10;          /* Ensure table headers are above table body data */
 }
 .bnd-table th:first-child     {padding-left:16px}
 .bnd-table tr                 {border-bottom:1px solid #ddd}

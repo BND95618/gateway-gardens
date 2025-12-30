@@ -1,28 +1,150 @@
-<!-- /app/plants/templates/plants/debug.html -->
-{% extends "plants/master.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0; /* Remove default body margin */
+            padding-top: 80px; /* Add padding to prevent content overlap with the fixed header */
+        }
 
-{% block title %}
-  <title>Gateway Gardens | Debug</title>
-{% endblock title %}
+        /* Fixed Banner and Navigation Bar */
+        .header-container {
+            position: fixed; /* Fix the header container to the viewport */
+            top: 0;
+            width: 100%;
+            z-index: 100; /* Ensure the header is above other content */
+            background-color: yellow; /* Add background to avoid content showing through */
+        }
 
-{% block css %}
-<!-- Insert template css here -->
-{% endblock css %}
+        .banner {
+            padding: 10px;
+            background-color: #f1f1f1;
+            text-align: center;
+        }
 
-{% block header-completion %}
-  <!-- complete the header from master.html -->
-  <div class="bnd-bar bnd-green">
-    <h3 class="">Debug</h3>
-  </div>
-{% endblock header-completion %}
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
 
-{% block content %}
-  <!-- Debug -->
-  <div class="bnd-container bnd-content-main-100">
-    <h4>Current user permissions:</h4>
-  </div>
-{% endblock content %}
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
 
-{% block js %}
-  <!-- Insert template Javascript here -->
-{% endblock js %}
+        /* Main content padding adjustment if needed */
+        .main-content {
+            padding: 16px;
+            background-color: red;
+            z-index: 1;
+        }
+
+        /* Scrollable Table with Sticky Header */
+        /* .table-wrapper { */
+            /* Optional: constrain the table height to force scrolling within the wrapper */
+            /* height: 20em; */
+            /* overflow-y: auto; */
+        /* } */
+
+        table {
+            width: 100%;
+            border-collapse: separate; /* Required for sticky headers to work well with borders */
+            border-spacing: 0;
+            z-index: 2;
+        }
+
+        th {
+            position: sticky; /* Make the table headers sticky */
+            top: 100px; /* Stick to the bottom edge of the fixed header/banner (adjust value to height of header-container) */
+            background-color: blue; /* Add a background color so content doesn't show through */
+            color: white;
+            padding: 12px 15px;
+            z-index: 3; /* Ensure table headers are above table body data */
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            z-index: 3;
+            background-color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Banner and Navigation Container -->
+    <div class="header-container">
+        <div class="banner">Your Banner Content</div>
+        <div class="navbar">
+            <a href="#home">Home</a>
+            <a href="#news">News</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Main Content Area with the Table -->
+    <div class="main-content">
+        <h1>Scrollable Table Example</h1>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Header 1</th>
+                        <th>Header 2</th>
+                        <th>Header 3</th>
+                        <th>Header 4</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add many rows here to enable scrolling -->
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <tr><td>Data</td><td>Data</td><td>Data</td><td>Data</td></tr>
+                    <!-- ... more rows ... -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>
