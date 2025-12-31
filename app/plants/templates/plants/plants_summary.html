@@ -543,12 +543,12 @@
                 {% if plant.plant_mine == "yes" %}
                   <button onclick="myplant_remove({{ plant.id }})" class="bnd-button-small">
                     <i    class="material-icons bnd-text-black">check</i>
-                    <span class="bnd-tooltip-text">My Plant</span>
+                    <span class="bnd-tooltip-text">MyPlant</span>
                   </button>
                 {% else %}
                   <a href="{% url 'plants:myplants_add' plant.id %}">
                     <i    class="material-icons bnd-text-black">add</i>
-                    <span class="bnd-tooltip-text">Add to My Plant</span>
+                    <span class="bnd-tooltip-text">MyPlant</span>
                   </a>
                 {% endif %}
               </div>
