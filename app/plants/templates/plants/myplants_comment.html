@@ -11,11 +11,19 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-bar bnd-green">
-    <h1 class="bnd-bar-item">
-      Comments related to: 
-      {{ myplant.plant.commonName }} / 
-      {{ myplant.plant.genus }} {{ myplant.plant.species }} {{ myplant.plant.variety }}
+  <div class="bnd-card-4">
+    <header class="bnd-container  bnd-green">
+      <h3 class="bnd-bar-item">
+        Comments related to: 
+        {{ myplant.plant.commonName }}
+        <span>(</span>
+        <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
+        {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
+          <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
+        {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
+          <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
+        {% endif %}
+        <span>)</span>
     </h1>
   </div>
 {% endblock header-completion %}

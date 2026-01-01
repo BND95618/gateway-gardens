@@ -17,14 +17,15 @@
   <div class="bnd-card-4">
     <header class="bnd-container  bnd-green">
       <h3 class="bnd-bar-item">
-        Update Plant: {{ plant.commonName }} 
-        <span class="bnd-italic">
-          {% if plant.variety != "tbd" %}
-            ({{ plant.genus }} {{ plant.species }} '{{ plant.variety }}')
-          {% else %}
-            ({{ plant.genus }} {{ plant.species }})
-          {% endif %}
-        </span>
+        Update Plant:{{ plant.commonName }}
+        <span>(</span>
+        <span>{{ plant.genus }} {{ plant.species }}</span>
+        {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+          <span class="bnd-variety">var. {{ plant.variety }}</span> 
+        {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+          <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
+        {% endif %}
+        <span>)</span>
       </h3>
     </header>
   </div>

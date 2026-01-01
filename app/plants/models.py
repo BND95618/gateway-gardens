@@ -184,6 +184,7 @@ class Plant(models.Model):
     genus             = models.CharField(max_length=64, default="tbd", blank=True)
     species           = models.CharField(max_length=64, default="tbd", blank=True)
     variety           = models.CharField(max_length=64, default="tbd", blank=True)
+    cultivar          = models.CharField(max_length=64, default="tbd", blank=True)
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)
     audio_name        = models.FileField(upload_to=upload_to_uuid('audio/'), blank=True, null=True)
     # Images

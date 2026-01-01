@@ -1112,7 +1112,7 @@ def myplant_comment(request, id):
         context = { 'myplant' : myplant,
                     'form'    : form,
                   }
-        return render(request, 'plants/myplant_comment.html', context)
+        return render(request, 'plants/myplants_comment.html', context)
 
 #
 
@@ -1500,6 +1500,7 @@ def plants_add(request):
             plant.genus          = form.cleaned_data.get('genus')
             plant.species        = form.cleaned_data.get('species')
             plant.variety        = form.cleaned_data.get('variety')
+            plant.cultivar       = form.cleaned_data.get('cultivar')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
             if 'blob' in request.FILES:
                 audio_name = request.FILES['blob']
@@ -1595,6 +1596,7 @@ def plant_update(request, id):
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
             plant.variety       = form.cleaned_data.get('variety')
+            plant.cultivar      = form.cleaned_data.get('cultivar')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
 
             # Check to see if the request includes an audio filefor genus/species
@@ -1710,6 +1712,7 @@ def plant_update(request, id):
                                             'genus'             : plant.genus,
                                             'species'           : plant.species,
                                             'variety'           : plant.variety,
+                                            'cultivar'          : plant.cultivar,
                                             'phonetic_spelling' : plant.phonetic_spelling,
                                             'audio_name'        : plant.audio_name,
                                             'image_1'           : plant.image_1,

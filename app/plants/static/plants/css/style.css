@@ -23,28 +23,28 @@
 /* ------------------------------------------------------------ */
 html
 {
-    box-sizing:border-box;
+    box-sizing:  border-box;
     font-family: chalkboard, verdana, sans-serif;
-    font-size:16px;
-    line-height:1.5;
-    overflow-x:hidden
+    font-size:   16px;
+    line-height: 1.5;
+    overflow-x:  hidden;
 }
 body
 {
     font-family: chalkboard, verdana, sans-serif;
-    font-size:16px;
-    line-height:1.5
+    font-size:   16px;
+    line-height: 1.5;
 }
 section
 {
-    margin-top:16px!important;
-    margin-bottom:16px!important
+    margin-top:    16px!important;
+    margin-bottom: 16px!important;
 }
 h1,h2,h3,h4,h5,h6
 {
-    font-family: chalkboard, verdana, sans-serif;
-    font-weight:400;
-    margin:10px 0
+    font-family:   chalkboard, verdana, sans-serif;
+    font-weight:   400;
+    margin:        10px 0;
 }
 h1{font-size:36px}
 h2{font-size:30px}
@@ -55,22 +55,22 @@ h6{font-size:16px}
 p 
 {
     font-family: chalkboard, verdana, sans-serif;
-    font-size: large;
+    font-size:   large;
 }
 a 
 {
-    cursor:pointer
+    cursor: pointer;
 }
 th 
 {
-    cursor:pointer
+    cursor: pointer;
 }
 button
 {
-    font:inherit;
-    margin:0;
-    overflow:visible;
-    text-transform:none
+    font:           inherit;
+    margin:         0;
+    overflow:       visible;
+    text-transform: none;
 }
 input
 {
@@ -78,30 +78,30 @@ input
 }
 hr 
 {
-    display: block;
-    margin-top: 1.0em;
+    display:       block;
+    margin-top:    1.0em;
     margin-bottom: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border-style: inset;
-    border-width: 1px;
+    margin-left:   auto;
+    margin-right:  auto;
+    border-style:  inset;
+    border-width:  1px;
 }
 img
 {
-    vertical-align:middle;
-    border-style:none
+    vertical-align: middle;
+    border-style:   none;
 }
 /* ------------------------------------------------------------ */
 /* Container for navigation bar and banner                      */
 /* ------------------------------------------------------------ */
 .bnd-container-top
 {
-    position:fixed;
-    width:100%;
-    z-index:100;
-    padding-right: 16px;
-    top:0;
-    height: 120px; 
+    position:         fixed;
+    width:            100%;
+    z-index:          100;
+    padding-right:    16px;
+    top:              0;
+    height:           120px; 
     background-color: white;
 }
 /* ------------------------------------------------------------ */
@@ -110,14 +110,14 @@ img
 /* ------------------------------------------------------------ */
 .bnd-container
 {
-    padding:0.01em 16px
+    padding: 0.01em 16px;
 }
 .bnd-container:after, 
 .bnd-container:before
 {
-    content:"";
-    display:table;
-    clear:both
+    content: "";
+    display: table;
+    clear:   both;
 }
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
@@ -145,7 +145,7 @@ img
 .bnd-row-padding > .bnd-quarter,
 .bnd-row-padding > .bnd-col
 {
-    padding:0 8px
+    padding: 0 8px;
 }
 /* ------------------------------------------------------------ */
 /* Responsive layout - column classes                           */
@@ -171,87 +171,99 @@ img
 /* ------------------------------------------------------------ */
 .bnd-input
 {
-    padding:8px;
-    display:block;
-    border:1px solid #ccc!important;
-    width:100%;
-    cursor:pointer
+    padding: 8px;
+    display: block;
+    border:  1px solid #ccc!important;
+    width:   100%;
+    cursor:  pointer;
 }
 /* ------------------------------------------------------------ */
 /* Input select formatting                                      */
 /* ------------------------------------------------------------ */
 .bnd-select
 {
-    padding:9px 0;
-    width:100%;
-    border:none;
-    border-bottom:1px solid #ccc
+    padding:       9px 0;
+    width:         100%;
+    border:        none;
+    border-bottom: 1px solid #ccc;
 }
 /* ------------------------------------------------------------ */
 /* Sidebar - used for verticle search menu                      */
 /* ------------------------------------------------------------ */
 .bnd-sidebar
 {
-    height:100%;
-    width:200px;
-    background-color:#fff;
-    position:fixed!important;
-    z-index:1;
-    overflow:auto
+    height:           100%;
+    width:            200px;
+    background-color: #fff;
+    position:         fixed!important;
+    z-index:          1;
+    overflow:         auto;
 }
 /* ------------------------------------------------------------ */
 /* Button formating                                               */
 /* ------------------------------------------------------------ */
 .bnd-button
 {
-    border:none;
-    display:inline-block;
-    padding:8px 16px;
-    vertical-align:middle;
-    overflow:hidden;
-    font-size:16px;
-    text-decoration:none;
-    color:inherit;
-    background-color:inherit;
-    text-align:center;
-    cursor:pointer;
-    white-space:nowrap;
+    border:           none;
+    display:          inline-block;
+    padding:          8px 16px;
+    vertical-align:   middle;
+    overflow:         hidden;
+    font-size:        16px;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
 }
 .bnd-button-small
 {
-    border:none;
-    display:inline-block;
-    padding:0;
-    margin:0;
-    vertical-align:middle;
-    overflow:hidden;
-    text-decoration:none;
-    color:inherit;
-    background-color:inherit;
-    text-align:center;
-    cursor:pointer;
-    white-space:nowrap
+    border:           none;
+    display:          inline-block;
+    padding:          0;
+    margin:           0;
+    vertical-align:   middle;
+    overflow:         hidden;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
 }
 .bnd-button:hover
 {
-    color:#000!important;
-    background-color:#ccc!important
+    color:            #000!important;
+    background-color: #ccc!important;
 }
 .bnd-button:disabled
 {
-    cursor:not-allowed;
-    opacity:0.3
+    cursor:  not-allowed;
+    opacity: 0.3;
 }
 .bnd-dropdown-hover:hover > .bnd-button:first-child,
 .bnd-dropdown-click:hover > .bnd-button:first-child
 {
-    background-color:#ccc;
-    color:#000
+    background-color: #ccc;
+    color:            #000;
 }
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */
 /* ------------------------------------------------------------ */
 .bnd-hide{display:none!important}
+/* ------------------------------------------------------------ */
+/* Plant taxonomy formating                                     */
+/* ------------------------------------------------------------ */
+.bnd-cultivar
+{
+    text-transform: capitalize;
+}
+.bnd-variety
+{
+    font-style:     italic;
+    text-transform: lowercase;
+}
 /* ------------------------------------------------------------ */
 /* Text formating                                               */
 /* ------------------------------------------------------------ */
@@ -336,24 +348,24 @@ img
 }
 .bnd-tooltip-text 
 {
-    visibility: hidden;
+    visibility:       hidden;
     background-color: black;
-    font-size:16px;
-    color: #fff;
-    text-align: center;
-    border-radius: 8px;
-    padding: 4px 8px;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -30px;
-    opacity: 0;
-    transition: opacity 2s;
+    font-size:        16px;
+    color:           #fff;
+    text-align:       center;
+    border-radius:    8px;
+    padding:          4px 8px;
+    position:         absolute;
+    bottom:           100%;
+    left:             50%;
+    margin-left:      -30px;
+    opacity:          0;
+    transition:       opacity 2s;
 }
 .bnd-tooltip:hover .bnd-tooltip-text 
 {
     visibility: visible;
-    opacity: 1;
+    opacity:    1;
 }
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar                                    */
