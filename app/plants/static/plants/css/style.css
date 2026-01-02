@@ -717,6 +717,12 @@ img
     margin-bottom:16px!important;
     text-align:center!important;
 }
+body.bnd-modal-open 
+{
+    overflow: hidden; /* Prevents background scrolling */
+    height:   100vh;  /* Optional: ensures the body fits the viewport height */
+}
+  
 .bnd-modal-close    
 {
     position: absolute;
