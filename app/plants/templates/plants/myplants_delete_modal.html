@@ -7,13 +7,9 @@
   <form class="bnd-container" action="{% url 'plants:myplants_delete' myplant.id %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-button-bar">
-      <button type="submit" class="bnd-button bnd-green bnd-round-medium">
-        Confirm
-      </button>
+      <button type="submit" class="bnd-button-submit">Confirm</button>
       <a href="{% url 'plants:myplants_summary' %}">
-        <button type="button" class="bnd-button bnd-red bnd-round-medium">
-          Cancel
-        </button>
+        <button type="button" class="bnd-button-cancel">Cancel</button>
       </a>
     </div>
   </form>

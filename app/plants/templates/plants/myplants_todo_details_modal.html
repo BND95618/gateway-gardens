@@ -1,12 +1,12 @@
 <!-- /plants/templates/plants/myplants_todo_details_modal.html -->
 <div class="bnd-modal-content-800">
-    <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
+    <header class="bnd-modal-header">
         <h4>To Do Item Details</h4>
         <!-- Close the modal -->
         <span onclick="document.getElementById('todo_details_modal').style.display='none'" 
             class="bnd-button bnd-modal-close">&times;
         </span>
-    </div>
+    </header>
     <div class="bnd-container">
         <p>Date:        {{ myplant_todo.date       }}</p>
         <p>Common Name: {{ myplant_todo.commonName }}</p>

@@ -1,19 +1,15 @@
 <!-- /app/plants/templates/plants/plants_delete_modal.html -->
 <div class="bnd-modal-content-300">
-  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
+  <header class="bnd-modal-header">
     <h4>Delete "{{ plant.commonName }}"?</h4>
-  </div>
+  </header>
   <form class="bnd-container" action="{% url 'plants:plants_delete' plant.id %}" method="post">
     {% csrf_token %}
-    <div class="bnd-modal-button-bar">
-      <button type="submit" class="bnd-button bnd-green bnd-round-medium">
-        Confirm
-      </button>
+    <footer class="bnd-modal-button-bar">
+      <button type="submit" class="bnd-button-submit">Confirm</button>
       <a href="{% url 'plants:plants_summary' %}">
-        <button type="button" class="bnd-button bnd-red bnd-round-medium">
-          Cancel
-        </button>
+        <button type="button" class="bnd-button-cancel">Cancel</button>
       </a>
-    </div>
+    </footer>
   </form>
 </div>

@@ -1,9 +1,9 @@
 <!-- /app/plants/templates/plants/user_login_modal.html -->
 
 <div class="bnd-modal-content-400">
-  <div class="bnd-container bnd-border-top bnd-padding-medium bnd-light-grey">
+  <header class="bnd-modal-header">
     <h3>User Login</h3>
-  </div>
+  </header>
   <form action="{% url 'plants:user_login' %}" method="post">
     {% csrf_token %}
     <div class="bnd-container">
