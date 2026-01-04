@@ -328,7 +328,7 @@ img
 .bnd-border-0      { border:        0               !important}
 
 .bnd-border-top    { border-top:    1px solid #ccc!important }
-.bnd-border-bottom { border-bottom: 1px solid #ccc!important }
+.bnd-border-bottom { border-bottom: 1px solid darkgray !important }
 .bnd-border-left   { border-left:   1px solid #ccc!important }
 .bnd-border-right  { border-right:  1px solid #ccc!important }
 
@@ -643,7 +643,7 @@ img
 .bnd-table th 
 {
     position:         sticky;
-    top:              120px;      /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              100px;      /* Stick to the bottom edge of the fixed navbar/banner */
     padding:          8px 8px;
     display:          table-cell;
     text-align:       left;
@@ -674,50 +674,41 @@ img
 /* ------------------------------------------------------------ */
 .bnd-modal
 {
-    z-index:     20;     /* Sit on top */
-    display:     none;   /* Hidden by default */
-    padding-top: 120px;
-    position:    fixed;  /* Stay in place */
-    left:0;
-    top:0;
-    width:        100%;  /* Full width */
-    height:       100%;  /* Full width */
-    overflow:     auto;  /* Enable scroll if needed */
+    position:          fixed;           /* Stay in place */
+    z-index:           20;              /* Sit on top */
+    left:              0;
+    top:               0;
+    display:           none;            /* Hidden by default */
+    padding-top:       120px;
+    width:             100%;            /* Full width */
+    height:            100%;            /* Full height */
+    overflow:          auto;            /* Enable scroll if needed */
     background-color:rgb(0,0,0);      /* Fallback color */
     background-color:rgba(0,0,0,0.4); /* Black w/ opacity */
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
 }
 .bnd-modal-header
 {
-    margin-top:       16px;
-    margin-bottom:    16px;
-    text-align:       center;
-    padding:          4px 16px;
-    border:           1px solid #ccc;
-    color:            #000; 
-    background-color: #f1f1f1;
-}
-bnd-modal-header-sticky
-{
-    position:         sticky;
+    position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              0px;    
     
     margin-top:       16px;
     margin-bottom:    16px;
     text-align:       center;
     padding:          4px 16px;
-    border:           1px solid #ccc;
-    color:            #000; 
+    border:           1px solid darkgray;
+    color:            black; 
     background-color: #f1f1f1;
 }
 .bnd-modal-content
 {
-    margin:auto;
-    background-color:#fff;
-    position:relative;
-    padding:0;
-    outline:0;
-    width:1000px;
-    animation:animatezoom 0.6s;
+    margin:            auto;
+    background-color: #fff;
+    position:          relative;
+    padding:           0;
+    outline:           0;
+    width:             1000px;
+    animation:         animatezoom 0.6s;
 }
 .bnd-modal-content-300,
 .bnd-modal-content-400,
