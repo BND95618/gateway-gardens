@@ -295,18 +295,36 @@ img
 /* Font styles */
 .bnd-italic   {font-style: italic}
 /* Text Colors */
+.bnd-text-white     { color:white  }
+.bnd-text-red       { color:red    }
+.bnd-text-pink      { color:pink   }
+.bnd-text-lightpink { color:lightpink }
+.bnd-text-orange    { color:orange }
+.bnd-text-yellow    { color:yellow }
+.bnd-text-green     { color:green  }
+.bnd-text-cyan      { color:cyan   }
+.bnd-text-blue      { color:blue   }
+.bnd-text-violet    { color:violet }
+.bnd-text-black     { color:black  }
+
+.bnd-text-outline 
+{
+    color: #fff; /* Text fill color */
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+}
+
+/* Background Colors */
 .bnd-white       { color:#000 !important; background-color:#fff    !important }
 .bnd-yellow,     .bnd-hover-yellow:hover      { color:#000 !important; background-color:#ffeb3b !important }
 .bnd-light-green,.bnd-hover-light-green:hover { color:#000 !important; background-color:#8bc34a !important }
 .bnd-green,      .bnd-hover-green:hover       { color:#fff !important; background-color:#4CAF50 !important }
-.bnd-red         { color:#fff !important; background-color:#f44336 !important }
-.bnd-grey        { color:#000 !important; background-color:#9e9e9e !important }
+.bnd-red         { color:#fff !important; background-color:red !important }
+.bnd-blue        { color:#fff !important; background-color:blue !important }
+.bnd-grey        { color:#000 !important; background-color:gray !important }
 .bnd-light-grey  { color:#000 !important; background-color:#f1f1f1 !important }
 
 .bnd-hover-white:hover { color:#000 !important; background-color:#fff !important }
 
-.bnd-text-white  { color:#fff !important }
-.bnd-text-black  { color:#000 !important }
 .bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
 /* ------------------------------------------------------------ */
 /* Text positioning                                             */
