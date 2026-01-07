@@ -469,10 +469,7 @@
         <h3 class="bnd-border-bottom">
           Bloom Chart - Blooms by Month
           <!-- Close the chart modal -->
-          <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
-                class="bnd-button bnd-modal-close">
-            &times;
-          </span>
+          <span onclick="plants_chart_modal_close()" class="bnd-button bnd-modal-close">&times;</span>
         </h3>
         <!-- Create the modal tabs - each chart has a tab -->
         <div class="bnd-bar">
@@ -797,6 +794,14 @@
           }
         }
       }
+    }
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - close modal
+    //-----------------------------------------------------------------------------
+    function plants_chart_modal_close()
+    {
+      document.getElementById('plants_chart_modal').style.display='none';
+      document.body.classList.remove('bnd-modal-open');
     }
     //-----------------------------------------------------------------------------
     // Close the open modal if user clicks anywhere outside of the modal content
