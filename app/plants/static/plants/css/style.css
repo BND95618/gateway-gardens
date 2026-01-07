@@ -682,7 +682,7 @@ img
     text-align:       left;
     vertical-align:   top;
     background-color: lightgray;
-    z-index:          10;          /* Ensure table headers are above table body data */
+    z-index:          30;          /* Ensure table headers are above table body data */
 }
 .bnd-table th:first-child     {padding-left:16px}
 .bnd-table tr                 {border-bottom:1px solid #ddd}
