@@ -316,7 +316,7 @@
   <!-------------------------------------------------------------------------->
   <!-- Plant Table                                                          -->
   <!-------------------------------------------------------------------------->
-  <div id="main" class="bnd-container bnd-content-main-120">
+  <div id="main" class="bnd-content-main-120">
     <table id="plantTable" class="bnd-table bnd-hoverable">
       <thead>
         <tr class="bnd-light-grey">
@@ -700,7 +700,7 @@
       document.body.classList.add("bnd-modal-open");
     }
     //-----------------------------------------------------------------------------
-    // Bloom Chart Modal Script
+    // Bloom Chart Modal - Open the modal
     //-----------------------------------------------------------------------------
     const plants_chart_modal = document.getElementById('plants_chart_modal')
     // Open the plant chart modal and freeze the main body while the modal is open
@@ -709,6 +709,9 @@
       plants_chart_modal.style.display='block'
       document.body.classList.add("bnd-modal-open");
     }
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - Tab switching
+    //-----------------------------------------------------------------------------
     // Register each plant chart tab button and open its tab when clicked via 'openChart'
     document.getElementById("bloomTabButton"      ).addEventListener("click", function() 
     {
@@ -726,12 +729,9 @@
     {
       openChart(event, 'hummingbirdTabContent');
     });
-    //
+
     function openChart(event, selectedTabContent) 
     {
-
-      console.log("DEBUG: Process selected tab:", selectedTabContent);
-
       // get each tab and the contents of each tab
       let i, tabs, tabContents;
       tabs        = document.getElementsByClassName("tab");
@@ -756,6 +756,48 @@
     // Select the first tab - click to highlight
     bloomTab = document.getElementsByClassName("tab")[0];
     bloomTab.click();
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - color table icons - this is done on page load
+    //-----------------------------------------------------------------------------
+    // Get references to the various bloom tables
+    const bloom_table       = document.getElementById("bloomTable");
+    const bee_table         = document.getElementById("beeTable");
+    const butterfly_table   = document.getElementById("butterflyTable");
+    const hummingbird_table = document.getElementById("hummingbirdTable");
+
+    function color_table_icons(table)
+    {
+      if (table) {
+        for (let i = 0; i < table.rows.length; i++) 
+        {
+          const row = table.rows[i];
+          if (i > 0) // skip the table header (i=0)
+          {
+            // Get the plants bloom color(s)
+            bloom_color = row.cells[1].textContent;
+            for (let j = 0; j < row.cells.length; j++) 
+            {
+              const cell = row.cells[j];
+              if (cell.textContent == "filter_vintage")
+              {
+                if      (bloom_color == "white")     { cell.classList.add("bnd-text-outline");   }
+                else if (bloom_color == "red")       { cell.classList.add("bnd-text-red");       }
+                else if (bloom_color == "pink")      { cell.classList.add("bnd-text-pink");      }
+                else if (bloom_color == "pale pink") { cell.classList.add("bnd-text-lightpink"); }
+                else if (bloom_color == "orange")    { cell.classList.add("bnd-text-orange");    }
+                else if (bloom_color == "yellow")    { cell.classList.add("bnd-text-yellow");    }
+                else if (bloom_color == "green")     { cell.classList.add("bnd-text-green");     }
+                else if (bloom_color == "cyan")      { cell.classList.add("bnd-text-cyan");      }
+                else if (bloom_color == "blue")      { cell.classList.add("bnd-text-blue");      }
+                else if (bloom_color == "violet")    { cell.classList.add("bnd-text-violet");    }
+                else if (bloom_color == "purple")    { cell.classList.add("bnd-text-purple");    }
+                else if (bloom_color == "black")     { cell.classList.add("bnd-text-black");     }
+              }
+            }
+          }
+        }
+      }
+    }
     //-----------------------------------------------------------------------------
     // Close the open modal if user clicks anywhere outside of the modal content
     //-----------------------------------------------------------------------------
@@ -782,58 +824,11 @@
         document.body.classList.remove('bnd-modal-open');
       }
     }
-    
-    //-----------------------------------------------------------------------------
-    // Color bloom table icons
-    //-----------------------------------------------------------------------------
-    // Get references to the various tables
-    const bloom_table       = document.getElementById("bloomTable");
-    const bee_table         = document.getElementById("beeTable");
-    const butterfly_table   = document.getElementById("butterflyTable");
-    const hummingbird_table = document.getElementById("hummingbirdTable");
-    function color_table_icons(table)
-    {
-      console.log("DEBUG: Got to color_table_icons - pt 1");
-      console.log("DEBUG: table:", table);
-
-      if (table) {
-        for (let i = 0; i < table.rows.length; i++) 
-        {
-          const row = table.rows[i];
-          if (i > 0)
-          {
-            bloom_color = row.cells[1].textContent;
-            console.log("DEBUG: bloom color =", bloom_color);
-            for (let j = 0; j < row.cells.length; j++) 
-            {
-              const cell = row.cells[j];
-              console.log(cell.textContent);
-              if (cell.textContent == "filter_vintage")
-              {
-                if      (bloom_color == "white")  { cell.classList.add("bnd-text-outline"); }
-                else if (bloom_color == "red")    { cell.classList.add("bnd-text-red");    }
-                else if (bloom_color == "pink")   { cell.classList.add("bnd-text-pink");   }
-                else if (bloom_color == "pale pink") { cell.classList.add("bnd-text-lightpink");   }
-                else if (bloom_color == "orange") { cell.classList.add("bnd-text-orange"); }
-                else if (bloom_color == "yellow") { cell.classList.add("bnd-text-yellow"); }
-                else if (bloom_color == "green")  { cell.classList.add("bnd-text-green");  }
-                else if (bloom_color == "cyan")   { cell.classList.add("bnd-text-cyan");   }
-                else if (bloom_color == "blue")   { cell.classList.add("bnd-text-blue");   }
-                else if (bloom_color == "violet") { cell.classList.add("bnd-text-violet"); }
-                else if (bloom_color == "black")  { cell.classList.add("bnd-text-black");  }
-              }
-            }
-          }
-        }
-      }
-    }
-
     //-----------------------------------------------------------------------------
     // On Page load functions - modern version of windows.onload
     //-----------------------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', (event) => 
     {
-      console.log("DOM fully loaded and parsed. Multiple commands can run here.");
       sortTable(0, 'plantTable');
       column_selector();
       color_table_icons(bloom_table);
