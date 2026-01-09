@@ -8,11 +8,9 @@
 {% block css %}
 <!-- Insert template css here -->
 {% endblock css %}
-
 <!---------------------------->
 <!-- Page Header Completion -->
 <!---------------------------->
-
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <div class="bnd-card-4">
@@ -24,7 +22,7 @@
             <i class="material-icons">menu</i>
           </button>
           <div class="bnd-banner-menu bnd-bar-block bnd-dropdown-content">
-            <button onclick="w3_open()" class="bnd-bar-item bnd-button">Search</button>
+            <button onclick="searchOpen()" class="bnd-bar-item bnd-button">Search</button>
             <button onclick="my_column_chooser()" class="bnd-bar-item bnd-button">Column Chooser</button>
             <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
                     class="bnd-bar-item bnd-button">Bloom Charts
@@ -39,10 +37,8 @@
   <!------------------------->
   <!-- Vertical Search Bar -->
   <!------------------------->
-  <div class="bnd-sidebar bnd-bar-block bnd-card bnd-animate-left bnd-margin-left" 
-       style="display:none; height:80%;" 
-       id="mySidebar">
-    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-container bnd-card-4 bnd-light-grey">
+  <div id="bnd-search-sidebar" class="bnd-sidebar">
+    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-sidebar-contents">
       {% csrf_token %}
 
       <!-- Plant Attributes -->
@@ -329,18 +325,16 @@
       </button>
       <!-- Button to hide the search menu -->
       <button type="button" 
-              onclick="w3_close()"
+              onclick="searchClose()"
               value="Hide" 
               class="bnd-button bnd-border bnd-red bnd-round-large bnd-margin-bottom">
         Hide
       </button>
     </form>
   </div>
-  
   <!------------------------->
   <!--        Modals       -->
   <!------------------------->
- 
   <!-- MyPlant Delete modal - html to be inserted by Javascript -->
   <div id="myplants_delete_modal" class="bnd-modal">
     <p> MyPlant delete form HTML to be Inserted Here! </p>
@@ -590,7 +584,9 @@
 {% block js %}
 <!-- Column selector -->
   <script>
-    function column_selector(){
+      // Get the list of columns to display
+      let column_selection_safe = {{ my_column_selection|safe }};
+      function column_selector(){
       const table = document.getElementById("plantTable");
       // 
       const column_options = ['Common Name', 'Genus/Species', 'Variety/Cultivar',
@@ -603,8 +599,6 @@
                              ];
                          
       let column_index = 0;
-      // Get the list of columns to display
-      let column_selection = {{ my_column_selection|safe }};
       // determine the array index for each column
       // walk through the list of columns to either display or hide
       // AR: streamine the code via column_options.forEach()?
@@ -643,7 +637,7 @@
         else if (column_options[i] == "Happy?")           { column_index = 28; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
-        if (column_selection.includes(column_options[i])){
+        if (column_selection_safe.includes(column_options[i])){
           // display the column
           for (let i = 0; i < table.rows.length; i++) {
             table.rows[i].cells[column_index].style.display = "";
@@ -660,14 +654,13 @@
 
   <!-- Search menu - sidebar navigation scripts -->
   <script>
-    function w3_open() {
+    function searchOpen() {
       document.getElementById("main").style.marginLeft = "16%";
-      document.getElementById("mySidebar").style.width = "15%";
-      document.getElementById("mySidebar").style.display = "block";
+      document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
     }
-    function w3_close() {
+    function searchClose() {
       document.getElementById("main").style.marginLeft = "0%";
-      document.getElementById("mySidebar").style.display = "none";
+      document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
     }
   </script>
 

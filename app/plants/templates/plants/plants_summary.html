@@ -23,9 +23,9 @@
             <i class="material-icons">menu</i>
           </button>
           <div class="bnd-banner-menu bnd-bar-block bnd-dropdown-content">
-            <button onclick="w3_open()"        class="bnd-bar-item bnd-button">Plant Search  </button>
-            <button onclick="column_chooser()" class="bnd-bar-item bnd-button">Column Chooser</button>
-            <button onclick="plants_chart()"   class="bnd-bar-item bnd-button">Bloom Charts  </button>
+            <button onclick="searchOpen()" class="bnd-bar-item bnd-button">Plant Search  </button>
+            <button onclick="column_chooser()"  class="bnd-bar-item bnd-button">Column Chooser</button>
+            <button onclick="plants_chart()"    class="bnd-bar-item bnd-button">Bloom Charts  </button>
             {% if perms.plants.add_plant %}
               <a href="{% url 'plants:plants_add' %}"  class="bnd-bar-item bnd-button">Add Plant</a>
             {% endif %}
@@ -40,10 +40,8 @@
   <!-------------------------------------------------------------------------->
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
-  <div class="bnd-sidebar bnd-bar-block bnd-card bnd-animate-left bnd-margin-left" 
-       style="display:none; height:80%;" 
-       id="mySidebar">
-    <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-container bnd-card-4 bnd-light-grey">
+  <div id="bnd-search-sidebar" class="bnd-sidebar">
+    <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-sidebar-contents">
       {% csrf_token %}
       <!-- Plant Attributes -->
       <p class="bnd-center"><i>Plant Details</i></p>
@@ -309,7 +307,7 @@
           Reset
         </button>
         <!-- Button to hide the search menu -->
-        <button type="button" onclick="w3_close()" value="Hide" class="bnd-button-cancel">Hide</button>
+        <button type="button" onclick="searchClose()" value="Hide" class="bnd-button-cancel">Hide</button>
       </footer>
     </form>
   </div>
@@ -557,11 +555,12 @@
   <script>
     //-----------------------------------------------------------------------------
     // Plant Table - Column Chooser Modal Script
-    //-----------------------------------------------------------------------------  
+    //----------------------------------------------------------------------------- 
+    const column_chooser_url = "{% url 'plants:column_chooser' %}"
     const column_chooser_modal = document.getElementById('column_chooser_modal')
     function column_chooser() {
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      fetch("{% url 'plants:column_chooser' %}")
+      fetch(column_chooser_url)
         .then(response => response.text())
         .then(html => {column_chooser_modal.innerHTML = html;})
       // Display the plant column chooser modal
@@ -573,7 +572,7 @@
     // Plant Table - Column selector
     //-----------------------------------------------------------------------------
     // Get the list of columns to display
-    let column_selection = {{ column_selection|safe }};
+    let column_selection_safe = {{ column_selection|safe }};
     function column_selector(){
       const table = document.getElementById("plantTable");
       // 
@@ -614,7 +613,7 @@
         else if (column_options[i] == "Status")           { column_index = 21; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
-        if (column_selection.includes(column_options[i])){
+        if (column_selection_safe.includes(column_options[i])){
           // display the column
           for (let i = 0; i < table.rows.length; i++) {
             table.rows[i].cells[column_index].style.display = "";
@@ -630,16 +629,13 @@
     //-----------------------------------------------------------------------------
     // Search menu - sidebar navigation scripts
     //-----------------------------------------------------------------------------
-    function w3_open() {
+    function searchOpen() {
       document.getElementById("main").style.marginLeft = "16%";
-      document.getElementById("mySidebar").style.width = "15%";
-      document.getElementById("mySidebar").style.display = "block";
-      // document.getElementById("openNav").style.display = 'none';
+      document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
     }
-    function w3_close() {
+    function searchClose() {
       document.getElementById("main").style.marginLeft = "0%";
-      document.getElementById("mySidebar").style.display = "none";
-      // document.getElementById("openNav").style.display = "inline-block";
+      document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
     }
     //-----------------------------------------------------------------------------
     // Search menu - Reset all search criteria to 'Any'
