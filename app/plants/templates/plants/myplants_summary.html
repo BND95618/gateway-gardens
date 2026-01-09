@@ -45,7 +45,7 @@
       <p class="bnd-center"><i>Plant Attributes</i></p>
 
       <label for="id_type_x_search">Type:</label><br>
-      <select id="id_type_x_search" name="type_x_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_type_x_search" name="type_x_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for plant_type in plant_types %}
           {% if plant_type == type_x_search %}
@@ -57,7 +57,7 @@
       </select>
 
       <label for="id_bloom_color_search">Bloom Color:</label><br>
-      <select id="id_bloom_color_search" name="bloom_color_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_bloom_color_search" name="bloom_color_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in bloom_color_opt %}
           {% if x == bloom_color_search %}
@@ -70,7 +70,7 @@
       <br>
 
       <label for="id_bloom_season_search">Bloom Season:</label><br>
-      <select id="id_bloom_season_search" name="bloom_season_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_bloom_season_search" name="bloom_season_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in bloom_season_opt %}
           {% if x == bloom_season_search %}
@@ -83,7 +83,7 @@
       <br>
 
       <label for="id_bloom_month_search">Bloom Month:</label><br>
-      <select id="id_bloom_month_search" name="bloom_month_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_bloom_month_search" name="bloom_month_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for month in month_opt %}
           {% if month == bloom_month_search %}
@@ -96,7 +96,7 @@
       <br>
 
       <label for="id_pollinators_search">Pollinators:</label><br>
-      <select id="id_pollinators_search" name="pollinators_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_pollinators_search" name="pollinators_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in pollinators_opt %}
           {% if x == pollinators_search %}
@@ -109,7 +109,7 @@
       <br>
 
       <label for="id_ca_native_search">California Native:</label><br>
-      <select id="id_ca_native_search" name="ca_native_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_ca_native_search" name="ca_native_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in ca_native_opt %}
           {% if x == ca_native_search %}
@@ -122,7 +122,7 @@
       <br>
 
       <label for="id_ucd_all_star_search">UCD All-Star:</label><br>
-      <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in ucd_all_star_opt %}
           {% if x == ucd_all_star_search %}
@@ -135,7 +135,7 @@
       <br>
 
       <label for="id_davis_trees_search">Davis Climate-Ready Trees:</label><br>
-      <select id="id_davis_trees_search" name="davis_trees_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_davis_trees_search" name="davis_trees_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in davis_trees_opt %}
           {% if x == davis_trees_search %}
@@ -148,7 +148,7 @@
       <br>
 
       <label for="id_sunset_z14_search">Sunset Zone 14 Recommendation:</label><br>
-      <select id="id_sunset_z14_search" name="sunset_z14_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_sunset_z14_search" name="sunset_z14_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sunset_z14_opt %}
           {% if x == sunset_z14_search %}
@@ -165,7 +165,7 @@
       <p class="bnd-center"><i>Environmental Needs</i></p>
 
       <label for="id_sun_exposure_search">Sun Exposure:</label><br>
-      <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sun_exposure_opt %}
           {% if x == sun_exposure_search %}
@@ -178,7 +178,7 @@
       <br>
 
       <label for="id_water_rqmts_search">Water Requirements:</label><br>
-      <select id="id_water_rqmts_search" name="water_rqmts_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_water_rqmts_search" name="water_rqmts_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in water_rqmts_opt %}
           {% if x == water_rqmts_search %}
@@ -191,7 +191,7 @@
       <br>
 
       <label for="id_soil_type_search">Soil Requirements:</label><br>
-      <select id="id_soil_type_search" name="soil_type_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_soil_type_search" name="soil_type_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in soil_type_opt %}
           {% if x == soil_type_search %}
@@ -204,7 +204,7 @@
       <br>
 
       <label for="id_pH_search">pH:</label><br>
-      <select id="id_pH_search" name="pH_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_pH_search" name="pH_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in pH_opt %}
           {% if x == pH_search %}
@@ -217,7 +217,7 @@
       <br>
 
       <label for="id_heat_tolerance_search">Heat Tolerance:</label><br>
-      <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in heat_tolerance_opt %}
           {% if x == heat_tolerance_search %}
@@ -230,7 +230,7 @@
       <br>
 
       <label for="id_usda_zone_search">USDA Zone:</label><br>
-      <select id="id_usda_zone_search" name="usda_zone_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_usda_zone_search" name="usda_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in usda_zones_opt %}
           {% if x == usda_zone_search %}
@@ -243,7 +243,7 @@
       <br>
 
       <label for="id_sunset_zone_search">Sunset Zone:</label><br>
-      <select id="id_sunset_zone_search" name="sunset_zone_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_sunset_zone_search" name="sunset_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sunset_zones_opt %}
           {% if x == sunset_zone_search %}
@@ -259,7 +259,7 @@
       <p class="bnd-center"><i>Garden Environment</i></p>
 
       <label for="id_my_sun_exposure_search">My Sun Exposure:</label><br>
-      <select id="id_my_sun_exposure_search" name="my_sun_exposure_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_my_sun_exposure_search" name="my_sun_exposure_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sun_exposure_opt %}
           {% if x == my_sun_exposure_search %}
@@ -272,7 +272,7 @@
       <br>
 
       <label for="id_my_water_level_search">My Water Level:</label><br>
-      <select id="id_my_water_level_search" name="my_water_level_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_my_water_level_search" name="my_water_level_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in water_rqmts_opt %}
           {% if x == my_water_level_search %}
@@ -285,7 +285,7 @@
       <br>
 
       <label for="id_my_soil_type_search">My Soil Type:</label><br>
-      <select id="id_my_soil_type_search" name="my_soil_type_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_my_soil_type_search" name="my_soil_type_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in soil_type_opt %}
           {% if x == my_soil_type_search %}
@@ -298,7 +298,7 @@
       <br>
 
       <label for="id_my_happiness_search">Happiness:</label><br>
-      <select id="id_my_happiness_search" name="my_happiness_search" class="bnd-select bnd-margin-bottom">
+      <select id="id_my_happiness_search" name="my_happiness_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in happiness_opt %}
           {% if x == my_happiness_search %}
@@ -310,26 +310,20 @@
       </select>
       <br>
 
-      <!-- Button to initiate the search based upon the input criteria -->
-      <button type="submit" 
-              value="Submit" 
-              class="bnd-button bnd-border bnd-green bnd-round-large bnd-margin-bottom">
-        Submit
-      </button>
-      <!-- Button to reset all search criteria to 'Any' -->
-      <button type="button" 
-              onclick="searchReset()"
-              value="Reset" 
-              class="bnd-button bnd-border bnd-white bnd-round-large bnd-margin-bottom">
-        Reset
-      </button>
-      <!-- Button to hide the search menu -->
-      <button type="button" 
-              onclick="searchClose()"
-              value="Hide" 
-              class="bnd-button bnd-border bnd-red bnd-round-large bnd-margin-bottom">
-        Hide
-      </button>
+      <footer class="bnd-modal-button-bar">
+        <!-- Button to initiate the search based upon the input criteria -->
+        <button type="submit" value="Submit" class="bnd-button-submit">Submit</button>
+        <!-- Button to reset all search criteria to 'Any' -->
+        <button type="button" 
+                onclick="searchReset()"
+                value="Reset" 
+                class="bnd-button bnd-border bnd-white bnd-round-large">
+          Reset
+        </button>
+        <!-- Button to hide the search menu -->
+        <button type="button" onclick="searchClose()" value="Hide" class="bnd-button-cancel">Hide</button>
+      </footer>
+      
     </form>
   </div>
   <!------------------------->

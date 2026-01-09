@@ -368,7 +368,7 @@ def myplants_summary(request):
                 garden.pollinators_search  = pollinators_search
                 garden.ca_native_search    = ca_native_search
                 garden.ucd_all_star_search = ucd_all_star_search
-                garden.davis_trees_search  = ucd_davis_trees_search
+                garden.davis_trees_search  = davis_trees_search
                 garden.sunset_z14_search   = sunset_z14_search
                 garden.sun_exposure_search = sun_exposure_search
                 garden.water_rqmts_search  = water_rqmts_search
