@@ -10,7 +10,7 @@
    > general sibling selector (~)
 */
 /* ----------------------- */
-/* Global formatting */
+/* Global formatting       */
 /* ----------------------- */
 *, *:before, *:after{box-sizing:inherit}
 /* ----------------------- */
@@ -371,7 +371,7 @@ img
 .bnd-padding-top-32 {padding-top:32px!important}
 .bnd-padding-top-24 {padding-top:24px!important}
 
-/* Border formating */
+/* Border formatting */
 .bnd-border        { border:        1px solid #ccc!important }
 .bnd-border-0      { border:        0               !important}
 

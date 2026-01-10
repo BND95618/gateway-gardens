@@ -12,7 +12,7 @@
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
+    <header class="bnd-container bnd-green">
 
       <!-- Banner text -->
       <h3 class="bnd-bar-item">
@@ -39,12 +39,12 @@
         {% endif %}
 
         <!-- Drop-down menu -->
-        <span class="bnd-dropdown-hover bnd-right">
+        <span class="bnd-dropdown-hover bnd-right bnd-green">
           <button class="bnd-button-small">
             <i class="material-icons">menu</i>
           </button>
-          <div class="bnd-banner-menu bnd-bar-block bnd-dropdown-content">
-            <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-button">Update</a>
+          <div class="bnd-banner-menu bnd-dropdown-content">
+            <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-dropdown-button">Update</a>
           </div>
         </span>
       </h3>

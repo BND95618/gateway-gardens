@@ -22,12 +22,12 @@
           <button class="bnd-button-small">
             <i class="material-icons">menu</i>
           </button>
-          <div class="bnd-banner-menu bnd-bar-block bnd-dropdown-content">
-            <button onclick="searchOpen()" class="bnd-bar-item bnd-button">Plant Search  </button>
-            <button onclick="column_chooser()"  class="bnd-bar-item bnd-button">Column Chooser</button>
-            <button onclick="plants_chart()"    class="bnd-bar-item bnd-button">Bloom Charts  </button>
+          <div class="bnd-banner-menu bnd-dropdown-content">
+            <button onclick="searchOpen()"     class="bnd-dropdown-button">Plant Search  </button>
+            <button onclick="column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
+            <button onclick="plants_chart()"   class="bnd-dropdown-button">Bloom Charts  </button>
             {% if perms.plants.add_plant %}
-              <a href="{% url 'plants:plants_add' %}"  class="bnd-bar-item bnd-button">Add Plant</a>
+              <a href="{% url 'plants:plants_add' %}" class="bnd-dropdown-button">Add Plant</a>
             {% endif %}
           </div>
         </span>

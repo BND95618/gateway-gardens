@@ -15,9 +15,9 @@
     > Pseudo-elements = ::  target a specific part of an element
 
     z-index values:
-      10: search sidebar and tooltips
+      10: search sidebar
       20: main content table th
-      30: modals
+      30: modals and tooltips
       40: modal headers
       50: page navigation bar and page banner
 
@@ -188,7 +188,7 @@ img
 /* ------------------------------------------------------------ */
 .bnd-right { float:right!important }
 /* ------------------------------------------------------------ */
-/* Input formating used in Django forms                         */
+/* Input formatting used in Django forms                         */
 /* ------------------------------------------------------------ */
 .bnd-input
 {
@@ -209,7 +209,7 @@ img
     border-bottom: 1px solid #ccc;
 }
 /* ------------------------------------------------------------ */
-/* Button formating                                               */
+/* Button formatting                                            */
 /* ------------------------------------------------------------ */
 .bnd-button,
 .bnd-button-submit,
@@ -280,7 +280,7 @@ img
 /* ------------------------------------------------------------ */
 .bnd-hide{display:none!important}
 /* ------------------------------------------------------------ */
-/* Plant taxonomy formating                                     */
+/* Plant taxonomy formatting                                    */
 /* ------------------------------------------------------------ */
 .bnd-cultivar
 {
@@ -292,7 +292,7 @@ img
     text-transform: lowercase;
 }
 /* ------------------------------------------------------------ */
-/* Text formating                                               */
+/* Text formatting                                              */
 /* ------------------------------------------------------------ */
 /* Font Sizes */
 .bnd-tiny     {font-size:10px!important}
@@ -343,7 +343,7 @@ img
 /* ------------------------------------------------------------ */
 .bnd-center { text-align:center!important }
 /* ------------------------------------------------------------ */
-/* Margin Formating                                             */
+/* Margin formatting                                            */
 /* ------------------------------------------------------------ */
 .bnd-margin-none   { margin:0           !important }
 .bnd-margin        { margin:16px        !important }
@@ -352,7 +352,7 @@ img
 .bnd-margin-bottom { margin-bottom:16px !important }
 .bnd-margin-right  { margin-right:16px  !important }
 /* ------------------------------------------------------------ */
-/* Border formating                                             */
+/* Border formatting                                            */
 /* ------------------------------------------------------------ */
 .bnd-border        { border:        1px solid #ccc!important }
 .bnd-border-0      { border:        0               !important}
@@ -383,21 +383,21 @@ img
 .bnd-padding-top-32 {padding-top:32px!important}
 .bnd-padding-top-24 {padding-top:24px!important}
 /* ------------------------------------------------------------ */
-/* Tool Tip                                                     */
+/* Tool Tip formatting                                          */
 /* ------------------------------------------------------------ */
 .bnd-tooltip 
 {
     position: relative;
-    z-index:  10;
     display:  inline-block;
     cursor:   pointer; 
 }
 .bnd-tooltip-text 
 {
+    z-index:          30;
     visibility:       hidden;
     background-color: black;
     font-size:        16px;
-    color:           #fff;
+    color:            white;
     text-align:       center;
     border-radius:    8px;
     padding:          4px 8px;
@@ -418,72 +418,88 @@ img
 /* ------------------------------------------------------------ */
 .bnd-bar /* horizontal navigation bar container */
 {
-    width:100%;
-    overflow:hidden
+    width:    100%;
+    overflow: hidden;
 }
 .bnd-bar .bnd-bar-item /* navigation button or link */
 {
-    padding:8px 16px;
-    float:left;
-    width:auto;
-    border:none;
-    display:block;
-    outline:0
+    padding: 8px 16px;
+    float:   left;
+    width:   auto;
+    border:  none;
+    display: block;
+    outline: 0;
 }
-.bnd-bar .bnd-dropdown-hover,
-.bnd-bar .bnd-dropdown-click
+.bnd-bar .bnd-dropdown-hover
 {
-    position:static;
-    float:left
+    position: static;
+    float:    left
 }
 .bnd-center .bnd-bar
 {
-    display:inline-block;
-    width:auto
+    display: inline-block;
+    width:   auto
 }
 .bnd-bar .bnd-button
 {
-    white-space:normal
+    white-space: normal
 }
 .bnd-banner-menu
 {
-    right:0; 
-    font-size: 16px;
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+    right:      0; 
+    font-size:  16px;
+    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2),
+                0 4px 20px 0 rgba(0,0,0,0.19);
 }
 /* ------------------------------------------------------------ */
-/* Drop-down menu formating                                     */
+/* Drop-down menu formatting                                    */
 /* ------------------------------------------------------------ */
-.bnd-dropdown-hover,
-.bnd-dropdown-click
+.bnd-dropdown-hover
 {
-    position:relative;
-    display:inline-block;
-    cursor:pointer
+    position: relative;
+    display:  inline-block;
+    cursor:   pointer;
 }
-.bnd-dropdown-hover:hover 
 .bnd-dropdown-content
 {
-    display:block
+    cursor:           auto;
+    color:            black;
+    background-color: white;
+    display:          none;
+    position:         absolute;
+    min-width:        160px;
+    margin:           0;
+    padding:          0;
+    z-index:          1;
 }
-.bnd-dropdown-hover:first-child,
-.bnd-dropdown-click:hover
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-dropdown-hover:hover .bnd-dropdown-content
 {
-    background-color:#ccc;
-    color:#000
+    display:          block;
 }
-/* bnd-dropdown-content */
-.bnd-dropdown-content
+.bnd-dropdown-button
 {
-    cursor:auto;
-    color:#000;
-    background-color:#fff;
-    display:none;
-    position:absolute;
-    min-width:160px;
-    margin:0;
-    padding:0;
-    z-index:1;
+    width:            100%;
+    text-align:       left;
+    float:            none;
+    outline:          0;
+
+    border:           none;
+    display:          inline-block;
+    padding:          8px 16px;
+    vertical-align:   middle;
+    overflow:         hidden;
+    font-size:        16px;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-dropdown-button:hover
+{
+    color:            black;
+    background-color: lightgray; 
 }
 /* ------------------------------------------------------------ */
 /* Vertical navigation bar                                      */
@@ -493,7 +509,7 @@ img
     height:           80%;
     width:            15%;
     margin-left:      16px;
-    background-color: #fff;
+    background-color: white;
     position:         fixed;
     z-index:          10;
     overflow:         auto;
@@ -512,120 +528,82 @@ img
     display:          block;
 }
 /* ------------------------------------------------------------ */
-/* Drop-down menus                                              */
-/* ------------------------------------------------------------ */
-.bnd-bar-block .bnd-bar-item /* navigation button or link */
-{
-    width:100%;
-    display:block;
-    padding:8px 16px;
-    text-align:left;
-    border:none;
-    white-space:normal;
-    float:none;
-    outline:0
-}
-.bnd-bar-block .bnd-center
-{
-    text-align:center
-}
-.bnd-bar-block .bnd-center .bnd-bar-item
-{
-    text-align:center
-}
-.bnd-bar-block .bnd-dropdown-hover,
-.bnd-bar-block .bnd-dropdown-click
-{
-    width:100%
-}
-.bnd-bar-block .bnd-dropdown-hover .bnd-dropdown-content,
-.bnd-bar-block .bnd-dropdown-click .bnd-dropdown-content
-{
-    min-width:100%
-}
-.bnd-bar-block .bnd-dropdown-hover .bnd-button,
-.bnd-bar-block .bnd-dropdown-click .bnd-button
-{
-    width:100%;
-    text-align:left;
-    padding:8px 16px
-}
-/* ------------------------------------------------------------ */
 /* Classes for displaying paper-like cards                      */
 /* ------------------------------------------------------------ */
 .bnd-card
 {
-    box-shadow:0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),
+                0 2px 10px 0 rgba(0,0,0,0.12)
 }
 .bnd-card-4
 {
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19)
+    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2),
+                0 4px 20px 0 rgba(0,0,0,0.19)
 }
 /* ------------------------------------------------------------ */
-/* Image formating                                              */
+/* Image formatting                                             */
 /* ------------------------------------------------------------ */
 .bnd-image
 {
-    width:100%; 
-    height: auto; 
-    border:4px solid green; 
-    border-radius:16px;
+    width:         100%; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
 }
 .bnd-image-right
 {
-    max-width:50%; 
-    height: auto; 
-    border:4px solid green; 
-    border-radius:16px;
-    float:right;
-    margin-left:15px;
+    max-width:     50%; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    float:         right;
+    margin-left:   15px;
 }
 .bnd-image-left
 {
-    max-width:50%; 
-    height: auto; 
-    border:4px solid green; 
-    border-radius:16px;
-    float:left; 
-    margin-right:20px;
+    max-width:     50%; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    float:         left; 
+    margin-right:  20px;
 }
 .bnd-image-left:hover,
 .bnd-image-right:hover,
 .bnd-image-thumbnail:hover
 { 
-    opacity:0.60;
+    opacity: 0.60;
 }
 .bnd-image-thumbnail
 {
-    width:100%; 
-    height: auto; 
-    border:4px solid green; 
-    border-radius:16px;
-    cursor:pointer
+    width:         100%; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    cursor:        pointer;
 }
-/* bnd-image-caption */
 .bnd-image-caption
 {
-    margin-top:16px;
-    padding:0px 16px;
-    color:#000; 
-    background-color:gainsboro;
-    border:4px solid green;
-    border-radius:16px;
-    position:absolute;
-    left:50%;
-    top:0;
-    transform:translate(-50%,0%);
+    margin-top:       16px;
+    padding:          0px 16px;
+    color:            black; 
+    background-color: gainsboro;
+    border:4px solid  green;
+    border-radius:    16px;
+    position:         absolute;
+    left:             50%;
+    top:              0;
+    transform:        translate(-50%,0%);
 }
 /* ------------------------------------------------------------ */
 /* Play audio                                                   */
 /* ------------------------------------------------------------ */
 .bnd-play-audio
 {
-    cursor:pointer
+    cursor:pointer;
 }
 /* ------------------------------------------------------------ */
-/* Slide show formating                                         */
+/* Slide show formatting                                        */
 /* ------------------------------------------------------------ */
 .bnd-slideshow-content
 {
@@ -642,7 +620,7 @@ img
     transform:     translate(-50%,0%);
 
     font-size:     18px;
-    color:       #fff;
+    color:         white;
     text-align:    center;
     margin-top:    16px;
     margin-bottom: 16px;
@@ -668,7 +646,7 @@ img
 }
 .bnd-slideshow-icon
 {
-    color:       #fff;
+    color:        white;
     display:       inline-block;
     padding-left:  8px;
     padding-right: 8px;
@@ -723,10 +701,10 @@ img
 .bnd-table-icon
 {
     width:10px;
-    text-align:center
+    text-align:center;
 }
 /* ------------------------------------------------------------ */
-/* Modal formatting                                              */
+/* Modal formatting                                             */
 /* ------------------------------------------------------------ */
 .bnd-modal
 {
@@ -739,9 +717,10 @@ img
     width:             100%;            /* Full width */
     height:            100%;            /* Full height */
     overflow:          auto;            /* Enable scroll if needed */
-    background-color:rgb(0,0,0);      /* Fallback color */
-    background-color:rgba(0,0,0,0.4); /* Black w/ opacity */
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+    background-color: rgb(0,0,0);      /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    box-shadow:        0 4px 10px 0 rgba(0,0,0,0.2),
+                       0 4px 20px 0 rgba(0,0,0,0.19);
 }
 .bnd-modal-header
 {
@@ -825,7 +804,7 @@ body.bnd-modal-open
 #plants_chart_modal th { top: 100px; }
 #plants_chart_modal footer { padding: 0px; }
 /* ------------------------------------------------------------ */
-/* Monthyly calendar formatting                                           */
+/* Monthyly calendar formatting                                 */
 /* ------------------------------------------------------------ */
 /* Calendar container */
 .calendar-container {
@@ -871,7 +850,7 @@ body.bnd-modal-open
     font-weight: bold;
 }
 /* ------------------------------------------------------------ */
-/* Garden planner formatting
+/* Garden planner formatting                                    */
 /* ------------------------------------------------------------ */
 /* opacity and zoom sliders */
 .slidecontainer {

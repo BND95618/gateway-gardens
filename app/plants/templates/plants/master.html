@@ -48,19 +48,19 @@
             {% else %}
               <button class="bnd-button">Account</button>
             {% endif %}
-            <div class="bnd-banner-menu bnd-bar-block bnd-dropdown-content">
+            <div class="bnd-banner-menu bnd-dropdown-content">
               {% if user.is_authenticated %}
-                <button id="update_button" class="bnd-bar-item bnd-button">Update </button>
+                <button id="update_button" class="bnd-dropdown-button">Update </button>
                 <!-- AR -->
                 <form action="{% url 'plants:user_logout' %}" method="post">
                   {% csrf_token %}
-                  <input type="submit" value="Logout" class="bnd-bar-item bnd-button">
+                  <input type="submit" value="Logout" class="bnd-dropdown-button">
                 </form>
               {% else %}
                 <!-- AR -->
-                <button id="login_button"    class="bnd-bar-item bnd-button">Login    </button>
-                <button id="signup_button"   class="bnd-bar-item bnd-button">Sign Up  </button>
-                <button id="recovery_button" class="bnd-bar-item bnd-button">Recovery </button>
+                <button id="login_button"    class="bnd-dropdown-button">Login    </button>
+                <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
+                <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
               {% endif %}
             </div>
           </div>
