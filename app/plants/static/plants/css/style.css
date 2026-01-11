@@ -269,8 +269,7 @@ img
     cursor:  not-allowed;
     opacity: 0.3;
 }
-.bnd-dropdown-hover:hover > .bnd-button:first-child,
-.bnd-dropdown-click:hover > .bnd-button:first-child
+.bnd-dropdown-hover:hover > .bnd-button:first-child
 {
     background-color: #ccc;
     color:            #000;

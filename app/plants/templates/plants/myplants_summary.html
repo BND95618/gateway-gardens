@@ -22,10 +22,9 @@
             <i class="material-icons">menu</i>
           </button>
           <div class="bnd-banner-menu bnd-dropdown-content">
-            <button onclick="searchOpen()" class="bnd-dropdown-button">Search</button>
+            <button onclick="searchOpen()"        class="bnd-dropdown-button">Search        </button>
             <button onclick="my_column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
-            <button onclick="document.getElementById('plants_chart_modal').style.display='block'"   
-                    class="bnd-dropdown-button">Bloom Charts
+            <button onclick="plants_chart()"      class="bnd-dropdown-button">Bloom Charts  </button>
           </div>
         </span>
       </h3>
@@ -34,9 +33,9 @@
 {% endblock header-completion %}
 
 {% block content %}
-  <!------------------------->
-  <!-- Vertical Search Bar -->
-  <!------------------------->
+  <!-------------------------------------------------------------------------->
+  <!-- Vertical Search Bar                                                  -->
+  <!-------------------------------------------------------------------------->
   <div id="bnd-search-sidebar" class="bnd-sidebar">
     <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-sidebar-contents">
       {% csrf_token %}
@@ -326,115 +325,9 @@
       
     </form>
   </div>
-  <!------------------------->
-  <!--        Modals       -->
-  <!------------------------->
-  <!-- MyPlant Delete modal - html to be inserted by Javascript -->
-  <div id="myplants_delete_modal" class="bnd-modal">
-    <p> MyPlant delete form HTML to be Inserted Here! </p>
-  </div>
-
-  <!-- Column Chooser modal - html to be inserted by Javascript -->
-  <div id="my_column_chooser_modal" class="bnd-modal">
-    <p> My Column Chooser HTML to be Inserted Here! </p>
-  </div>
-
-  <!-- Plant Chart modal -->
-   <div id="plants_chart_modal" class="bnd-modal">
-    <div class="bnd-modal-content" >
-      
-      <header class="bnd-container bnd-green"> 
-        <h3>
-          Bloom Chart - Blooms by Month
-          <!-- Close the chart modal -->
-          <span onclick="document.getElementById('plants_chart_modal').style.display='none'" 
-                class="bnd-button bnd-modal-close">
-            &times;
-          </span>
-        </h3>
-      </header>
-
-      <!-- Create the modal tabs - each chart has a tab -->
-      <div class="bnd-bar bnd-border-bottom">
-        <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
-        <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
-        <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
-        <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
-      </div>
-    
-      <!-- Create the modal chart - Blooms -->
-      <div id="bloomTabContent" class="tabContent">
-        {% with table_name="bloomTable" %}
-          <table id="bloomTable" class="bnd-table bnd-hoverable">
-            {% include "plants/myplants_chart_modal_head.html" %}
-            {% for myplant in myplants %}
-              {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
-              {% endif %}
-            {% endfor %}
-          </table>
-          <footer class="bnd-container bnd-green">
-            <p class="bnd-center">Garden Blooms</p>
-          </footer>
-        {% endwith %}
-      </div>
-    
-      <!-- Create the modal chart - Bees -->
-      <div id="beeTabContent" class="tabContent">
-        {% with table_name="beeTable" %}
-          <table id="beeTable" class="bnd-table bnd-hoverable">
-            {% include "plants/myplants_chart_modal_head.html" %}
-            {% for myplant in myplants %}
-              {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
-              {% endif %}
-            {% endfor %}
-          </table>
-          <footer class="bnd-container bnd-green">
-            <p class="bnd-center">Blooms attracting Bees</p>
-          </footer>
-        {% endwith %}
-      </div>
-    
-      <!-- Create the modal chart - Butterflies -->
-      <div id="butterflyTabContent" class="tabContent">
-        {% with table_name="butterflyTable" %}
-          <table id="butterflyTable" class="bnd-table bnd-hoverable">
-            {% include "plants/myplants_chart_modal_head.html" %}
-            {% for myplant in myplants %}
-              {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
-              {% endif %}
-            {% endfor %}
-          </table>
-          <footer class="bnd-container bnd-green">
-            <p class="bnd-center">Blooms attracting Butterflies</p>
-          </footer>
-        {% endwith %}
-      </div>
-    
-      <!-- Create the modal chart - Hummingbirds -->
-      <div id="hummingbirdTabContent" class="tabContent">
-        {% with table_name="hummingbirdTable" %}
-          <table id="hummingbirdTable" class="bnd-table bnd-hoverable">
-            {% include "plants/myplants_chart_modal_head.html" %}
-            {% for myplant in myplants %}
-              {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
-              {% endif %}
-            {% endfor %}
-          </table>
-          <footer class="bnd-container bnd-green">
-            <p class="bnd-center">Blooms attracting Hummingbirds</p>
-          </footer>
-        {% endwith %}
-      </div>
-    
-    </div>
-  </div>
-  <!------------------------->
-  <!--   My Plant Table    -->
-  <!------------------------->
+  <!-------------------------------------------------------------------------->
+  <!-- My Plant Table                                                       -->
+  <!-------------------------------------------------------------------------->
   <div id="main" class="bnd-content-main-120">
     <table id="plantTable" class="bnd-table bnd-hoverable" >
       <thead>
@@ -572,15 +465,134 @@
       {% endfor %}
     </table>
   </div>
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <!-- MyPlant Delete modal - html to be inserted by Javascript -->
+  <div id="myplants_delete_modal" class="bnd-modal">
+    <p> MyPlant delete form HTML to be Inserted Here! </p>
+  </div>
+
+  <!-- Column Chooser modal - html to be inserted by Javascript -->
+  <div id="my_column_chooser_modal" class="bnd-modal">
+    <p> My Column Chooser HTML to be Inserted Here! </p>
+  </div>
+
+  <!-- Plant Chart modal -->
+  <div id="plants_chart_modal" class="bnd-modal">
+    <div class="bnd-modal-content-1000">
+      <header class="bnd-modal-header bnd-margin-none"> 
+        <h3>
+          Bloom Chart - Blooms by Month
+          <!-- Close the chart modal -->
+          <span onclick="plants_chart_modal_close()" class="bnd-button bnd-modal-close">&times;</span>
+        </h3>
+      </header>
+      <!-- Create the modal tabs - each chart has a tab -->
+      <div class="bnd-bar">
+        <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
+        <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
+        <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
+        <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
+      </div>
+    
+      <!-- Create the modal chart - Blooms -->
+      <div id="bloomTabContent" class="tabContent">
+        {% with table_name="bloomTable" %}
+          <table id="bloomTable" class="bnd-table bnd-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="bnd-modal-footer">
+            <p class="bnd-center">Garden Blooms</p>
+          </footer>
+        {% endwith %}
+      </div>
+    
+      <!-- Create the modal chart - Bees -->
+      <div id="beeTabContent" class="tabContent">
+        {% with table_name="beeTable" %}
+          <table id="beeTable" class="bnd-table bnd-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer footer class="bnd-modal-footer">
+            <p class="bnd-center">Blooms attracting Bees</p>
+          </footer>
+        {% endwith %}
+      </div>
+    
+      <!-- Create the modal chart - Butterflies -->
+      <div id="butterflyTabContent" class="tabContent">
+        {% with table_name="butterflyTable" %}
+          <table id="butterflyTable" class="bnd-table bnd-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="bnd-modal-footer">
+            <p class="bnd-center">Blooms attracting Butterflies</p>
+          </footer>
+        {% endwith %}
+      </div>
+    
+      <!-- Create the modal chart - Hummingbirds -->
+      <div id="hummingbirdTabContent" class="tabContent">
+        {% with table_name="hummingbirdTable" %}
+          <table id="hummingbirdTable" class="bnd-table bnd-hoverable">
+            {% include "plants/myplants_chart_modal_head.html" %}
+            {% for myplant in myplants %}
+              {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
+                {% include "plants/myplants_chart_modal_rows.html" %}
+              {% endif %}
+            {% endfor %}
+          </table>
+          <footer class="bnd-modal-footer">
+            <p class="bnd-center">Blooms attracting Hummingbirds</p>
+          </footer>
+        {% endwith %}
+      </div>
+    
+    </div>
+  </div>
 
 {% endblock content %}
 
 {% block js %}
 <!-- Column selector -->
   <script>
-      // Get the list of columns to display
-      let column_selection_safe = {{ my_column_selection|safe }};
-      function column_selector(){
+    //-----------------------------------------------------------------------------
+    // Plant Table - Column Chooser Modal Script
+    //----------------------------------------------------------------------------- 
+    const my_column_chooser_url = "{% url 'plants:my_column_chooser' %}"
+    const my_column_chooser_modal = document.getElementById('my_column_chooser_modal')
+    function my_column_chooser() {
+      // Get the column chooser html from the server
+      fetch(my_column_chooser_url)
+        .then(response => response.text())
+        .then(html => {my_column_chooser_modal.innerHTML = html;})
+      // Display the plant column chooser modal
+      my_column_chooser_modal.style.display='block';
+      // Freeze the main body while the modal is open
+      document.body.classList.add("bnd-modal-open");
+    }
+    //-----------------------------------------------------------------------------
+    // Plant Table - Column Chooser Modal Script
+    //----------------------------------------------------------------------------- 
+    let column_selection_safe = {{ my_column_selection|safe }};
+    function column_selector()
+    {
       const table = document.getElementById("plantTable");
       // 
       const column_options = ['Common Name', 'Genus/Species', 'Variety/Cultivar',
@@ -590,14 +602,14 @@
                               'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
                               'My Location', 'My Sun Exposure', 'My Water Level', 'My Soil Type', 'My pH', 
                               'My Bloom Color', 'My Bloom Range', 'Happy?',
-                             ];
-                         
+                              ];                
       let column_index = 0;
       // determine the array index for each column
       // walk through the list of columns to either display or hide
       // AR: streamine the code via column_options.forEach()?
       let i, len;
-      for (i = 0, len = column_options.length; i < len; i++) {
+      for (i = 0, len = column_options.length; i < len; i++) 
+      {
         if      (column_options[i] == "Common Name")      { column_index =  0; } 
         else if (column_options[i] == "Genus/Species")    { column_index =  1; }
         else if (column_options[i] == "Variety/Cultivar") { column_index =  2; }
@@ -631,23 +643,27 @@
         else if (column_options[i] == "Happy?")           { column_index = 28; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
-        if (column_selection_safe.includes(column_options[i])){
+        if (column_selection_safe.includes(column_options[i]))
+        {
           // display the column
-          for (let i = 0; i < table.rows.length; i++) {
+          for (let i = 0; i < table.rows.length; i++) 
+          {
             table.rows[i].cells[column_index].style.display = "";
           }
-        } else {
+        } 
+        else 
+        {
           // hide the column
-          for (let i = 0; i < table.rows.length; i++) {
+          for (let i = 0; i < table.rows.length; i++) 
+          {
             table.rows[i].cells[column_index].style.display = "none";
           }
         }
       }
     }
-  </script>
-
-  <!-- Search menu - sidebar navigation scripts -->
-  <script>
+    //-----------------------------------------------------------------------------
+    // Search menu - sidebar navigation scripts
+    //-----------------------------------------------------------------------------
     function searchOpen() {
       document.getElementById("main").style.marginLeft = "16%";
       document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
@@ -656,10 +672,9 @@
       document.getElementById("main").style.marginLeft = "0%";
       document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
     }
-  </script>
-
-  <!-- Reset all search criteria to 'Any' -->
-  <script>
+    //-----------------------------------------------------------------------------
+    // Search menu - Reset all search criteria to 'Any'
+    //----------------------------------------------------------------------------- 
     function searchReset() {
       document.getElementById("id_type_x_search"         ).value = "Any";
       document.getElementById("id_bloom_color_search"    ).value = "Any";
@@ -682,24 +697,9 @@
       document.getElementById("id_my_soil_type_search"   ).value = "Any";
       document.getElementById("id_status_search"         ).value = "Any";
     }
-  </script>
-
-  <!-- Plant Table Column Chooser Script -->
-  <script>
-    function my_column_chooser() {
-      // Get the column chooser modal
-      const my_column_chooser_modal = document.getElementById('my_column_chooser_modal');
-      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      fetch("{% url 'plants:my_column_chooser' %}")
-        .then(response => response.text())
-        .then(html => {my_column_chooser_modal.innerHTML = html;})
-      // Display the plant column chooser modal
-      my_column_chooser_modal.style.display='block';
-    }
-  </script>
-
-  <!-- Delete My Plant Modal Script -->
-  <script>
+    //-----------------------------------------------------------------------------
+    // Delete Plant Modal Script
+    //-----------------------------------------------------------------------------
     function myplants_delete(id) {
       // Get the MyPlant delete modal
       const myplants_delete_modal  = document.getElementById('myplants_delete_modal')
@@ -711,20 +711,29 @@
       // Display the plant delete modal
       myplants_delete_modal.style.display='block'
     }
-  </script>
-
-  <!-- Plant Chart Modal Script -->
-  <script>
-    // Register bloom chart tab buttons
-    document.getElementById("bloomTabButton").addEventListener("click", function() 
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - Open the modal
+    //-----------------------------------------------------------------------------
+    const plants_chart_modal = document.getElementById('plants_chart_modal')
+    // Open the plant chart modal and freeze the main body while the modal is open
+    function plants_chart()
+    {
+      plants_chart_modal.style.display='block'
+      document.body.classList.add("bnd-modal-open");
+    }
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - Tab switching
+    //-----------------------------------------------------------------------------
+    // Register each plant chart tab button and open its tab when clicked via 'openChart'
+    document.getElementById("bloomTabButton"      ).addEventListener("click", function() 
     {
       openChart(event, 'bloomTabContent');
     });
-    document.getElementById("beeTabButton").addEventListener("click", function() 
+    document.getElementById("beeTabButton"        ).addEventListener("click", function() 
     {
       openChart(event, 'beeTabContent');
     });
-    document.getElementById("butterflyTabButton").addEventListener("click", function() 
+    document.getElementById("butterflyTabButton"  ).addEventListener("click", function() 
     {
       openChart(event, 'butterflyTabContent');
     });
@@ -758,13 +767,88 @@
     bloomTab = document.getElementsByClassName("tab")[0];
     bloomTab.click();
     sortTable(0, "bloomTable");
-  </script>
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - color table icons - this is done on page load
+    //-----------------------------------------------------------------------------
+    // Get references to the various bloom tables
+    const bloom_table       = document.getElementById("bloomTable");
+    const bee_table         = document.getElementById("beeTable");
+    const butterfly_table   = document.getElementById("butterflyTable");
+    const hummingbird_table = document.getElementById("hummingbirdTable");
 
-  <!-- On Page load functions -->
-  <script>
-    // Sort My Plants table by Common Name
-    window.onload = sortTable(0, 'plantTable');
-    // Show columns as defined by column_selection
-    window.onload = column_selector();
+    function color_table_icons(table)
+    {
+      if (table) {
+        for (let i = 0; i < table.rows.length; i++) 
+        {
+          const row = table.rows[i];
+          if (i > 0) // skip the table header (i=0)
+          {
+            // Get the plants bloom color(s)
+            bloom_color = row.cells[1].textContent;
+            for (let j = 0; j < row.cells.length; j++) 
+            {
+              const cell = row.cells[j];
+              if (cell.textContent == "filter_vintage")
+              {
+                if      (bloom_color == "white")     { cell.classList.add("bnd-text-outline");   }
+                else if (bloom_color == "red")       { cell.classList.add("bnd-text-red");       }
+                else if (bloom_color == "pink")      { cell.classList.add("bnd-text-pink");      }
+                else if (bloom_color == "pale pink") { cell.classList.add("bnd-text-lightpink"); }
+                else if (bloom_color == "orange")    { cell.classList.add("bnd-text-orange");    }
+                else if (bloom_color == "yellow")    { cell.classList.add("bnd-text-yellow");    }
+                else if (bloom_color == "green")     { cell.classList.add("bnd-text-green");     }
+                else if (bloom_color == "cyan")      { cell.classList.add("bnd-text-cyan");      }
+                else if (bloom_color == "blue")      { cell.classList.add("bnd-text-blue");      }
+                else if (bloom_color == "violet")    { cell.classList.add("bnd-text-violet");    }
+                else if (bloom_color == "purple")    { cell.classList.add("bnd-text-purple");    }
+                else if (bloom_color == "black")     { cell.classList.add("bnd-text-black");     }
+              }
+            }
+          }
+        }
+      }
+    }
+    //-----------------------------------------------------------------------------
+    // Bloom Chart Modal - close modal
+    //-----------------------------------------------------------------------------
+    function plants_chart_modal_close()
+    {
+      document.getElementById('plants_chart_modal').style.display='none';
+      document.body.classList.remove('bnd-modal-open');
+    }
+    //-----------------------------------------------------------------------------
+    // Close the open modal if user clicks anywhere outside of the modal content
+    //-----------------------------------------------------------------------------
+    window.onclick = function(event) 
+    {
+      if (event.target == my_column_chooser_modal) 
+      {
+        my_column_chooser_modal.style.display = "none";
+        document.body.classList.remove('bnd-modal-open');
+      }
+      else if (event.target == plants_chart_modal) 
+      {
+        plants_chart_modal.style.display = "none";
+        document.body.classList.remove('bnd-modal-open');
+      }
+      else if (event.target == myplants_delete_modal) 
+      {
+        myplants_delete_modal.style.display = "none";
+        document.body.classList.remove('bnd-modal-open');
+      }
+    }
+    //-----------------------------------------------------------------------------
+    // On Page load functions - modern version of windows.onload
+    //-----------------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', (event) => 
+    {
+      sortTable(0, 'plantTable');
+      column_selector();
+      color_table_icons(bloom_table);
+      color_table_icons(bee_table);
+      color_table_icons(butterfly_table);
+      color_table_icons(hummingbird_table);
+    });
   </script>
 {% endblock js %}

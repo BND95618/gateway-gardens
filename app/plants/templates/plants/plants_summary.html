@@ -464,19 +464,19 @@
   <div id="plants_chart_modal" class="bnd-modal">
     <div class="bnd-modal-content-1000" >
       <header class="bnd-modal-header bnd-margin-none">
-        <h3 class="bnd-border-bottom">
+        <h3>
           Bloom Chart - Blooms by Month
           <!-- Close the chart modal -->
           <span onclick="plants_chart_modal_close()" class="bnd-button bnd-modal-close">&times;</span>
         </h3>
-        <!-- Create the modal tabs - each chart has a tab -->
-        <div class="bnd-bar">
-          <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
-          <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
-          <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
-          <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
-        </div>
       </header>
+      <!-- Create the modal tabs - each chart has a tab -->
+      <div class="bnd-bar">
+        <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
+        <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
+        <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
+        <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
+      </div>
     
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
@@ -559,7 +559,7 @@
     const column_chooser_url = "{% url 'plants:column_chooser' %}"
     const column_chooser_modal = document.getElementById('column_chooser_modal')
     function column_chooser() {
-      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      // Get the column chooser html from the server
       fetch(column_chooser_url)
         .then(response => response.text())
         .then(html => {column_chooser_modal.innerHTML = html;})
