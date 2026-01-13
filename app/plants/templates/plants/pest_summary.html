@@ -44,8 +44,8 @@
       <thead>
         <tr class="bnd-light-grey">
           <!-- Pest Attributes -->
-          <th style="width:10%;" onclick="sortTable(0, 'pestTable')" >Pest Name </th>
-          <th style="width:10%;" onclick="sortTable(1, 'pestTable')" >Pest Type </th>
+          <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
+          <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
           <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
           <!-- Pest Update header placeholder -->
           {% if perms.plants.change_plant %}
@@ -58,7 +58,7 @@
         </tr>
       </thead>
       {% for pest in pests %} 
-        <tr class="bnd-hover-light-green">
+        <tr>
           <!-- Pest Attributes -->
           <td>{{ pest.pest_name }}</td>
           <td>{{ pest.pest_type }}</td>

@@ -56,7 +56,6 @@ status_opt       = ["Development", "Review", "Published", "Archived"]
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
-    # DEBUG_print_request(request)
     return render(request, 'plants/index.html')
 
 #
@@ -1120,9 +1119,6 @@ def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    
-    DEBUG_print_request(request)
-
     # Executed when search request is submitted
     if request.method == 'POST':   
         template = loader.get_template("plants/plants_summary.html")
@@ -1311,9 +1307,6 @@ def plants_summary(request):
                     status_search = "Published"
                 #
                 user_garden_found     = True
-
-                print("DEBUG: status_search =", status_search)
-
                 break # once the user's garden is found exit the loop
 
         # the current user needs to have a registered garden
@@ -1457,9 +1450,6 @@ def plants_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    
-    DEBUG_print_request(request)
-
     plant = Plant()
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -1553,9 +1543,6 @@ def plant_update(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    
-    DEBUG_print_request(request)
-
     plant = Plant.objects.get(id=id)
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)

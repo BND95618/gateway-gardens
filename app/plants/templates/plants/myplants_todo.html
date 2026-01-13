@@ -40,13 +40,13 @@
     <table id="todoTable" class="bnd-table bnd-hoverable">
       <thead>
         <tr class="bnd-light-grey">
-          <th style="width:5%;"  onclick="todo_sort(1)">Status  </th>
-          <th style="display:none"               onclick="todo_sort(1)">Status  </th>
-          <th style="width:10%;" onclick="todo_sort(2)">Date    </th>
-          <th style="width:15%;" onclick="todo_sort(3)">My Plant</th>
-          <th style="width:10%;" onclick="todo_sort(4)">Action  </th>
-          <th style="width:10%;" onclick="todo_sort(5)">Repeat  </th>
-          <th style="width:45%;" onclick="todo_sort(6)">Details </th>
+          <th onclick="todo_sort(1)">Status  </th>
+          <th style="display:none" onclick="todo_sort(1)">Status  </th>
+          <th onclick="todo_sort(2)">Date    </th>
+          <th onclick="todo_sort(3)">My Plant</th>
+          <th onclick="todo_sort(4)">Action  </th>
+          <th onclick="todo_sort(5)">Repeat  </th>
+          <th onclick="todo_sort(6)">Details </th>
           <!-- Button Placeholders -->
           <th class="bnd-table-icon"></th>
           <th class="bnd-table-icon"></th>
@@ -54,7 +54,7 @@
       </thead>
       {% for todo in myplants_todo  %}  
         <tbody>
-          <tr class="bnd-hover-light-green">
+          <tr>
             <!-- To Do complete -->
             <td class="bnd-center">
               <div class="bnd-tooltip">
@@ -156,7 +156,6 @@
         
     function todo_details(id)
     {
-        console.log("DEBUG: Got to showToDoModal - id =", id);
         // AR: fix url approach
         url = "/myplants_todo_details/" + id;
         fetch(url) 
@@ -383,8 +382,6 @@
     // On page load fetch the user's To Do items and put into list of todo objects
     function fetchToDoItems()
     {
-        console.log("DEBUG: Got to fetchToDoItems");
-        
         const url = "{% url 'plants:myplants_todo_fetch' %}"
         const requestMethod = "POST";
         const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -417,8 +414,6 @@
     
     function renderCalendar() 
     {
-        console.log("DEBUG: Got to renderCalendar");
-
         calendarDates.innerHTML = ''; // Clear previous dates
 
         const year  = currentDate.getFullYear();
@@ -441,9 +436,6 @@
             const emptyDiv = document.createElement('div');
             calendarDates.appendChild(emptyDiv);
         }
-
-        console.log("DEBUG: ToDo Items:", todoItems);
-
         // Populate dates
         for (let day = 1; day <= daysInMonth; day++) 
         {
@@ -467,8 +459,6 @@
                                 "<span style='cursor:pointer;' onclick='todo_details(" + todoItems[i].id + ")'>" +
                                 todoItems[i].action + ": " + todoItems[i].commonName +
                                 "</span>";
-
-                    console.log("DEBUG: date_text =", date_text);
                 }
             }
             dateDiv.innerHTML = date_text;

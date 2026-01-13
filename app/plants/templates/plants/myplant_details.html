@@ -86,12 +86,12 @@
         <table id="todoTable" class="bnd-table bnd-hoverable bnd-margin-top bnd-margin-bottom">
           <thead>
             <tr class="bnd-light-grey">
-              <th style="width:5%;"  onclick="todo_sort(1)">Status  </th>
+              <th onclick="todo_sort(1)">Status  </th>
               <th style="display:none"  onclick="todo_sort(1)">Status  </th>
-              <th style="width:10%;" onclick="todo_sort(2)">Date    </th>
-              <th style="width:10%;" onclick="todo_sort(3)">Action  </th>
-              <th style="width:10%;" onclick="todo_sort(4)">Repeat  </th>
-              <th style="width:60%;" onclick="todo_sort(5)">Details </th>
+              <th onclick="todo_sort(2)">Date    </th>
+              <th onclick="todo_sort(3)">Action  </th>
+              <th onclick="todo_sort(4)">Repeat  </th>
+              <th onclick="todo_sort(5)">Details </th>
               <!-- Button Placeholders -->
               <th class="bnd-table-icon"></th>
               <th class="bnd-table-icon"></th>
@@ -99,7 +99,7 @@
           </thead>
           {% for todo in myplant_todos  %}  
             <tbody>
-              <tr class="bnd-hover-light-green">
+              <tr>
                 <!-- To Do complete -->
                 <td class="bnd-center">
                   <div class="bnd-tooltip">
