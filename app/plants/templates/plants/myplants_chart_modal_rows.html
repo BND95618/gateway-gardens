@@ -1,7 +1,7 @@
 <tr class="bnd-text-{{ myplant.bloom_color }}" >
     <!-- Plant Attributes -->
-    <td class="bnd-text-black">{{ myplant.plant.commonName  }}</td>
-    <td class="bnd-text-black">{{ myplant.bloom_color }}</td>
+    <td>{{ myplant.plant.commonName }}</td>
+    <td>{{ myplant.bloom_color      }}</td>
     <!-- Jan -->
     {% if "Jan" in myplant.plant.bloom_months %}
       <td class="bnd-center"><i class="material-icons">filter_vintage</i></td>

@@ -725,29 +725,6 @@ img
     box-shadow:        0 4px 10px 0 rgba(0,0,0,0.2),
                        0 4px 20px 0 rgba(0,0,0,0.19);
 }
-.bnd-modal-header
-{
-    position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
-    top:              0px;    
-    z-index:          40;
-    
-    margin-top:       16px;
-    margin-bottom:    16px;
-    text-align:       center;
-    padding:          4px 16px;
-    border:           1px solid darkgray;
-    background-color: gainsboro;
-}
-.bnd-modal-content
-{
-    margin:            auto;
-    background-color:  white;
-    position:          relative;
-    padding:           0;
-    outline:           0;
-    width:             1000px;
-    animation:         animatezoom 0.6s;
-}
 .bnd-modal-content-300,
 .bnd-modal-content-400,
 .bnd-modal-content-500,
@@ -772,7 +749,19 @@ img
 .bnd-modal-content-800  { width:  800px }
 .bnd-modal-content-900  { width:  900px }
 .bnd-modal-content-1000 { width: 1000px }
-/* bnd-modal-image */
+.bnd-modal-header
+{
+    position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              0px;    
+    z-index:          40;
+    
+    margin-top:       16px;
+    margin-bottom:    16px;
+    text-align:       center;
+    padding:          4px 16px;
+    border:           1px solid darkgray;
+    background-color: gainsboro;
+}
 .bnd-modal-image
 {
     width:  100%; 
@@ -797,7 +786,6 @@ body.bnd-modal-open
     overflow: hidden; /* Prevents background scrolling */
     height:   100vh;  /* Optional: ensures the body fits the viewport height */
 }
-  
 .bnd-modal-close    
 {
     position: absolute;

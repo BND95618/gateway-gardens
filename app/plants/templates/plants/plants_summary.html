@@ -317,7 +317,7 @@
   <div id="main" class="bnd-content-main-120">
     <table id="plantTable" class="bnd-table bnd-hoverable">
       <thead>
-        <tr class="bnd-light-grey">
+        <tr>
           <!-- Plant Attributes -->
           <th onclick="sortTable( 0, 'plantTable')" >Common Name     </th>
           <th onclick="sortTable( 1, 'plantTable')" >Genus/Species   </th>
@@ -469,14 +469,14 @@
           <!-- Close the chart modal -->
           <span onclick="plants_chart_modal_close()" class="bnd-button bnd-modal-close">&times;</span>
         </h3>
+        <!-- Create the modal tabs - each chart has a tab -->
+        <div class="bnd-bar">
+          <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
+          <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
+          <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
+          <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
+        </div>
       </header>
-      <!-- Create the modal tabs - each chart has a tab -->
-      <div class="bnd-bar">
-        <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
-        <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
-        <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
-        <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
-      </div>
     
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
