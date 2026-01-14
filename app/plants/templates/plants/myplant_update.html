@@ -11,23 +11,21 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
-      <h3 class="bnd-bar-item">
-        Updating: 
-        {{ myplant.plant.commonName }}
-        <span>(</span>
-        <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
-        {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
-          <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
-        {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
-          <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
-        {% endif %}
-        <span>)</span>
-        in My Garden
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>
+      Updating: 
+      {{ myplant.plant.commonName }}
+      <span>(</span>
+      <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
+      {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
+        <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
+      {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
+        <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
+      {% endif %}
+      <span>)</span>
+      in My Garden
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}

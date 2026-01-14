@@ -12,24 +12,22 @@
 {% endblock css %}
 
 {% block header-completion %}
-<!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container bnd-green">
-      <h3 class="bnd-bar-item">
-        To Do List
-        <span class="bnd-dropdown-hover bnd-right bnd-green">
-          <button class="bnd-button-small">
-            <i class="material-icons">menu</i>
-          </button>
-          <div class="bnd-banner-menu bnd-dropdown-content">
-            <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
-            <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
-            <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>
-          </div>
-        </span>
-      </h3>
-    </header>
-  </div>
+  <!-- complete the header from master.html -->
+  <header class="bnd-page-banner">
+    <h3>
+      To Do List
+      <span class="bnd-dropdown-hover bnd-right">
+        <button class="bnd-button-small">
+          <i class="material-icons">menu</i>
+        </button>
+        <div class="bnd-page-menu bnd-dropdown-content">
+          <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
+          <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
+          <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>
+        </div>
+      </span>
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
@@ -37,7 +35,7 @@
   <!-- My Plant To Do List Summary     -->
   <!------------------------------------->
   <div class="bnd-content-main-120">
-    <table id="todoTable" class="bnd-table bnd-hoverable">
+    <table id="todoTable" class="bnd-table">
       <thead>
         <tr>
           <th onclick="todo_sort(1)">Status  </th>

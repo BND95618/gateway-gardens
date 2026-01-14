@@ -2,7 +2,7 @@
 
 <div class="bnd-modal-content-300">
 
-    <header class="bnd-container bnd-green"> 
+    <header class="bnd-modal-header"> 
         <!-- Close the shape edit modal -->
         <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
             class="bnd-button bnd-modal-close">&times;
@@ -10,43 +10,41 @@
         <h3>Edit Shape</h3>
     </header>
         
-    <header class="bnd-modal-header">
-        <div>
-            <!-- populate current attribute values from server response -->
-            <form id       = "id_edit_form" 
-                  name     = "editForm"
-                  action   = ""
-                  onsubmit = "processEditForm()"
-                  >
-                <label for="x">X: </label>
-                <input type="number" id="x" name="x" value = {{ x }}>
-                <br>
-                <label for="y">Y: </label>
-                <input type="number" id="y" name="y" value = {{ y }}>
-                <br>
-                <label for="width">width: </label>
-                <input type="number" id="width" name="width" value = {{ width }}>
-                <br>
-                <label for="height">height: </label>
-                <input type="number" id="height" name="height" value = {{ height }}>
-                <br>
-                <label for="rotation">rotation: </label>
-                <input type="number" id="rotation" name="rotation">
-                <br>
-                <label for="line_color">Line color:</label>
-                <input type="color" id="line_color" name="line_color">
-                <br>
-                <label for="fill_color">Fill color:</label>
-                <input type="color" id="fill_color" name="fill_color">
-                <br>
-                <!-- on submit, process attribute value changes in Javascript -->
-                <input type="submit" value="Submit" class="bnd-button bnd-round-large bnd-green">
-                <input type="reset"  value="Reset"  class="bnd-button bnd-round-large bnd-grey">
-                <button type="button"               class="bnd-button bnd-round-large bnd-red"
-                        onclick="document.getElementById('planner_edit_modal').style.display='none'">
-                        Cancel
-                </button>
-            </form>
-        </div>
-    </header>
+    <div>
+        <!-- populate current attribute values from server response -->
+        <form id       = "id_edit_form" 
+                name     = "editForm"
+                action   = ""
+                onsubmit = "processEditForm()"
+                >
+            <label for="x">X: </label>
+            <input type="number" id="x" name="x" value = {{ x }}>
+            <br>
+            <label for="y">Y: </label>
+            <input type="number" id="y" name="y" value = {{ y }}>
+            <br>
+            <label for="width">width: </label>
+            <input type="number" id="width" name="width" value = {{ width }}>
+            <br>
+            <label for="height">height: </label>
+            <input type="number" id="height" name="height" value = {{ height }}>
+            <br>
+            <label for="rotation">rotation: </label>
+            <input type="number" id="rotation" name="rotation">
+            <br>
+            <label for="line_color">Line color:</label>
+            <input type="color" id="line_color" name="line_color">
+            <br>
+            <label for="fill_color">Fill color:</label>
+            <input type="color" id="fill_color" name="fill_color">
+            <br>
+            <!-- on submit, process attribute value changes in Javascript -->
+            <input type="submit" value="Submit" class="bnd-button-submit">
+            <input type="reset"  value="Reset"  class="bnd-button bnd-round-large bnd-grey">
+            <button type="button"               class="bnd-button-cancel"
+                    onclick="document.getElementById('planner_edit_modal').style.display='none'">
+                    Cancel
+            </button>
+        </form>
+    </div>
 </div>

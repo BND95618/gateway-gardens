@@ -11,13 +11,9 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
-      <h3 class="bnd-bar-item">
-        Update {{ garden.name }}
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>Update {{ garden.name }}</h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
@@ -37,25 +33,25 @@
     <div class="bnd-row">
       <div class="bnd-container bnd-quarter">
         {% if garden.image_1 %}
-          <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_1.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_1 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_2 %}
-          <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_2.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_2 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_3 %}
-          <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_3.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_3 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_4 %}
-          <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_4.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_4 }}</p>
         {% endif %}
       </div>
@@ -64,32 +60,45 @@
     <div class="bnd-row">
       <div class="bnd-container bnd-quarter">
         {% if garden.image_5 %}
-          <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_5.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_5 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_6 %}
-          <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_6.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_6 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_7 %}
-          <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_7.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_7 }}</p>
         {% endif %}
       </div>
       <div class="bnd-container bnd-quarter">
         {% if garden.image_8 %}
-          <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_8.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No garden image found">
           <p class="bnd-center">{{ garden.caption_8 }}</p>
         {% endif %}
       </div>
+    </div>
+  </div>
+
+  <!-- Plant images: modal -->
+  <div id="image_modal" class="bnd-modal" onclick="this.style.display='none'">
+    <div class="bnd-modal-content-600">
+      <img id="image" style="width:100%; height:auto">
     </div>
   </div>
 {% endblock content %}
 
 {% block js %}
   <!-- Insert template Javascript here -->
+  <script>
+  function onClick(element) {
+    document.getElementById("image").src = element.src;
+    document.getElementById("image_modal").style.display = "block";
+  }
+  </script>
 {% endblock js %}

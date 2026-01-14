@@ -177,8 +177,12 @@ img
     float: left;
     width: 100%;
 }
-.bnd-col.s4{width:33.33333%}
+.bnd-col.s4
+{
+    width:      33.33333%;
+}
 .bnd-row-padding > .bnd-quarter { padding: 0 8px }
+
 @media (min-width:601px)
 {
     .bnd-quarter{width:24.99999%}
@@ -213,6 +217,7 @@ img
 /* ------------------------------------------------------------ */
 .bnd-button,
 .bnd-button-submit,
+.bnd-button-reset,
 .bnd-button-cancel
 {
     border:           none;
@@ -248,6 +253,13 @@ img
     color:            #fff; 
     background-color: green;
     border-color:     green;
+    border-radius:    4px;
+}
+.bnd-button-reset
+{
+    color:            white; 
+    border-color:     gray;
+    background-color: gray;
     border-radius:    4px;
 }
 .bnd-button-cancel
@@ -326,17 +338,12 @@ img
 
 /* Background Colors */
 .bnd-white       { color:#000 !important; background-color:#fff    !important }
-.bnd-yellow,     .bnd-hover-yellow:hover      { color:#000 !important; background-color:#ffeb3b !important }
-.bnd-light-green,.bnd-hover-light-green:hover { color:#000 !important; background-color:#8bc34a !important }
-.bnd-green,      .bnd-hover-green:hover       { color:#fff !important; background-color:#4CAF50 !important }
-.bnd-red         { color:#fff !important; background-color:red !important }
-.bnd-blue        { color:#fff !important; background-color:blue !important }
+.bnd-yellow      { color:#000 !important; background-color:#ffeb3b !important }
+.bnd-light-green { color:#000 !important; background-color:#8bc34a !important }
 .bnd-grey        { color:#000 !important; background-color:gray !important }
 .bnd-light-grey  { color:#000 !important; background-color:#f1f1f1 !important }
 
-.bnd-hover-white:hover { color:#000 !important; background-color:#fff !important }
-
-.bnd-text-khaki, .bnd-hover-text-khaki:hover{color:#b4aa50!important}
+.bnd-text-khaki  {color:#b4aa50!important}
 /* ------------------------------------------------------------ */
 /* Text positioning                                             */
 /* ------------------------------------------------------------ */
@@ -443,12 +450,52 @@ img
 {
     white-space: normal
 }
-.bnd-banner-menu
+/* ------------------------------------------------------------ */
+/* Banner formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-page-menu
 {
     right:      0; 
     font-size:  16px;
-    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2),
-                0 4px 20px 0 rgba(0,0,0,0.19);
+    box-shadow:  5px 10px 18px darkgray;
+}
+.bnd-page-banner
+{
+    padding:          0.01em 16px;
+    color:            white;
+    background-color: green;
+    box-shadow:       5px 10px 18px darkgray;
+}
+.bnd-section
+{
+    border-width:     1px;
+    border-color:     green;
+    box-shadow:       5px 10px 18px darkgray;
+}
+.bnd-section.s4
+{
+    width:33.33333%;
+}
+.bnd-section-header
+{
+    padding:          0.01em 16px;
+    color:            white;
+    background-color: green;
+}
+.bnd-section-contents
+{
+    padding:          0.01em 16px;
+    color:            black;
+    background-color: whitesmoke;
+}
+.bnd-page-footer
+{
+    margin-top:       16px;
+    padding:          0.01em 16px;
+    text-align:       center;
+    color:            white;
+    background-color: green;
+    box-shadow:       5px 10px 18px darkgray;
 }
 /* ------------------------------------------------------------ */
 /* Drop-down menu formatting                                    */
@@ -531,13 +578,11 @@ img
 /* ------------------------------------------------------------ */
 .bnd-card
 {
-    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),
-                0 2px 10px 0 rgba(0,0,0,0.12)
+    box-shadow:       5px 10px 18px darkgray;
 }
 .bnd-card-4
 {
-    box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2),
-                0 4px 20px 0 rgba(0,0,0,0.19)
+    box-shadow:       5px 10px 18px darkgray;
 }
 /* ------------------------------------------------------------ */
 /* Image formatting                                             */
@@ -551,7 +596,8 @@ img
 }
 .bnd-image-right
 {
-    max-width:     50%; 
+    width:         50%;
+    max-width:     400px; 
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
@@ -560,7 +606,8 @@ img
 }
 .bnd-image-left
 {
-    max-width:     50%; 
+    width:         50%;
+    max-width:     400px; 
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
@@ -722,8 +769,7 @@ img
     overflow:          auto;             /* Enable scroll if needed */
     background-color: rgb(0,0,0);      /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    box-shadow:        0 4px 10px 0 rgba(0,0,0,0.2),
-                       0 4px 20px 0 rgba(0,0,0,0.19);
+    box-shadow:       5px 10px 18px darkgray;
 }
 .bnd-modal-content-300,
 .bnd-modal-content-400,
@@ -754,9 +800,6 @@ img
     position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
     top:              0px;    
     z-index:          40;
-    
-    margin-top:       16px;
-    margin-bottom:    16px;
     text-align:       center;
     padding:          4px 16px;
     border:           1px solid darkgray;
@@ -777,9 +820,9 @@ img
 }
 .bnd-modal-button-bar
 {
-    margin-top:    4px;
-    margin-bottom: 16px;
-    text-align:    center;
+    margin-top: 16px;
+    padding:    0px 16px 16px 16px;
+    text-align: center;
 }
 body.bnd-modal-open 
 {
@@ -801,7 +844,7 @@ body.bnd-modal-open
 .calendar-container {
     width:       1400px;
     border:      1px solid darkgray;
-    box-shadow:  0 2px 5px rgba(0,0,0,0.1);
+    box-shadow:  5px 10px 18px darkgray;
     font-family: chalkboard, verdana, sans-serif;
 }
 
@@ -867,7 +910,7 @@ body.bnd-modal-open
     display:          none;                             /* Hidden by default */
     background-color: #fff;
     border: 1px solid lightgray;
-    box-shadow:       2px 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow:       5px 10px 18px darkgray;
     z-index:          1000;                             /* Ensure it's above other elements */
 }
 .ctxMenuItem 

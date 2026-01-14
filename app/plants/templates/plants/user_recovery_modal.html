@@ -1,16 +1,16 @@
 <!-- /app/plants/templates/plants/user_recovery_modal.html -->
 
 <div class="bnd-modal-content-400">
-  <div class="bnd-container bnd-border-top bnd-light-grey">
+  <header class="bnd-modal-header">
     <h3>User Recovery - Under Construction</h3>
-  </div>
+  </header>
   <form class="bnd-container" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-button-bar">
       {{ form.as_p }}
-      <button class="bnd-button bnd-green bnd-padding" type="submit">Login</button>
+      <button type="submit" class="bnd-button-submit" >Login</button>
       <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
-      <button onclick="location.reload();" type="button" class="bnd-button bnd-red">Cancel</button>
+      <button onclick="location.reload();" type="button" class="bnd-button-cancel">Cancel</button>
       <!-- AR: Go to reset password page -->
       <span class="bnd-right bnd-padding bnd-hide-small">Forgot <a href="#">password?</a></span>
     </div>

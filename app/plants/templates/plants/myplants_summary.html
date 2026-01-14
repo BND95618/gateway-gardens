@@ -13,23 +13,21 @@
 <!---------------------------->
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
-      <h3 class="bnd-bar-item">
-        My Plants
-        <span class="bnd-dropdown-hover bnd-right bnd-green">
-          <button class="bnd-button-small">
-            <i class="material-icons">menu</i>
-          </button>
-          <div class="bnd-banner-menu bnd-dropdown-content">
-            <button onclick="searchOpen()"        class="bnd-dropdown-button">Search        </button>
-            <button onclick="my_column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
-            <button onclick="plants_chart()"      class="bnd-dropdown-button">Bloom Charts  </button>
-          </div>
-        </span>
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>
+      My Plants
+      <span class="bnd-dropdown-hover bnd-right">
+        <button class="bnd-button-small">
+          <i class="material-icons">menu</i>
+        </button>
+        <div class="bnd-page-menu bnd-dropdown-content">
+          <button onclick="searchOpen()"        class="bnd-dropdown-button">Search        </button>
+          <button onclick="my_column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
+          <button onclick="plants_chart()"      class="bnd-dropdown-button">Bloom Charts  </button>
+        </div>
+      </span>
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
@@ -329,7 +327,7 @@
   <!-- My Plant Table                                                       -->
   <!-------------------------------------------------------------------------->
   <div id="main" class="bnd-content-main-120">
-    <table id="plantTable" class="bnd-table bnd-hoverable" >
+    <table id="plantTable" class="bnd-table" >
       <thead>
         <tr>
           <!-- Plant Attributes -->
@@ -500,7 +498,7 @@
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
-          <table id="bloomTable" class="bnd-table bnd-hoverable">
+          <table id="bloomTable" class="bnd-table">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
@@ -517,7 +515,7 @@
       <!-- Create the modal chart - Bees -->
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
-          <table id="beeTable" class="bnd-table bnd-hoverable">
+          <table id="beeTable" class="bnd-table">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
@@ -534,7 +532,7 @@
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
-          <table id="butterflyTable" class="bnd-table bnd-hoverable">
+          <table id="butterflyTable" class="bnd-table">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
@@ -551,7 +549,7 @@
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
-          <table id="hummingbirdTable" class="bnd-table bnd-hoverable">
+          <table id="hummingbirdTable" class="bnd-table">
             {% include "plants/myplants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 

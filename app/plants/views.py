@@ -1111,7 +1111,7 @@ def myplant_comment(request, id):
         context = { 'myplant' : myplant,
                     'form'    : form,
                   }
-        return render(request, 'plants/myplants_comment.html', context)
+        return render(request, 'plants/myplant_comment.html', context)
 
 #
 

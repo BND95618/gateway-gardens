@@ -11,21 +11,19 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container bnd-green">
-      <h3 class="bnd-bar-item">
-        My Garden: {{ garden.name }}
-        <span class="bnd-dropdown-hover bnd-right bnd-green">
-          <button class="bnd-button-small">
-            <i class="material-icons">menu</i>
-          </button>
-            <div class="bnd-banner-menu bnd-dropdown-content">
-              <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
-            </div>
-        </span>
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>
+      My Garden: {{ garden.name }}
+      <span class="bnd-dropdown-hover bnd-right">
+        <button class="bnd-button-small">
+          <i class="material-icons">menu</i>
+        </button>
+          <div class="bnd-page-menu bnd-dropdown-content">
+            <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
+          </div>
+      </span>
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}

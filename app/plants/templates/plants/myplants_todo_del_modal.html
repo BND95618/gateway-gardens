@@ -7,9 +7,7 @@
     <form class="bnd-container" action="{% url 'plants:myplants_todo_del' myplant_todo.id %}" method="post">
       {% csrf_token %}
       <div class="bnd-modal-button-bar">
-        <button type="submit" class="bnd-button-submit">
-          Submit
-        </button>
+        <button type="submit" class="bnd-button-submit">Submit</button>
         <button type="button"
                 onclick="document.getElementById('myplants_todo_del_modal').style.display='none'"
                 class="bnd-button-cancel">

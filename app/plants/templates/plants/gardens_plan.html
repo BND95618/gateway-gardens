@@ -11,13 +11,9 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
-      <h3 class="bnd-bar-item">
-        My Garden Plan
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>My Garden Plan</h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
@@ -318,7 +314,7 @@
         <div id="planner_edit_modal" class="bnd-modal bnd-background-visible">
             <div class="bnd-modal-content-300">
 
-                <header class="bnd-container bnd-green"> 
+                <header class="bnd-modal-header"> 
                     <!-- Close the shape edit modal -->
                     <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
                         class="bnd-button bnd-modal-close">&times;
@@ -326,215 +322,213 @@
                     <h3>Edit Shape</h2>
                 </header>
                     
-                <header class="bnd-modal-header">
-                    <div>
-                        <form id = "id_edit_form" name = "editForm" action = "">
+                <div>
+                    <form id = "id_edit_form" name = "editForm" action = "">
 
-                            <div class="line rectangle circle ellipse polygon">
-                                <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
-                                <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
-                                <br>
-                            </div>
+                        <div class="line rectangle circle ellipse polygon">
+                            <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
+                            <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
+                            <br>
+                        </div>
 
-                            <div class="line curve">
-                                <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
-                                <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="xStartInForm" name="xStartInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
+                        <div class="line curve">
+                            <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
+                            <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="xStartInForm" name="xStartInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yStartFtForm" style="display: inline-block; width: 80px;">Y (start): </label>
-                                <input type="number" id="yStartFtForm" name="yStartFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="yStartInForm" name="yStartInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yStartFtForm" style="display: inline-block; width: 80px;">Y (start): </label>
+                            <input type="number" id="yStartFtForm" name="yStartFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="yStartInForm" name="yStartInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="curve">
-                                <label for="xControlFtForm" style="display: inline-block; width: 80px;">X (control): </label>
-                                <input type="number" id="xControlFtForm" name="xControFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="xControlInForm" name="xControlInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
+                        <div class="curve">
+                            <label for="xControlFtForm" style="display: inline-block; width: 80px;">X (control): </label>
+                            <input type="number" id="xControlFtForm" name="xControFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="xControlInForm" name="xControlInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yControlFtForm" style="display: inline-block; width: 80px;">Y (control): </label>
-                                <input type="number" id="yControlFtForm" name="yControlFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="yControlInForm" name="yControlInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yControlFtForm" style="display: inline-block; width: 80px;">Y (control): </label>
+                            <input type="number" id="yControlFtForm" name="yControlFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="yControlInForm" name="yControlInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="line curve">
-                                <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
-                                <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="xEndInForm" name="xEndInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
+                        <div class="line curve">
+                            <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
+                            <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="xEndInForm" name="xEndInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yEndFtForm" style="display: inline-block; width: 80px;">Y (end): </label>
-                                <input type="number" id="yEndFtForm" name="yEndFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="yEndInForm" name="yEndInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yEndFtForm" style="display: inline-block; width: 80px;">Y (end): </label>
+                            <input type="number" id="yEndFtForm" name="yEndFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="yEndInForm" name="yEndInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="rectangle">
-                                <label for="xFtForm" style="display: inline-block; width: 80px;">X: </label>
-                                <input type="number" id="xFtForm" name="xFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="xInForm" name="xInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
+                        <div class="rectangle">
+                            <label for="xFtForm" style="display: inline-block; width: 80px;">X: </label>
+                            <input type="number" id="xFtForm" name="xFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="xInForm" name="xInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yFtForm" style="display: inline-block; width: 80px;">Y: </label>
-                                <input type="number" id="yFtForm" name="yFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="yInForm" name="yInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yFtForm" style="display: inline-block; width: 80px;">Y: </label>
+                            <input type="number" id="yFtForm" name="yFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="yInForm" name="yInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="circle ellipse">
-                                <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
-                                <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="xCenterInForm" name="xCenterInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
+                        <div class="circle ellipse">
+                            <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
+                            <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="xCenterInForm" name="xCenterInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yCenterFtForm" style="display: inline-block; width: 80px;">Y (center): </label>
-                                <input type="number" id="yCenterFtForm" name="yCenterFtForm" style="width: 60px;">
-                                <span>ft</span>
-                                <input type="number" id="yCenterInForm" name="yCenterInForm" style="width: 60px;">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yCenterFtForm" style="display: inline-block; width: 80px;">Y (center): </label>
+                            <input type="number" id="yCenterFtForm" name="yCenterFtForm" style="width: 60px;">
+                            <span>ft</span>
+                            <input type="number" id="yCenterInForm" name="yCenterInForm" style="width: 60px;">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="polygon" id="polygonHTML">
-                                <p>Polygon vertices go here!</p>
-                            </div>
+                        <div class="polygon" id="polygonHTML">
+                            <p>Polygon vertices go here!</p>
+                        </div>
 
-                            <div class="rectangle">
-                                <label for="widthFtForm" style="display: inline-block; width: 80px;">width: </label>
-                                <input type="number" id="widthFtForm" name="widthFtForm" style="width: 60px;" min="0">
-                                <span>ft</span>
-                                <input type="number" id="widthInForm" name="widthInForm" style="width: 60px;" min="0">
-                                <span>in</span>
-                                <br>
+                        <div class="rectangle">
+                            <label for="widthFtForm" style="display: inline-block; width: 80px;">width: </label>
+                            <input type="number" id="widthFtForm" name="widthFtForm" style="width: 60px;" min="0">
+                            <span>ft</span>
+                            <input type="number" id="widthInForm" name="widthInForm" style="width: 60px;" min="0">
+                            <span>in</span>
+                            <br>
 
-                                <label for="heightFtForm" style="display: inline-block; width: 80px;">height: </label>
-                                <input type="number" id="heightFtForm" name="heightFtForm" style="width: 60px;" min="0">
-                                <span>ft</span>
-                                <input type="number" id="heightInForm" name="heightInForm" style="width: 60px;" min="0">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="heightFtForm" style="display: inline-block; width: 80px;">height: </label>
+                            <input type="number" id="heightFtForm" name="heightFtForm" style="width: 60px;" min="0">
+                            <span>ft</span>
+                            <input type="number" id="heightInForm" name="heightInForm" style="width: 60px;" min="0">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="circle">
-                                <label for="radiusFtForm" style="display: inline-block; width: 80px;">radius: </label>
-                                <input type="number" id="radiusFtForm" name="radiusFtForm" style="width: 60px;" min="0">
-                                <span>ft</span>
-                                <input type="number" id="radiusInForm" name="radiusInForm" style="width: 60px;" min="0">
-                                <span>in</span>
-                                <br>
-                            </div>
+                        <div class="circle">
+                            <label for="radiusFtForm" style="display: inline-block; width: 80px;">radius: </label>
+                            <input type="number" id="radiusFtForm" name="radiusFtForm" style="width: 60px;" min="0">
+                            <span>ft</span>
+                            <input type="number" id="radiusInForm" name="radiusInForm" style="width: 60px;" min="0">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="ellipse">
-                                <label for="xRadiusFtForm" style="display: inline-block; width: 80px;">X radius: </label>
-                                <input type="number" id="xRadiusFtForm" name="xRadiusFtForm" style="width: 60px;" min="0">
-                                <span>ft</span>
-                                <input type="number" id="xRadiusInForm" name="xRadiusInForm" style="width: 60px;" min="0">
-                                <span>in</span>
-                                <br>
+                        <div class="ellipse">
+                            <label for="xRadiusFtForm" style="display: inline-block; width: 80px;">X radius: </label>
+                            <input type="number" id="xRadiusFtForm" name="xRadiusFtForm" style="width: 60px;" min="0">
+                            <span>ft</span>
+                            <input type="number" id="xRadiusInForm" name="xRadiusInForm" style="width: 60px;" min="0">
+                            <span>in</span>
+                            <br>
 
-                                <label for="yRadiusFtForm" style="display: inline-block; width: 80px;">Y radius: </label>
-                                <input type="number" id="yRadiusFtForm" name="yRadiusFtForm" style="width: 60px;" min="0">
-                                <span>ft</span>
-                                <input type="number" id="yRadiusInForm" name="yRadiusInForm" style="width: 60px;" min="0">
-                                <span>in</span>
-                                <br>
-                            </div>
+                            <label for="yRadiusFtForm" style="display: inline-block; width: 80px;">Y radius: </label>
+                            <input type="number" id="yRadiusFtForm" name="yRadiusFtForm" style="width: 60px;" min="0">
+                            <span>ft</span>
+                            <input type="number" id="yRadiusInForm" name="yRadiusInForm" style="width: 60px;" min="0">
+                            <span>in</span>
+                            <br>
+                        </div>
 
-                            <div class="rectangle">
-                                <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
-                                <input type="number" id="rotationForm" name="rotationForm" style="width: 60px;">
-                                <span>degrees</span>
-                                <br>
-                            </div>
+                        <div class="rectangle">
+                            <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
+                            <input type="number" id="rotationForm" name="rotationForm" style="width: 60px;">
+                            <span>degrees</span>
+                            <br>
+                        </div>
 
-                            <div class="line curve rectangle circle ellipse polygon">
-                                <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
-                                <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 60px;" min="1">
-                                <span>pixels</span>
-                                <br>
+                        <div class="line curve rectangle circle ellipse polygon">
+                            <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
+                            <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 60px;" min="1">
+                            <span>pixels</span>
+                            <br>
 
-                                <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
-                                <select id="lineStyleForm" style="width: 60px;" name="lineStyleForm">
-                                    <option value="solid" >solid </option>
-                                    <option value="dashed">dashed</option>
-                                    <option value="dotted">dotted</option>
-                                </select>
-                                <br>
+                            <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
+                            <select id="lineStyleForm" style="width: 60px;" name="lineStyleForm">
+                                <option value="solid" >solid </option>
+                                <option value="dashed">dashed</option>
+                                <option value="dotted">dotted</option>
+                            </select>
+                            <br>
 
-                                <label for="lineColorForm" style="display: inline-block; width: 80px;">Line color:</label>
-                                <input type="color" id="lineColorForm" name="lineColorForm" style="width: 60px;">
-                                <br>
+                            <label for="lineColorForm" style="display: inline-block; width: 80px;">Line color:</label>
+                            <input type="color" id="lineColorForm" name="lineColorForm" style="width: 60px;">
+                            <br>
 
-                                <label for="lineOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
-                                <select id="lineOpacityForm" style="width: 60px;">
-                                    <option value=0.0>  0%</option>
-                                    <option value=0.1> 10%</option>
-                                    <option value=0.2> 20%</option>
-                                    <option value=0.3> 30%</option>
-                                    <option value=0.4> 40%</option>
-                                    <option value=0.5> 50%</option>
-                                    <option value=0.6> 60%</option>
-                                    <option value=0.7> 70%</option>
-                                    <option value=0.8> 80%</option>
-                                    <option value=0.9> 90%</option>
-                                    <option value=1.0>100%</option>
-                                </select>
-                                <br>
-                            </div>
+                            <label for="lineOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
+                            <select id="lineOpacityForm" style="width: 60px;">
+                                <option value=0.0>  0%</option>
+                                <option value=0.1> 10%</option>
+                                <option value=0.2> 20%</option>
+                                <option value=0.3> 30%</option>
+                                <option value=0.4> 40%</option>
+                                <option value=0.5> 50%</option>
+                                <option value=0.6> 60%</option>
+                                <option value=0.7> 70%</option>
+                                <option value=0.8> 80%</option>
+                                <option value=0.9> 90%</option>
+                                <option value=1.0>100%</option>
+                            </select>
+                            <br>
+                        </div>
 
-                            <div class="rectangle circle ellipse polygon">
-                                <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
-                                <input type="color" id="fillColorForm" name="fillColorForm" style="width: 60px;">
-                                <br>
-                            
-                                <label for="fillOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
-                                <select id="fillOpacityForm" style="width: 60px;">
-                                    <option value=0.0>  0%</option>
-                                    <option value=0.1> 10%</option>
-                                    <option value=0.2> 20%</option>
-                                    <option value=0.3> 30%</option>
-                                    <option value=0.4> 40%</option>
-                                    <option value=0.5> 50%</option>
-                                    <option value=0.6> 60%</option>
-                                    <option value=0.7> 70%</option>
-                                    <option value=0.8> 80%</option>
-                                    <option value=0.9> 90%</option>
-                                    <option value=1.0>100%</option>
-                                </select>
-                                <br>
-                            </div>
+                        <div class="rectangle circle ellipse polygon">
+                            <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
+                            <input type="color" id="fillColorForm" name="fillColorForm" style="width: 60px;">
+                            <br>
+                        
+                            <label for="fillOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
+                            <select id="fillOpacityForm" style="width: 60px;">
+                                <option value=0.0>  0%</option>
+                                <option value=0.1> 10%</option>
+                                <option value=0.2> 20%</option>
+                                <option value=0.3> 30%</option>
+                                <option value=0.4> 40%</option>
+                                <option value=0.5> 50%</option>
+                                <option value=0.6> 60%</option>
+                                <option value=0.7> 70%</option>
+                                <option value=0.8> 80%</option>
+                                <option value=0.9> 90%</option>
+                                <option value=1.0>100%</option>
+                            </select>
+                            <br>
+                        </div>
 
-                            <!-- on submit, process attribute value changes in Javascript -->
-                            <input type="submit" value="Apply" class="bnd-button bnd-round-large bnd-green">
-                            <input type="reset"  value="Reset" class="bnd-button bnd-round-large bnd-grey">
-                            <button type="button"              class="bnd-button bnd-round-large bnd-red"
-                                    onclick="document.getElementById('planner_edit_modal').style.display='none'">
-                                    Exit
-                            </button>
-                        </form>
-                    </div>
-                </header>
+                        <!-- on submit, process attribute value changes in Javascript -->
+                        <input type="submit" value="Apply" class="bnd-button-submit">
+                        <input type="reset"  value="Reset" class="bnd-button bnd-round-large bnd-grey">
+                        <button type="button"              class="bnd-button-cancel"
+                                onclick="document.getElementById('planner_edit_modal').style.display='none'">
+                                Exit
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 

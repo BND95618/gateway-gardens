@@ -11,41 +11,40 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container  bnd-green">
-      <h3 class="bnd-bar-item">
-        {{ myplant.plant.commonName }}
-        <span>(</span>
-        <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
-        {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
-          <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
-        {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
-          <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
-        {% endif %}
-        <span>)</span>
-        <span class="bnd-dropdown-hover bnd-right bnd-green">
-          <button class="bnd-button-small">
-            <i class="material-icons">
-              menu
-            </i>
-          </button>
-          <div class="bnd-banner-menu bnd-dropdown-content">
-            <a href="{% url 'plants:myplant_update' myplant.id %}" class="bnd-dropdown-button">update</a>
-        </span>
-      </h3>
-    </header>
-  </div>
+  <header class="bnd-page-banner">
+    <h3>
+      {{ myplant.plant.commonName }}
+      <span>(</span>
+      <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
+      {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
+        <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
+      {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
+        <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
+      {% endif %}
+      <span>)</span>
+      <span class="bnd-dropdown-hover bnd-right">
+        <button class="bnd-button-small">
+          <i class="material-icons">
+            menu
+          </i>
+        </button>
+        <div class="bnd-page-menu bnd-dropdown-content">
+          <a href="{% url 'plants:myplant_update' myplant.id %}" class="bnd-dropdown-button">update</a>
+      </span>
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- My Plant Attributes -->
   <div class="bnd-content-main-120">
     <div class="bnd-row-padding">
+
       <div class="bnd-col s4">
-        <header class="bnd-container bnd-green bnd-border">
-          <h4>Characteristics</h4>
+        <header class="bnd-section-header">
+          <h4>My Plant: Characteristics</h4>
         </header>
-        <div class="bnd-container bnd-border">
+        <div class="bnd-section-contents">
           <p>Date Planted:        {{ myplant.date_planted }}</p>
           <p>Location:            {{ myplant.location     }}</p>
           <p>Sun Exposure:        {{ myplant.sun_exposure }}</p>
@@ -57,97 +56,137 @@
         </div> 
       </div>
     </div>
-  </div>
-  <!------------------------------------->
-  <!-- My Plant To Do List Summary     -->
-  <!------------------------------------->
-  <div class="bnd-margin">
-    <!-- To Do section -->
-    <div class="bnd-card-4 bnd-margin-top">
-      <header class="bnd-container  bnd-green">
-        <h4 class="bnd-bar-item">
-          <span>My To Do List:</span>
-          <span class="bnd-dropdown-hover bnd-right bnd-green">
-            <button class="bnd-button">
-              <i class="material-icons">
-                menu
-              </i>
-            </button>
-              <div class="bnd-banner-menu bnd-dropdown-content">
-                <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
-                <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
-                <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>
-              </div>
-          </span>
-        </h4>
-      </header>
-      <!-- To Do table -->
-      <div class="bnd-container">
-        <table id="todoTable" class="bnd-table bnd-hoverable bnd-margin-top bnd-margin-bottom">
-          <thead>
-            <tr>
-              <th onclick="todo_sort(1)">Status  </th>
-              <th style="display:none"  onclick="todo_sort(1)">Status  </th>
-              <th onclick="todo_sort(2)">Date    </th>
-              <th onclick="todo_sort(3)">Action  </th>
-              <th onclick="todo_sort(4)">Repeat  </th>
-              <th onclick="todo_sort(5)">Details </th>
-              <!-- Button Placeholders -->
-              <th class="bnd-table-icon"></th>
-              <th class="bnd-table-icon"></th>
-            </tr>
-          </thead>
-          {% for todo in myplant_todos  %}  
-            <tbody>
-              <tr>
-                <!-- To Do complete -->
-                <td class="bnd-center">
-                  <div class="bnd-tooltip">
-                    <button class="bnd-button-small" onclick="todo_done({{ todo.id }})">
-                      <i class="material-icons">
-                        {% if todo.complete %}
-                          check_box
-                        {% else %}
-                          check_box_outline_blank
-                        {% endif %}
-                      </i>
-                      <span class="bnd-tooltip-text">Complete?</span>
-                    </button>
-                  </div>
-                </td>
-                <!-- To Do fields -->
-                <td style="display:none">{{ todo.complete }}</td>
-                <td>{{ todo.date|date:"Y-m-d" }}</td>
-                <td>{{ todo.action   }}</td>
-                <td>{{ todo.repeat   }}</td>
-                <td>{{ todo.details  }}</td>
-                <!-- To Do edit -->
-                <td class="bnd-table-icon">
-                  <div class="bnd-tooltip">
-                    <button class="bnd-button-small" onclick="todo_edit({{ todo.id }})">
-                      <i class="material-icons">edit</i>
-                      <span class="bnd-tooltip-text">Edit</span>
-                    </button>
-                  </div>
-                </td>
-                <!-- To Do delete -->
-                <td class="bnd-table-icon">
-                <div class="bnd-tooltip">
-                    <button class="bnd-button-small" onclick="todo_delete({{ todo.id }})">
-                      <i class="material-icons">delete</i>
-                      <span class="bnd-tooltip-text">Delete</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          {% endfor %}
-        </table>
-      </div>
-    </div>
-  </div>
-  <hr>
+    <!------------------------------------->
+    <!-- My Plant To Do List Summary     -->
+    <!------------------------------------->
+    <div class="bnd-margin">
 
+      <!-- To Do section header -->
+      <section class="bnd-section">
+        <header class="bnd-section-header">
+          <h4>
+            <span>My Plant: To Do List</span>
+            <span class="bnd-dropdown-hover bnd-right">
+              <button class="bnd-button-small">
+                <i class="material-icons">
+                  menu
+                </i>
+              </button>
+                <div class="bnd-page-menu bnd-dropdown-content">
+                  <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
+                  <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
+                  <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>
+                </div>
+            </span>
+          </h4>
+        </header>
+        <!-- To Do table -->
+        <div class="bnd-container">
+          <table id="todoTable" class="bnd-table bnd-margin-top bnd-margin-bottom">
+            <thead>
+              <tr>
+                <th onclick="todo_sort(1)">Status  </th>
+                <th style="display:none"  onclick="todo_sort(1)">Status  </th>
+                <th onclick="todo_sort(2)">Date    </th>
+                <th onclick="todo_sort(3)">Action  </th>
+                <th onclick="todo_sort(4)">Repeat  </th>
+                <th onclick="todo_sort(5)">Details </th>
+                <!-- Button Placeholders -->
+                <th class="bnd-table-icon"></th>
+                <th class="bnd-table-icon"></th>
+              </tr>
+            </thead>
+            {% for todo in myplant_todos  %}  
+              <tbody>
+                <tr>
+                  <!-- To Do complete -->
+                  <td class="bnd-center">
+                    <div class="bnd-tooltip">
+                      <button class="bnd-button-small" onclick="todo_done({{ todo.id }})">
+                        <i class="material-icons">
+                          {% if todo.complete %}
+                            check_box
+                          {% else %}
+                            check_box_outline_blank
+                        {% endif %}
+                        </i>
+                        <span class="bnd-tooltip-text">Complete?</span>
+                      </button>
+                    </div>
+                  </td>
+                  <!-- To Do fields -->
+                  <td style="display:none">{{ todo.complete }}</td>
+                  <td>{{ todo.date|date:"Y-m-d" }}</td>
+                  <td>{{ todo.action   }}</td>
+                  <td>{{ todo.repeat   }}</td>
+                  <td>{{ todo.details  }}</td>
+                  <!-- To Do edit -->
+                  <td class="bnd-table-icon">
+                  <div class="bnd-tooltip">
+                      <button class="bnd-button-small" onclick="todo_edit({{ todo.id }})">
+                        <i class="material-icons">edit</i>
+                        <span class="bnd-tooltip-text">Edit</span>
+                      </button>
+                    </div>
+                  </td>
+                  <!-- To Do delete -->
+                  <td class="bnd-table-icon">
+                  <div class="bnd-tooltip">
+                      <button class="bnd-button-small" onclick="todo_delete({{ todo.id }})">
+                        <i class="material-icons">delete</i>
+                        <span class="bnd-tooltip-text">Delete</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            {% endfor %}
+          </table>
+        </div>
+      </section>
+      <!------------------------------------->
+      <!-- Gardener Notes                  -->
+      <!------------------------------------->
+      <section class="bnd-section">
+        <header class="bnd-section-header">
+          <h4>My Plant: Notes</h4>
+        </header>
+        <div class="bnd-section-contents">
+          {{ myplant.notes.html|safe|escape }}
+        </div>
+      </section>
+      <!------------------------------------->
+      <!-- My Plant Comments               -->
+      <!------------------------------------->
+      <section class="bnd-section">
+        <header class="bnd-section-header">
+          <h4>My Plant: Comments</h4>
+        </header>
+        <div class="bnd-section-contents">
+          {% for comment in myplant_comments %}
+            <p>Subject: {{ comment.subject }}</p>
+            <p>Author:  {{ comment.author  }}</p>
+            {{ comment.comment.html|safe|escape }}
+            <hr>
+          {% endfor %}
+          <p><a href="{% url 'plants:myplant_comment' myplant.id %}">Add comment</a></p>
+        </div>
+      </section>
+      <hr>
+    </div>
+    <!------------------------------------->
+    <!-- Plant Details                   -->
+    <!------------------------------------->
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>Base Plant Details:</h4>
+      </header>
+      {% include "plants/plant_details_insert.html" %}
+    </section>
+  </div>
+  <!------------------------------------->
+  <!-- Modals                          -->
+  <!------------------------------------->
   <!-- To Do add modal - html to be inserted by Javascript -->
   <div id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
@@ -163,46 +202,6 @@
     <p> To Do delete form HTML to be Inserted Here! </p>
   </div>
 
-  <!------------------------------------->
-  <!-- My Plant Gardener Notes         -->
-  <!------------------------------------->
-  <div class="bnd-margin">
-    <div class="bnd-card-4 bnd-margin-top">
-      <header class="bnd-container bnd-green">
-        <h4>My Notes:</h4>
-      </header>
-      <div class="bnd-container">
-        {{ myplant.notes.html|safe|escape }}
-      </div>
-    </div>
-  </div>
-  <hr>
-  <!------------------------------------->
-  <!-- My Plant Comments               -->
-  <!------------------------------------->
-  <div class="bnd-margin">
-    <div class="bnd-card-4 bnd-margin-top">
-      <header class="bnd-container bnd-green">
-        <h4>Fellow Gardener Comments:</h4>
-      </header>
-      <div class="bnd-margin">
-        {% for comment in myplant_comments %}
-          <p>Subject: {{ comment.subject }}</p>
-          <p>Author:  {{ comment.author  }}</p>
-          {{ comment.comment.html|safe|escape }}
-          <hr>
-          {% endfor %}
-      </div>
-      <div>
-        <p><a href="{% url 'plants:myplant_comment' myplant.id %}">Add comment</a></p>
-      </div>
-    </div>
-  </div>
-  <hr>
-  <!------------------------------------->
-  <!-- Plant Details                   -->
-  <!------------------------------------->
-  {% include "plants/plant_details_insert.html" %}
 {% endblock content %}
 
 {% block js %}
@@ -407,7 +406,13 @@
             lastToDoSortDir = "down";
         }
     }
-    // Sort My Plants table by Date
+    
+    function onClick(element) {
+      document.getElementById("image").src = element.src;
+      document.getElementById("image_modal").style.display = "block";
+    }
+    
+  </script>// Sort My Plants table by Date
     window.onload = restoreToDoSort();
 </script>
 {% endblock js %}

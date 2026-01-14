@@ -2,11 +2,12 @@
 
 <!-- Plant Attributes -->
 <div class="bnd-row-padding">
-  <div class="bnd-col s4">
-    <header class="bnd-container bnd-green bnd-border">
+
+  <section class="bnd-col s4">
+    <header class="bnd-section-header">
       <h4>Characteristics</h4>
     </header>
-    <div class="bnd-container bnd-border">
+    <div class="bnd-section-contents">
       <p>Type:               {{ plant.type_x }}</p>
       <p>Bloom Color:        {{ plant.bloom_color  }}</p>
       <p>Bloom Season:       {{ plant.bloom_season }}</p>
@@ -19,13 +20,13 @@
       <p>Davis Climate-Ready Tree: {{ plant.davis_trees }}</p>
       <p>Sunset Z14:         {{ plant.sunset_z14   }}</p>
     </div> 
-  </div>
+  </section>
 
-  <div class="bnd-col s4">
-    <header class="bnd-container bnd-green bnd-border">
+  <section class="bnd-col s4">
+    <header class="bnd-section-header">
       <h4>Environmental Needs</h4>
     </header>
-    <div class="bnd-container bnd-border">
+    <div class="bnd-section-contents">
       <p>Sun Exposure:       {{ plant.sun_exposure }}</p>
       <p>Water Requirements: {{ plant.water_rqmts  }}</p>
       <p>pH Requirements:    {{ plant.pH_min }} through {{ plant.pH_max }}</p>
@@ -34,13 +35,13 @@
       <p>USDA Zones:         {{ plant.usda_zone_min }} through {{ plant.usda_zone_max }}</p>
       <p>Sunset Zones:       {{ plant.sunset_zones }}</p>
     </div>
-  </div>
+  </section>
 
-  <div class="bnd-col s4">
-    <header class="bnd-container bnd-green bnd-border">
+  <section class="bnd-col s4">
+    <header class="bnd-section-header">
       <h4>Scientific Naming Taxonomy</h4>
     </header>
-    <div class="bnd-container bnd-border">
+    <div class="bnd-section-contents">
       <p>Kingdom:           {{ plant.kingdom }}</p>
       <p>Subkingdom:        {{ plant.subkingdom }}</p>
       <p>Superdivision:     {{ plant.superdivision }}</p>
@@ -55,52 +56,53 @@
       <p>Cultivar:          {{ plant.cultivar }}</p>
       <p>Phonetic Spelling: {{ plant.phonetic_spelling }}</p>
     </div>
-  </div>
+  </section>
+  
 </div>
 
 <!-- Plant Description/Pruning/Fertilization/Propagation/Pests & Diseases -->
-<div class="bnd-margin">
-  <div class="bnd-card-4 bnd-margin-top">
-    <header class="bnd-container bnd-green">
+<div>
+  <section class="bnd-section">
+    <header class="bnd-section-header">
       <h4>Description</h4>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-section-contents">
       {{ plant.description.html|safe|escape }}
     </div>
-  </div>
+  </section>
 
-  <div class="bnd-card-4 bnd-margin-top">
-    <header class="bnd-container bnd-green">
+  <section class="bnd-section">
+    <header class="bnd-section-header">
       <h4>Pruning</h4>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-section-contents">
       {{ plant.pruning.html|safe|escape }}
     </div>
-  </div>
+  </section>
 
-  <section class="bnd-card-4">
-    <header class="bnd-container bnd-green">
+  <section class="bnd-section">
+    <header class="bnd-section-header">
       <h4>Fertilization</h4>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-section-contents">
       {{ plant.fertilization.html|safe|escape }}
     </div>
   </section>
 
-  <section class="bnd-card-4">
-    <header class="bnd-container bnd-green">
+  <section class="bnd-section">
+    <header class="bnd-section-header">
       <h4>Propagation</h4>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-section-contents">
       {{ plant.propagation.html|safe|escape }}
     </div>
   </section>
 
-  <section class="bnd-card-4">
-    <header class="bnd-container bnd-green">
+  <section class="bnd-section">
+    <header class="bnd-section-header">
       <h4>Pests and Diseases</h4>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-section-contents">
       {{ plant.pests_diseases.html|safe|escape }}
       <!-- Display the pests related to this plant -->
       {% if pests %} 

@@ -11,66 +11,66 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <div class="bnd-card-4">
-    <header class="bnd-container bnd-green">
+  <header class="bnd-page-banner">
+    <h3>
+      {{ plant.commonName }}
+      <span>(</span>
+      <span>{{ plant.genus }} {{ plant.species }}</span>
+      {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+        <span class="bnd-variety">var. {{ plant.variety }}</span> 
+      {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+        <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
+      {% endif %}
+      <span>)</span>
 
-      <!-- Banner text -->
-      <h3 class="bnd-bar-item">
-        {{ plant.commonName }}
-        <span>(</span>
-        <span>{{ plant.genus }} {{ plant.species }}</span>
-        {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
-          <span class="bnd-variety">var. {{ plant.variety }}</span> 
-        {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
-          <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
-        {% endif %}
-        <span>)</span>
-
-        <!-- Scientific Name Pronunciation -->
-        {% if plant.audio_name %}
-          <span class="bnd-tooltip">
-            <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
-            <span onclick="document.getElementById('player-2').play()">
-              <i class="material-icons bnd-play-audio">volume_up</i>
-            </span>
-            <!-- Tool Tip -->
-            <span class="bnd-tooltip-text">Pronounce</span>
+      <!-- Scientific Name Pronunciation -->
+      {% if plant.audio_name %}
+        <span class="bnd-tooltip">
+          <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
+          <span onclick="document.getElementById('player-2').play()">
+            <i class="material-icons bnd-play-audio">volume_up</i>
           </span>
-        {% endif %}
-
-        <!-- Drop-down menu -->
-        <span class="bnd-dropdown-hover bnd-right bnd-green">
-          <button class="bnd-button-small">
-            <i class="material-icons">menu</i>
-          </button>
-          <div class="bnd-banner-menu bnd-dropdown-content">
-            <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-dropdown-button">Update</a>
-          </div>
+          <!-- Tool Tip -->
+          <span class="bnd-tooltip-text">Pronounce</span>
         </span>
-      </h3>
-    </header>
-  </div>
+      {% endif %}
+
+      <!-- Drop-down menu -->
+      <span class="bnd-dropdown-hover bnd-right">
+        <button class="bnd-button-small">
+          <i class="material-icons">menu</i>
+        </button>
+        <div class="bnd-page-menu bnd-dropdown-content">
+          <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-dropdown-button">Update</a>
+        </div>
+      </span>
+    </h3>
+  </header>
 {% endblock header-completion %}
 
 {% block content %}
   <!-- Plant Attributes -->
   <div class=" bnd-content-main-120">
     {% include "plants/plant_details_insert.html" %}
-  </div>
-
-  <!-- Comments -->
-  <div class="bnd-margin">
-    <fieldset>
-      <legend>Comments</legend>
-      {% for comment in comments %}
-        <p>Subject: {{ comment.subject }}</p>
-        <p>Author:  {{ comment.author  }}</p>
-        {{ comment.comment.html|safe|escape }}
-        <hr>
-      {% endfor %}
-      <p><a href="{% url 'plants:plants_comment' plant.id %}">Add comment</a></p>
-    </fieldset>
+  
+    <!-- Comments -->
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>Comments</h4>
+      </header>
+      <div class="bnd-section-contents">
+        {% for comment in comments %}
+          <p>Subject: {{ comment.subject }}</p>
+          <p>Author:  {{ comment.author  }}</p>
+          {{ comment.comment.html|safe|escape }}
+          <hr>
+        {% endfor %}
+        <p><a href="{% url 'plants:plants_comment' plant.id %}">Add comment</a></p>
+      </div>
+    </section>
     <hr>
+
+    <!-- Plant record creator/date -->
     <p>Creator: {{ plant.creator }}</p>
     <p>Creation Date: {{ plant.creation_date }}</p>
   </div>
