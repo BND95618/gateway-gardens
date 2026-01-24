@@ -25,17 +25,24 @@
       em:  Relative to the font-size of the element
       rem: Relative to font-size of the root elem
       px:  pixels (1px = 1/96th of 1in)
+
+    Pseudo-class selector order:
+      link
+      visited
+      hover
+      focus
+      active
 */
 /* ------------------------------------------------------------ */
 /* Global formatting                                            */
 /* ------------------------------------------------------------ */
-*, *:before, *:after{box-sizing:inherit}
+* { box-sizing: border-box; }   /* use the new box model */
 /* ------------------------------------------------------------ */
 /* HTML element formatting                                      */
 /* ------------------------------------------------------------ */
 html
 {
-    box-sizing:  border-box;    
+    box-sizing:  border-box;    /* use the new box model */
     overflow-x:  hidden;
 }
 body
@@ -68,6 +75,10 @@ a
 {
     cursor: pointer;
 }
+a:visited
+{
+    color: darkred;
+}
 th 
 {
     cursor: pointer;
@@ -82,6 +93,15 @@ button
 input
 {
     line-height: 80%;
+    background-color: lightgray;
+}
+input:hover
+{
+    background-color: whitesmoke;
+}
+input:focus
+{
+    background-color: whitesmoke;
 }
 hr 
 {
@@ -97,6 +117,24 @@ img
 {
     vertical-align: middle;
     border-style:   none;
+}
+figure {
+    /* box */
+    margin:     auto;
+    border:     none;
+    padding:    4px;
+    box-shadow: 5px 10px 18px darkgray;
+}
+  
+figcaption {
+    margin-top:       6px; 
+    background-color: lightgray;
+    /* text */
+    text-align:       center;
+    color:            darkslategray;
+    font-style:       italic;
+    /* box */
+    padding:          2px;
 }
 /* ------------------------------------------------------------ */
 /* Container for navigation bar and banner                      */
@@ -147,45 +185,27 @@ img
     clear:   both;
 }
 /* ------------------------------------------------------------ */
-/*  */
+/* Stop floating previous section's image to ensure this        */
+/* section's text starts correctly                              */
 /* ------------------------------------------------------------ */
 .bnd-endfloat { clear:both; }
 /* ------------------------------------------------------------ */
-/* Responsive layout - row classes                              */
+/* Responsive layout - flex                                    */
 /* ------------------------------------------------------------ */
-.bnd-row:after,
-.bnd-row:before,
-.bnd-row-padding:after,
-.bnd-row-padding:before
+.bnd-flex-container
 {
-    content: "";
-    display: table;
-    clear:   both;
+    /* position */
+    display:         flex;
+    flex-direction:  row;
+    flex-wrap:       wrap;
+    justify-content: space-between;
+    /* box model attributes */
+    width:           100%;
 }
-.bnd-row-padding,
-.bnd-row-padding > .bnd-quarter,
-.bnd-row-padding > .bnd-col
+.bnd-flex-item
 {
-    padding: 0 8px;
-}
-/* ------------------------------------------------------------ */
-/* Responsive layout - column classes                           */
-/* ------------------------------------------------------------ */
-.bnd-col,
-.bnd-quarter
-{
-    float: left;
-    width: 100%;
-}
-.bnd-col.s4
-{
-    width:      33.33333%;
-}
-.bnd-row-padding > .bnd-quarter { padding: 0 8px }
-
-@media (min-width:601px)
-{
-    .bnd-quarter{width:24.99999%}
+    /* box model attributes */
+    max-width:        300px;
 }
 /* ------------------------------------------------------------ */
 /* Element positioning                                          */
@@ -289,7 +309,7 @@ img
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */
 /* ------------------------------------------------------------ */
-.bnd-hide{display:none!important}
+.bnd-hide{ display:none!important }
 /* ------------------------------------------------------------ */
 /* Plant taxonomy formatting                                    */
 /* ------------------------------------------------------------ */
@@ -622,7 +642,7 @@ img
 }
 .bnd-image-thumbnail
 {
-    width:         100%; 
+    max-width:     200px; 
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
@@ -717,7 +737,7 @@ img
     border-collapse: separate; /* Required for sticky headers to work well with borders */
     border-spacing:  0;
     table-layout:    auto;     /* use the browsers automatic table layout algorithm */
-    width:           auto;     /* content dictates the width of the table */
+    width:           100%;     /* content dictates the width of the table */
     display:         table;
     border:          1px solid lightgray;
     box-shadow:      5px 5px 10px 0 darkgray;
@@ -758,16 +778,20 @@ img
 /* ------------------------------------------------------------ */
 .bnd-modal
 {
+    /* position */
     position:          fixed;            /* Stay in place */
-    z-index:           30;               /* Sit on top */
-    left:              0;
     top:               0;
-    display:           none;             /* Hidden by default */
-    padding-top:       120px;            /* Position below navbar and page header */
+    left:              0;
+    z-index:           30;               /* Sit above the main content */
+    /* size */
     width:             100%;             /* Full width */
     height:            100%;             /* Full height */
-    overflow:          auto;             /* Enable scroll if needed */
+    /* box model attributes */
+    padding-top:       120px;            /* Position below navbar and page header */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    /* other */
+    display:           none;             /* Hidden by default */
+    overflow:          auto;             /* Enable scroll if needed */
 }
 .bnd-modal-content-300,
 .bnd-modal-content-400,
@@ -778,13 +802,17 @@ img
 .bnd-modal-content-900,
 .bnd-modal-content-1000
 {
-    margin:           auto;
-    background-color: white;
+    /* position */
     position:         relative;
+    /* box model attributes */
+    margin:           auto;
     padding:          0;
-    outline:          0;
+    background-color: white;
+    background-image: url(../img/leaves.png);
+    /* other */
     animation:        animatezoom 0.6s;
 }
+
 .bnd-modal-content-300  { width:  300px }
 .bnd-modal-content-400  { width:  400px }
 .bnd-modal-content-500  { width:  500px }
@@ -793,20 +821,40 @@ img
 .bnd-modal-content-800  { width:  800px }
 .bnd-modal-content-900  { width:  900px }
 .bnd-modal-content-1000 { width: 1000px }
+
 .bnd-modal-header
 {
+    /* position */
     position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
     top:              0px;    
     z-index:          40;
+    /* text */
     text-align:       center;
-    padding:          4px 16px;
+    /* box model attributes */
     border:           1px solid darkgray;
+    padding:          4px 16px;
     background-color: gainsboro;
+}
+.bnd-modal-image-container
+{
+    /* position */
+    position:      relative;
+    top:           20px;
+    /* size */
+    max-width:     800px;
+    /* box model attributes */
+    margin:        auto;
+    /* other */
+    animation:     animatezoom 0.6s;
 }
 .bnd-modal-image
 {
-    width:  100%; 
-    height: auto;
+    /* size - fill the container */
+    width:         100%; 
+    height:        auto;
+    /* box model attributes */
+    border:        4px solid green; 
+    border-radius: 16px;
 }
 .bnd-modal-footer
 {
@@ -833,6 +881,7 @@ body.bnd-modal-open
     right:    0;
     top:      0;
 }
+#bloomTable, #beeTable, #butterflyTable, #hummingbirdTable { width: 100%; }
 #plants_chart_modal th { top: 100px; }
 #plants_chart_modal footer { padding: 0px; }
 /* ------------------------------------------------------------ */
@@ -892,7 +941,6 @@ body.bnd-modal-open
     width:         100%;
     height:        15px;
     border-radius: 5px;  
-    background:    lightgray;
     outline:       none;
     opacity:       0.7;
     transition:    opacity .2s;

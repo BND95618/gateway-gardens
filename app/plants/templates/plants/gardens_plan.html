@@ -225,6 +225,7 @@
 
                 <div id="id_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
                     <input type="range" id="id_opacity_slider" class="slider" min="0" max="100" value="50">
+                    <output id="opacity" for="id_opacity_slider_div">100%</output>
                 </div>
                 
                 <div id="id_zoom_select_div" style="display: none;">
@@ -241,6 +242,7 @@
 
                 <div id="id_zoom_slider_div" class="slidecontainer" style="display: none; margin: 10px">
                     <input type="range" id="id_zoom_slider" class="slider" min="100" max="500" value="250">
+                    <output id="zoom" for="id_zoom_slider">100%</output>
                 </div>
             </div>  
 
@@ -304,7 +306,9 @@
                 </div>
             </div>  
         </form>
-
+        <!-------------------------------------------------------------------------->
+        <!-- Modals                                                               -->
+        <!-------------------------------------------------------------------------->
         <!-- Plant Details Modal -->
         <div id="plant_details_modal" class="bnd-modal">
             <p> Modal HTML to be Inserted Here! </p>
@@ -4587,6 +4591,12 @@
         };  
     }
 
+    // update zoom slider value on form in realtime
+    document.getElementById('id_zoom_slider').addEventListener('input', synchZoomOutput);
+    function synchZoomOutput(event)
+    {
+        document.getElementById('zoom').value = event.target.value;
+    }
     //-----------------------------------------------------//
     // Code for drawing freeform lines on canvas via mouse //
     //-----------------------------------------------------//

@@ -1,6 +1,22 @@
 // app/plants/static/plants/js/common_functions.js
 
+// -------------------------------------------------------------------------- //
+// Expand image via modal
+// -------------------------------------------------------------------------- //
+function imageModalOpen(element) {
+    document.getElementById("image").src = element.src;
+    document.getElementById("image_modal").style.display = "block";
+    // Freeze the main body while the modal is open
+    document.body.classList.add("bnd-modal-open");
+  }
+  function imageModalClose(element) {
+    element.style.display = "none";
+    // Unfreeze the main body
+    document.body.classList.remove("bnd-modal-open");
+  }
+// -------------------------------------------------------------------------- //
 // Table sort script - alphetically - toggle between ascending and descending
+// -------------------------------------------------------------------------- //
 function sortTable(n, tableID) 
 {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

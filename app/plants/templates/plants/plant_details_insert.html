@@ -1,9 +1,9 @@
 <!-- /app/plants/templates/plants/plant_details_insert.html -->
 
 <!-- Plant Attributes -->
-<div class="bnd-row-padding">
+<div class="bnd-flex-container">
 
-  <section class="bnd-col s4">
+  <section class ="bnd-flex-item">
     <header class="bnd-section-header">
       <h4>Characteristics</h4>
     </header>
@@ -22,7 +22,7 @@
     </div> 
   </section>
 
-  <section class="bnd-col s4">
+  <section class="bnd-flex-item">
     <header class="bnd-section-header">
       <h4>Environmental Needs</h4>
     </header>
@@ -37,7 +37,7 @@
     </div>
   </section>
 
-  <section class="bnd-col s4">
+  <section class="bnd-flex-item">
     <header class="bnd-section-header">
       <h4>Scientific Naming Taxonomy</h4>
     </header>
@@ -118,38 +118,38 @@
 </div>
 
 <!-- Plant images -->
-<div class="bnd-row-padding">
+<div class="bnd-flex-container">
   {% if plant.image_1 %}
-  <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
-      <footer class="bnd-center bnd-large">{{ plant.caption_1 }}</footer>
-    </div>
+  <figure class="bnd-flex-item">
+    <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption>{{ plant.caption_1 }}</figcaption>
+  </figure>
   {% endif %}
 
   {% if plant.image_2 %}
-  <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
-      <footer class="bnd-center bnd-large">{{ plant.caption_2 }}</footer>
-    </div>
+  <figure class="bnd-flex-item">
+    <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption>{{ plant.caption_2 }}</figcaption>
+  </figure>
   {% endif %}
 
   {% if plant.image_3 %}
-  <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
-      <footer class="bnd-center bnd-large">{{ plant.caption_3 }}</footer>
-    </div>
+  <figure class="bnd-flex-item">
+    <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption>{{ plant.caption_3 }}</figcaption>
+  </figure>
   {% endif %}
 
   {% if plant.image_4 %}
-    <div class="bnd-container bnd-quarter">
-      <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="onClick(this)" alt="No image found">
-      <footer class="bnd-center bnd-large">{{ plant.caption_4 }}</footer>
-    </div>
+  <figure class="bnd-flex-item">
+    <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption>{{ plant.caption_4 }}</figcaption>
+  </figure>
   {% endif %}
 </div>
 
 <!-- Plant images: modal -->
-<div id="image_modal" class="bnd-modal" onclick="this.style.display='none'">
+<div id="image_modal" class="bnd-modal" onclick="imageModalClose(this)">
   <div class="bnd-modal-content-600">
     <img id="image" style="width:100%; height:auto">
   </div>
