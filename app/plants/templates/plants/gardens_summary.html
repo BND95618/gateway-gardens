@@ -43,7 +43,7 @@
       <div class="bnd-slideshow-content">
         <!-- Load the images -->
         {% if garden.image_1 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_1 }}</h2>
@@ -51,7 +51,7 @@
           </div>
         {% endif %}
         {% if garden.image_2 %}
-        <div class="mySlides">
+        <div class="bnd-slideshow-slides">
           <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
           <div class="bnd-image-caption">
             <h2>{{ garden.caption_3 }}</h2>
@@ -59,7 +59,7 @@
         </div>
         {% endif %}
         {% if garden.image_3 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_3 }}</h2>
@@ -67,7 +67,7 @@
           </div>
         {% endif %}
         {% if garden.image_4 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_4 }}</h2>
@@ -75,7 +75,7 @@
           </div>
         {% endif %}
         {% if garden.image_5 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_5 }}</h2>
@@ -83,7 +83,7 @@
           </div>
         {% endif %}
         {% if garden.image_6 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_6 }}</h2>
@@ -91,7 +91,7 @@
           </div>
         {% endif %}
         {% if garden.image_7 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_7 }}</h2>
@@ -99,7 +99,7 @@
           </div>
         {% endif %}
         {% if garden.image_8 %}
-          <div class="mySlides">
+          <div class="bnd-slideshow-slides">
             <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
             <div class="bnd-image-caption">
               <h2>{{ garden.caption_8 }}</h2>
@@ -141,7 +141,7 @@
     
   function showSlide(n) {
     let i;
-    let x = document.getElementsByClassName("mySlides");
+    let x = document.getElementsByClassName("bnd-slideshow-slides");
     let icons = document.getElementsByClassName("bnd-slideshow-icon");
     if (n > x.length) {slideIndex = 1}
     if (n < 1) {slideIndex = x.length}

@@ -7,7 +7,8 @@ function imageModalOpen(element) {
     document.getElementById("image").src = element.src;
     document.getElementById("image_modal").style.display = "block";
     // Freeze the main body while the modal is open
-    document.body.classList.add("bnd-modal-open");
+    // AR: freeze page when modal is open
+    // document.body.classList.add("bnd-modal-open");
   }
   function imageModalClose(element) {
     element.style.display = "none";

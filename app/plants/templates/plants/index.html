@@ -43,7 +43,7 @@
       <p>
         <img src="{% static 'plants/img/sunset-zone-14-map.png' %}" 
               alt="No sunset map found" 
-              onclick="onClick(this)" 
+              onclick="imageModalOpen(this)" 
               class="bnd-image-right">
         The plant database focuses on plants that are suitable for the Sunset Zone 14 climate zone.  
         Marine air moderates parts of Zone 14 that otherwise would be colder in winter and hotter in summer. 
@@ -67,7 +67,7 @@
       <p>
         <img src="{% static 'plants/img/davis_temperature_history_2024.png' %}" 
         alt="Temperature Chart" 
-        onclick="onClick(this)"   
+        onclick="imageModalOpen(this)"   
         class="bnd-image-left">
         The hot season lasts for 3.7 months, from June 3 to September 26, with an 
         average daily high temperature above 86°F. The hottest month of the year 
@@ -86,7 +86,7 @@
       <p>
         <img src="{% static 'plants/img/davis_average_monthly_rainfall.png' %}" 
         alt="Rainfall Chart" 
-        onclick="onClick(this)" 
+        onclick="imageModalOpen(this)" 
         class="bnd-image-right">
         Davis experiences extreme seasonal variation in monthly rainfall.
         <br/><br/>
@@ -104,39 +104,31 @@
       <p>
         <img src="{% static 'plants/img/davis_daylight_hours_2024.png' %}" 
         alt="Temperature Chart" 
-        onclick="onClick(this)" 
+        onclick="imageModalOpen(this)" 
         class="bnd-image-left">
         The length of the day in Davis varies significantly over the course of the year. 
         In 2024, the shortest day is December 21, with 9 hours, 28 minutes of daylight; 
         the longest day is June 20, with 14 hours, 52 minutes of daylight.
       </p>
     </section>
-
   </div>
-
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
-  <div id="image_modal" class="bnd-modal" onclick="this.style.display='none'">
+  <div id="image_modal" class="bnd-modal" onclick="imageModalClose(this)">
     <div class="bnd-modal-image-container">
       <img id="image" class="bnd-modal-image">
     </div>
   </div>
-
 {% endblock content %}
 
 {% block js %}
   <!-- Insert template Javascript here -->
   <!-- Expand image via modal -->
   <script>
-    function onClick(element) {
-      document.getElementById("image").src = element.src;
-      document.getElementById("image_modal").style.display = "block";
-    }
     // if the user has not been authenticalled open the login modal
     {% if not user.is_authenticated %}
       window.onload = login_modal.style.display='block';
     {% endif %}
-
   </script>
 {% endblock js %}

@@ -12,14 +12,7 @@
         <p>Common Name: {{ myplant_todo.commonName }}</p>
         <p>Action:      {{ myplant_todo.action     }}</p>
         <p>Details:     {{ myplant_todo.details    }}</p>
-        <p>Repeat :     {{ myplant_todo.repeat     }}</p>
-    </div>
-    <div class="bnd-card-4 bnd-margin-top">
-        <header class="bnd-container bnd-light-grey">
-            <h4>Pruning Guidelines:</h4>
-        </header>
-        <div class="bnd-container">
-            {{ myplant_todo.pruning.html|safe|escape }}
-        </div>
+        <p>Repeat:      {{ myplant_todo.repeat     }}</p>
+        <p>Pruning Guidelines: {{ myplant_todo.pruning.html|safe|escape }}</p>
     </div>
 </div>
