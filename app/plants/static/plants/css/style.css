@@ -574,13 +574,14 @@ figcaption {
 .bnd-table th 
 {
     position:         sticky;
-    top:              120px;      /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              120px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    z-index:          20;                /* Ensure table headers are above table body data */
     padding:          12px 8px 12px 8px;
+    background-color: slategray;
     display:          table-cell;
+    color:            white;
     text-align:       left;
     vertical-align:   top;
-    background-color: lightgreen;
-    z-index:          20;          /* Ensure table headers are above table body data */
 }
 .bnd-table th:first-child     {padding-left:  16px}
 .bnd-table th:last-child      {padding-right: 16px}
