@@ -10,6 +10,13 @@
 
 {% block css %}
 <!-- Insert template css here -->
+<style>
+  a[href*='/plants_summary'] 
+  {
+    color:            white;
+    background-color: slategray; 
+  }
+</style>
 {% endblock css %}
 
 {% block header-completion %}
@@ -468,11 +475,11 @@
           <span onclick="plants_chart_modal_close()" class="bnd-button bnd-modal-close">&times;</span>
         </h3>
         <!-- Create the modal tabs - each chart has a tab -->
-        <div class="bnd-bar">
-          <button id="bloomTabButton"       class="tab bnd-bar-item bnd-button">Blooms      </button>
-          <button id="beeTabButton"         class="tab bnd-bar-item bnd-button">Bees        </button>
-          <button id="butterflyTabButton"   class="tab bnd-bar-item bnd-button">Butterflies </button>
-          <button id="hummingbirdTabButton" class="tab bnd-bar-item bnd-button">Hummingbirds</button>
+        <div class="bnd-navbar">
+          <button id="bloomTabButton"       class="tab bnd-navbar-item-left bnd-button">Blooms      </button>
+          <button id="beeTabButton"         class="tab bnd-navbar-item-left bnd-button">Bees        </button>
+          <button id="butterflyTabButton"   class="tab bnd-navbar-item-left bnd-button">Butterflies </button>
+          <button id="hummingbirdTabButton" class="tab bnd-navbar-item-left bnd-button">Hummingbirds</button>
         </div>
       </header>
     

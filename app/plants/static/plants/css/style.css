@@ -174,6 +174,87 @@ figcaption {
     clear:   both;
 }
 /* ------------------------------------------------------------ */
+/* Horizontal navigation bar formatting                         */
+/* ------------------------------------------------------------ */
+.bnd-navbar /* horizontal navigation bar container */
+{
+    width:            100%;
+    overflow:         hidden;
+    background-color: lightgray;
+}
+.bnd-navbar-item-left,
+.bnd-navbar-item-right
+{
+    display:         block;
+    width:           auto;
+    border:          none;
+    padding:         8px 12px;
+    color:           black;
+    outline:         0;
+    text-decoration: none;
+}
+.bnd-navbar-item-left  { float: left;  }
+.bnd-navbar-item-right { float: right; }
+
+.bnd-navbar-item-left:hover,
+.bnd-navbar-item-right:hover
+{
+    color:            white;
+    background-color: gray;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-navbar-item-right:hover .bnd-dropdown-content
+{
+    display:          block;
+}
+/* ------------------------------------------------------------ */
+/* Banner formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-page-menu
+{
+    right:      0; 
+    font-size:  16px;
+    box-shadow: var(--shadow-parameters);
+}
+.bnd-page-banner
+{
+    padding:          0.01em 16px;
+    color:            white;
+    background-color: green;
+    box-shadow:       var(--shadow-parameters);
+}
+.bnd-section
+{
+    border-width:     1px;
+    border-color:     green;
+    box-shadow:       var(--shadow-parameters);
+}
+.bnd-section.s4
+{
+    width:33.33333%;
+}
+.bnd-section-header
+{
+    padding:          0.01em 16px;
+    color:            white;
+    background-color: green;
+}
+.bnd-section-contents
+{
+    padding:          0.01em 16px;
+    color:            black;
+    background-color: whitesmoke;
+}
+.bnd-page-footer
+{
+    margin-top:       16px;
+    padding:          0.01em 16px;
+    text-align:       center;
+    color:            white;
+    background-color: green;
+    box-shadow:       var(--shadow-parameters);
+}
+/* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
 /* section's text starts correctly                              */
 /* ------------------------------------------------------------ */
@@ -339,84 +420,6 @@ figcaption {
 {
     visibility: visible;
     opacity:    1;
-}
-/* ------------------------------------------------------------ */
-/* Horizontal navigation bar formatting                         */
-/* ------------------------------------------------------------ */
-.bnd-bar /* horizontal navigation bar container */
-{
-    width:    100%;
-    overflow: hidden;
-}
-.bnd-bar .bnd-bar-item /* navigation button or link */
-{
-    padding: 8px 16px;
-    float:   left;
-    width:   auto;
-    border:  none;
-    display: block;
-    outline: 0;
-}
-.bnd-bar .bnd-dropdown-hover
-{
-    position: static;
-    float:    left
-}
-.bnd-center .bnd-bar
-{
-    display: inline-block;
-    width:   auto
-}
-.bnd-bar .bnd-button
-{
-    white-space: normal
-}
-/* ------------------------------------------------------------ */
-/* Banner formatting                                            */
-/* ------------------------------------------------------------ */
-.bnd-page-menu
-{
-    right:      0; 
-    font-size:  16px;
-    box-shadow: var(--shadow-parameters);
-}
-.bnd-page-banner
-{
-    padding:          0.01em 16px;
-    color:            white;
-    background-color: green;
-    box-shadow:       var(--shadow-parameters);
-}
-.bnd-section
-{
-    border-width:     1px;
-    border-color:     green;
-    box-shadow:       var(--shadow-parameters);
-}
-.bnd-section.s4
-{
-    width:33.33333%;
-}
-.bnd-section-header
-{
-    padding:          0.01em 16px;
-    color:            white;
-    background-color: green;
-}
-.bnd-section-contents
-{
-    padding:          0.01em 16px;
-    color:            black;
-    background-color: whitesmoke;
-}
-.bnd-page-footer
-{
-    margin-top:       16px;
-    padding:          0.01em 16px;
-    text-align:       center;
-    color:            white;
-    background-color: green;
-    box-shadow:       var(--shadow-parameters);
 }
 /* ------------------------------------------------------------ */
 /* Drop-down menu formatting                                    */

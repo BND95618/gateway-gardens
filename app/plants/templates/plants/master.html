@@ -23,52 +23,53 @@
     {% block title %}
       <!-- Insert template title here -->}
     {% endblock title %}
-
   </head>
 
   <body>
     <header>
-      <!-- Navigation Bar -->
-      <div class="bnd-container-top">
-        <div class="bnd-bar bnd-light-grey">
-          <a href="{% url 'plants:index' %}"            class="bnd-bar-item bnd-button">Home</a>
-          <a href="{% url 'plants:gardens_summary' %}"  class="bnd-bar-item bnd-button">My Garden</a>
-          <a href="{% url 'plants:myplants_summary' %}" class="bnd-bar-item bnd-button">My Plants</a>
-          <a href="{% url 'plants:myplants_todo' %}"    class="bnd-bar-item bnd-button">My ToDo's</a>
-          <a href="{% url 'plants:gardens_plan' %}"     class="bnd-bar-item bnd-button">My Garden Plan</a>
-          <a href="{% url 'plants:plants_summary' %}"   class="bnd-bar-item bnd-button">All Plants</a>
-          <a href="{% url 'plants:pest_summary' %}"     class="bnd-bar-item bnd-button">Pests</a>
-          <a href="{% url 'plants:plants_glossary' %}"  class="bnd-bar-item bnd-button">Glossary</a>
-          <a href="{% url 'plants:plants_reference' %}" class="bnd-bar-item bnd-button">Reference</a>
-          <a href="{% url 'plants:plants_about' %}"     class="bnd-bar-item bnd-button">About</a>
-          <!-- drop down account menu item -->
-          <div class="bnd-dropdown-hover bnd-right">
-            {% if user.is_authenticated %}
-              <button class="bnd-button">{{ user.username }}</button>
-            {% else %}
-              <button class="bnd-button">Account</button>
-            {% endif %}
-            <div class="bnd-page-menu bnd-dropdown-content">
+      <nav>
+        <div class="bnd-container-top">
+          {% block header-completion %}
+          <!-- Page-specific header inserted here -->
+          {% endblock header-completion %}
+          <!-- Navigation Bar -->
+          <div class="bnd-navbar">
+            <a href="{% url 'plants:index' %}"            class="bnd-navbar-item-left">Home</a>
+            <a href="{% url 'plants:gardens_summary' %}"  class="bnd-navbar-item-left">My Garden</a>
+            <a href="{% url 'plants:myplants_summary' %}" class="bnd-navbar-item-left">My Plants</a>
+            <a href="{% url 'plants:myplants_todo' %}"    class="bnd-navbar-item-left">My ToDo's</a>
+            <a href="{% url 'plants:gardens_plan' %}"     class="bnd-navbar-item-left">My Garden Plan</a>
+            <a href="{% url 'plants:plants_summary' %}"   class="bnd-navbar-item-left">All Plants</a>
+            <a href="{% url 'plants:pest_summary' %}"     class="bnd-navbar-item-left">Pests</a>
+            <a href="{% url 'plants:plants_glossary' %}"  class="bnd-navbar-item-left">Glossary</a>
+            <a href="{% url 'plants:plants_reference' %}" class="bnd-navbar-item-left">Reference</a>
+            <a href="{% url 'plants:plants_about' %}"     class="bnd-navbar-item-left">About</a>
+            <!-- drop down account menu item -->
+            <div class="bnd-navbar-item-right">
               {% if user.is_authenticated %}
-                <button id="update_button" class="bnd-dropdown-button">Update </button>
-                <!-- AR -->
-                <form action="{% url 'plants:user_logout' %}" method="post">
-                  {% csrf_token %}
-                  <input type="submit" value="Logout" class="bnd-dropdown-button">
-                </form>
+                {{ user.username }}
               {% else %}
-                <!-- AR -->
-                <button id="login_button"    class="bnd-dropdown-button">Login    </button>
-                <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
-                <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
+                Account
               {% endif %}
+              <div class="bnd-page-menu bnd-dropdown-content">
+                {% if user.is_authenticated %}
+                  <button id="update_button" class="bnd-dropdown-button">Update </button>
+                  <!-- AR -->
+                  <form action="{% url 'plants:user_logout' %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Logout" class="bnd-dropdown-button">
+                  </form>
+                {% else %}
+                  <!-- AR -->
+                  <button id="login_button"    class="bnd-dropdown-button">Login    </button>
+                  <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
+                  <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
+                {% endif %}
+              </div>
             </div>
           </div>
         </div>
-        {% block header-completion %}
-        <!-- Header is completed on each page -->
-        {% endblock header-completion %}
-      </div>
+      </nav>
     </header>
     
     <!-------------------------------------------------------------------------->
