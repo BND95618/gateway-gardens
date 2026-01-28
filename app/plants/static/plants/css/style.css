@@ -76,7 +76,7 @@ h5{font-size:18px}
 h6{font-size:16px}
 p {font-size:large}
 a {cursor:pointer}
-a:visited{color: darkred}
+/* a:visited{color: darkred} */
 th {cursor: pointer}
 button
 {
@@ -178,7 +178,13 @@ figcaption {
 /* ------------------------------------------------------------ */
 .bnd-navbar /* horizontal navigation bar container */
 {
+    display:          flex;
+    flex-wrap:        wrap;
+    align-items:      center;
     width:            100%;
+    margin:           0px;
+    padding:          0px 0px;
+    list-style-type:  none;
     overflow:         hidden;
     background-color: lightgray;
 }
@@ -186,26 +192,50 @@ figcaption {
 .bnd-navbar-item-right
 {
     display:         block;
-    width:           auto;
+    width:           100%;
     border:          none;
-    padding:         8px 12px;
+    padding:         0px 0px;
     color:           black;
+    text-align:      center;
     outline:         0;
     text-decoration: none;
 }
-.bnd-navbar-item-left  { float: left;  }
-.bnd-navbar-item-right { float: right; }
-
+.bnd-navbar-item-right
+{
+    margin-left: auto;
+    padding-right: 24px;
+}
 .bnd-navbar-item-left:hover,
 .bnd-navbar-item-right:hover
 {
     color:            white;
     background-color: gray;
 }
+/* Format the memu item links */
+.bnd-navbar-item-left a
+{
+    margin: 8px 8px;
+    padding:         12px 8px;
+    text-decoration: none;
+}
+.bnd-navbar-item-left  a:hover,
+.bnd-navbar-item-right a:hover
+{
+    color:            white;
+}
 /* Display dropdown content when hovering over the menu title/contents */
 .bnd-navbar-item-right:hover .bnd-dropdown-content
 {
     display:          block;
+}
+/* Use horizontal memu formal for larger screens */
+@media all and (min-width: 60em)
+{
+    .bnd-navbar-item-left,
+    .bnd-navbar-item-right
+    {
+        width:  auto;
+    }
 }
 /* ------------------------------------------------------------ */
 /* Banner formatting                                            */
