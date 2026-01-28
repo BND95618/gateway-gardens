@@ -36,11 +36,11 @@
       {% endif %}
 
       <!-- Drop-down menu -->
-      <span class="bnd-dropdown-hover bnd-right">
+      <span class="bnd-dropdown-container">
         <button class="bnd-button-small">
           <i class="material-icons">menu</i>
         </button>
-        <div class="bnd-page-menu bnd-dropdown-content">
+        <div class="bnd-dropdown-content">
           <a href="{% url 'plants:plant_update' plant.id %}" class="bnd-dropdown-button">Update</a>
         </div>
       </span>

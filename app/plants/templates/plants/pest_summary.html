@@ -18,11 +18,11 @@
   <header class="bnd-page-banner">
     <h3>
       Pests
-      <span class="bnd-dropdown-hover bnd-right">
+      <span class="bnd-dropdown-container">
         <button class="bnd-button-small">
           <i class="material-icons">menu</i>
         </button>
-        <div class="bnd-page-menu bnd-dropdown-content">
+        <div class="bnd-dropdown-content">
           <a href="{% url 'plants:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
         </div>
       </span>
@@ -31,13 +31,6 @@
 {% endblock header-completion %}
 
 {% block content %}
-  <!------------------------->
-  <!--        Modals       -->
-  <!------------------------->
-  <!-- Pest Delete modal - html to be inserted by Javascript -->
-  <div id="pest_delete_modal" class="bnd-modal">
-    <p>Pest delete form HTML to be Inserted Here!</p>
-  </div>
   <!------------------------->
   <!--     Pest Table     -->
   <!------------------------->
@@ -93,11 +86,17 @@
       {% endfor %}
     </table>
   </div>
-
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <!-- Pest Delete modal - html to be inserted by Javascript -->
+  <div id="pest_delete_modal" class="bnd-modal">
+    <p>Pest delete form HTML to be Inserted Here!</p>
+  </div>
+  
 {% endblock content %}
 
 {% block js %}
-
   <!-- Delete Pest Modal Script --> 
   <script>
     function pest_delete(id) {
@@ -111,11 +110,5 @@
       // Display the = pest modal
       pest_delete_modal.style.display='block'
     }
-  </script>
-
-  <!-- On Page load functions -->
-  <script>
-    // Sort table alphabetically by Common Name
-    // window.onload = sortTable(0, 'plantTable');
   </script>
 {% endblock js %}

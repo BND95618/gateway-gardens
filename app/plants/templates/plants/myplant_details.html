@@ -22,13 +22,13 @@
         <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
       {% endif %}
       <span>)</span>
-      <span class="bnd-dropdown-hover bnd-right">
+      <span class="bnd-dropdown-container">
         <button class="bnd-button-small">
           <i class="material-icons">
             menu
           </i>
         </button>
-        <div class="bnd-page-menu bnd-dropdown-content">
+        <div class="bnd-dropdown-content">
           <a href="{% url 'plants:myplant_update' myplant.id %}" class="bnd-dropdown-button">update</a>
       </span>
     </h3>
@@ -66,13 +66,13 @@
         <header class="bnd-section-header">
           <h4>
             <span>My Plant: To Do List</span>
-            <span class="bnd-dropdown-hover bnd-right">
+            <span class="bnd-dropdown-container">
               <button class="bnd-button-small">
                 <i class="material-icons">
                   menu
                 </i>
               </button>
-                <div class="bnd-page-menu bnd-dropdown-content">
+                <div class="bnd-dropdown-content">
                   <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
                   <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
                   <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>

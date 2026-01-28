@@ -264,10 +264,6 @@ figcaption {
     border-color:     green;
     box-shadow:       var(--shadow-parameters);
 }
-.bnd-section.s4
-{
-    width:33.33333%;
-}
 .bnd-section-header
 {
     padding:          0.01em 16px;
@@ -395,11 +391,6 @@ figcaption {
     cursor:  not-allowed;
     opacity: 0.3;
 }
-.bnd-dropdown-hover:hover > .bnd-button:first-child
-{
-    background-color: lightgray;
-    color:            black;
-}
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */
 /* ------------------------------------------------------------ */
@@ -450,17 +441,28 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Drop-down menu formatting                                    */
 /* ------------------------------------------------------------ */
-.bnd-dropdown-hover
+.bnd-dropdown-container
 {
     position: relative;
-    display:  inline-block;
+    float:    right;
     cursor:   pointer;
+}
+.bnd-dropdown-container:hover > .bnd-button:first-child
+{
+    background-color: lightgray;
+    color:            black;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-dropdown-container:hover .bnd-dropdown-content
+{
+    display:          block;
 }
 .bnd-dropdown-content
 {
-    cursor:           auto;
-    display:          none;
     position:         absolute;
+    right:            0; 
+    z-index:          1;
+    display:          none;
     min-width:        160px;
     margin:           0;
     border-style:     solid;
@@ -470,12 +472,7 @@ figcaption {
     background-color: white;
     box-shadow:       var(--shadow-parameters);
     color:            black;
-    z-index:          1;
-}
-/* Display dropdown content when hovering over the menu title/contents */
-.bnd-dropdown-hover:hover .bnd-dropdown-content
-{
-    display:          block;
+    cursor:           auto;
 }
 .bnd-dropdown-button
 {
@@ -808,7 +805,6 @@ body.bnd-modal-open
     box-shadow:  var(--shadow-parameters);
     font-family: chalkboard, verdana, sans-serif;
 }
-
 /* Header styling */
 .calendar-header 
 {
@@ -891,9 +887,6 @@ body.bnd-modal-open
 /* ------------------------------------------------------------ */
 .bnd-page-footer
 {
-    /* position:         fixed; */
-    /* bottom:           0;     */
-    /* left:             0;     */
     width:            100%;
     margin-top:       16px;
     padding:          0.01em 0px;

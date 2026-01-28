@@ -18,11 +18,11 @@
   <header class="bnd-page-banner">
     <h3>
       To Do List
-      <span class="bnd-dropdown-hover bnd-right">
+      <span class="bnd-dropdown-container">
         <button class="bnd-button-small">
           <i class="material-icons">menu</i>
         </button>
-        <div class="bnd-page-menu bnd-dropdown-content">
+        <div class="bnd-dropdown-content">
           <button onclick="todo_add()"       class="bnd-dropdown-button">Add          </button>
           <button onclick="todo_show_all()"  class="bnd-dropdown-button">Show All     </button>
           <button onclick="todo_hide_done()" class="bnd-dropdown-button">Hide Complete</button>
@@ -484,8 +484,13 @@
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar();
     });
-
-    // Fetch all ToDo items for current user 
-    window.onload = fetchToDoItems();
+    //-----------------------------------------------------------------------------
+    // On Page load functions - modern version of windows.onload
+    //-----------------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', (event) => 
+    {
+      sortTable(0, 'todoTable');
+      fetchToDoItems();              // Fetch all ToDo items for current user
+    });
 </script>
 {% endblock js %}
