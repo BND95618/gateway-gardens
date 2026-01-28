@@ -23,15 +23,15 @@
 
     Unit definitions:
       em:  Relative to the font-size of the element
-      rem: Relative to font-size of the root elem
+      rem: Relative to font-size of the root element
       px:  pixels (1px = 1/96th of 1in)
 
     Pseudo-class selector order:
-      link
-      visited
-      hover
-      focus
-      active
+      > link
+      > visited
+      > hover
+      > focus
+      > active
 */
 /* ------------------------------------------------------------ */
 /* CSS variables                                                */
@@ -50,23 +50,27 @@
 html
 {
     box-sizing:  border-box;    /* use the new box model */
+    margin:      0;             /* remove default */
+    padding:     0;             /* remove default */
     overflow-x:  hidden;
 }
 body
 {
+    margin:      0;             /* remove default */
+    padding:     0;             /* remove default */
     font-family: chalkboard, verdana, sans-serif;
     font-size:   16px;
     line-height: 1.5;
 }
 section
 {
-    margin-top:    16px!important;
-    margin-bottom: 16px!important;
+    margin-top:    16px;
+    margin-bottom: 16px;
 }
 h1,h2,h3,h4,h5,h6
 {
     font-weight: 400;
-    margin:      10px 0;
+    margin:      10px 0px;
 }
 h1{font-size:36px}
 h2{font-size:30px}
@@ -126,19 +130,6 @@ figcaption {
     padding:          2px;
 }
 /* ------------------------------------------------------------ */
-/* Container for navigation bar and banner                      */
-/* ------------------------------------------------------------ */
-.bnd-container-top
-{
-    position:         fixed;
-    top:              0;
-    z-index:          50;
-    width:            100%;
-    height:           120px; 
-    padding-right:    16px;
-    background-color: white;
-}
-/* ------------------------------------------------------------ */
 /* bnd-container provides equality for all HTML container       */
 /* elements: margins, paddings, alignments, fonts and colors    */
 /* ------------------------------------------------------------ */
@@ -152,6 +143,98 @@ figcaption {
     content: "";
     display: table;
     clear:   both;
+}
+/* ------------------------------------------------------------ */
+/* Container for navigation bar and banner                      */
+/* ------------------------------------------------------------ */
+.bnd-container-top
+{
+    position:         fixed;
+    top:              0;
+    left:             0;
+    z-index:          50;
+    width:            100%;
+    height:           120px; 
+    margin:           0px;
+    padding:          0px;
+    background-color: white;
+}
+/* ------------------------------------------------------------ */
+/* Banner formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-page-banner
+{
+    padding:          0.01em 16px;
+    color:            white;
+    background-color: green;
+}
+.bnd-page-menu
+{
+    right:      0; 
+    font-size:  16px;
+}
+/* ------------------------------------------------------------ */
+/* Horizontal navigation bar formatting                         */
+/* ------------------------------------------------------------ */
+.bnd-navbar /* horizontal navigation bar container */
+{
+    display:          flex;
+    flex-wrap:        wrap;
+    align-items:      center;
+    width:            100%;
+    margin:           0px;
+    padding:          0px;
+    list-style-type:  none;        /* no list element bullerts */
+    overflow:         hidden;
+    background-color: lightgray;
+}
+.bnd-navbar-item-left,
+.bnd-navbar-item-right
+{
+    width:            100%;        /* small screen default */
+    border:           none;
+    padding:          0px 0px;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+}
+.bnd-navbar-item-right
+{
+    margin-left:      auto;
+    padding-right:    24px;
+}
+.bnd-navbar-item-left:hover,
+.bnd-navbar-item-right:hover
+{
+    color:            white;
+    background-color: gray;
+}
+/* Format the memu item links */
+.bnd-navbar-item-left a
+{
+    margin:           8px 8px;
+    padding:          12px 6px;
+    text-decoration:  none;
+}
+.bnd-navbar-item-left  a:hover,
+.bnd-navbar-item-right a:hover
+{
+    color:            white;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-navbar-item-right:hover .bnd-dropdown-content
+{
+    display:          block;
+}
+/* Use horizontal memu format for larger screens */
+@media all and (min-width: 60em)
+{
+    .bnd-navbar-item-left,
+    .bnd-navbar-item-right
+    {
+        width:  auto;
+    }
 }
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
@@ -174,85 +257,7 @@ figcaption {
     clear:   both;
 }
 /* ------------------------------------------------------------ */
-/* Horizontal navigation bar formatting                         */
 /* ------------------------------------------------------------ */
-.bnd-navbar /* horizontal navigation bar container */
-{
-    display:          flex;
-    flex-wrap:        wrap;
-    align-items:      center;
-    width:            100%;
-    margin:           0px;
-    padding:          0px 0px;
-    list-style-type:  none;
-    overflow:         hidden;
-    background-color: lightgray;
-}
-.bnd-navbar-item-left,
-.bnd-navbar-item-right
-{
-    display:         block;
-    width:           100%;
-    border:          none;
-    padding:         0px 0px;
-    color:           black;
-    text-align:      center;
-    outline:         0;
-    text-decoration: none;
-}
-.bnd-navbar-item-right
-{
-    margin-left: auto;
-    padding-right: 24px;
-}
-.bnd-navbar-item-left:hover,
-.bnd-navbar-item-right:hover
-{
-    color:            white;
-    background-color: gray;
-}
-/* Format the memu item links */
-.bnd-navbar-item-left a
-{
-    margin: 8px 8px;
-    padding:         12px 6px;
-    text-decoration: none;
-}
-.bnd-navbar-item-left  a:hover,
-.bnd-navbar-item-right a:hover
-{
-    color:            white;
-}
-/* Display dropdown content when hovering over the menu title/contents */
-.bnd-navbar-item-right:hover .bnd-dropdown-content
-{
-    display:          block;
-}
-/* Use horizontal memu formal for larger screens */
-@media all and (min-width: 60em)
-{
-    .bnd-navbar-item-left,
-    .bnd-navbar-item-right
-    {
-        width:  auto;
-    }
-}
-/* ------------------------------------------------------------ */
-/* Banner formatting                                            */
-/* ------------------------------------------------------------ */
-.bnd-page-menu
-{
-    right:      0; 
-    font-size:  16px;
-    box-shadow: var(--shadow-parameters);
-}
-.bnd-page-banner
-{
-    padding:          0.01em 16px;
-    color:            white;
-    background-color: green;
-    box-shadow:       var(--shadow-parameters);
-}
 .bnd-section
 {
     border-width:     1px;
@@ -274,15 +279,6 @@ figcaption {
     padding:          0.01em 16px;
     color:            black;
     background-color: whitesmoke;
-}
-.bnd-page-footer
-{
-    margin-top:       16px;
-    padding:          0.01em 16px;
-    text-align:       center;
-    color:            white;
-    background-color: green;
-    box-shadow:       var(--shadow-parameters);
 }
 /* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
@@ -463,13 +459,17 @@ figcaption {
 .bnd-dropdown-content
 {
     cursor:           auto;
-    color:            black;
-    background-color: white;
     display:          none;
     position:         absolute;
     min-width:        160px;
     margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
     padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    color:            black;
     z-index:          1;
 }
 /* Display dropdown content when hovering over the menu title/contents */
@@ -885,6 +885,21 @@ body.bnd-modal-open
 .bnd-background-visible
 {
     background: none !important; 
+}
+/* ------------------------------------------------------------ */
+/* Page footer                                                  */
+/* ------------------------------------------------------------ */
+.bnd-page-footer
+{
+    /* position:         fixed; */
+    /* bottom:           0;     */
+    /* left:             0;     */
+    width:            100%;
+    margin-top:       16px;
+    padding:          0.01em 0px;
+    text-align:       center;
+    color:            white;
+    background-color: green;
 }
 /* ------------------------------------------------------------ */
 /* */
