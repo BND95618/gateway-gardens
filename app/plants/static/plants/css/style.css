@@ -337,8 +337,6 @@ figcaption {
     overflow:         hidden;
     font-size:        16px;
     text-decoration:  none;
-    color:            inherit;
-    background-color: inherit;
     text-align:       center;
     cursor:           pointer;
     white-space:      nowrap;
@@ -383,8 +381,8 @@ figcaption {
 .bnd-button-submit:hover,
 .bnd-button-cancel:hover
 {
-    color:            black;
-    background-color: lightgray;
+    color:            white;
+    background-color: gray;
 }
 .bnd-button:disabled
 {
