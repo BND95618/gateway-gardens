@@ -586,6 +586,7 @@ class PlantAddUpdateForm(forms.Form):
 	commonName = forms.CharField(
 		label="Common Name", 
 		max_length=255,
+		widget=forms.TextInput(attrs={"class": "bnd-form-commonName"}),
 		)
 	# Attributes
 	type_x = forms.ChoiceField(
@@ -593,6 +594,26 @@ class PlantAddUpdateForm(forms.Form):
 		initial  = 'tbd',
 		choices  = TYPE_CHOICES,
 		required = False,
+		)
+	height_feet = forms.IntegerField(
+		label="Height (ft)",
+		initial="0", 
+		required=False,
+		)
+	height_inch = forms.IntegerField(
+		label="Height (in)",
+		initial="0", 
+		required=False,
+		)
+	width_feet = forms.IntegerField(
+		label="Width (ft)",
+		initial="0", 
+		required=False,
+		)
+	width_inch = forms.IntegerField(
+		label="Width (in)",
+		initial="0", 
+		required=False,
 		)
 	bloom_color = forms.MultipleChoiceField(
 		label="Bloom Color",
@@ -618,26 +639,6 @@ class PlantAddUpdateForm(forms.Form):
 		label="Bloom End",
 		initial='tbd',
 		choices = MONTH_CHOICES, 
-		required=False,
-		)
-	height_feet = forms.IntegerField(
-		label="Height (ft)",
-		initial="0", 
-		required=False,
-		)
-	height_inch = forms.IntegerField(
-		label="Height (in)",
-		initial="0", 
-		required=False,
-		)
-	width_feet = forms.IntegerField(
-		label="Width (ft)",
-		initial="0", 
-		required=False,
-		)
-	width_inch = forms.IntegerField(
-		label="Width (in)",
-		initial="0", 
 		required=False,
 		)
 	pollinators = forms.MultipleChoiceField(
@@ -669,7 +670,7 @@ class PlantAddUpdateForm(forms.Form):
 		required=False,
 		)
 	sunset_z14 = forms.ChoiceField(
-		label="Sunset Zone 14 Recommendation",
+		label="Sunset Zone 14",
 		initial = 'tbd',
 		choices = SUNSET_Z14_CHOICES, 
 		widget=forms.RadioSelect,

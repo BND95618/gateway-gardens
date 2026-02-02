@@ -47,7 +47,7 @@ urlpatterns = [
     path('plants_reference',          views.plants_reference,    name='plants_reference'),
     path('plants_about',              views.plants_about,        name='plants_about'),
     #
-    path('plants_add',                views.plants_add,          name='plants_add'),
+    path('plant_add',                 views.plant_add,           name='plant_add'),
     path('plant_update/<int:id>',     views.plant_update,        name='plant_update'),
     path('plant_details/<int:id>',    views.plant_details,       name='plant_details'),
     path('plants_comment/<int:id>',   views.plants_comment,      name='plants_comment'),

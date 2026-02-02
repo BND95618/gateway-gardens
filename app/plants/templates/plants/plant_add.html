@@ -1,4 +1,4 @@
-<!-- app/plants/templates/plants_add.html -->
+<!-- app/plants/templates/plant_add.html -->
 {% extends "plants/master.html" %}
 
 <!-- Required in order to load static files -->
@@ -29,37 +29,147 @@
           enctype  = "multipart/form-data"
           onsubmit = "validatePlantForm()">
       {% csrf_token %}
-      {{ form.as_p }}
-
-
-      <p>Pests:</p>
-      <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
-      <label for="id_tbd">tbd</label><br>
-      {% for pest in pests %}
-        <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
-        <label for="id_{{ pest }}">{{ pest }}</label><br>
-      {% endfor %}
-
-
-      <!-- ------------------------ -->
-      <!-- Audio recorder HTML here -->
-      <!-- ------------------------ -->
-      <h5>Audio Recording - Scientific Name</h5>   
-      <hr>
-      <div class="wrapper">
-        <!-- HTML section for graphical display -->
-        <section class="main-controls">
-          <canvas class="visualizer" height="80px"></canvas>
-          <div id="buttons">
-            <button class="record bnd-button bnd-round-large bnd-grey">Record</button>
-            <button class="stop   bnd-button bnd-round-large bnd-grey"  >Stop</button>
+      <div class="grid-container">
+        <!-- Attributes -->
+        <div class="attributes">
+          <fieldset>
+            <legend>Attributes:</legend>
+            {{ form.commonName.as_field_group  }} <br>
+            {{ form.type_x.as_field_group      }} <br>
+            {{ form.height_feet.as_field_group }} <br>
+            {{ form.height_inch.as_field_group }} <br>
+            {{ form.width_feet.as_field_group  }} <br>
+            {{ form.width_inch.as_field_group  }}
+          </fieldset>
+          {{ form.ca_native.as_field_group }}
+          {{ form.pollinators.as_field_group }}
+        </div>
+        <!-- Attributes: Blooms -->
+        <div class="blooms">
+            {{ form.bloom_color.as_field_group }}
+            {{ form.bloom_season.as_field_group }}
+            {{ form.bloom_start.as_field_group }}
+            {{ form.bloom_end.as_field_group }}
+        </div>
+        <!-- Requirements -->
+        <div class="requirements">
+          <fieldset>
+            <legend>Requirements:</legend>
+            {{ form.sun_exposure.as_field_group }}
+            {{ form.water_rqmts.as_field_group }}
+            {{ form.soil_type.as_field_group }}
+            {{ form.pH_min.as_field_group }}
+            {{ form.pH_max.as_field_group }}
+            {{ form.heat_tolerance.as_field_group }}
+            {{ form.usda_zone_min.as_field_group }}
+            {{ form.usda_zone_max.as_field_group }}
+            {{ form.sunset_zones.as_field_group }}
+          </fieldset>
+        </div>
+        <!-- Recommendations -->
+        <div class="recommendations">
+          <fieldset>
+            <legend>Recommendations:</legend>
+            {{ form.ucd_all_star.as_field_group }}
+            {{ form.davis_trees.as_field_group }}
+            {{ form.sunset_z14.as_field_group }}
+          </fieldset>
+        </div>
+        <div class="description">
+          {{ form.description.as_field_group }}
+        </div>
+        <div class="pruning">
+          {{ form.pruning.as_field_group }}
+        </div>
+        <div class="fertilization">
+          {{ form.fertilization.as_field_group }}
+        </div>
+        <div class="propagation">
+          {{ form.propagation.as_field_group }}
+        </div>
+        <div class="pests_diseases">
+          {{ form.pests_diseases.as_field_group }}
+        </div>
+        <!-- Pest Selection -->
+        <div class="pests">
+          <fieldset>
+            <legend>Pests:</legend>
+            <label for="id_tbd">
+              <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
+              tbd
+            </label>
+            {% for pest in pests %}
+              <label for="id_{{ pest }}">
+                <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+                {{ pest }}
+              </label>
+            {% endfor %}
+          </fieldset>
+        </div>
+        <!-- ------------------------ -->
+        <!-- Audio recorder HTML here -->
+        <!-- ------------------------ -->
+        <div class="pronunciation">
+          <h5>Audio Recording - Scientific Name</h5>  
+          {{ form.phonetic_spelling.as_field_group }} 
+          <hr>
+          <div class="wrapper">
+            <!-- HTML section for graphical display -->
+            <section class="main-controls">
+              <canvas class="visualizer" height="80px"></canvas>
+              <div id="buttons">
+                <button class="record bnd-button bnd-round-large bnd-grey">Record</button>
+                <button class="stop   bnd-button bnd-round-large bnd-grey"  >Stop</button>
+              </div>
+            </section>
+            <!-- HTML section for sound clip player -->
+            <!-- Javascript will insert sound clips here -->
+            <section class="sound-clips"></section>
           </div>
-        </section>
-        <!-- HTML section for sound clip player -->
-        <!-- Javascript will insert sound clips here -->
-        <section class="sound-clips"></section>
+        </div>
+        <!-- Plant Taxonomy -->
+        <div class="taxonomy">
+          <fieldset>
+            <legend>Taxonomy:</legend>
+            {{ form.kingdom.as_field_group }}
+            {{ form.subkingdom.as_field_group }}
+            {{ form.superdivision.as_field_group }}
+            {{ form.division.as_field_group }}
+            {{ form.class_x.as_field_group }}
+            {{ form.subclass.as_field_group }}
+            {{ form.order.as_field_group }}
+            {{ form.family.as_field_group }}
+            {{ form.genus.as_field_group }}
+            {{ form.species.as_field_group }}
+            {{ form.variety.as_field_group }}
+            {{ form.cultivar.as_field_group }}
+          </fieldset>
+        </div>
+        <!-- Plant Images -->
+        <div class="images">
+          <fieldset>
+            <legend>Images:</legend>
+            {{ form.image_1.as_field_group }}
+            {{ form.caption_1.as_field_group }}
+            {{ form.image_2.as_field_group }}
+            {{ form.caption_2.as_field_group }}
+            {{ form.image_3.as_field_group }}
+            {{ form.caption_3.as_field_group }}
+            {{ form.image_4.as_field_group }}
+            {{ form.caption_4.as_field_group }}
+          </fieldset>
+        </div>
+        <!-- Content Creation Status and Notes -->
+        <div class="creator_notes">
+          <fieldset>
+            <legend>Content Creation Status:</legend>
+            {{ form.status.as_field_group }}
+            <br>
+            {{ form.creator_notes.as_field_group }}
+          </fieldset>
+        </div>
       </div>
-      <hr>
+
       <button type="submit" class="bnd-button-submit">Submit</button>
       <button type="button" class="bnd-button bnd-yellow bnd-round-medium" onclick="validatePlantForm()">Check</button>
       <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium">Reset </button>
@@ -154,7 +264,7 @@
     const tmp_1 = sunset_zones.replaceAll(' ', '');
     const ranges = tmp_1.split(',');
 
-    // Check for casee where the Sunset Zones are not tbd
+    // Check for case where the Sunset Zones are not tbd
     if (tmp_1 != 'tbd')
     {
       ranges.forEach(function(range) 

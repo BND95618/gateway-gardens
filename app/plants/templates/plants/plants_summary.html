@@ -30,7 +30,7 @@
           <button onclick="column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
           <button onclick="plants_chart()"   class="bnd-dropdown-button">Bloom Charts  </button>
           {% if perms.plants.add_plant %}
-            <a href="{% url 'plants:plants_add' %}" class="bnd-dropdown-button">Add Plant</a>
+            <a href="{% url 'plants:plant_add' %}" class="bnd-dropdown-button">Add Plant</a>
           {% endif %}
         </div>
       </span>

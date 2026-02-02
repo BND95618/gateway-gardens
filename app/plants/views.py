@@ -1446,7 +1446,7 @@ def plant_details(request, id):
             }
     return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
 
-def plants_add(request):
+def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1537,7 +1537,7 @@ def plants_add(request):
                     'pests'            : pests,
                     'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
-        return render(request, 'plants/plants_add.html', context)
+        return render(request, 'plants/plant_add.html', context)
 
 def plant_update(request, id):
     """ Update the attributes for an existing plant """

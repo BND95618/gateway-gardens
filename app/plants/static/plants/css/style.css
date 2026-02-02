@@ -154,7 +154,7 @@ figcaption {
     left:             0;
     z-index:          50;
     width:            100%;
-    height:           120px; 
+    height:           100px; 
     margin:           0px;
     padding:          0px;
     background-color: white;
@@ -257,6 +257,7 @@ figcaption {
     clear:   both;
 }
 /* ------------------------------------------------------------ */
+/*                                                              */
 /* ------------------------------------------------------------ */
 .bnd-section
 {
@@ -388,6 +389,77 @@ figcaption {
 {
     cursor:  not-allowed;
     opacity: 0.3;
+}
+/* ------------------------------------------------------------ */
+/* Plant Add/Update Form formatting                             */
+/* ------------------------------------------------------------ */
+.grid-container
+{ 
+    display:          grid;
+    grid-gap:         8px;
+    background-color: green;
+    padding:          10px;
+    grid-template-areas:
+    'attributes     blooms         requirements   recommendations taxonomy      pests'
+    'description    description    description    .               .             pests'
+    'pruning        pruning        pruning        .               .             pests'
+    'fertilization  fertilization  fertilization  .               .             pests'
+    'propagation    propagation    propagation    images          images        images'
+    'pests_diseases pests_diseases pests_diseases images          images        images'
+    'creator_notes  creator_notes  creator_notes  pronunciation   pronunciation pronunciation';
+}
+
+.attributes      { grid-area: attributes;      }
+.blooms          { grid-area: blooms;          }
+.requirements    { grid-area: requirements;    }
+.recommendations { grid-area: recommendations; }
+.description     { grid-area: description;     }
+.pruning         { grid-area: pruning;         }
+.fertilization   { grid-area: fertilization;   }
+.propagation     { grid-area: propagation;     }
+.pests_diseases  { grid-area: pests_diseases;  }
+.pests           { grid-area: pests;           }
+.pronunciation   { grid-area: pronunciation;   }
+.taxonomy        { grid-area: taxonomy;        }
+.images          { grid-area: images;          }
+.creator_notes   { grid-area: creator_notes;   }
+
+.grid-container > div 
+{
+    background-color: whitesmoke;
+    text-align: left;
+    padding: 8px 8px;
+    font-size: 12px;
+}
+.grid-container label 
+{
+    display:    block;
+    min-width:  8em;
+    text-align: left;
+    font-size:  12px;
+}
+.grid-container input
+{
+    background-color: lightgray;
+    line-height:      80%;
+    font-size:        12px;
+}
+.grid-container select 
+{
+    display:          inline-block; 
+    min-width:        3em;
+    border-width:     2px;
+    background-color: lightgray;
+    text-align:       left;
+    line-height:      80%;
+    font-size:        12px; 
+}
+.grid-container input:hover,
+.grid-container input:focus,
+.grid-container select:hover,
+.grid-container select:focus
+{
+    background-color: whitesmoke
 }
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */
