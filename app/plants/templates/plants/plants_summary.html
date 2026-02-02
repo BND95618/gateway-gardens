@@ -405,7 +405,7 @@
             {% if perms.plants.change_plant %}
             <td class="bnd-table-icon">
               <div class="bnd-tooltip">
-                <a href="{% url 'plants:plant_update' plant.id %}">
+                <a href="{% url 'plants:plant_edit' plant.id %}">
                   <i    class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>

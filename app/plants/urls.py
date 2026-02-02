@@ -33,7 +33,7 @@ urlpatterns = [
     path('my_column_chooser',         views.my_column_chooser,   name='my_column_chooser'),
     #
     path('myplant_details/<int:id>',   views.myplant_details,     name='myplant_details'),
-    path('myplant_update/<int:id>',    views.myplant_update,      name='myplant_update'),
+    path('myplant_edit/<int:id>',    views.myplant_update,      name='myplant_update'),
     path('myplant_comment/<int:id>',   views.myplant_comment,     name='myplant_comment'),
     path('myplant_todo_add/<int:id>',  views.myplant_todo_add,    name='myplant_todo_add'),
     path('myplant_todo_edit/<int:id>', views.myplant_todo_edit,   name='myplant_todo_edit'),
@@ -48,7 +48,7 @@ urlpatterns = [
     path('plants_about',              views.plants_about,        name='plants_about'),
     #
     path('plant_add',                 views.plant_add,           name='plant_add'),
-    path('plant_update/<int:id>',     views.plant_update,        name='plant_update'),
+    path('plant_edit/<int:id>',       views.plant_edit,          name='plant_edit'),
     path('plant_details/<int:id>',    views.plant_details,       name='plant_details'),
     path('plants_comment/<int:id>',   views.plants_comment,      name='plants_comment'),
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),

@@ -99,7 +99,7 @@ web browser.
 template with a context dictionary and return an HttpResponse object containing 
 the rendered HTML.
 
-  return render(request, 'plants/plant_update.html', context)
+  return render(request, 'plants/plant_edit.html', context)
 
 'HttpResponseRedirect' is a class within django.http that facilitates redirecting
 a user's browser to a different URL. It is commonly used after processing form

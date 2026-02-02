@@ -440,6 +440,7 @@ figcaption {
 }
 .grid-container input
 {
+    border-width:     2px;
     background-color: lightgray;
     line-height:      80%;
     font-size:        12px;
@@ -460,6 +461,12 @@ figcaption {
 .grid-container select:focus
 {
     background-color: whitesmoke
+}
+.grid-container select,
+.grid-container input[type="radio"],
+.grid-container input[type="checkbox"]
+{
+    cursor: pointer;
 }
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */

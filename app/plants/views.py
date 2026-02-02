@@ -1450,96 +1450,17 @@ def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    # Create a dummy plant and save it to obtain an ID
     plant = Plant()
-    if request.POST:
-        form = PlantAddUpdateForm(request.POST, request.FILES)
-        if form.is_valid():
-            plant.status         = form.cleaned_data.get('status')
-            plant.commonName     = form.cleaned_data.get('commonName')
-            plant.type_x         = form.cleaned_data.get('type_x')
-            plant.bloom_color    = form.cleaned_data.get('bloom_color')
-            plant.bloom_season   = form.cleaned_data.get('bloom_season')
-            plant.bloom_start    = form.cleaned_data.get('bloom_start')
-            plant.bloom_end      = form.cleaned_data.get('bloom_end')
-            plant.pollinators    = form.cleaned_data.get('pollinators')
-            plant.height_feet    = form.cleaned_data.get('height_feet')
-            plant.height_inch    = form.cleaned_data.get('height_inch')
-            plant.width_feet     = form.cleaned_data.get('width_feet')
-            plant.width_inch     = form.cleaned_data.get('width_inch')
-            plant.sun_exposure   = form.cleaned_data.get('sun_exposure')
-            plant.water_rqmts    = form.cleaned_data.get('water_rqmts')
-            plant.pH_min         = form.cleaned_data.get('pH_min')
-            plant.pH_max         = form.cleaned_data.get('pH_max')
-            plant.soil_type      = form.cleaned_data.get("soil_type")
-            plant.heat_tolerance = form.cleaned_data.get('heat_tolerance')
-            plant.ca_native      = form.cleaned_data.get('ca_native')
-            plant.ucd_all_star   = form.cleaned_data.get('ucd_all_star')
-            plant.davis_trees    = form.cleaned_data.get('davis_trees')
-            plant.sunset_z14     = form.cleaned_data.get('sunset_z14')
-            plant.usda_zone_min  = form.cleaned_data.get('usda_zone_min')
-            plant.usda_zone_max  = form.cleaned_data.get('usda_zone_max')
-            plant.sunset_zones   = form.cleaned_data.get('sunset_zones')
-            plant.kingdom        = form.cleaned_data.get('kingdom')
-            plant.subkingdom     = form.cleaned_data.get('subkingdom')
-            plant.superdivision  = form.cleaned_data.get('superdivision')
-            plant.division       = form.cleaned_data.get('division')
-            plant.class_x        = form.cleaned_data.get('class_x')
-            plant.subclass       = form.cleaned_data.get('subclass')
-            plant.order          = form.cleaned_data.get('order')
-            plant.family         = form.cleaned_data.get('family')
-            plant.genus          = form.cleaned_data.get('genus')
-            plant.species        = form.cleaned_data.get('species')
-            plant.variety        = form.cleaned_data.get('variety')
-            plant.cultivar       = form.cleaned_data.get('cultivar')
-            plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
-            if 'blob' in request.FILES:
-                audio_name = request.FILES['blob']
-                plant.audio_name = audio_name
-            plant.description    = form.cleaned_data.get('description')
-            plant.pruning        = form.cleaned_data.get('pruning')
-            plant.fertilization  = form.cleaned_data.get('fertilization')
-            plant.propagation    = form.cleaned_data.get('propagation')
-            plant.pests_diseases = form.cleaned_data.get('pests_diseases')
-            # Check to see if an image file has been specified
-            if 'image_1' in request.FILES:
-                plant.image_1   = request.FILES['image_1']
-                plant.caption_1 = form.cleaned_data.get('caption_1')
-            if 'image_2' in request.FILES:
-                plant.image_2   = request.FILES['image_2']
-                plant.caption_2 = form.cleaned_data.get('caption_2')
-            if 'image_3' in request.FILES:
-                plant.image_3   = request.FILES['image_3']
-                plant.caption_3 = form.cleaned_data.get('caption_3')
-            if 'image_4' in request.FILES:
-                plant.image_4   = request.FILES['image_4']
-                plant.caption_4 = form.cleaned_data.get('caption_4')
-            # Admin
-            plant.creator       = request.user.username
-            plant.creator_notes = form.cleaned_data.get('creator_notes')
-            plant.status        = form.cleaned_data.get('status')
-            # Build list of bloom months
-            plant.bloom_months = bloom_month_list(plant.bloom_start, plant.bloom_end, month_opt) 
-            plant.save()
+    plant.save()
+    # Give the new plant a default common name and status
+    plant.commonName = "New Plant " + str(plant.id)
+    plant.status     = "Development"
+    plant.save()
+    # Edit the newly created plant
+    return plant_edit(request, plant.id)
 
-            # Add the selected pests to the selected plant
-            pest_list = request.POST.getlist('pest_list')
-            pests = Pest.objects.all()
-            for pest_item in pest_list:
-                for pest in pests:
-                    if (pest.pest_name == pest_item):
-                        pest.plants.add(plant)
-
-        return HttpResponseRedirect(reverse('plants:plants_summary'))
-    else:
-        form = PlantAddUpdateForm()
-        pests = Pest.objects.all()
-        context = { 'form'             : form,
-                    'pests'            : pests,
-                    'usda_zones_opt'   : usda_zones_opt,
-                    'sunset_zones_opt' : sunset_zones_opt }
-        return render(request, 'plants/plant_add.html', context)
-
-def plant_update(request, id):
+def plant_edit(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1720,7 +1641,7 @@ def plant_update(request, id):
                     'form'             : form,
                     'usda_zones_opt'   : usda_zones_opt,
                     'sunset_zones_opt' : sunset_zones_opt }
-        return render(request, 'plants/plant_update.html', context)
+        return render(request, 'plants/plant_edit.html', context)
 
 def plants_comment(request, id):
     """ Associate a comment to a plant """
