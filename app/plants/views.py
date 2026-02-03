@@ -1450,7 +1450,7 @@ def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    # Create a dummy plant and save it to obtain an ID
+    # Create a new plant and save it to obtain an ID
     plant = Plant()
     plant.save()
     # Give the new plant a default common name and status
@@ -1458,7 +1458,7 @@ def plant_add(request):
     plant.status     = "Development"
     plant.save()
     # Edit the newly created plant
-    return plant_edit(request, plant.id)
+    return HttpResponseRedirect(reverse('plants:plant_edit', args=(plant.id,))) 
 
 def plant_edit(request, id):
     """ Update the attributes for an existing plant """

@@ -155,31 +155,100 @@
             {{ form.cultivar.as_field_group }}
           </fieldset>
         </div>
-        <!-- Plant Images -->
-        <div class="images">
-          <fieldset>
-            <legend>Images:</legend>
-            {{ form.image_1.as_field_group }}
-            {{ form.caption_1.as_field_group }}
-            {{ form.image_2.as_field_group }}
-            {{ form.caption_2.as_field_group }}
-            {{ form.image_3.as_field_group }}
-            {{ form.caption_3.as_field_group }}
-            {{ form.image_4.as_field_group }}
-            {{ form.caption_4.as_field_group }}
-          </fieldset>
-        </div>
+        
         <!-- Content Creation Status and Notes -->
         <div class="creator_notes">
           <fieldset>
-            <legend>Content Creation Status:</legend>
+            <legend>Content Creation Details:</legend>
+            Creator: {{ plant.creator }}
+            <br>
+            Date: {{ plant.creation_date }}
+            <br>
             {{ form.status.as_field_group }}
             <br>
             {{ form.creator_notes.as_field_group }}
           </fieldset>
         </div>
-      </div>
 
+        <!-- Plant images -->
+        <div class="images">
+          <fieldset>
+            <legend>Images:</legend>
+            <div class="bnd-flex-container">
+              <!-- Image 1 -->
+              <figure class="flex-item">
+                <fieldset>
+                  <legend>Image 1:</legend>
+                  <label for="id_image_1">Filename:</label>
+                  {{ form.image_1 }}
+                  <br>
+                  <label for="id_caption_1">Caption:</label>
+                  {{ form.caption_1 }}
+
+                  {% if plant.image_1 %}
+                    <hr>
+                    <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+                    <figcaption>{{ plant.caption_1 }}</figcaption>
+                  {% endif %}
+                </fieldset>
+              </figure>
+              <!-- Image 2 -->
+              <figure class="flex-item">
+                <fieldset>
+                  <legend>Image 2:</legend>
+                  <label for="id_image_2">Filename:</label>
+                  {{ form.image_2 }}
+                  <br>
+                  <label for="id_caption_2">Caption:</label>
+                  {{ form.caption_2 }}
+
+                  {% if plant.image_2 %}
+                    <hr>
+                    <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+                    <figcaption>{{ plant.caption_2 }}</figcaption>
+                  {% endif %}
+                </fieldset>
+              </figure>
+`             <!-- Image 3 -->
+              <figure class="flex-item">
+                <fieldset>
+                  <legend>Image 3:</legend>
+                  <label for="id_image_3">Filename:</label>
+                  {{ form.image_3 }}
+                  <br>
+                  <label for="id_caption_3">Caption:</label>
+                  {{ form.caption_3 }}
+
+                  {% if plant.image_3 %}
+                    <hr>
+                    <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+                    <figcaption>{{ plant.caption_3 }}</figcaption>
+                  {% endif %}
+                </fieldset>
+              </figure>
+              <!-- Image 4 -->
+              <figure class="flex-item">
+                <fieldset>
+                  <legend>Image 4:</legend>
+                  <label for="id_image_4">Filename:</label>
+                  {{ form.image_4 }}
+                  <br>
+                  <label for="id_caption_4">Caption:</label>
+                  {{ form.caption_4 }}
+
+                  {% if plant.image_4 %}
+                    <hr>
+                    <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+                    <figcaption>{{ plant.caption_4 }}</figcaption>
+                  {% endif %}
+                </fieldset>
+              </figure>
+
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <br>
       <button type="submit" class="bnd-button-submit">Submit</button>
       <button type="button" class="bnd-button bnd-yellow bnd-round-medium" onclick="validatePlantForm()">Check</button>
       <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium">Reset </button>

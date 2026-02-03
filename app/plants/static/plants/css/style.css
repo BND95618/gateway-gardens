@@ -295,7 +295,7 @@ figcaption {
 }
 .bnd-flex-item
 {
-    min-width:        400px;
+    min-width:        200px;
     max-width:        600px;
 }
 /* ------------------------------------------------------------ */
@@ -400,13 +400,14 @@ figcaption {
     background-color: green;
     padding:          10px;
     grid-template-areas:
-    'attributes     blooms         requirements   recommendations taxonomy      pests'
-    'description    description    description    .               .             pests'
-    'pruning        pruning        pruning        .               .             pests'
-    'fertilization  fertilization  fertilization  .               .             pests'
-    'propagation    propagation    propagation    images          images        images'
-    'pests_diseases pests_diseases pests_diseases images          images        images'
-    'creator_notes  creator_notes  creator_notes  pronunciation   pronunciation pronunciation';
+    'attributes     blooms         requirements   recommendations taxonomy      pests        '
+    'description    description    description    description     .             pests        '
+    'pruning        pruning        pruning        pruning         .             pests        '
+    'fertilization  fertilization  fertilization  fertilization   .             pests        '
+    'propagation    propagation    propagation    propagation     .             pests        '
+    'pests_diseases pests_diseases pests_diseases pests_diseases  pronunciation pronunciation'
+    'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation pronunciation'
+    'images         images         images         images         images         images       ';
 }
 
 .attributes      { grid-area: attributes;      }
@@ -434,7 +435,7 @@ figcaption {
 .grid-container label 
 {
     display:    block;
-    min-width:  8em;
+    min-width:  4em;
     text-align: left;
     font-size:  12px;
 }
@@ -467,6 +468,26 @@ figcaption {
 .grid-container input[type="checkbox"]
 {
     cursor: pointer;
+}
+.grid-container .flex-item
+{
+    min-width:        200px;
+    max-width:        600px;
+}
+.grid-container .images input[type="file"]
+{
+    width:        100%;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+.grid-container .images input[type="text"]
+{
+    width:  100%;
+}
+.grid-container .creator_notes label 
+{
+    display:   inline-block;
 }
 /* ------------------------------------------------------------ */
 /* Hide the element                                             */
