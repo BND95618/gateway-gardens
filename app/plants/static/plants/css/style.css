@@ -41,10 +41,6 @@
     --shadow-parameters: 5px 10px 18px darkgray;
 }
 /* ------------------------------------------------------------ */
-/* Global formatting                                            */
-/* ------------------------------------------------------------ */
-* { box-sizing: border-box; }   /* use the new box model */
-/* ------------------------------------------------------------ */
 /* HTML element formatting                                      */
 /* ------------------------------------------------------------ */
 html
@@ -54,6 +50,11 @@ html
     padding:     0;             /* remove default */
     overflow-x:  hidden;
 }
+/* ------------------------------------------------------------ */
+/* Global formatting ("HTML and CSS p. 472)                     */
+/* ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: inherit; }
+
 body
 {
     margin:      0;             /* remove default */
@@ -239,18 +240,18 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
 /* ------------------------------------------------------------ */
+.bnd-content-main-80
+{ 
+    margin-top: 80px; 
+    padding:    0.01em 16px;
+}
 .bnd-content-main-100
 { 
     margin-top: 100px; 
     padding:    0.01em 16px;
 }
-.bnd-content-main-120
-{ 
-    margin-top: 120px; 
-    padding:    0.01em 16px;
-}
-.bnd-content-main-100:after, 
-.bnd-content-main-120:before
+.bnd-content-main-80:after, 
+.bnd-content-main-100:before
 {
     content: "";
     display: table;
@@ -295,7 +296,7 @@ figcaption {
 }
 .bnd-flex-item
 {
-    min-width:        200px;
+    min-width:        150px;
     max-width:        600px;
 }
 /* ------------------------------------------------------------ */
@@ -400,14 +401,14 @@ figcaption {
     background-color: green;
     padding:          10px;
     grid-template-areas:
-    'attributes     blooms         requirements   recommendations taxonomy      pests        '
-    'description    description    description    description     .             pests        '
-    'pruning        pruning        pruning        pruning         .             pests        '
-    'fertilization  fertilization  fertilization  fertilization   .             pests        '
-    'propagation    propagation    propagation    propagation     .             pests        '
-    'pests_diseases pests_diseases pests_diseases pests_diseases  pronunciation pronunciation'
-    'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation pronunciation'
-    'images         images         images         images         images         images       ';
+    'attributes     blooms         requirements   recommendations taxonomy       pests        '
+    'description    description    description    description     description    description        '
+    'pruning        pruning        pruning        pruning         pruning        pruning        '
+    'fertilization  fertilization  fertilization  fertilization   fertilization  fertilization        '
+    'propagation    propagation    propagation    propagation     propagation    propagation        '
+    'pests_diseases pests_diseases pests_diseases pests_diseases  pests_diseases pests_diseases '
+    'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation  pronunciation'
+    'images         images         images         images          images         images       ';
 }
 
 .attributes      { grid-area: attributes;      }
@@ -419,23 +420,33 @@ figcaption {
 .fertilization   { grid-area: fertilization;   }
 .propagation     { grid-area: propagation;     }
 .pests_diseases  { grid-area: pests_diseases;  }
-.pests           { grid-area: pests;           }
+.pests          
+{ 
+    grid-area: pests;
+    height:   560px;
+    overflow-y: auto;
+}
 .pronunciation   { grid-area: pronunciation;   }
 .taxonomy        { grid-area: taxonomy;        }
 .images          { grid-area: images;          }
 .creator_notes   { grid-area: creator_notes;   }
 
+.grid-container .flex-item
+{
+    min-width:        160px;
+    max-width:        600px;
+}
 .grid-container > div 
 {
     background-color: whitesmoke;
-    text-align: left;
-    padding: 8px 8px;
-    font-size: 12px;
+    text-align:       left;
+    padding:          8px 8px;
+    font-size:        12px;
 }
 .grid-container label 
 {
     display:    block;
-    min-width:  4em;
+    min-width:  3em;
     text-align: left;
     font-size:  12px;
 }
@@ -449,7 +460,7 @@ figcaption {
 .grid-container select 
 {
     display:          inline-block; 
-    min-width:        3em;
+    min-width:        10px;
     border-width:     2px;
     background-color: lightgray;
     text-align:       left;
@@ -469,10 +480,11 @@ figcaption {
 {
     cursor: pointer;
 }
-.grid-container .flex-item
+.grid-container .images img
 {
-    min-width:        200px;
-    max-width:        600px;
+    display:      block;
+    margin-left:  auto;
+    margin-right: auto;
 }
 .grid-container .images input[type="file"]
 {
@@ -484,6 +496,10 @@ figcaption {
 .grid-container .images input[type="text"]
 {
     width:  100%;
+}
+.grid-container .images a
+{
+    display: none;
 }
 .grid-container .creator_notes label 
 {
@@ -702,7 +718,7 @@ figcaption {
 .bnd-table th 
 {
     position:         sticky;
-    top:              120px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
     padding:          12px 8px 12px 8px;
     background-color: slategray;
