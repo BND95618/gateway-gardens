@@ -1,5 +1,6 @@
 <!-- app/plants/templates/gardens_plan.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Garden | Plan</title>
@@ -16,7 +17,10 @@
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
-    <h3>My Garden Plan</h3>
+    <h3>
+        <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
+        My Garden Plan
+    </h3>
   </header>
 {% endblock header-completion %}
 

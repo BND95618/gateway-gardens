@@ -1,5 +1,6 @@
 <!-- /plants/templates/plants/pest_update.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>IPM | Update</title>
@@ -12,7 +13,10 @@
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
-    <h3>Update Pest</h3>
+    <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+      Update Pest
+    </h3>
   </header>
 {% endblock header-completion %}
 

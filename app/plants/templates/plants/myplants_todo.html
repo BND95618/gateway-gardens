@@ -1,5 +1,6 @@
 <!-- /app/plants/templates/plants/plants_about.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Gateway Gardens | Todo</title>
@@ -17,6 +18,7 @@
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
     <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
       To Do List
       <span class="bnd-dropdown-container">
         <button class="bnd-button-small">

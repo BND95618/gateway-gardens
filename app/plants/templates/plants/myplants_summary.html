@@ -1,5 +1,6 @@
 <!-- /app/plants/templates/plants/myplants_summary.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>My Plants | Summary</title>
@@ -19,6 +20,7 @@
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
     <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
       My Plants
       <span class="bnd-dropdown-container">
         <button class="bnd-button-small">

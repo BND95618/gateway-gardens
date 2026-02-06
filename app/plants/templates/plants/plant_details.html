@@ -1,5 +1,6 @@
 <!-- /plants/templates/plant_details.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Plant | Details</title>
@@ -13,6 +14,7 @@
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
     <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
       {{ plant.commonName }}
       <span>(</span>
       <span>{{ plant.genus }} {{ plant.species }}</span>

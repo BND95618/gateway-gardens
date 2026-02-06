@@ -1,5 +1,6 @@
 <!-- app/plants/templates/plants/myplant_comment.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>My Plants | Add</title>
@@ -13,6 +14,7 @@
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
     <h3>
+      <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
       Comments related to: 
       {{ myplant.plant.commonName }}
       <span>(</span>

@@ -1,5 +1,6 @@
 <!-- /app/plants/templates/plants/plants_glossary.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 {% block title %}
   <title>Glossary</title>
@@ -16,7 +17,10 @@
 {% block header-completion %}
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
-    <h3>Glossary</h3>
+    <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+      Glossary
+    </h3>
   </header>
 {% endblock header-completion %}
 

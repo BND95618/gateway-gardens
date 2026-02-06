@@ -695,6 +695,17 @@ figcaption {
     top:              0;
     transform:        translate(-50%,0%);
 }
+.bnd-logo
+{
+    display:       inline-block;
+    width:         40px; 
+    height:        auto; 
+    margin:        -4px 4px -4px -4px;
+    padding:       4px;
+    border:        1px solid green; 
+    background-color: white;
+    border-radius: 16px;
+}
 /* ------------------------------------------------------------ */
 /* Play audio formatting                                        */
 /* ------------------------------------------------------------ */

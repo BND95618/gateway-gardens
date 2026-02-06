@@ -1,5 +1,6 @@
 <!-- app/plants/templates/plants/plant_edit.html -->
 {% extends "plants/master.html" %}
+{% load static %}
 
 <!-- Required in order to load static files -->
 {% load static %}
@@ -16,6 +17,7 @@
   <!-- complete the header from master.html -->
   <header class="bnd-page-banner">
     <h3>
+      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
       Update Plant:{{ plant.commonName }}
       <span>(</span>
       <span>{{ plant.genus }} {{ plant.species }}</span>
