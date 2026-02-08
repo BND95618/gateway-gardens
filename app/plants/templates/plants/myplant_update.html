@@ -12,39 +12,34 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-      Updating: 
-      {{ myplant.plant.commonName }}
-      <span>(</span>
-      <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
-      {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
-        <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
-      {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
-        <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
-      {% endif %}
-      <span>)</span>
-      in My Garden
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+    Updating: 
+    {{ myplant.plant.commonName }}
+    <span>(</span>
+    <span>{{ myplant.plant.genus }} {{ myplant.plant.species }}</span>
+    {% if myplant.plant.variety != "tbd" and myplant.plant.variety != 'n/a' %}
+      <span class="bnd-variety">var. {{ myplant.plant.variety }}</span> 
+    {% elif myplant.plant.cultivar != "tbd" and myplant.plant.cultivar != 'n/a' %}
+      <span class="bnd-cultivar">'{{ myplant.plant.cultivar }}'</span>
+    {% endif %}
+    <span>)</span>
+    in My Garden
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-  <!-- Update Plant in My Plants -->
-  <div class="bnd-content-main-80">
-    <!-- Required for django_flatpickr -->
-    {{ form.media }}
-    <form action="" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="bnd-button-submit">Submit</button>
-      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-      <a href="{% url 'plants:myplants_summary' %}">
-        <button type="button" class="bnd-button-cancel">Cancel</button>
-      </a>
-    </form>
-  </div>
+  <!-- Required for django_flatpickr -->
+  {{ form.media }}
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bnd-button-submit">Submit</button>
+    <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
+    <a href="{% url 'plants:myplants_summary' %}">
+      <button type="button" class="bnd-button-cancel">Cancel</button>
+    </a>
+  </form>
 {% endblock content %}
 
 {% block js %}

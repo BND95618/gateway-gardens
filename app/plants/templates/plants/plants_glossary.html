@@ -16,147 +16,141 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-      Glossary
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+    Glossary
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-  <!-- Glossary -->
-  <div class="bnd-content-main-80">
-    <h3>Cultivar</h3>
-    <p class="bnd-margin-left">
-      A specific plant variety that has been intentionally bred by humans to 
-      possess desirable characteristics, meaning it is cultivated and maintained 
-      through human intervention; essentially, a cultivar is a "cultivated 
-      variety" of a plant species.  The term cultivar is a blended word for 
-      “cultivated variety". 
-      <p class="bnd-margin-left"> 
-      Cultivars are capitalized and enclosed in single quotes. Example: tbd
-      </p>
+  <h3>Cultivar</h3>
+  <p class="bnd-margin-left">
+    A specific plant variety that has been intentionally bred by humans to 
+    possess desirable characteristics, meaning it is cultivated and maintained 
+    through human intervention; essentially, a cultivar is a "cultivated 
+    variety" of a plant species.  The term cultivar is a blended word for 
+    “cultivated variety". 
+    <p class="bnd-margin-left"> 
+    Cultivars are capitalized and enclosed in single quotes. Example: tbd
     </p>
+  </p>
 
-    <h3>Fertilizer NPK</h3>
-    <p class="bnd-margin-left">
-      The NPK ratio represents the availability of Nitrogen, Phosphorous, and Potassium, 
-      by weight, contained in a plant fertilizer.
-    </p>
-      <ul>
-        <li>
-          N = Nitrogen: Helps leaves grow and gives plants a deep green color
-        </li>
-        <li>
-          P = Phosphorus: Helps roots develop and absorb nutrients
-        </li>
-        <li>
-          K = Potasium: Helps plants convert food into energy and strengthens plant blades
-        </li>
-      </ul>
-
-    <h3>Genus</h3>
-      <p class="bnd-margin-left">
-        Naming: Capitalize and italize.
-      </p>
-
-    <h3>Hybrid</h3>
-    <p class="bnd-margin-left">
-      A hybrid plant is the offspring of a cross between two different species 
-      or varieties. Hybrids have greater genetic variability than their parents. 
-      Hybrid plants tend to be more vigorous than their parents, and often have 
-      faster growth, increased yield, and greater size.  Hybrids cannot usually 
-      be reproduced by seed and must be clonally reproduced (i.e cuttings, grafting, 
-      or tissue culture). 
-    </p>
-
-    <h3>Integrated Pest Management (IPM)</h3>
-    <p class="bnd-margin-left">
-      IPM is an ecosystem-based strategy that focuses on long-term prevention of pests or 
-      their damage through a combination of techniques such as biological control, habitat 
-      manipulation, modification of cultural practices, and use of resistant varieties. 
-      Pesticides are used only after monitoring indicates they are needed according to 
-      established guidelines, and treatments are made with the goal of removing only the 
-      target organism. Pest control materials are selected and applied in a manner that 
-      minimizes risks to human health, beneficial and nontarget organisms, and the environment.
-    </p>
-
-    <h3>Species</h3>
-    <p class="bnd-margin-left">
-      A natural grouping of similar plants (or organisms) that can interbreed. 
-      Usually, a species develops over time when the plant group is isolated 
-      and through inbreeding becomes a unique species.
-      <br><br>
-      Naming: Lower case and italize.
-    </p>
-
-    <h3>Sun Exposure</h3>
-    <div h4 class="bnd-margin-left">
-      <h4>What is Full Sun?</h4>
-      <p>
-        Full sun is defined as more than six hours of direct sun per day. If you live 
-        in a newly constructed development or out in the country where there are few 
-        trees, your garden may not see any shade at all during the day. Maybe your 
-        front porch faces South and has nothing obstructing the sun from mid-morning 
-        until early evening. Any amount of sun greater than six hours is considered 
-        full sun.
-      </p>
-      <h4>What is Part Sun?</h4>
-      <p>
-        Part sun is defined as four to six hours of direct sun per day. Not all those 
-        hours need to be accrued consecutively—it could mean a few hours of morning sun 
-        plus a few more in the afternoon. When a plant prefers part sun, although it does 
-        not need to be in direct sun all day, it will grow and bloom best with at least 
-        some of those hours being in the afternoon. These plants need some heat and 
-        intense sun exposure in order to produce flowers and new growth.
-      </p>
-      <h4>What is Part Shade?</h4>
-      <p>
-        Part shade is also defined as four to six hours of direct sun per day, but most 
-        of that should come in the morning hours when the sun’s rays are less intense. 
-        We say that plants which prefer part shade enjoy “cool sun”, meaning direct sun 
-        in the morning or evening and protection from the hot midday sun.
-      </p>
-      <h4>What is Full Shade?</h4>
-      <p>
-        Full shade is defined as less than four hours of direct sun per day. Notice we 
-        didn’t say zero hours of direct sun—that would be dense shade which is the darkest 
-        of all light levels where few plants can survive. Full shade loving plants enjoy a 
-        few hours of sun each day, preferably in the morning. 
-      </p>
-    </div>
-
-    <h3>Sunset Zones</h3>
-    <p class="bnd-margin-left">
-      Sunset climate zones consider the total climate.  Including the following factors:
-    </p>
+  <h3>Fertilizer NPK</h3>
+  <p class="bnd-margin-left">
+    The NPK ratio represents the availability of Nitrogen, Phosphorous, and Potassium, 
+    by weight, contained in a plant fertilizer.
+  </p>
     <ul>
-      <li>Winter minimum temperature</li>
-      <li>Summer maximum temperature</li>
-      <li>Length of growing season</li>
-      <li>Humidity</li>
-      <li>Rainfall patterns (timing and amount)</li>
-      <li>Wind</li>
+      <li>
+        N = Nitrogen: Helps leaves grow and gives plants a deep green color
+      </li>
+      <li>
+        P = Phosphorus: Helps roots develop and absorb nutrients
+      </li>
+      <li>
+        K = Potasium: Helps plants convert food into energy and strengthens plant blades
+      </li>
     </ul>
 
-    <h3>USDA Zones</h3>
-    <p class="bnd-margin-left">text here!</p>
-
-    <h3>Variety</h3>
+  <h3>Genus</h3>
     <p class="bnd-margin-left">
-      In plant taxonomy, a variety is a plant within a species group in nature that 
-      forms a trait. The trait is stable and can be reproduced either by seed or by 
-      cuttings or grafting.  A naturally occurring variation within a plant species, 
-      often arising from genetic mutations or environmental factors.
-    </p>
-    <p class="bnd-margin-left">
-      When writing a variety name within a plant’s full scientific name, the species 
-      name comes first followed by the abbreviation "var." followed by the variety 
-      name all lowercase and italicized.  Example: tbd
+      Naming: Capitalize and italize.
     </p>
 
+  <h3>Hybrid</h3>
+  <p class="bnd-margin-left">
+    A hybrid plant is the offspring of a cross between two different species 
+    or varieties. Hybrids have greater genetic variability than their parents. 
+    Hybrid plants tend to be more vigorous than their parents, and often have 
+    faster growth, increased yield, and greater size.  Hybrids cannot usually 
+    be reproduced by seed and must be clonally reproduced (i.e cuttings, grafting, 
+    or tissue culture). 
+  </p>
+
+  <h3>Integrated Pest Management (IPM)</h3>
+  <p class="bnd-margin-left">
+    IPM is an ecosystem-based strategy that focuses on long-term prevention of pests or 
+    their damage through a combination of techniques such as biological control, habitat 
+    manipulation, modification of cultural practices, and use of resistant varieties. 
+    Pesticides are used only after monitoring indicates they are needed according to 
+    established guidelines, and treatments are made with the goal of removing only the 
+    target organism. Pest control materials are selected and applied in a manner that 
+    minimizes risks to human health, beneficial and nontarget organisms, and the environment.
+  </p>
+
+  <h3>Species</h3>
+  <p class="bnd-margin-left">
+    A natural grouping of similar plants (or organisms) that can interbreed. 
+    Usually, a species develops over time when the plant group is isolated 
+    and through inbreeding becomes a unique species.
+    <br><br>
+    Naming: Lower case and italize.
+  </p>
+
+  <h3>Sun Exposure</h3>
+  <div h4 class="bnd-margin-left">
+    <h4>What is Full Sun?</h4>
+    <p>
+      Full sun is defined as more than six hours of direct sun per day. If you live 
+      in a newly constructed development or out in the country where there are few 
+      trees, your garden may not see any shade at all during the day. Maybe your 
+      front porch faces South and has nothing obstructing the sun from mid-morning 
+      until early evening. Any amount of sun greater than six hours is considered 
+      full sun.
+    </p>
+    <h4>What is Part Sun?</h4>
+    <p>
+      Part sun is defined as four to six hours of direct sun per day. Not all those 
+      hours need to be accrued consecutively—it could mean a few hours of morning sun 
+      plus a few more in the afternoon. When a plant prefers part sun, although it does 
+      not need to be in direct sun all day, it will grow and bloom best with at least 
+      some of those hours being in the afternoon. These plants need some heat and 
+      intense sun exposure in order to produce flowers and new growth.
+    </p>
+    <h4>What is Part Shade?</h4>
+    <p>
+      Part shade is also defined as four to six hours of direct sun per day, but most 
+      of that should come in the morning hours when the sun’s rays are less intense. 
+      We say that plants which prefer part shade enjoy “cool sun”, meaning direct sun 
+      in the morning or evening and protection from the hot midday sun.
+    </p>
+    <h4>What is Full Shade?</h4>
+    <p>
+      Full shade is defined as less than four hours of direct sun per day. Notice we 
+      didn’t say zero hours of direct sun—that would be dense shade which is the darkest 
+      of all light levels where few plants can survive. Full shade loving plants enjoy a 
+      few hours of sun each day, preferably in the morning. 
+    </p>
   </div>
+
+  <h3>Sunset Zones</h3>
+  <p class="bnd-margin-left">
+    Sunset climate zones consider the total climate.  Including the following factors:
+  </p>
+  <ul>
+    <li>Winter minimum temperature</li>
+    <li>Summer maximum temperature</li>
+    <li>Length of growing season</li>
+    <li>Humidity</li>
+    <li>Rainfall patterns (timing and amount)</li>
+    <li>Wind</li>
+  </ul>
+
+  <h3>USDA Zones</h3>
+  <p class="bnd-margin-left">text here!</p>
+
+  <h3>Variety</h3>
+  <p class="bnd-margin-left">
+    In plant taxonomy, a variety is a plant within a species group in nature that 
+    forms a trait. The trait is stable and can be reproduced either by seed or by 
+    cuttings or grafting.  A naturally occurring variation within a plant species, 
+    often arising from genetic mutations or environmental factors.
+  </p>
+  <p class="bnd-margin-left">
+    When writing a variety name within a plant’s full scientific name, the species 
+    name comes first followed by the abbreviation "var." followed by the variety 
+    name all lowercase and italicized.  Example: tbd
+  </p>
 {% endblock content%}
 
 {% block js %}

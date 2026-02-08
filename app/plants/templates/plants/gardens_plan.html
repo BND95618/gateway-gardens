@@ -16,551 +16,547 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-        <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-        My Garden Plan
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
+    My Garden Plan
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-    <div class="bnd-content-main-80">
-        <!-- Canvas -->
-        <canvas id="myCanvas">
-            Your browser does not support HTML 5 Canvas
-        </canvas>
+    <!-- Canvas -->
+    <canvas id="myCanvas">
+        Your browser does not support HTML 5 Canvas
+    </canvas>
 
-        <!-- Canvas tools-->
-        <form class = "bnd-light-grey">
-            <div style="padding: 10px 0px 0px 10px">
-                <label for="action" style="display: inline-block;">Action: </label>
-                <select id="id_action" name="action">
-                    <option value="select"   >select   </option>
-                    <option value="add plant">add plant</option>
-                    <option value="draw"     >draw     </option>
-                    <option value="pan"      >pan      </option>
-                    <option value="zoom"     >zoom     </option>
+    <!-- Canvas tools-->
+    <form class = "bnd-light-grey">
+        <div style="padding: 10px 0px 0px 10px">
+            <label for="action" style="display: inline-block;">Action: </label>
+            <select id="id_action" name="action">
+                <option value="select"   >select   </option>
+                <option value="add plant">add plant</option>
+                <option value="draw"     >draw     </option>
+                <option value="pan"      >pan      </option>
+                <option value="zoom"     >zoom     </option>
+            </select>
+            <span id="id_group_div" style="display: none;">
+                <button type="button" id="id_group" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Group</button>
+            </span>
+            <span id="id_ungroup_div" style="display: none;">
+                <button type="button" id="id_ungroup" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Ungroup</button>
+            </span>
+            <span class="bnd-right">
+                <button type="button" id="id_save"  class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Save</button>
+                <button type="button" id="id_clear" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Clear</button>
+            </span>
+        </div>
+    </form>
+
+    <!-- Canvas tool options -->
+    <form class = "bnd-light-grey bnd-text-black">
+        <!-- Tool options -->
+        <div style="margin: 0px; padding: 0px 0px 0px 10px">
+            <div id="id_plant_div" style="display: none;">
+                <label for="plant" style="display: inline-block;">Plant: </label>
+                <select id="id_plant" name="plant">
+                    <option value="--"> -- </option>
+                    <optgroup label="Annual" class = "bnd-text-black">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Annual" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Fern">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Fern" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Grass">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Grass" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Groundcover">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Groundcover" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Perennial">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Perennial" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Shrub">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Shrub" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Succulent">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Succulent" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Succulent">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Succulent" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Tree-Deciduous">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Tree-Deciduous" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Tree-Evergreen">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Tree-Evergreen" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Vegetable">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Vegetable" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
+                    <optgroup label="Vine">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Vine" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
                 </select>
-                <span id="id_group_div" style="display: none;">
-                    <button type="button" id="id_group" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Group</button>
-                </span>
-                <span id="id_ungroup_div" style="display: none;">
-                    <button type="button" id="id_ungroup" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Ungroup</button>
-                </span>
-                <span class="bnd-right">
-                    <button type="button" id="id_save"  class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Save</button>
-                    <button type="button" id="id_clear" class="bnd-button bnd-padding-small bnd-grey bnd-round-medium">Clear</button>
-                </span>
             </div>
-        </form>
-
-        <!-- Canvas tool options -->
-        <form class = "bnd-light-grey bnd-text-black">
-            <!-- Tool options -->
-            <div style="margin: 0px; padding: 0px 0px 0px 10px">
-                <div id="id_plant_div" style="display: none;">
-                    <label for="plant" style="display: inline-block;">Plant: </label>
-                    <select id="id_plant" name="plant">
-                        <option value="--"> -- </option>
-                        <optgroup label="Annual" class = "bnd-text-black">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Annual" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Fern">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Fern" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Grass">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Grass" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Groundcover">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Groundcover" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Perennial">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Perennial" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Shrub">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Shrub" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Succulent">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Succulent" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Succulent">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Succulent" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Tree-Deciduous">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Tree-Deciduous" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Tree-Evergreen">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Tree-Evergreen" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Vegetable">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Vegetable" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                        <optgroup label="Vine">
-                            {% for plant in plants %}
-                                {% if plant.type_x == "Vine" %}
-                                    <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
-                                {% endif %}
-                            {% endfor %}
-                        </optgroup>
-                    </select>
-                </div>
-                
-                <div id="id_shape_div" style="display: none;">
-                    <label for="shape" style="display: inline-block;">Shape: </label>
-                    <select id="id_shape" name="shape">
-                        <option value="line"     >line     </option>
-                        <option value="curve"    >curve    </option>
-                        <option value="rectangle">rectangle</option>
-                        <option value="circle"   >circle   </option>
-                        <option value="ellipse"  >ellipse  </option>
-                        <option value="polygon"  >polygon  </option>
-                        <option value="free form">free form</option>
-                    </select>
-                </div>
-                
-                <div id="id_line_width_div" style="display: none;">
-                    <label for="line_width" style="display: inline-block;">Line Width: </label>
-                    <select id="id_line_width" name="line_width">
-                        <option value="1">1 px</option>
-                        <option value="2">2 px</option>
-                        <option value="3">3 px</option>
-                        <option value="4">4 px</option>
-                    </select>
-                </div>
             
-                <div id="id_line_style_div" style="display: none;">
-                    <label for="line_style" style="display: inline-block;">Line Style: </label>
-                    <select id="id_line_style" name="line_style">
-                        <option value="solid" >solid </option>
-                        <option value="dashed">dashed</option>
-                        <option value="dotted">dotted</option>
-                    </select>
-                </div>
+            <div id="id_shape_div" style="display: none;">
+                <label for="shape" style="display: inline-block;">Shape: </label>
+                <select id="id_shape" name="shape">
+                    <option value="line"     >line     </option>
+                    <option value="curve"    >curve    </option>
+                    <option value="rectangle">rectangle</option>
+                    <option value="circle"   >circle   </option>
+                    <option value="ellipse"  >ellipse  </option>
+                    <option value="polygon"  >polygon  </option>
+                    <option value="free form">free form</option>
+                </select>
+            </div>
+            
+            <div id="id_line_width_div" style="display: none;">
+                <label for="line_width" style="display: inline-block;">Line Width: </label>
+                <select id="id_line_width" name="line_width">
+                    <option value="1">1 px</option>
+                    <option value="2">2 px</option>
+                    <option value="3">3 px</option>
+                    <option value="4">4 px</option>
+                </select>
+            </div>
         
-                <div id="id_line_color_div" style="display: none;">
-                    <label for="line_color" style="display: inline-block;">Line Color: </label>           
-                    <input type="color" id="id_line_color" name="line_color" value="#000000"/>
-                </div>
+            <div id="id_line_style_div" style="display: none;">
+                <label for="line_style" style="display: inline-block;">Line Style: </label>
+                <select id="id_line_style" name="line_style">
+                    <option value="solid" >solid </option>
+                    <option value="dashed">dashed</option>
+                    <option value="dotted">dotted</option>
+                </select>
+            </div>
+    
+            <div id="id_line_color_div" style="display: none;">
+                <label for="line_color" style="display: inline-block;">Line Color: </label>           
+                <input type="color" id="id_line_color" name="line_color" value="#000000"/>
+            </div>
 
-                <div id="id_line_opacity_sel_div" style="display: none;">
-                    <label for="id_line_color_div" style="display: inline-block;">Line Opacity: </label>
-                    <select id="id_line_opacity_sel" name="line_opacity_sel">
-                        <option value=0.0>  0%</option>
-                        <option value=0.1> 10%</option>
-                        <option value=0.2> 20%</option>
-                        <option value=0.3> 30%</option>
-                        <option value=0.4> 40%</option>
-                        <option value=0.5> 50%</option>
-                        <option value=0.6> 60%</option>
-                        <option value=0.7> 70%</option>
-                        <option value=0.8> 80%</option>
-                        <option value=0.9> 90%</option>
-                        <option value=1.0 selected>100%</option>
-                    </select>
-                </div>
-        
-                <div id="id_fill_div" style="display: none;">
-                    <label for="fill" style="display: inline-block;">Fill: </label>
-                    <input type="checkbox" id="id_fill" name="fill">
-                </div>
+            <div id="id_line_opacity_sel_div" style="display: none;">
+                <label for="id_line_color_div" style="display: inline-block;">Line Opacity: </label>
+                <select id="id_line_opacity_sel" name="line_opacity_sel">
+                    <option value=0.0>  0%</option>
+                    <option value=0.1> 10%</option>
+                    <option value=0.2> 20%</option>
+                    <option value=0.3> 30%</option>
+                    <option value=0.4> 40%</option>
+                    <option value=0.5> 50%</option>
+                    <option value=0.6> 60%</option>
+                    <option value=0.7> 70%</option>
+                    <option value=0.8> 80%</option>
+                    <option value=0.9> 90%</option>
+                    <option value=1.0 selected>100%</option>
+                </select>
+            </div>
+    
+            <div id="id_fill_div" style="display: none;">
+                <label for="fill" style="display: inline-block;">Fill: </label>
+                <input type="checkbox" id="id_fill" name="fill">
+            </div>
 
-                <div id="id_fill_color_div" style="display: none;">
-                    <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
-                    <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
-                </div>
+            <div id="id_fill_color_div" style="display: none;">
+                <label for="fill_color" style="display: inline-block;">Fill Color: </label>          
+                <input  type="color" id="id_fill_color" name="fill_color" value="#ffffff"/>
+            </div>
 
-                <div id="id_fill_opacity_sel_div" style="display: none;">
-                    <label for="id_fill_color_div" style="display: inline-block;">Fill Opacity: </label>
-                    <select id="id_fill_opacity_sel" name="fill_opacity_sel">
-                        <option value=0.0>  0%</option>
-                        <option value=0.1> 10%</option>
-                        <option value=0.2> 20%</option>
-                        <option value=0.3> 30%</option>
-                        <option value=0.4> 40%</option>
-                        <option value=0.5> 50%</option>
-                        <option value=0.6> 60%</option>
-                        <option value=0.7> 70%</option>
-                        <option value=0.8> 80%</option>
-                        <option value=0.9> 90%</option>
-                        <option value=1.0 selected>100%</option>
-                    </select>
-                </div>
+            <div id="id_fill_opacity_sel_div" style="display: none;">
+                <label for="id_fill_color_div" style="display: inline-block;">Fill Opacity: </label>
+                <select id="id_fill_opacity_sel" name="fill_opacity_sel">
+                    <option value=0.0>  0%</option>
+                    <option value=0.1> 10%</option>
+                    <option value=0.2> 20%</option>
+                    <option value=0.3> 30%</option>
+                    <option value=0.4> 40%</option>
+                    <option value=0.5> 50%</option>
+                    <option value=0.6> 60%</option>
+                    <option value=0.7> 70%</option>
+                    <option value=0.8> 80%</option>
+                    <option value=0.9> 90%</option>
+                    <option value=1.0 selected>100%</option>
+                </select>
+            </div>
 
-                <div id="id_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
-                    <input type="range" id="id_opacity_slider" class="slider" min="0" max="100" value="50">
-                    <output id="opacity" for="id_opacity_slider_div">100%</output>
-                </div>
+            <div id="id_opacity_slider_div" class="slidecontainer" style="display: none; margin: 10px">
+                <input type="range" id="id_opacity_slider" class="slider" min="0" max="100" value="50">
+                <output id="opacity" for="id_opacity_slider_div">100%</output>
+            </div>
+            
+            <div id="id_zoom_select_div" style="display: none;">
+                <label for="zoom_select" style="display: inline-block;">Zoom: </label>
+                <select id="id_zoom_select" name="zoom_select">
+                    <option value="Slider">Slider</option>
+                    <option value="100%">100%</option>
+                    <option value="200%">200%</option>
+                    <option value="300%">300%</option>
+                    <option value="400%">400%</option>
+                    <option value="500%">500%</option>
+                </select>
+            </div>
+
+            <div id="id_zoom_slider_div" class="slidecontainer" style="display: none; margin: 10px">
+                <input type="range" id="id_zoom_slider" class="slider" min="100" max="500" value="250">
+                <output id="zoom" for="id_zoom_slider">100%</output>
+            </div>
+        </div>  
+
+        <!-- Checkboxes to select layers to display -->
+        <div style="margin: 0px; padding: 5px 0px 0px 10px">
+            <div id="id_view_layer_div" style="display: inline">
+                <span>Display Layers:</span>
+            
+                <input id= "view_layer_all" type="checkbox" name="view_layer" value="all" checked>
+                <label for="view_layer_all" style="display: inline-block;"> All</label>
                 
-                <div id="id_zoom_select_div" style="display: none;">
-                    <label for="zoom_select" style="display: inline-block;">Zoom: </label>
-                    <select id="id_zoom_select" name="zoom_select">
-                        <option value="Slider">Slider</option>
-                        <option value="100%">100%</option>
-                        <option value="200%">200%</option>
-                        <option value="300%">300%</option>
-                        <option value="400%">400%</option>
-                        <option value="500%">500%</option>
-                    </select>
-                </div>
-
-                <div id="id_zoom_slider_div" class="slidecontainer" style="display: none; margin: 10px">
-                    <input type="range" id="id_zoom_slider" class="slider" min="100" max="500" value="250">
-                    <output id="zoom" for="id_zoom_slider">100%</output>
-                </div>
-            </div>  
-
-            <!-- Checkboxes to select layers to display -->
-            <div style="margin: 0px; padding: 5px 0px 0px 10px">
-                <div id="id_view_layer_div" style="display: inline">
-                    <span>Display Layers:</span>
+                <input id ="view_layer_ground" type="checkbox" name="view_layer" value="ground">
+                <label for="view_layer_ground" style="display: inline-block;"> Ground</label>
                 
-                    <input id= "view_layer_all" type="checkbox" name="view_layer" value="all" checked>
-                    <label for="view_layer_all" style="display: inline-block;"> All</label>
-                    
-                    <input id ="view_layer_ground" type="checkbox" name="view_layer" value="ground">
-                    <label for="view_layer_ground" style="display: inline-block;"> Ground</label>
-                    
-                    <input id ="view_layer_groundcover" type="checkbox" name="view_layer" value="groundcover">
-                    <label for="view_layer_groundcover" style="display: inline-block;"> Groundcover</label>
-                    
-                    <input id ="view_layer_flower" type="checkbox" name="view_layer" value="flower">
-                    <label for="view_layer_flower" style="display: inline-block;"> Flower</label>
+                <input id ="view_layer_groundcover" type="checkbox" name="view_layer" value="groundcover">
+                <label for="view_layer_groundcover" style="display: inline-block;"> Groundcover</label>
+                
+                <input id ="view_layer_flower" type="checkbox" name="view_layer" value="flower">
+                <label for="view_layer_flower" style="display: inline-block;"> Flower</label>
 
-                    <input id ="view_layer_shrub" type="checkbox" name="view_layer" value="shrub">
-                    <label for="view_layer_shrub" style="display: inline-block;"> Shrub</label>
+                <input id ="view_layer_shrub" type="checkbox" name="view_layer" value="shrub">
+                <label for="view_layer_shrub" style="display: inline-block;"> Shrub</label>
 
-                    <input id ="view_layer_small_tree" type="checkbox" name="view_layer" value="small_tree">
-                    <label for="view_layer_small_tree" style="display: inline-block;"> Small Tree</label>
-                    
-                    <input id ="view_layer_large_tree" type="checkbox" name="view_layer" value="large_tree">
-                    <label for="view_layer_large_tree" style="display: inline-block;"> Large Tree</label>
-                </div>
-            </div>
-
-            <!-- Radio buttons to select layer to draw on -->
-            <div style="margin: 0px; padding: 0px 0px 0px 10px">
-                <div id="id_draw_layer_div" style="display: none">
-                    <span>Draw on Layer:</span>
-                    
-                    <input id ="draw_layer_ground" type="radio" name="draw_layer" value="ground" checked>
-                    <label for="draw_layer_ground" style="display: inline-block;"> Ground</label>
-                    
-                    <input id ="draw_layer_groundcover" type="radio" name="draw_layer" value="groundcover">
-                    <label for="draw_layer_groundcover" style="display: inline-block;"> Groundcover</label>
-                    
-                    <input id ="draw_layer_flower" type="radio" name="draw_layer" value="flower">
-                    <label for="draw_layer_flower" style="display: inline-block;"> Flower</label>
-
-                    <input id ="draw_layer_shrub" type="radio" name="draw_layer" value="shrub">
-                    <label for="draw_layer_shrub" style="display: inline-block;"> Shrub</label>
-
-                    <input id ="draw_layer_small_tree" type="radio" name="draw_layer" value="small_tree">
-                    <label for="draw_layer_small_tree" style="display: inline-block;"> Small Tree</label>
-                    
-                    <input id ="draw_layer_large_tree" type="radio"  name="draw_layer" value="large_tree">
-                    <label for="draw_layer_large_tree" style="display: inline-block;"> Large Tree</label>
-                </div>
-            </div>
-
-            <!-- Display shape attributes below canvas -->
-            <div style = "margin: 0px; padding: 5px 0px 0px 10px">
-                <div id="id_shape_attributes">
-                    <!-- shape attributes inserted here -->
-                </div>
-            </div>  
-        </form>
-        <!-------------------------------------------------------------------------->
-        <!-- Modals                                                               -->
-        <!-------------------------------------------------------------------------->
-        <!-- Plant Details Modal -->
-        <div id="plant_details_modal" class="bnd-modal">
-            <p> Modal HTML to be Inserted Here! </p>
-        </div>
-
-        <!-- Shape Edit Modal -->
-        <div id="planner_edit_modal" class="bnd-modal bnd-background-visible">
-            <div class="bnd-modal-content-300">
-
-                <header class="bnd-modal-header"> 
-                    <!-- Close the shape edit modal -->
-                    <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
-                        class="bnd-button bnd-modal-close">&times;
-                    </span>
-                    <h3>Edit Shape</h2>
-                </header>
-                    
-                <div>
-                    <form id = "id_edit_form" name = "editForm" action = "">
-
-                        <div class="line rectangle circle ellipse polygon">
-                            <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
-                            <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
-                            <br>
-                        </div>
-
-                        <div class="line curve">
-                            <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
-                            <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="xStartInForm" name="xStartInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yStartFtForm" style="display: inline-block; width: 80px;">Y (start): </label>
-                            <input type="number" id="yStartFtForm" name="yStartFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="yStartInForm" name="yStartInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="curve">
-                            <label for="xControlFtForm" style="display: inline-block; width: 80px;">X (control): </label>
-                            <input type="number" id="xControlFtForm" name="xControFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="xControlInForm" name="xControlInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yControlFtForm" style="display: inline-block; width: 80px;">Y (control): </label>
-                            <input type="number" id="yControlFtForm" name="yControlFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="yControlInForm" name="yControlInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="line curve">
-                            <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
-                            <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="xEndInForm" name="xEndInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yEndFtForm" style="display: inline-block; width: 80px;">Y (end): </label>
-                            <input type="number" id="yEndFtForm" name="yEndFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="yEndInForm" name="yEndInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="rectangle">
-                            <label for="xFtForm" style="display: inline-block; width: 80px;">X: </label>
-                            <input type="number" id="xFtForm" name="xFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="xInForm" name="xInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yFtForm" style="display: inline-block; width: 80px;">Y: </label>
-                            <input type="number" id="yFtForm" name="yFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="yInForm" name="yInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="circle ellipse">
-                            <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
-                            <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="xCenterInForm" name="xCenterInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yCenterFtForm" style="display: inline-block; width: 80px;">Y (center): </label>
-                            <input type="number" id="yCenterFtForm" name="yCenterFtForm" style="width: 60px;">
-                            <span>ft</span>
-                            <input type="number" id="yCenterInForm" name="yCenterInForm" style="width: 60px;">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="polygon" id="polygonHTML">
-                            <p>Polygon vertices go here!</p>
-                        </div>
-
-                        <div class="rectangle">
-                            <label for="widthFtForm" style="display: inline-block; width: 80px;">width: </label>
-                            <input type="number" id="widthFtForm" name="widthFtForm" style="width: 60px;" min="0">
-                            <span>ft</span>
-                            <input type="number" id="widthInForm" name="widthInForm" style="width: 60px;" min="0">
-                            <span>in</span>
-                            <br>
-
-                            <label for="heightFtForm" style="display: inline-block; width: 80px;">height: </label>
-                            <input type="number" id="heightFtForm" name="heightFtForm" style="width: 60px;" min="0">
-                            <span>ft</span>
-                            <input type="number" id="heightInForm" name="heightInForm" style="width: 60px;" min="0">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="circle">
-                            <label for="radiusFtForm" style="display: inline-block; width: 80px;">radius: </label>
-                            <input type="number" id="radiusFtForm" name="radiusFtForm" style="width: 60px;" min="0">
-                            <span>ft</span>
-                            <input type="number" id="radiusInForm" name="radiusInForm" style="width: 60px;" min="0">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="ellipse">
-                            <label for="xRadiusFtForm" style="display: inline-block; width: 80px;">X radius: </label>
-                            <input type="number" id="xRadiusFtForm" name="xRadiusFtForm" style="width: 60px;" min="0">
-                            <span>ft</span>
-                            <input type="number" id="xRadiusInForm" name="xRadiusInForm" style="width: 60px;" min="0">
-                            <span>in</span>
-                            <br>
-
-                            <label for="yRadiusFtForm" style="display: inline-block; width: 80px;">Y radius: </label>
-                            <input type="number" id="yRadiusFtForm" name="yRadiusFtForm" style="width: 60px;" min="0">
-                            <span>ft</span>
-                            <input type="number" id="yRadiusInForm" name="yRadiusInForm" style="width: 60px;" min="0">
-                            <span>in</span>
-                            <br>
-                        </div>
-
-                        <div class="rectangle">
-                            <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
-                            <input type="number" id="rotationForm" name="rotationForm" style="width: 60px;">
-                            <span>degrees</span>
-                            <br>
-                        </div>
-
-                        <div class="line curve rectangle circle ellipse polygon">
-                            <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
-                            <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 60px;" min="1">
-                            <span>pixels</span>
-                            <br>
-
-                            <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
-                            <select id="lineStyleForm" style="width: 60px;" name="lineStyleForm">
-                                <option value="solid" >solid </option>
-                                <option value="dashed">dashed</option>
-                                <option value="dotted">dotted</option>
-                            </select>
-                            <br>
-
-                            <label for="lineColorForm" style="display: inline-block; width: 80px;">Line color:</label>
-                            <input type="color" id="lineColorForm" name="lineColorForm" style="width: 60px;">
-                            <br>
-
-                            <label for="lineOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
-                            <select id="lineOpacityForm" style="width: 60px;">
-                                <option value=0.0>  0%</option>
-                                <option value=0.1> 10%</option>
-                                <option value=0.2> 20%</option>
-                                <option value=0.3> 30%</option>
-                                <option value=0.4> 40%</option>
-                                <option value=0.5> 50%</option>
-                                <option value=0.6> 60%</option>
-                                <option value=0.7> 70%</option>
-                                <option value=0.8> 80%</option>
-                                <option value=0.9> 90%</option>
-                                <option value=1.0>100%</option>
-                            </select>
-                            <br>
-                        </div>
-
-                        <div class="rectangle circle ellipse polygon">
-                            <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
-                            <input type="color" id="fillColorForm" name="fillColorForm" style="width: 60px;">
-                            <br>
-                        
-                            <label for="fillOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
-                            <select id="fillOpacityForm" style="width: 60px;">
-                                <option value=0.0>  0%</option>
-                                <option value=0.1> 10%</option>
-                                <option value=0.2> 20%</option>
-                                <option value=0.3> 30%</option>
-                                <option value=0.4> 40%</option>
-                                <option value=0.5> 50%</option>
-                                <option value=0.6> 60%</option>
-                                <option value=0.7> 70%</option>
-                                <option value=0.8> 80%</option>
-                                <option value=0.9> 90%</option>
-                                <option value=1.0>100%</option>
-                            </select>
-                            <br>
-                        </div>
-
-                        <!-- on submit, process attribute value changes in Javascript -->
-                        <input type="submit" value="Apply" class="bnd-button-submit">
-                        <input type="reset"  value="Reset" class="bnd-button bnd-round-large bnd-grey">
-                        <button type="button"              class="bnd-button-cancel"
-                                onclick="document.getElementById('planner_edit_modal').style.display='none'">
-                                Exit
-                        </button>
-                    </form>
-                </div>
+                <input id ="view_layer_small_tree" type="checkbox" name="view_layer" value="small_tree">
+                <label for="view_layer_small_tree" style="display: inline-block;"> Small Tree</label>
+                
+                <input id ="view_layer_large_tree" type="checkbox" name="view_layer" value="large_tree">
+                <label for="view_layer_large_tree" style="display: inline-block;"> Large Tree</label>
             </div>
         </div>
 
-        <!-- Context menu - Plant -->
-        <div id="ctxPlantMenu" class="ctxMenu">
-            <div class = "ctxMenuItem">Plant: Show Details</div>
-            <div class = "ctxMenuItem">Plant: Duplicate</div>
-            <div class = "ctxMenuItem">Plant: Delete</div>
+        <!-- Radio buttons to select layer to draw on -->
+        <div style="margin: 0px; padding: 0px 0px 0px 10px">
+            <div id="id_draw_layer_div" style="display: none">
+                <span>Draw on Layer:</span>
+                
+                <input id ="draw_layer_ground" type="radio" name="draw_layer" value="ground" checked>
+                <label for="draw_layer_ground" style="display: inline-block;"> Ground</label>
+                
+                <input id ="draw_layer_groundcover" type="radio" name="draw_layer" value="groundcover">
+                <label for="draw_layer_groundcover" style="display: inline-block;"> Groundcover</label>
+                
+                <input id ="draw_layer_flower" type="radio" name="draw_layer" value="flower">
+                <label for="draw_layer_flower" style="display: inline-block;"> Flower</label>
+
+                <input id ="draw_layer_shrub" type="radio" name="draw_layer" value="shrub">
+                <label for="draw_layer_shrub" style="display: inline-block;"> Shrub</label>
+
+                <input id ="draw_layer_small_tree" type="radio" name="draw_layer" value="small_tree">
+                <label for="draw_layer_small_tree" style="display: inline-block;"> Small Tree</label>
+                
+                <input id ="draw_layer_large_tree" type="radio"  name="draw_layer" value="large_tree">
+                <label for="draw_layer_large_tree" style="display: inline-block;"> Large Tree</label>
+            </div>
         </div>
 
-        <!-- Context menu - Shape -->
-        <div id="ctxShapeMenu" class="ctxMenu">
-            <div class = "ctxMenuItem">Shape: Edit</div>
-            <div class = "ctxMenuItem">Shape: Duplicate</div>
-            <div class = "ctxMenuItem">Shape: Delete</div>
-            <div class = "ctxMenuItem">Shape: To Front</div>
-            <div class = "ctxMenuItem">Shape: To Back</div>
+        <!-- Display shape attributes below canvas -->
+        <div style = "margin: 0px; padding: 5px 0px 0px 10px">
+            <div id="id_shape_attributes">
+                <!-- shape attributes inserted here -->
+            </div>
+        </div>  
+    </form>
+    <!-------------------------------------------------------------------------->
+    <!-- Modals                                                               -->
+    <!-------------------------------------------------------------------------->
+    <!-- Plant Details Modal -->
+    <div id="plant_details_modal" class="bnd-modal">
+        <p> Modal HTML to be Inserted Here! </p>
+    </div>
+
+    <!-- Shape Edit Modal -->
+    <div id="planner_edit_modal" class="bnd-modal bnd-background-visible">
+        <div class="bnd-modal-content-300">
+
+            <header class="bnd-modal-header"> 
+                <!-- Close the shape edit modal -->
+                <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
+                    class="bnd-button bnd-modal-close">&times;
+                </span>
+                <h3>Edit Shape</h2>
+            </header>
+                
+            <div>
+                <form id = "id_edit_form" name = "editForm" action = "">
+
+                    <div class="line rectangle circle ellipse polygon">
+                        <label for="labelForm" style="display: inline-block; width: 80px;">label: </label>
+                        <input type="text" id="labelForm" name="labelForm" style="width: 120px;">
+                        <br>
+                    </div>
+
+                    <div class="line curve">
+                        <label for="xStartFtForm" style="display: inline-block; width: 80px;">X (start): </label>
+                        <input type="number" id="xStartFtForm" name="xStartFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="xStartInForm" name="xStartInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yStartFtForm" style="display: inline-block; width: 80px;">Y (start): </label>
+                        <input type="number" id="yStartFtForm" name="yStartFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="yStartInForm" name="yStartInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="curve">
+                        <label for="xControlFtForm" style="display: inline-block; width: 80px;">X (control): </label>
+                        <input type="number" id="xControlFtForm" name="xControFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="xControlInForm" name="xControlInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yControlFtForm" style="display: inline-block; width: 80px;">Y (control): </label>
+                        <input type="number" id="yControlFtForm" name="yControlFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="yControlInForm" name="yControlInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="line curve">
+                        <label for="xEndFtForm" style="display: inline-block; width: 80px;">X (end): </label>
+                        <input type="number" id="xEndFtForm" name="xEndFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="xEndInForm" name="xEndInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yEndFtForm" style="display: inline-block; width: 80px;">Y (end): </label>
+                        <input type="number" id="yEndFtForm" name="yEndFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="yEndInForm" name="yEndInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="rectangle">
+                        <label for="xFtForm" style="display: inline-block; width: 80px;">X: </label>
+                        <input type="number" id="xFtForm" name="xFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="xInForm" name="xInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yFtForm" style="display: inline-block; width: 80px;">Y: </label>
+                        <input type="number" id="yFtForm" name="yFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="yInForm" name="yInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="circle ellipse">
+                        <label for="xCenterFtForm" style="display: inline-block; width: 80px;">X (center): </label>
+                        <input type="number" id="xCenterFtForm" name="xCenterFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="xCenterInForm" name="xCenterInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yCenterFtForm" style="display: inline-block; width: 80px;">Y (center): </label>
+                        <input type="number" id="yCenterFtForm" name="yCenterFtForm" style="width: 60px;">
+                        <span>ft</span>
+                        <input type="number" id="yCenterInForm" name="yCenterInForm" style="width: 60px;">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="polygon" id="polygonHTML">
+                        <p>Polygon vertices go here!</p>
+                    </div>
+
+                    <div class="rectangle">
+                        <label for="widthFtForm" style="display: inline-block; width: 80px;">width: </label>
+                        <input type="number" id="widthFtForm" name="widthFtForm" style="width: 60px;" min="0">
+                        <span>ft</span>
+                        <input type="number" id="widthInForm" name="widthInForm" style="width: 60px;" min="0">
+                        <span>in</span>
+                        <br>
+
+                        <label for="heightFtForm" style="display: inline-block; width: 80px;">height: </label>
+                        <input type="number" id="heightFtForm" name="heightFtForm" style="width: 60px;" min="0">
+                        <span>ft</span>
+                        <input type="number" id="heightInForm" name="heightInForm" style="width: 60px;" min="0">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="circle">
+                        <label for="radiusFtForm" style="display: inline-block; width: 80px;">radius: </label>
+                        <input type="number" id="radiusFtForm" name="radiusFtForm" style="width: 60px;" min="0">
+                        <span>ft</span>
+                        <input type="number" id="radiusInForm" name="radiusInForm" style="width: 60px;" min="0">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="ellipse">
+                        <label for="xRadiusFtForm" style="display: inline-block; width: 80px;">X radius: </label>
+                        <input type="number" id="xRadiusFtForm" name="xRadiusFtForm" style="width: 60px;" min="0">
+                        <span>ft</span>
+                        <input type="number" id="xRadiusInForm" name="xRadiusInForm" style="width: 60px;" min="0">
+                        <span>in</span>
+                        <br>
+
+                        <label for="yRadiusFtForm" style="display: inline-block; width: 80px;">Y radius: </label>
+                        <input type="number" id="yRadiusFtForm" name="yRadiusFtForm" style="width: 60px;" min="0">
+                        <span>ft</span>
+                        <input type="number" id="yRadiusInForm" name="yRadiusInForm" style="width: 60px;" min="0">
+                        <span>in</span>
+                        <br>
+                    </div>
+
+                    <div class="rectangle">
+                        <label for="rotationForm" style="display: inline-block; width: 80px;">rotation: </label>
+                        <input type="number" id="rotationForm" name="rotationForm" style="width: 60px;">
+                        <span>degrees</span>
+                        <br>
+                    </div>
+
+                    <div class="line curve rectangle circle ellipse polygon">
+                        <label for="lineWidthForm" style="display: inline-block; width: 80px;">Line width:</label>
+                        <input type="number" id="lineWidthForm" name="lineWidthForm" style="width: 60px;" min="1">
+                        <span>pixels</span>
+                        <br>
+
+                        <label for="lineStyleForm" style="display: inline-block; width: 80px;">Line style:</label>
+                        <select id="lineStyleForm" style="width: 60px;" name="lineStyleForm">
+                            <option value="solid" >solid </option>
+                            <option value="dashed">dashed</option>
+                            <option value="dotted">dotted</option>
+                        </select>
+                        <br>
+
+                        <label for="lineColorForm" style="display: inline-block; width: 80px;">Line color:</label>
+                        <input type="color" id="lineColorForm" name="lineColorForm" style="width: 60px;">
+                        <br>
+
+                        <label for="lineOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
+                        <select id="lineOpacityForm" style="width: 60px;">
+                            <option value=0.0>  0%</option>
+                            <option value=0.1> 10%</option>
+                            <option value=0.2> 20%</option>
+                            <option value=0.3> 30%</option>
+                            <option value=0.4> 40%</option>
+                            <option value=0.5> 50%</option>
+                            <option value=0.6> 60%</option>
+                            <option value=0.7> 70%</option>
+                            <option value=0.8> 80%</option>
+                            <option value=0.9> 90%</option>
+                            <option value=1.0>100%</option>
+                        </select>
+                        <br>
+                    </div>
+
+                    <div class="rectangle circle ellipse polygon">
+                        <label for="fillColorForm" style="display: inline-block; width: 80px;">Fill color:</label>
+                        <input type="color" id="fillColorForm" name="fillColorForm" style="width: 60px;">
+                        <br>
+                    
+                        <label for="fillOpacityForm" style="display: inline-block; width: 80px;">Opacity:</label>
+                        <select id="fillOpacityForm" style="width: 60px;">
+                            <option value=0.0>  0%</option>
+                            <option value=0.1> 10%</option>
+                            <option value=0.2> 20%</option>
+                            <option value=0.3> 30%</option>
+                            <option value=0.4> 40%</option>
+                            <option value=0.5> 50%</option>
+                            <option value=0.6> 60%</option>
+                            <option value=0.7> 70%</option>
+                            <option value=0.8> 80%</option>
+                            <option value=0.9> 90%</option>
+                            <option value=1.0>100%</option>
+                        </select>
+                        <br>
+                    </div>
+
+                    <!-- on submit, process attribute value changes in Javascript -->
+                    <input type="submit" value="Apply" class="bnd-button-submit">
+                    <input type="reset"  value="Reset" class="bnd-button bnd-round-large bnd-grey">
+                    <button type="button"              class="bnd-button-cancel"
+                            onclick="document.getElementById('planner_edit_modal').style.display='none'">
+                            Exit
+                    </button>
+                </form>
+            </div>
         </div>
+    </div>
+
+    <!-- Context menu - Plant -->
+    <div id="ctxPlantMenu" class="ctxMenu">
+        <div class = "ctxMenuItem">Plant: Show Details</div>
+        <div class = "ctxMenuItem">Plant: Duplicate</div>
+        <div class = "ctxMenuItem">Plant: Delete</div>
+    </div>
+
+    <!-- Context menu - Shape -->
+    <div id="ctxShapeMenu" class="ctxMenu">
+        <div class = "ctxMenuItem">Shape: Edit</div>
+        <div class = "ctxMenuItem">Shape: Duplicate</div>
+        <div class = "ctxMenuItem">Shape: Delete</div>
+        <div class = "ctxMenuItem">Shape: To Front</div>
+        <div class = "ctxMenuItem">Shape: To Back</div>
+    </div>
         
-    </div> 
 {% endblock content %}
 
 {% block js %}

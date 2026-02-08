@@ -163,7 +163,7 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Banner formatting                                            */
 /* ------------------------------------------------------------ */
-.bnd-page-banner
+.bnd-page-header
 {
     padding:          0.01em 16px;
     color:            white;
@@ -177,7 +177,8 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting                         */
 /* ------------------------------------------------------------ */
-.bnd-navbar /* horizontal navigation bar container */
+.bnd-page-nav ul,
+.bnd-navbar           /* bloom table tabs */
 {
     display:          flex;
     flex-wrap:        wrap;
@@ -240,18 +241,12 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
 /* ------------------------------------------------------------ */
-.bnd-content-main-80
-{ 
-    margin-top: 80px; 
-    padding:    0.01em 16px;
-}
-.bnd-content-main-100
+.bnd-content-main
 { 
     margin-top: 100px; 
     padding:    0.01em 16px;
 }
-.bnd-content-main-80:after, 
-.bnd-content-main-100:before
+.bnd-content-main:after
 {
     content: "";
     display: table;
@@ -619,7 +614,7 @@ figcaption {
 {
     height:           80%;
     width:            15%;
-    margin-left:      16px;
+    margin:           8px 0% 0px 0px;
     background-color: white;
     position:         fixed;
     z-index:          10;
@@ -718,34 +713,36 @@ figcaption {
 /* ------------------------------------------------------------ */
 .bnd-table
 {
+    display:         table;
     border-collapse: separate; /* Required for sticky headers to work well with borders */
     border-spacing:  0;
     table-layout:    auto;     /* use the browsers automatic table layout algorithm */
     width:           100%;     /* content dictates the width of the table */
-    display:         table;
-    border:          1px solid lightgray;
+    padding-top:     10px;
     box-shadow:      var(--shadow-parameters);
 }
 .bnd-table th 
 {
+    display:          table-cell;
     position:         sticky;
     top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
-    padding:          12px 8px 12px 8px;
+    border:           1px solid slategray;
+    padding:          8px 8px 8px 8px;
     background-color: slategray;
-    display:          table-cell;
     color:            white;
     text-align:       left;
     vertical-align:   top;
 }
 .bnd-table th:first-child     {padding-left:  16px}
 .bnd-table th:last-child      {padding-right: 16px}
-.bnd-table tr                 {border-bottom:1px solid gainsboro}
+.bnd-table tr                 {border-bottom: 1px solid gainsboro}
 .bnd-table tr:nth-child(odd)  {background-color:white}
 .bnd-table tr:nth-child(even) {background-color:gainsboro}
 .bnd-table tr:hover           {background-color:gray}
 .bnd-table td 
 {
+    border:         1px solid lightgray;
     padding:        8px 8px 4px 8px;
     display:        table-cell;
     text-align:     left;
@@ -924,14 +921,15 @@ body.bnd-modal-open
 /* Monthyly calendar formatting                                 */
 /* ------------------------------------------------------------ */
 /* Calendar container */
-.calendar-container {
-    width:       1400px;
+.bnd-calendar-container 
+{
+    min-width:   800px;
     border:      1px solid darkgray;
     box-shadow:  var(--shadow-parameters);
     font-family: chalkboard, verdana, sans-serif;
 }
 /* Header styling */
-.calendar-header 
+.bnd-calendar-header 
 {
     display:          flex;
     justify-content:  space-between;
@@ -941,26 +939,26 @@ body.bnd-modal-open
     color:            black;
 }
 /* Weekdays and dates styling */
-.calendar-weekdays,
-.calendar-dates 
+.bnd-calendar-weekdays,
+.bnd-calendar-dates 
 {
     display:               grid;
     grid-template-columns: repeat(7, 1fr);
     text-align:            left;
 }
-.calendar-weekdays div 
+.bnd-calendar-weekdays div 
 {
     padding:          8px;
     font-weight:      bold;
     background-color: whitesmoke;
 }
-.calendar-dates div 
+.bnd-calendar-dates div 
 {
     padding: 10px;
     border:  1px solid whitesmoke;
 }
 /* Highlight today's date */
-.today 
+.bnd-calendar-today 
 {
     background-color: orange;
     font-weight:      bold;

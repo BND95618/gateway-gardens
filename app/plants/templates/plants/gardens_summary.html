@@ -16,118 +16,113 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-      My Garden: {{ garden.name }}
-      <span class="bnd-dropdown-container">
-        <button class="bnd-button-small">
-          <i class="material-icons">menu</i>
-        </button>
-          <div class="bnd-dropdown-content">
-            <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
-          </div>
-      </span>
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
+    My Garden: {{ garden.name }}
+    <span class="bnd-dropdown-container">
+      <button class="bnd-button-small">
+        <i class="material-icons">menu</i>
+      </button>
+        <div class="bnd-dropdown-content">
+          <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
+        </div>
+    </span>
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-<!-- main content -->
-  <div class="bnd-content-main-80">
-    <h3>My Garden Photos:</h3>
-    <!-- Check to see it there are any images to display -->
-    {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
-      <h3>
-        No garden photos to display
-        <br>
-        Please select 'Menu -> Update' to add photos of your garden
-        <br>
-      </h3>
-    {% else %}
-      <!-- Load images for display -->
-      <div class="bnd-slideshow-content">
-        <!-- Load the images -->
-        {% if garden.image_1 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_1 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        {% if garden.image_2 %}
+  <h3>My Garden Photos:</h3>
+  <!-- Check to see it there are any images to display -->
+  {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
+    <h3>
+      No garden photos to display
+      <br>
+      Please select 'Menu -> Update' to add photos of your garden
+      <br>
+    </h3>
+  {% else %}
+    <!-- Load images for display -->
+    <div class="bnd-slideshow-content">
+      <!-- Load the images -->
+      {% if garden.image_1 %}
         <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
+          <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_1 }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      {% if garden.image_2 %}
+      <div class="bnd-slideshow-slides">
+        <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
+        <div class="bnd-image-caption">
+          <h2>{{ garden.caption_3 }}</h2>
+        </div>
+      </div>
+      {% endif %}
+      {% if garden.image_3 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
           <div class="bnd-image-caption">
             <h2>{{ garden.caption_3 }}</h2>
           </div>
         </div>
-        {% endif %}
-        {% if garden.image_3 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_3 }}</h2>
-            </div>
+      {% endif %}
+      {% if garden.image_4 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_4 }}</h2>
           </div>
-        {% endif %}
-        {% if garden.image_4 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_4 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        {% if garden.image_5 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_5 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        {% if garden.image_6 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_6 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        {% if garden.image_7 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_7 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        {% if garden.image_8 %}
-          <div class="bnd-slideshow-slides">
-            <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
-            <div class="bnd-image-caption">
-              <h2>{{ garden.caption_8 }}</h2>
-            </div>
-          </div>
-        {% endif %}
-        <!-- Slide show -->
-        <div class="bnd-slideshow-controls">
-          <div  class="bnd-slideshow-arrow-left"  onclick="plusSlide(-1)">&#10094;</div>
-          <div  class="bnd-slideshow-arrow-right" onclick="plusSlide( 1)">&#10095;</div>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(1)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(2)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(3)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(4)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(5)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(6)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(7)"></span>
-          <span class="bnd-slideshow-icon" onclick="currentSlide(8)"></span>
         </div>
+      {% endif %}
+      {% if garden.image_5 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_5 }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      {% if garden.image_6 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_6 }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      {% if garden.image_7 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_7 }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      {% if garden.image_8 %}
+        <div class="bnd-slideshow-slides">
+          <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
+          <div class="bnd-image-caption">
+            <h2>{{ garden.caption_8 }}</h2>
+          </div>
+        </div>
+      {% endif %}
+      <!-- Slide show -->
+      <div class="bnd-slideshow-controls">
+        <div  class="bnd-slideshow-arrow-left"  onclick="plusSlide(-1)">&#10094;</div>
+        <div  class="bnd-slideshow-arrow-right" onclick="plusSlide( 1)">&#10095;</div>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(1)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(2)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(3)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(4)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(5)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(6)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(7)"></span>
+        <span class="bnd-slideshow-icon" onclick="currentSlide(8)"></span>
       </div>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 {% endblock content%}
 
 {% block js %}

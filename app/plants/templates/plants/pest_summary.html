@@ -16,78 +16,71 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-      Pests
-      <span class="bnd-dropdown-container">
-        <button class="bnd-button-small">
-          <i class="material-icons">menu</i>
-        </button>
-        <div class="bnd-dropdown-content">
-          <a href="{% url 'plants:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
-        </div>
-      </span>
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+    Pests
+    <span class="bnd-dropdown-container">
+      <button class="bnd-button-small">
+        <i class="material-icons">menu</i>
+      </button>
+      <div class="bnd-dropdown-content">
+        <a href="{% url 'plants:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
+      </div>
+    </span>
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-  <!------------------------->
-  <!--     Pest Table     -->
-  <!------------------------->
-  <div id="main" class="bnd-content-main-100">
-    <table id="pestTable" class="bnd-table">
-      <thead>
-        <tr>
-          <!-- Pest Attributes -->
-          <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
-          <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
-          <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
-          <!-- Pest Update header placeholder -->
-          {% if perms.plants.change_plant %}
-            <th class="bnd-center"></th>
-          {% endif %}
-          <!-- Pest Delete header placeholder -->
-          {% if perms.plants.delete_plant %}
-            <th class="bnd-center"></th>
-          {% endif %}
-        </tr>
-      </thead>
-      {% for pest in pests %} 
-        <tr>
-          <!-- Pest Attributes -->
-          <td>{{ pest.pest_name }}</td>
-          <td>{{ pest.pest_type }}</td>
-          <td>
-            <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
+  <table id="pestTable" class="bnd-table">
+    <thead>
+      <tr>
+        <!-- Pest Attributes -->
+        <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
+        <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
+        <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
+        <!-- Pest Update header placeholder -->
+        {% if perms.plants.change_plant %}
+          <th class="bnd-center"></th>
+        {% endif %}
+        <!-- Pest Delete header placeholder -->
+        {% if perms.plants.delete_plant %}
+          <th class="bnd-center"></th>
+        {% endif %}
+      </tr>
+    </thead>
+    {% for pest in pests %} 
+      <tr>
+        <!-- Pest Attributes -->
+        <td>{{ pest.pest_name }}</td>
+        <td>{{ pest.pest_type }}</td>
+        <td>
+          <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
+        </td>
+        <!-- Pest Update Icon/Link -->
+        {% if perms.plants.change_plant %}
+          <td class="bnd-table-icon">
+            <div class="bnd-tooltip">
+              <a href="{% url 'plants:pest_update' pest.id %}">
+                <i class="material-icons bnd-text-black">edit</i>
+                <span class="bnd-tooltip-text">Edit</span>
+              </a>
+            </div>
           </td>
-          <!-- Pest Update Icon/Link -->
-          {% if perms.plants.change_plant %}
-            <td class="bnd-table-icon">
-              <div class="bnd-tooltip">
-                <a href="{% url 'plants:pest_update' pest.id %}">
-                  <i class="material-icons bnd-text-black">edit</i>
-                  <span class="bnd-tooltip-text">Edit</span>
-                </a>
-              </div>
-            </td>
-          {% endif %}
-          <!-- Pest Delete Icon/Link -->
-          {% if perms.plants.delete_plant %}
-            <td class="bnd-table-icon">
-              <div class="bnd-tooltip">
-                <button onclick="pest_delete({{ pest.id }})" class="bnd-button-small">
-                  <i class="material-icons bnd-text-black">delete</i>
-                  <span class="bnd-tooltip-text">Delete</span>
-                </button>
-              </div>
-            </td>
-          {% endif %}
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+        {% endif %}
+        <!-- Pest Delete Icon/Link -->
+        {% if perms.plants.delete_plant %}
+          <td class="bnd-table-icon">
+            <div class="bnd-tooltip">
+              <button onclick="pest_delete({{ pest.id }})" class="bnd-button-small">
+                <i class="material-icons bnd-text-black">delete</i>
+                <span class="bnd-tooltip-text">Delete</span>
+              </button>
+            </div>
+          </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->

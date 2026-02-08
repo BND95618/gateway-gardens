@@ -19,25 +19,23 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-      Plant Finder
-      <span class="bnd-dropdown-container">
-        <button class="bnd-button-small">
-          <i class="material-icons">menu</i>
-        </button>
-        <div class="bnd-dropdown-content">
-          <button onclick="searchOpen()"     class="bnd-dropdown-button">Plant Search  </button>
-          <button onclick="column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
-          <button onclick="plants_chart()"   class="bnd-dropdown-button">Bloom Charts  </button>
-          {% if perms.plants.add_plant %}
-            <a href="{% url 'plants:plant_add' %}" class="bnd-dropdown-button">Add Plant</a>
-          {% endif %}
-        </div>
-      </span>
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+    Plant Finder
+    <span class="bnd-dropdown-container">
+      <button class="bnd-button-small">
+        <i class="material-icons">menu</i>
+      </button>
+      <div class="bnd-dropdown-content">
+        <button onclick="searchOpen()"     class="bnd-dropdown-button">Plant Search  </button>
+        <button onclick="column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
+        <button onclick="plants_chart()"   class="bnd-dropdown-button">Bloom Charts  </button>
+        {% if perms.plants.add_plant %}
+          <a href="{% url 'plants:plant_add' %}" class="bnd-dropdown-button">Add Plant</a>
+        {% endif %}
+      </div>
+    </span>
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
@@ -318,7 +316,7 @@
   <!-------------------------------------------------------------------------->
   <!-- Plant Table                                                          -->
   <!-------------------------------------------------------------------------->
-  <div id="main" class="bnd-content-main-100">
+  <div id="tableContainer">
     <table id="plantTable" class="bnd-table">
       <thead>
         <tr>
@@ -445,7 +443,7 @@
         {% endif %}
       {% endfor %}
     </table>
-  </div>
+</div>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
@@ -634,11 +632,11 @@
     // Search menu - sidebar navigation scripts
     //-----------------------------------------------------------------------------
     function searchOpen() {
-      document.getElementById("main").style.marginLeft = "16%";
+      document.getElementById("tableContainer").style.marginLeft = "16%";
       document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
     }
     function searchClose() {
-      document.getElementById("main").style.marginLeft = "0%";
+      document.getElementById("tableContainer").style.marginLeft = "0%";
       document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
     }
     //-----------------------------------------------------------------------------

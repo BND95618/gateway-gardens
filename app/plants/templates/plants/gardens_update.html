@@ -12,78 +12,73 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-      Update {{ garden.name }}
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
+    Update {{ garden.name }}
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
-<!-- Garden update form -->
-  <div class="bnd-content-main-80">
-    <form action="" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="bnd-button-submit">Submit</button>
-      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-      <a href="{% url 'plants:gardens_summary' %}">
-        <button type="button" class="bnd-button-cancel">Cancel</button>
-      </a>
-    </form>
-    <hr>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bnd-button-submit">Submit</button>
+    <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
+    <a href="{% url 'plants:gardens_summary' %}">
+      <button type="button" class="bnd-button-cancel">Cancel</button>
+    </a>
+  </form>
+  <hr>
 
-    <div class="bnd-flex-container">
-      {% if garden.image_1 %}
+  <div class="bnd-flex-container">
+    {% if garden.image_1 %}
+    <figure class="bnd-flex-item">
+      <img src="{{ garden.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+      <figcaption>{{ garden.caption_1 }}</figcaption>
+    </figure>
+    {% endif %}
+    {% if garden.image_2 %}
+    <figure class="bnd-flex-item">
+      <img src="{{ garden.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+      <figcaption>{{ garden.caption_2 }}</figcaption> 
+    </figure>
+    {% endif %}
+    {% if garden.image_3 %}
+    <figure class="bnd-flex-item">
+      <img src="{{ garden.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+      <figcaption>{{ garden.caption_3 }}</figcaption>
+    </figure>
+    {% endif %}
+    {% if garden.image_4 %}
+    <figure class="bnd-flex-item">
+      <img src="{{ garden.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+      <figcaption>{{ garden.caption_4 }}</figcaption>
+    </figure>
+    {% endif %}
+    {% if garden.image_5 %}
       <figure class="bnd-flex-item">
-        <img src="{{ garden.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-        <figcaption>{{ garden.caption_1 }}</figcaption>
+        <img src="{{ garden.image_5.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+        <figcaption>{{ garden.caption_5 }}</figcaption>
       </figure>
-      {% endif %}
-      {% if garden.image_2 %}
+    {% endif %}
+    {% if garden.image_6 %}
       <figure class="bnd-flex-item">
-        <img src="{{ garden.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-        <figcaption>{{ garden.caption_2 }}</figcaption> 
+        <img src="{{ garden.image_6.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+        <figcaption>{{ garden.caption_6 }}</figcaption>
       </figure>
-      {% endif %}
-      {% if garden.image_3 %}
+    {% endif %}
+    {% if garden.image_7 %}
       <figure class="bnd-flex-item">
-        <img src="{{ garden.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-        <figcaption>{{ garden.caption_3 }}</figcaption>
+        <img src="{{ garden.image_7.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+        <figcaption>{{ garden.caption_7 }}</figcaption>
       </figure>
-      {% endif %}
-      {% if garden.image_4 %}
+    {% endif %}
+    {% if garden.image_8 %}
       <figure class="bnd-flex-item">
-        <img src="{{ garden.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-        <figcaption>{{ garden.caption_4 }}</figcaption>
+        <img src="{{ garden.image_8.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
+        <figcaption>{{ garden.caption_8 }}</figcaption>
       </figure>
-      {% endif %}
-      {% if garden.image_5 %}
-        <figure class="bnd-flex-item">
-          <img src="{{ garden.image_5.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-          <figcaption>{{ garden.caption_5 }}</figcaption>
-        </figure>
-      {% endif %}
-      {% if garden.image_6 %}
-        <figure class="bnd-flex-item">
-          <img src="{{ garden.image_6.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-          <figcaption>{{ garden.caption_6 }}</figcaption>
-        </figure>
-      {% endif %}
-      {% if garden.image_7 %}
-        <figure class="bnd-flex-item">
-          <img src="{{ garden.image_7.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-          <figcaption>{{ garden.caption_7 }}</figcaption>
-        </figure>
-      {% endif %}
-      {% if garden.image_8 %}
-        <figure class="bnd-flex-item">
-          <img src="{{ garden.image_8.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-          <figcaption>{{ garden.caption_8 }}</figcaption>
-        </figure>
-      {% endif %}
-    </div>
+    {% endif %}
   </div>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->

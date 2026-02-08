@@ -26,13 +26,14 @@
   </head>
 
   <body>
-    <header>
-      <nav class="bnd-container-top">
+    <div class="bnd-container-top">
+      <header class="bnd-page-header">
         {% block header-completion %}
-        <!-- Page-specific header inserted here -->
+          <!-- Page-specific header inserted here -->
         {% endblock header-completion %}
-        <!-- Navigation Bar -->
-        <ul class="bnd-navbar">
+      </header>
+      <nav class="bnd-page-nav">
+        <ul>
           <li id="home" class="bnd-navbar-item-left"><a href="{% url 'plants:index' %}"                       >Home          </a></li>
           <li id="gardens_summary"  class="bnd-navbar-item-left"><a href="{% url 'plants:gardens_summary' %}" >My Garden     </a></li>
           <li id="myplants_summary" class="bnd-navbar-item-left"><a href="{% url 'plants:myplants_summary' %}">My Plants     </a></li>
@@ -68,14 +69,17 @@
           </li>
         </ul>
       </nav>
-    </header>
-    
+    </div>
     <!-------------------------------------------------------------------------->
-    {% block content %}
-      <!-- Insert template HTML here -->
-    {% endblock content %}
+    <!-- Main                                                                 -->
     <!-------------------------------------------------------------------------->
-    <!-- Footer -->
+    <main class="bnd-content-main">
+      {% block content %}
+        <!-- Insert template HTML here -->
+      {% endblock content %}
+    </main>
+    <!-------------------------------------------------------------------------->
+    <!-- Footer                                                               -->
     <!-------------------------------------------------------------------------->
     <footer class="bnd-page-footer">
       <h3>Footer - Under Construction</h3>

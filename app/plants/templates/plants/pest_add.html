@@ -12,27 +12,23 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <header class="bnd-page-banner">
-    <h3>
-      <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-      Add Pest
-    </h3>
-  </header>
+  <h3>
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
+    Add Pest
+  </h3>
 {% endblock header-completion %}
 
 {% block content %}
 <!-- Pest add form -->
-  <div class="bnd-content-main-100">
-    <form action="" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="bnd-button-submit">Submit</button>
-      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-      <a href="{% url 'plants:pest_summary' %}">
-        <button type="button" class="bnd-button-cancel">Cancel</button>
-      </a>
-    </form>
-  </div>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bnd-button-submit">Submit</button>
+    <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
+    <a href="{% url 'plants:pest_summary' %}">
+      <button type="button" class="bnd-button-cancel">Cancel</button>
+    </a>
+  </form>
 {% endblock content %}
 
 {% block js %}
