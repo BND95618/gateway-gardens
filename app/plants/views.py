@@ -1554,7 +1554,7 @@ def plant_edit(request, id):
 
             # Add the selected pests to the selected plant
             pest_list = request.POST.getlist('pest_list')
-            pests = Pest.objects.all()
+            pests = Pest.objects.all().order_by('pest_type', 'pest_name')
             for pest_item in pest_list:
                 for pest in pests:
                     if (pest.pest_name == pest_item):
@@ -1569,9 +1569,9 @@ def plant_edit(request, id):
         sun_exposure_list = string2list(plant.sun_exposure)
         soil_type_list    = string2list(plant.soil_type)
         # Get the full list of pests in the database
-        pests = Pest.objects.all()
+        pests = Pest.objects.all().order_by('pest_type', 'pest_name')
         # Get the pests currently associated with this particular plant
-        pests_current = Pest.objects.filter(plants__id=plant.id).order_by('pest_name')
+        pests_current = Pest.objects.filter(plants__id=plant.id).order_by('pest_type', 'pest_name')
         pest_name_list = []
         pest_tbd_checked = True
         for pest in pests_current:
@@ -1761,7 +1761,7 @@ def pest_summary(request):
     """ Render the page to show all pests for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    pests = Pest.objects.all()
+    pests = Pest.objects.all().order_by('pest_type', 'pest_name')
     template = loader.get_template("plants/pest_summary.html")
     context = { 'pests' : pests }
     return HttpResponse(template.render(context, request))

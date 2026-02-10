@@ -16,7 +16,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h3>
+  <h2>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Pests
     <span class="bnd-dropdown-container">
@@ -27,7 +27,7 @@
         <a href="{% url 'plants:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
       </div>
     </span>
-  </h3>
+  </h2>
 {% endblock header-completion %}
 
 {% block content %}

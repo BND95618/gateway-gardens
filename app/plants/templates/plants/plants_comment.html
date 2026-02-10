@@ -12,7 +12,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h3>
+  <h2>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Comments related to: {{ plant.commonName }} 
     <span>(</span>
@@ -23,7 +23,7 @@
       <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
     {% endif %}
     <span>)</span>
-  </h3>
+  </h2>
 {% endblock header-completion %}
 
 {% block content %}

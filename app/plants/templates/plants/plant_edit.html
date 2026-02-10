@@ -15,7 +15,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h3>
+  <h2>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Update Plant:{{ plant.commonName }}
     <span>(</span>
@@ -26,7 +26,35 @@
       <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
     {% endif %}
     <span>)</span>
-  </h3>
+    <span class="bnd-dropdown-container">
+      <button class="bnd-button-small">
+        <i class="material-icons">menu</i>
+      </button>
+      <div class="bnd-dropdown-content">
+        <a target="_blank" class="bnd-dropdown-button" href="https://garden.org/">
+          National Gardening Association
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://plants.ces.ncsu.edu/">
+          North Carolina Extension Gardener Plant Toolbox
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://www.gardenia.net">
+          Gardenia
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://plants.usda.gov/home">
+          USDA Plant Database
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://arboretum.ucdavis.edu/plant-database">
+          UC Davis Arboretum All Stars - Plant Database
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://sunsetplantcollection.com/climate-zones/zone-14/">
+          Sunset - Plants Recommended for Climate Zone 14
+        </a>
+        <a target="_blank" class="bnd-dropdown-button" href="https://www.cityofdavis.org/home/showpublisheddocument/20284/638835996605670000">
+          City of Davis - Climate-Ready Tree List
+        </a>
+      </div>
+    </span>
+  </h2>
 {% endblock header-completion %}
 
 {% block content %}
@@ -101,16 +129,48 @@
       <!-- Pest Selection -->
       <div class="pests">
         <fieldset>
-          <legend>Pests:</legend>
+          <legend>Insect:</legend>
           <label for="id_tbd">
             <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
             tbd
           </label>
           {% for pest in pests %}
-            <label for="id_{{ pest }}">
-              <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
-              {{ pest }}
-            </label>
+            {% if pest.pest_type == "Insect" %}
+              <label for="id_{{ pest }}">
+                <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+                {{ pest }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </fieldset>
+        <fieldset>
+          <legend>Weed:</legend>
+          <label for="id_tbd">
+            <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
+            tbd
+          </label>
+          {% for pest in pests %}
+            {% if pest.pest_type == "Weed" %}
+              <label for="id_{{ pest }}">
+                <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+                {{ pest }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </fieldset>
+        <fieldset>
+          <legend>Disease:</legend>
+          <label for="id_tbd">
+            <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
+            tbd
+          </label>
+          {% for pest in pests %}
+            {% if pest.pest_type == "Disease" %}
+              <label for="id_{{ pest }}">
+                <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+                {{ pest }}
+              </label>
+            {% endif %}
           {% endfor %}
         </fieldset>
       </div>
