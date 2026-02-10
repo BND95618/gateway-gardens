@@ -73,13 +73,13 @@ h1,h2,h3,h4,h5,h6
     font-weight: 400;
     margin:      10px 0px;
 }
-h1{font-size:36px}
-h2{font-size:30px}
-h3{font-size:24px}
-h4{font-size:20px}
-h5{font-size:18px}
-h6{font-size:16px}
-p {font-size:large}
+h1{font-size:   36px}
+h2{font-size: 30px}
+h3{font-size: 24px}
+h4{font-size: 20px}
+h5{font-size: 18px}
+h6{font-size: 16px}
+p {font-size: 16px}
 a {cursor:pointer}
 /* a:visited{color: darkred} */
 th {cursor: pointer}
@@ -193,7 +193,7 @@ figcaption {
 .bnd-navbar-item-left,
 .bnd-navbar-item-right
 {
-    width:            100%;        /* small screen default */
+    width:            auto;        /* small screen default */
     border:           none;
     padding:          0px 0px;
     color:            black;
@@ -229,8 +229,8 @@ figcaption {
 {
     display:          block;
 }
-/* Use horizontal memu format for larger screens */
-@media all and (min-width: 60em)
+/* Use horizontal menu format for larger screens */
+@media all and (min-width: 40em)
 {
     .bnd-navbar-item-left,
     .bnd-navbar-item-right
@@ -270,8 +270,9 @@ figcaption {
 .bnd-section-contents
 {
     padding:          0.01em 16px;
-    color:            black;
+    color:            black;    
     background-color: whitesmoke;
+    white-space:      normal;
 }
 /* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
@@ -291,6 +292,7 @@ figcaption {
 }
 .bnd-flex-item
 {
+    flex-shrink:      1;     /* Default, but good to be explicit */
     min-width:        150px;
     max-width:        600px;
 }
