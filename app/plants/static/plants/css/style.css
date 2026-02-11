@@ -244,14 +244,8 @@ figcaption {
 {
     display:          block;
 }
-/* Add an active class to highlight the current page */
-.bnd-active 
-{
-    background-color: slategray;
-    color: white;
-}
 /* Hide the link that should open and close the topnav on small screens */
-.bnd-nav-top .icon 
+.bnd-nav-top .bnd-nav-phone-icon 
 {
     display: none;
 }
@@ -263,6 +257,7 @@ figcaption {
     .bnd-nav-top
     {
         display: block;
+        width:   100vw;
     }
     .bnd-nav-top a:not(:first-child), 
     .bnd-nav-dropdown,
@@ -270,7 +265,7 @@ figcaption {
     {
         display: none;
     }
-    .bnd-nav-top a.icon
+    .bnd-nav-top a.bnd-nav-phone-icon
     {
         float:   right;
         display: block;
@@ -282,7 +277,7 @@ figcaption {
 @media screen and (max-width: 800px) 
 {
     .bnd-nav-top.responsive {position: relative;}
-    .bnd-nav-top.responsive a.icon
+    .bnd-nav-top.responsive a.bnd-nav-phone-icon
     {
         position: absolute;
         right: 0;

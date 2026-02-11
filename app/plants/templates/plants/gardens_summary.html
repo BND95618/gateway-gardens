@@ -9,8 +9,11 @@
 {% block css %}
   <!-- Insert template css here -->
   <style>
-    #gardens_summary   { background-color: slategray; }
-    #gardens_summary a { color: white; }
+    #gardens_summary
+    {
+      background-color: slategray;
+      color:            white;
+    }
   </style>
 {% endblock css %}
 
@@ -18,7 +21,7 @@
   <!-- complete the header from master.html -->
   <h1>
     <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-    My Garden: {{ garden.name }}
+    {{ garden.name }}
     <span class="bnd-dropdown-container">
       <button class="bnd-button-small">
         <i class="material-icons">menu</i>

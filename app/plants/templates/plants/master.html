@@ -41,16 +41,16 @@
       <!-- Navigtion Bar                                                        -->
       <!-------------------------------------------------------------------------->
       <nav id="id_nav" class="bnd-nav-top">
-        <a class="bnd-active" href="{% url 'plants:index' %}"           >Home          </a>
-        <a href="{% url 'plants:gardens_summary' %}" >My Garden     </a>
-        <a href="{% url 'plants:myplants_summary' %}">My Plants     </a>
-        <a href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
-        <a href="{% url 'plants:gardens_plan' %}"    >My Garden Plan</a>
-        <a href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
-        <a href="{% url 'plants:pest_summary' %}"    >Pests         </a>
-        <a href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
-        <a href="{% url 'plants:plants_reference' %}">Reference     </a>
-        <a href="{% url 'plants:plants_about' %}"    >About         </a>
+        <a id="home"             href="{% url 'plants:index' %}"           >Home          </a>
+        <a id="gardens_summary"  href="{% url 'plants:gardens_summary' %}" >My Garden     </a>
+        <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}">My Plants     </a>
+        <a id="myplants_todo"    href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
+        <a id="gardens_plan"     href="{% url 'plants:gardens_plan' %}"    >My Garden Plan</a>
+        <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
+        <a id="pest_summary"     href="{% url 'plants:pest_summary' %}"    >Pests         </a>
+        <a id="plants_glossary"  href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
+        <a id="plants_reference" href="{% url 'plants:plants_reference' %}">Reference     </a>
+        <a id="plants_about"     href="{% url 'plants:plants_about' %}"    >About         </a>
         <!-- drop down account menu item -->
         <div class="bnd-nav-dropdown">
           {% if user.is_authenticated %}
@@ -75,7 +75,7 @@
           </div>
         </div>
         <!-- menu for small screens -->
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+        <a href="javascript:void(0);" class="bnd-nav-phone-icon" onclick="myFunction()">&#9776;</a>
       </nav>
     </div>
     <!-------------------------------------------------------------------------->
