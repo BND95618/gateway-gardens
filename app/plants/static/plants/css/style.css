@@ -177,8 +177,136 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting                         */
 /* ------------------------------------------------------------ */
-.bnd-page-nav ul,
-.bnd-navbar           /* bloom table tabs */
+.bnd-nav-top
+{
+    display:          flex;
+    flex-wrap:        wrap;
+    align-items:      center;
+    width:            100%;
+    margin:           0px;
+    padding:          0px;
+    overflow:         hidden;
+    background-color: lightgray;
+}
+.bnd-nav-top a
+{
+    width:            auto;
+    border:           none;
+    padding:          2px 10px;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+}
+.bnd-nav-top a:hover
+{
+    color:            white;
+    background-color: gray;
+}
+.bnd-nav-dropdown
+{
+    right:            0;
+    width:            auto;
+    margin-left:      auto;
+    border:           none;
+    padding:          2px 24px 2px 10px;
+    font-size:        16px;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+}   
+.bnd-nav-dropdown:hover
+{
+    color:            white;
+    background-color: gray;
+}
+.bnd-nav-dropdown-content
+{
+    position:         absolute;
+    right:            0; 
+    z-index:          1;
+    display:          none;
+    min-width:        160px;
+    margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
+    padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    font-size:        16px;
+    color:            black;
+    cursor:           auto;
+}   
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-nav-dropdown:hover .bnd-nav-dropdown-content
+{
+    display:          block;
+}
+/* Add an active class to highlight the current page */
+.bnd-active 
+{
+    background-color: slategray;
+    color: white;
+}
+/* Hide the link that should open and close the topnav on small screens */
+.bnd-nav-top .icon 
+{
+    display: none;
+}
+
+/* When the screen is less than 800 pixels wide, hide all links, except for the first one ("Home"). */
+/* Show the link that contains should open and close the topnav (.icon)                             */
+@media screen and (max-width: 800px)
+{
+    .bnd-nav-top
+    {
+        display: block;
+    }
+    .bnd-nav-top a:not(:first-child), 
+    .bnd-nav-dropdown,
+    .bnd-nav-dropdown-content .bnd-dropdown-button
+    {
+        display: none;
+    }
+    .bnd-nav-top a.icon
+    {
+        float:   right;
+        display: block;
+    }
+}
+/* The "responsive" class is added to the topnav with JavaScript when the user clicks */
+/* on the icon. This class makes the topnav look good on small screens (display the   */
+/* vertically instead of horizontally)                                                */
+@media screen and (max-width: 800px) 
+{
+    .bnd-nav-top.responsive {position: relative;}
+    .bnd-nav-top.responsive a.icon
+    {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    .bnd-nav-top.responsive a
+    {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    .bnd-nav-top.responsive .dropdown {float: none;}
+    .bnd-nav-top.responsive .dropdown-content {position: relative;}
+    .bnd-nav-top.responsive .dropdown .dropbtn
+        {
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+}
+/* ------------------------------------------------------------ */
+/* Bloom chart navigation bar formatting                        */
+/* ------------------------------------------------------------ */
+.bnd-chart-tab-container
 {
     display:          flex;
     flex-wrap:        wrap;
@@ -190,8 +318,7 @@ figcaption {
     overflow:         hidden;
     background-color: lightgray;
 }
-.bnd-navbar-item-left,
-.bnd-navbar-item-right
+.bnd-chart-tab
 {
     width:            auto;        /* small screen default */
     border:           none;
@@ -201,42 +328,10 @@ figcaption {
     outline:          0;
     text-decoration:  none;
 }
-.bnd-navbar-item-right
-{
-    margin-left:      auto;
-    padding-right:    24px;
-}
-.bnd-navbar-item-left:hover,
-.bnd-navbar-item-right:hover
+.bnd-chart-tab:hover
 {
     color:            white;
     background-color: gray;
-}
-/* Format the memu item links */
-.bnd-navbar-item-left a
-{
-    margin:           8px 8px;
-    padding:          12px 6px;
-    text-decoration:  none;
-}
-.bnd-navbar-item-left  a:hover,
-.bnd-navbar-item-right a:hover
-{
-    color:            white;
-}
-/* Display dropdown content when hovering over the menu title/contents */
-.bnd-navbar-item-right:hover .bnd-dropdown-content
-{
-    display:          block;
-}
-/* Use horizontal menu format for larger screens */
-@media all and (min-width: 40em)
-{
-    .bnd-navbar-item-left,
-    .bnd-navbar-item-right
-    {
-        width:  auto;
-    }
 }
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */

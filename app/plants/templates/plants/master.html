@@ -40,42 +40,42 @@
       <!-------------------------------------------------------------------------->
       <!-- Navigtion Bar                                                        -->
       <!-------------------------------------------------------------------------->
-      <nav class="bnd-page-nav">
-        <ul>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:index' %}"           >Home          </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:gardens_summary' %}" >My Garden     </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:myplants_summary' %}">My Plants     </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:gardens_plan' %}"    >My Garden Plan</a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:plants_summary' %}"  >All Plants    </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:pest_summary' %}"    >Pests         </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:plants_glossary' %}" >Glossary      </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:plants_reference' %}">Reference     </a></li>
-          <li class="bnd-navbar-item-left"><a href="{% url 'plants:plants_about' %}"    >About         </a></li>
-          <!-- drop down account menu item -->
-          <li class="bnd-navbar-item-right">
+      <nav id="id_nav" class="bnd-nav-top">
+        <a class="bnd-active" href="{% url 'plants:index' %}"           >Home          </a>
+        <a href="{% url 'plants:gardens_summary' %}" >My Garden     </a>
+        <a href="{% url 'plants:myplants_summary' %}">My Plants     </a>
+        <a href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
+        <a href="{% url 'plants:gardens_plan' %}"    >My Garden Plan</a>
+        <a href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
+        <a href="{% url 'plants:pest_summary' %}"    >Pests         </a>
+        <a href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
+        <a href="{% url 'plants:plants_reference' %}">Reference     </a>
+        <a href="{% url 'plants:plants_about' %}"    >About         </a>
+        <!-- drop down account menu item -->
+        <div class="bnd-nav-dropdown">
+          {% if user.is_authenticated %}
+            {{ user.username }}
+          {% else %}
+            Account
+          {% endif %}
+          <div class="bnd-nav-dropdown-content">
             {% if user.is_authenticated %}
-              {{ user.username }}
+              <button id="update_button" class="bnd-dropdown-button">Update </button>
+              <!-- AR -->
+              <form action="{% url 'plants:user_logout' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Logout" class="bnd-dropdown-button"/>
+              </form>
             {% else %}
-              Account
+              <!-- AR -->
+              <button id="login_button"    class="bnd-dropdown-button">Login    </button>
+              <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
+              <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
             {% endif %}
-            <div class="bnd-page-menu bnd-dropdown-content">
-              {% if user.is_authenticated %}
-                <button id="update_button" class="bnd-dropdown-button">Update </button>
-                <!-- AR -->
-                <form action="{% url 'plants:user_logout' %}" method="post">
-                  {% csrf_token %}
-                  <input type="submit" value="Logout" class="bnd-dropdown-button"/>
-                </form>
-              {% else %}
-                <!-- AR -->
-                <button id="login_button"    class="bnd-dropdown-button">Login    </button>
-                <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
-                <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
-              {% endif %}
-            </div>
-          </li>
-        </ul>
+          </div>
+        </div>
+        <!-- menu for small screens -->
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
       </nav>
     </div>
     <!-------------------------------------------------------------------------->
@@ -120,6 +120,22 @@
       <!-- Insert template Javascript here -->
     {% endblock js %}
 
+    <script>
+      // Toggle between adding and removing the "responsive" class to topnav  
+      // when the user clicks on the icon
+      function myFunction() 
+      {
+        var x = document.getElementById("id_nav");
+        if (x.className === "bnd-nav-top") 
+        {
+          x.className += " responsive";
+        } 
+        else 
+        {
+          x.className = "bnd-nav-top";
+        }
+      }
+    </script>
     {% if user.is_authenticated %}
       <!-- User Update Modal Script -->
       <script>
