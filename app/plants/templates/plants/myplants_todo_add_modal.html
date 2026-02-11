@@ -10,48 +10,48 @@
       {% csrf_token %}
 
       <div class="bnd-container">
-        <label for="id_common_name">Common Name:</label><br>
+        <label for="id_common_name">Common Name:</label><br/>
         <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for myPlant in myPlants %}
             <option value="{{ myPlant.plant.commonName }}">{{ myPlant.plant.commonName }}</option>
           {% endfor %}
         </select>
-      <br>
+      <br/>
       </div>
 
       <div class="bnd-container">
         <label for="date">Date:</label>
-        <input type="date" id="id_date" name="date">
-        <br>
+        <input type="date" id="id_date" name="date"/>
+        <br/>
       </div>
 
       <div class="bnd-container">
-        <label for="id_action">Action:</label><br>
+        <label for="id_action">Action:</label><br/>
         <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for action in todo_action_opt %}
             <option value="{{ action }}" >{{ action }}</option>
           {% endfor %}
         </select>
-        <br>
+        <br/>
       </div>
 
       <div class="bnd-container">
-        <label for="id_repeat">Repeat:</label><br>
+        <label for="id_repeat">Repeat:</label><br/>
         <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
           <option value="---" selected> --- </option>
           {% for repeat in todo_repeat_opt %}
             <option value="{{ repeat }}" >{{ repeat }}</option>
           {% endfor %}
         </select>
-        <br>
+        <br/>
       </div>
 
       <div class="bnd-container">
         <label for="id_details">Details:</label>
-        <input type="text" id="id_details" class="bnd-margin-bottom" name="details">
-        <br>
+         type="text" id="id_details" class="bnd-margin-bottom" name="details">
+        <br/>
       <div class="bnd-modal-button-bar">
         <!-- To Do add - submit -->
         <button type="submit" class="bnd-button-submit">Submit</button>

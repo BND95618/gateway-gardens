@@ -15,7 +15,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h2>
+  <h1>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Update Plant:{{ plant.commonName }}
     <span>(</span>
@@ -54,7 +54,7 @@
         </a>
       </div>
     </span>
-  </h2>
+  </h1>
 {% endblock header-completion %}
 
 {% block content %}
@@ -70,11 +70,11 @@
       <div class="attributes">
         <fieldset>
           <legend>Attributes:</legend>
-          {{ form.commonName.as_field_group  }} <br>
-          {{ form.type_x.as_field_group      }} <br>
-          {{ form.height_feet.as_field_group }} <br>
-          {{ form.height_inch.as_field_group }} <br>
-          {{ form.width_feet.as_field_group  }} <br>
+          {{ form.commonName.as_field_group  }} <br/>
+          {{ form.type_x.as_field_group      }} <br/>
+          {{ form.height_feet.as_field_group }} <br/>
+          {{ form.height_inch.as_field_group }} <br/>
+          {{ form.width_feet.as_field_group  }} <br/>
           {{ form.width_inch.as_field_group  }}
         </fieldset>
         {{ form.ca_native.as_field_group }}
@@ -219,11 +219,11 @@
         <fieldset>
           <legend>Content Creation Details:</legend>
           Creator: {{ plant.creator }}
-          <br>
+          <br/>
           Date: {{ plant.creation_date }}
-          <br>
+          <br/>
           {{ form.status.as_field_group }}
-          <br>
+          <br/>
           {{ form.creator_notes.as_field_group }}
         </fieldset>
       </div>
@@ -239,7 +239,7 @@
                 <legend>Image 1:</legend>
                 <label for="id_image_1">Filename:</label>
                 {{ form.image_1 }}
-                <br>
+                <br/>
                 <label for="id_caption_1">Caption:</label>
                 {{ form.caption_1 }}
 
@@ -256,7 +256,7 @@
                 <legend>Image 2:</legend>
                 <label for="id_image_2">Filename:</label>
                 {{ form.image_2 }}
-                <br>
+                <br/>
                 <label for="id_caption_2">Caption:</label>
                 {{ form.caption_2 }}
 
@@ -273,7 +273,7 @@
                 <legend>Image 3:</legend>
                 <label for="id_image_3">Filename:</label>
                 {{ form.image_3 }}
-                <br>
+                <br/>
                 <label for="id_caption_3">Caption:</label>
                 {{ form.caption_3 }}
 
@@ -290,7 +290,7 @@
                 <legend>Image 4:</legend>
                 <label for="id_image_4">Filename:</label>
                 {{ form.image_4 }}
-                <br>
+                <br/>
                 <label for="id_caption_4">Caption:</label>
                 {{ form.caption_4 }}
 
@@ -306,7 +306,7 @@
         </fieldset>
       </div>
     </div>
-    <br>
+    <br/>
     <button type="submit" class="bnd-button-submit">Submit</button>
     <button type="button" class="bnd-button bnd-yellow bnd-round-medium" onclick="validatePlantForm()">Check</button>
     <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium">Reset </button>

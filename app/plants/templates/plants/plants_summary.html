@@ -19,7 +19,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h2>
+  <h1>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Plant Finder
     <span class="bnd-dropdown-container">
@@ -35,7 +35,7 @@
         {% endif %}
       </div>
     </span>
-  </h2>
+  </h1>
 {% endblock header-completion %}
 
 {% block content %}
@@ -48,7 +48,7 @@
       <!-- Plant Attributes -->
       <p class="bnd-center"><i>Plant Details</i></p>
 
-      <label for="id_type_x_search">Type:</label><br>
+      <label for="id_type_x_search">Type:</label><br/>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for plant_type in plant_types %}
@@ -59,9 +59,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_bloom_color_search">Bloom Color:</label><br>
+      <label for="id_bloom_color_search">Bloom Color:</label><br/>
       <select id="id_bloom_color_search" name="bloom_color_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in bloom_color_opt %}
@@ -72,9 +72,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_bloom_season_search">Bloom Season:</label><br>
+      <label for="id_bloom_season_search">Bloom Season:</label><br/>
       <select id="id_bloom_season_search" name="bloom_season_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in bloom_season_opt %}
@@ -85,9 +85,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_bloom_month_search">Bloom Month:</label><br>
+      <label for="id_bloom_month_search">Bloom Month:</label><br/>
       <select id="id_bloom_month_search" name="bloom_month_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for month in month_opt %}
@@ -98,9 +98,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_pollinators_search">Pollinators:</label><br>
+      <label for="id_pollinators_search">Pollinators:</label><br/>
       <select id="id_pollinators_search" name="pollinators_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in pollinators_opt %}
@@ -111,9 +111,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_ca_native_search">California Native:</label><br>
+      <label for="id_ca_native_search">California Native:</label><br/>
       <select id="id_ca_native_search" name="ca_native_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in ca_native_opt %}
@@ -124,9 +124,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_ucd_all_star_search">UCD All-Star:</label><br>
+      <label for="id_ucd_all_star_search">UCD All-Star:</label><br/>
       <select id="id_ucd_all_star_search" name="ucd_all_star_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in ucd_all_star_opt %}
@@ -137,9 +137,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_davis_trees_search">Davis Climate-Ready Trees:</label><br>
+      <label for="id_davis_trees_search">Davis Climate-Ready Trees:</label><br/>
       <select id="id_davis_trees_search" name="davis_trees_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in davis_trees_opt %}
@@ -150,9 +150,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_sunset_z14_search">Sunset Z14:</label><br>
+      <label for="id_sunset_z14_search">Sunset Z14:</label><br/>
       <select id="id_sunset_z14_search" name="sunset_z14_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sunset_z14_opt %}
@@ -163,12 +163,12 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
       <!-- Environmental Needs -->
       <p class="bnd-center"><i>Environmental Needs</i></p>
 
-      <label for="id_sun_exposure_search">Sun Exposure:</label><br>
+      <label for="id_sun_exposure_search">Sun Exposure:</label><br/>
       <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sun_exposure_opt %}
@@ -179,9 +179,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_water_rqmts_search">Water Requirements:</label><br>
+      <label for="id_water_rqmts_search">Water Requirements:</label><br/>
       <select id="id_water_rqmts_search" name="water_rqmts_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in water_rqmts_opt %}
@@ -192,9 +192,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_soil_type_search">Soil Requirements:</label><br>
+      <label for="id_soil_type_search">Soil Requirements:</label><br/>
       <select id="id_soil_type_search" name="soil_type_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in soil_type_opt %}
@@ -205,9 +205,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_pH_search">pH:</label><br>
+      <label for="id_pH_search">pH:</label><br/>
       <select id="id_pH_search" name="pH_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in pH_opt %}
@@ -218,9 +218,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
       
-      <label for="id_heat_tolerance_search">Heat Tolerance:</label><br>
+      <label for="id_heat_tolerance_search">Heat Tolerance:</label><br/>
       <select id="id_heat_tolerance_search" name="heat_tolerance_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in heat_tolerance_opt %}
@@ -231,9 +231,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_usda_zone_search">USDA Zone:</label><br>
+      <label for="id_usda_zone_search">USDA Zone:</label><br/>
       <select id="id_usda_zone_search" name="usda_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in usda_zones_opt %}
@@ -244,9 +244,9 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
 
-      <label for="id_sunset_zone_search">Sunset Zone:</label><br>
+      <label for="id_sunset_zone_search">Sunset Zone:</label><br/>
       <select id="id_sunset_zone_search" name="sunset_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
         {% for x in sunset_zones_opt %}
@@ -257,11 +257,11 @@
           {% endif %}
         {% endfor %}
       </select>
-      <br>
+      <br/>
       <!-- In My Garden? -->
       <p class="bnd-center"><i>In My Garden?</i></p>
 
-      <label for="id_garden_search">All plants / My plants</label><br>
+      <label for="id_garden_search">All plants / My plants</label><br/>
       <select id="id_garden_search" name="garden_search" class="bnd-select">
         {% if garden_search == "Any" %}
           <option value="Any"  selected>Any </option>
@@ -271,7 +271,7 @@
           <option value="Mine" selected>Mine</option>
         {% endif %}
       </select>
-      <br>
+      <br/>
 
       <!-- Admin stuff - Display for group = "Garden-Editor" -->
       {% if request.user|has_group:"Garden-Editor" %}
@@ -283,7 +283,7 @@
         <!-- Admin stuff -->
         <p class="bnd-center"><i>Admin stuff</i></p>
         
-        <label for="id_status_search">Status:</label><br>
+        <label for="id_status_search">Status:</label><br/>
         <select id="id_status_search" name="status_search" class="bnd-select">
           <option value="Any" >Any</option>
           {% for x in status_opt %}
@@ -294,7 +294,7 @@
             {% endif %}
           {% endfor %}
         </select>
-        <br>
+        <br/>
 
       </div>
 

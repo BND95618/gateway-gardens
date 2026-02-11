@@ -10,7 +10,7 @@
       {% csrf_token %}
 
       <div class="bnd-container">
-        <label for="id_common_name">Common Name:</label><br>
+        <label for="id_common_name">Common Name:</label><br/>
         <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
           {% for myplant in myplants %}
             {% if myplant.plant.commonName == myplant_todo.myplant.plant.commonName %}
@@ -20,17 +20,17 @@
             {% endif %}
           {% endfor %}
         </select>
-      <br>
+      <br/>
       </div>
 
       <div class="bnd-container">
         <label for="date">Date:</label>
-        <input type="date" id="id_date" name="date" value="{{ myplant_todo.date|date:'Y-m-d' }}">
-        <br>
+        <input type="date" id="id_date" name="date" value="{{ myplant_todo.date|date:'Y-m-d' }}"/>
+        <br/>
       </div>
 
       <div class="bnd-container">
-        <label for="id_action">Action:</label><br>
+        <label for="id_action">Action:</label><br/>
         <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
           {% for action in todo_action_opt %}
             {% if action == myplant_todo.action %}
@@ -40,11 +40,11 @@
             {% endif %}
           {% endfor %}
         </select>
-        <br>
+        <br/>
       </div>
 
       <div class="bnd-container">
-        <label for="id_repeat">Repeat:</label><br>
+        <label for="id_repeat">Repeat:</label><br/>
         <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
           {% for repeat in todo_repeat_opt %}
             {% if repeat == myplant_todo.repeat %}
@@ -54,13 +54,13 @@
             {% endif %}
           {% endfor %}
         </select>
-        <br>
+        <br/>
       </div>
 
       <div class="bnd-container">
         <label for="id_details">Details:</label>
-        <input type="text" id="id_details" class="bnd-margin-bottom" name="details" value="{{myplant_todo.details}}">
-        <br>
+        <input type="text" id="id_details" class="bnd-margin-bottom" name="details" value="{{myplant_todo.details}}"/>
+        <br/>
       </div>
 
       <div class="bnd-modal-button-bar">

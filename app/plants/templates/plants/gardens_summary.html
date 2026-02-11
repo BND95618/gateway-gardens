@@ -16,7 +16,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h2>
+  <h1>
     <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
     My Garden: {{ garden.name }}
     <span class="bnd-dropdown-container">
@@ -27,7 +27,7 @@
           <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
         </div>
     </span>
-  </h2>
+  </h1>
 {% endblock header-completion %}
 
 {% block content %}
@@ -36,9 +36,9 @@
   {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
     <h3>
       No garden photos to display
-      <br>
+      <br/>
       Please select 'Menu -> Update' to add photos of your garden
-      <br>
+      <br/>
     </h3>
   {% else %}
     <!-- Load images for display -->

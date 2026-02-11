@@ -12,7 +12,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h2>
+  <h1>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     {{ plant.commonName }}
     <span>(</span>
@@ -45,7 +45,7 @@
         <a href="{% url 'plants:plant_edit' plant.id %}" class="bnd-dropdown-button">Update</a>
       </div>
     </span>
-  </h2>
+  </h1>
 {% endblock header-completion %}
 
 {% block content %}

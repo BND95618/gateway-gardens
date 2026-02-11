@@ -12,7 +12,7 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h2>
+  <h1>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     Updating: 
     {{ myplant.plant.commonName }}
@@ -25,7 +25,7 @@
     {% endif %}
     <span>)</span>
     in My Garden
-  </h2>
+  </h1>
 {% endblock header-completion %}
 
 {% block content %}

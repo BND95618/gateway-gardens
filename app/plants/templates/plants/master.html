@@ -4,16 +4,16 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta description="Plant Database">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta description="Plant Database"/>
     <!-------------------------------------------------------------------------->
     <!-- CSS                                                                  -->
     <!-------------------------------------------------------------------------->
     <!-- https://necolas.github.io/normalize.css/ -->
-    <link rel="stylesheet" href="{% static 'plants/css/normalize.css' %}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="{% static 'plants/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'plants/css/normalize.css' %}"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+    <link rel="stylesheet" href="{% static 'plants/css/style.css' %}"/>
 
     {% block css %}
       <!-- Insert css from template here -->
@@ -65,7 +65,7 @@
                 <!-- AR -->
                 <form action="{% url 'plants:user_logout' %}" method="post">
                   {% csrf_token %}
-                  <input type="submit" value="Logout" class="bnd-dropdown-button">
+                  <input type="submit" value="Logout" class="bnd-dropdown-button"/>
                 </form>
               {% else %}
                 <!-- AR -->
