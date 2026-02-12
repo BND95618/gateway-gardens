@@ -52,7 +52,7 @@
         <a id="plants_reference" href="{% url 'plants:plants_reference' %}">Reference     </a>
         <a id="plants_about"     href="{% url 'plants:plants_about' %}"    >About         </a>
         <!-- drop down account menu item -->
-        <div class="bnd-nav-dropdown">
+        <div class="bnd-nav-dropdown-container">
           {% if user.is_authenticated %}
             {{ user.username }}
           {% else %}

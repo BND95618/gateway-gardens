@@ -175,19 +175,25 @@ figcaption {
     font-size:  16px;
 }
 /* ------------------------------------------------------------ */
-/* Horizontal navigation bar formatting                         */
+/* Horizontal navigation bar formatting - responsive            */
 /* ------------------------------------------------------------ */
 .bnd-nav-top
 {
-    display:          flex;
-    flex-wrap:        wrap;
+    display:          block;
     align-items:      center;
-    width:            100%;
+    width:            100vw;
     margin:           0px;
     padding:          0px;
     overflow:         hidden;
     background-color: lightgray;
+    @media screen and (min-width: 600px)
+    {
+        display:      flex;
+        flex-wrap:    wrap;
+        width:        100%;
+    }
 }
+/* web-site links */
 .bnd-nav-top a
 {
     width:            auto;
@@ -203,8 +209,10 @@ figcaption {
     color:            white;
     background-color: gray;
 }
-.bnd-nav-dropdown
+/* user authentication drop-down */
+.bnd-nav-dropdown-container
 {
+    display:          none;
     right:            0;
     width:            auto;
     margin-left:      auto;
@@ -215,8 +223,12 @@ figcaption {
     text-align:       center;
     outline:          0;
     text-decoration:  none;
+    @media screen and (min-width: 600px)
+    {
+        display: block;
+    }
 }   
-.bnd-nav-dropdown:hover
+.bnd-nav-dropdown-container:hover
 {
     color:            white;
     background-color: gray;
@@ -239,64 +251,65 @@ figcaption {
     color:            black;
     cursor:           auto;
 }   
-/* Display dropdown content when hovering over the menu title/contents */
-.bnd-nav-dropdown:hover .bnd-nav-dropdown-content
+/* Display dropdown content when hovering over the menu item */
+.bnd-nav-dropdown-container:hover .bnd-nav-dropdown-content
 {
     display:          block;
 }
-/* Hide the link that should open and close the topnav on small screens */
-.bnd-nav-top .bnd-nav-phone-icon 
+/* Navigation links                        */
+/* Phone: Show only 'home' navigation link */
+.bnd-nav-top a:not(:first-child),
+.bnd-nav-dropdown-container
 {
     display: none;
-}
-
-/* When the screen is less than 800 pixels wide, hide all links, except for the first one ("Home"). */
-/* Show the link that contains should open and close the topnav (.icon)                             */
-@media screen and (max-width: 800px)
-{
-    .bnd-nav-top
+    @media screen and (min-width: 600px)
     {
         display: block;
-        width:   100vw;
     }
-    .bnd-nav-top a:not(:first-child), 
-    .bnd-nav-dropdown,
-    .bnd-nav-dropdown-content .bnd-dropdown-button
+}
+/* Show menu icon for hidden navigation links */
+.bnd-nav-top a.bnd-nav-phone-icon
+{
+    float:   right;
+    display: block;
+    @media screen and (min-width: 600px)
     {
         display: none;
     }
-    .bnd-nav-top a.bnd-nav-phone-icon
+}
+/* Style when menu icon is selected */
+.bnd-nav-top.responsive 
+{
+    position: relative;
+}
+.bnd-nav-top.responsive a.bnd-nav-phone-icon
+{
+    position: absolute;
+    right:    0;
+    top:      0;
+    @media screen and (min-width: 600px)
     {
-        float:   right;
-        display: block;
+        display: none;
     }
 }
-/* The "responsive" class is added to the topnav with JavaScript when the user clicks */
-/* on the icon. This class makes the topnav look good on small screens (display the   */
-/* vertically instead of horizontally)                                                */
-@media screen and (max-width: 800px) 
+/* Style horizontal list of navigation links */
+.bnd-nav-top.responsive a,
+.bnd-nav-top.responsive .bnd-nav-dropdown-container
 {
-    .bnd-nav-top.responsive {position: relative;}
-    .bnd-nav-top.responsive a.bnd-nav-phone-icon
-    {
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .bnd-nav-top.responsive a
-    {
-        float: none;
-        display: block;
-        text-align: left;
-    }
-    .bnd-nav-top.responsive .dropdown {float: none;}
-    .bnd-nav-top.responsive .dropdown-content {position: relative;}
-    .bnd-nav-top.responsive .dropdown .dropbtn
-        {
-        display: block;
-        width: 100%;
-        text-align: left;
-    }
+    float:      none;
+    display:    block;
+    text-align: left;
+}
+.bnd-nav-top.responsive .bnd-nav-dropdown-content 
+{
+    position:   relative;
+    width:      100px;
+}
+.bnd-nav-top.responsive .bnd-nav-dropdown-container .bnd-dropdown-button
+{
+    display:    block;
+    width:      100%;
+    text-align: left;
 }
 /* ------------------------------------------------------------ */
 /* Bloom chart navigation bar formatting                        */
