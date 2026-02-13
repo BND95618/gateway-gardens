@@ -184,7 +184,7 @@ figcaption {
     width:            100vw;
     margin:           0px;
     padding:          0px;
-    overflow:         hidden;
+    overflow:         auto;
     background-color: lightgray;
     @media screen and (min-width: 1000px)
     {
