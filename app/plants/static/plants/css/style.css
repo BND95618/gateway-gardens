@@ -377,6 +377,10 @@ figcaption {
     background-color: whitesmoke;
     white-space:      normal;
 }
+.bnd-section-contents p
+{
+    line-height: 0.8;
+}
 /* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
 /* section's text starts correctly                              */
@@ -387,17 +391,19 @@ figcaption {
 /* ------------------------------------------------------------ */
 .bnd-flex-container
 {
-    display:         flex;
-    flex-direction:  row;
-    flex-wrap:       wrap;
-    justify-content: space-between;
-    width:           100%;
+    display:          flex;
+    flex-direction:   row;
+    flex-wrap:        wrap;
+    column-gap:       8px;
+    width:            100%;
 }
 .bnd-flex-item
 {
-    flex-shrink:      1;     /* Default, but good to be explicit */
-    min-width:        150px;
-    max-width:        600px;
+    flex-grow:        1;     /* ability of item to grow   */
+    flex-shrink:      1;     /* ability of item to shrink */
+    flex-basis:       300px; /* default size of item      */
+    border:           1px solid slategray; 
+    background-color: whitesmoke;        
 }
 /* ------------------------------------------------------------ */
 /* Element positioning                                          */
