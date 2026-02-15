@@ -377,10 +377,6 @@ figcaption {
     background-color: whitesmoke;
     white-space:      normal;
 }
-.bnd-section-contents p
-{
-    line-height: 0.8;
-}
 /* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
 /* section's text starts correctly                              */
