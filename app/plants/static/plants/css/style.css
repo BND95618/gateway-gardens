@@ -377,6 +377,11 @@ figcaption {
     background-color: whitesmoke;
     white-space:      normal;
 }
+.bnd-section-contents p
+{
+    margin-block-start: 0.25em;
+    margin-block-end:   0.25em;
+}
 /* ------------------------------------------------------------ */
 /* Stop floating previous section's image to ensure this        */
 /* section's text starts correctly                              */
