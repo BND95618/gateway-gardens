@@ -40,7 +40,7 @@
       <!-------------------------------------------------------------------------->
       <!-- Navigtion Bar                                                        -->
       <!-------------------------------------------------------------------------->
-      <nav id="id_nav" class="bnd-nav-top">
+      <nav id="id_nav" class="bnd-page-nav">
         <a id="home"             href="{% url 'plants:index' %}"           >Home          </a>
         <a id="gardens_summary"  href="{% url 'plants:gardens_summary' %}" >My Garden     </a>
         <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}">My Plants     </a>
@@ -81,7 +81,7 @@
     <!-------------------------------------------------------------------------->
     <!-- Main                                                                 -->
     <!-------------------------------------------------------------------------->
-    <main class="bnd-content-main">
+    <main class="bnd-page-main">
       {% block content %}
         <!-- Insert template HTML here -->
       {% endblock content %}
@@ -126,13 +126,13 @@
       function myFunction() 
       {
         var x = document.getElementById("id_nav");
-        if (x.className === "bnd-nav-top") 
+        if (x.className === "bnd-page-nav") 
         {
           x.className += " responsive";
         } 
         else 
         {
-          x.className = "bnd-nav-top";
+          x.className = "bnd-page-nav";
         }
       }
     </script>

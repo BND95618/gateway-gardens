@@ -113,14 +113,21 @@ img
     border-style:   none;
 }
 figure {
+
+    width:            100%;
     /* box */
-    margin:     auto;
-    border:     none;
-    padding:    4px;
-    box-shadow: var(--shadow-parameters);
+    margin:           auto;
+    border:           none;
+    padding:          4px;
+    box-shadow:       var(--shadow-parameters);
+    @media screen and (min-width: 1000px)
+    {
+        max-width:        250px;
+    }
 }
   
 figcaption {
+    width:            100%;
     margin-top:       6px; 
     background-color: lightgray;
     /* text */
@@ -129,6 +136,10 @@ figcaption {
     font-style:       italic;
     /* box */
     padding:          2px;
+    @media screen and (min-width: 1000px)
+    {
+        max-width:        250px;
+    }
 }
 /* ------------------------------------------------------------ */
 /* bnd-container provides equality for all HTML container       */
@@ -177,11 +188,12 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting - responsive            */
 /* ------------------------------------------------------------ */
-.bnd-nav-top
+.bnd-page-nav
 {
     display:          block;
     align-items:      center;
-    width:            100vw;
+    width:            100%;
+    height:           auto;
     margin:           0px;
     padding:          0px;
     overflow:         auto;
@@ -191,11 +203,13 @@ figcaption {
         display:      flex;
         flex-wrap:    wrap;
         width:        100%;
+        height:       auto;
     }
 }
-/* web-site links */
-.bnd-nav-top a
+/* web-site navigation links */
+.bnd-page-nav a
 {
+    display:          inline-block;
     width:            auto;
     border:           none;
     padding:          2px 10px;
@@ -204,12 +218,21 @@ figcaption {
     outline:          0;
     text-decoration:  none;
 }
-.bnd-nav-top a:hover
+/* hide all navigation links except for "Home" unless large screen */
+.bnd-page-nav a:not(:first-child)
+{
+    display: none;
+    @media screen and (min-width: 1000px)
+    {
+        display: block;
+    }
+}
+.bnd-page-nav a:hover
 {
     color:            white;
     background-color: gray;
 }
-/* user authentication drop-down */
+/* user authentication drop-down - only display for large screens */
 .bnd-nav-dropdown-container
 {
     display:          none;
@@ -256,19 +279,10 @@ figcaption {
 {
     display:          block;
 }
-/* Navigation links                        */
-/* Phone: Show only 'home' navigation link */
-.bnd-nav-top a:not(:first-child),
-.bnd-nav-dropdown-container
-{
-    display: none;
-    @media screen and (min-width: 1000px)
-    {
-        display: block;
-    }
-}
-/* Show menu icon for hidden navigation links */
-.bnd-nav-top a.bnd-nav-phone-icon
+/* Menu icon for hidden navigation links */
+/* - small screens - show                */
+/* - large screens - hide                */
+.bnd-page-nav a.bnd-nav-phone-icon
 {
     float:   right;
     display: block;
@@ -278,11 +292,11 @@ figcaption {
     }
 }
 /* Style when menu icon is selected */
-.bnd-nav-top.responsive 
+.bnd-page-nav.responsive 
 {
     position: relative;
 }
-.bnd-nav-top.responsive a.bnd-nav-phone-icon
+.bnd-page-nav.responsive a.bnd-nav-phone-icon
 {
     position: absolute;
     right:    0;
@@ -293,19 +307,19 @@ figcaption {
     }
 }
 /* Style horizontal list of navigation links */
-.bnd-nav-top.responsive a,
-.bnd-nav-top.responsive .bnd-nav-dropdown-container
+.bnd-page-nav.responsive a,
+.bnd-page-nav.responsive .bnd-nav-dropdown-container
 {
     float:      none;
     display:    block;
     text-align: left;
 }
-.bnd-nav-top.responsive .bnd-nav-dropdown-content 
+.bnd-page-nav.responsive .bnd-nav-dropdown-content 
 {
     position:   relative;
     width:      100px;
 }
-.bnd-nav-top.responsive .bnd-nav-dropdown-container .bnd-dropdown-button
+.bnd-page-nav.responsive .bnd-nav-dropdown-container .bnd-dropdown-button
 {
     display:    block;
     width:      100%;
@@ -344,12 +358,12 @@ figcaption {
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
 /* ------------------------------------------------------------ */
-.bnd-content-main
+.bnd-page-main
 { 
     margin-top: 100px; 
     padding:    0.01em 16px;
 }
-.bnd-content-main:after
+.bnd-page-main:after
 {
     content: "";
     display: table;
@@ -402,7 +416,6 @@ figcaption {
 {
     flex-grow:        1;     /* ability of item to grow   */
     flex-shrink:      1;     /* ability of item to shrink */
-    flex-basis:       300px; /* default size of item      */
     border:           1px solid slategray; 
     background-color: whitesmoke;        
 }
@@ -763,7 +776,15 @@ figcaption {
     border:        4px solid green; 
     border-radius: 16px;
 }
-@media screen and (min-width: 800px)
+.bnd-image-thumbnail
+{
+    width:         90vw; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    cursor:        pointer;
+}
+@media (min-width: 1000px)
 {
     .bnd-image-left
     {
@@ -779,20 +800,21 @@ figcaption {
         float:         right;
         margin-left:   15px;
     }
+    .bnd-image-thumbnail
+    {
+        width:         100%;
+        max-width:     300px; 
+        height:        auto; 
+        border:        4px solid green; 
+        border-radius: 16px;
+        cursor:        pointer;
+    }
 }
 .bnd-image-left:hover,
 .bnd-image-right:hover,
 .bnd-image-thumbnail:hover
 { 
     opacity: 0.60;
-}
-.bnd-image-thumbnail
-{
-    max-width:     200px; 
-    height:        auto; 
-    border:        4px solid green; 
-    border-radius: 16px;
-    cursor:        pointer;
 }
 .bnd-image-caption
 {
