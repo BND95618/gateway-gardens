@@ -121,30 +121,30 @@
 <!-- Plant images -->
 <div class="bnd-flex-container">
   {% if plant.image_1 %}
-  <figure class="bnd-flex-item">
-    <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-    <figcaption>{{ plant.caption_1 }}</figcaption>
+  <figure class="bnd-flex-image">
+    <img  class="bnd-image-thumbnail" src="{{ plant.image_1.url }}" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
   </figure>
   {% endif %}
 
   {% if plant.image_2 %}
-  <figure class="bnd-flex-item">
-    <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-    <figcaption>{{ plant.caption_2 }}</figcaption>
+  <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ plant.image_2.url }}"  onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
   </figure>
   {% endif %}
 
   {% if plant.image_3 %}
-  <figure class="bnd-flex-item">
-    <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-    <figcaption>{{ plant.caption_3 }}</figcaption>
+  <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ plant.image_3.url }}" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
   </figure>
   {% endif %}
 
   {% if plant.image_4 %}
-  <figure class="bnd-flex-item">
-    <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-    <figcaption>{{ plant.caption_4 }}</figcaption>
+  <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ plant.image_4.url }}"  onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
   </figure>
   {% endif %}
 </div>
