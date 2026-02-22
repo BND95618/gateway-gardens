@@ -16,12 +16,14 @@
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     {{ plant.commonName }}
     <span>(</span>
-    <span>{{ plant.genus }} {{ plant.species }}</span>
-    {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
-      <span class="bnd-variety">var. {{ plant.variety }}</span> 
-    {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
-      <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
-    {% endif %}
+    <div class="bnd-truncate">
+      <span>{{ plant.genus }} {{ plant.species }}</span>
+      {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+        <span class="bnd-variety">var. {{ plant.variety }}</span> 
+      {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+        <span class="bnd-cultivar">'{{ plant.cultivar}}'</span>
+      {% endif %}
+    </div>
     <span>)</span>
 
     <!-- Scientific Name Pronunciation -->

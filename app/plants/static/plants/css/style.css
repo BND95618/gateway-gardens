@@ -73,23 +73,42 @@ h1,h2,h3,h4,h5,h6
     font-weight: 400;
     margin:      10px 0px;
 }
-h1{font-size: 28px}
-h2{font-size: 26px}
-h3{font-size: 24px}
-h4{font-size: 22px}
-h5{font-size: 20px}
-h6{font-size: 18px}
-p 
+h1
 {
-    font-size: 12px;
-    @media screen and (600px <= width <= 1000px)
-    {
-        font-size: 14px;
-    }
-    @media screen and (min-width: 1000px)
-    {
-        font-size: 16px;
-    }
+    font-size:   20px;
+    white-space: nowrap;
+}
+h2{font-size: 18px}
+h3{font-size: 16px}
+h4{font-size: 14px}
+h5{font-size: 12px}
+h6{font-size: 12px}
+@media screen and (600px <= width <= 1000px)
+{
+    h1{font-size: 24px}
+    h2{font-size: 22px}
+    h3{font-size: 20px}
+    h4{font-size: 18px}
+    h5{font-size: 16px}
+    h6{font-size: 14px}
+}
+@media screen and (min-width: 1000px)
+{
+    h1{font-size: 28px}
+    h2{font-size: 26px}
+    h3{font-size: 24px}
+    h4{font-size: 22px}
+    h5{font-size: 20px}
+    h6{font-size: 18px}
+}
+p{font-size: 12px}
+@media screen and (600px <= width <= 1000px)
+{
+    p{font-size: 14px}
+}
+@media screen and (min-width: 1000px)
+{
+    p{font-size: 16px}
 }
 a {cursor:pointer}
 /* a:visited{color: darkred} */
@@ -166,6 +185,15 @@ img
 {
     right:      0; 
     font-size:  16px;
+}
+.bnd-truncate 
+{
+    display:        inline-block;
+    max-width:      50%;
+    overflow-x:     hidden;
+    text-overflow:  ellipsis;
+    vertical-align: top;        /* fixes issue with text moving up */
+    white-space:    nowrap; 
 }
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting - responsive            */
@@ -845,13 +873,21 @@ img
 .bnd-logo
 {
     display:       inline-block;
-    width:         40px; 
+    width:         28px; 
     height:        auto; 
     margin:        -4px 4px -4px -4px;
     padding:       4px;
     border:        1px solid green; 
     background-color: white;
     border-radius: 16px;
+    @media screen and (600px <= width <= 1000px)
+    {
+        width: 34px;
+    }
+    @media screen and (min-width: 1000px)
+    {
+        width: 40px;
+    }
 }
 /* ------------------------------------------------------------ */
 /* Play audio formatting                                        */

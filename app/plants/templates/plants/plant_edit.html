@@ -17,14 +17,16 @@
   <!-- complete the header from master.html -->
   <h1>
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-    Update Plant:{{ plant.commonName }}
+    Update: {{ plant.commonName }}
     <span>(</span>
-    <span>{{ plant.genus }} {{ plant.species }}</span>
-    {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
-      <span class="bnd-variety">var. {{ plant.variety }}</span> 
-    {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
-      <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
-    {% endif %}
+    <div class="bnd-truncate">
+      <span>{{ plant.genus }} {{ plant.species }}</span>
+      {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+        <span class="bnd-variety">var. {{ plant.variety }}</span> 
+      {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+        <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
+      {% endif %}
+    </div>
     <span>)</span>
     <span class="bnd-dropdown-container">
       <button class="bnd-button-small">
