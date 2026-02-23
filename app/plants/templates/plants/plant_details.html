@@ -16,7 +16,17 @@
     <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
     {{ plant.commonName }}
     <span>(</span>
-    <div class="bnd-truncate">
+    <div class="bnd-truncate new-tooltip">
+      <!-- Tool Tip -->
+      <span class="new-tooltip-text">
+        <span>{{ plant.genus }} {{ plant.species }}</span>
+        {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+          <span class="bnd-variety">var. {{ plant.variety }}</span> 
+        {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+          <span class="bnd-cultivar">'{{ plant.cultivar}}'</span>
+        {% endif %}
+      </span>
+      <!-- Scientific name   -->
       <span>{{ plant.genus }} {{ plant.species }}</span>
       {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
         <span class="bnd-variety">var. {{ plant.variety }}</span> 
@@ -28,13 +38,13 @@
 
     <!-- Scientific Name Pronunciation -->
     {% if plant.audio_name %}
-      <span class="bnd-tooltip">
+      <span class="new-tooltip">
         <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
         <span onclick="document.getElementById('player-2').play()">
           <i class="material-icons bnd-play-audio">volume_up</i>
         </span>
         <!-- Tool Tip -->
-        <span class="bnd-tooltip-text">Pronounce</span>
+        <span class="new-tooltip-text">Pronounce</span>
       </span>
     {% endif %}
 

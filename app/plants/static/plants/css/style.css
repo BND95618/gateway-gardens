@@ -663,25 +663,51 @@ img
 }
 .bnd-tooltip-text 
 {
-    z-index:          30;
-    visibility:       hidden;
-    background-color: black;
-    font-size:        16px;
-    color:            white;
-    text-align:       center;
-    border-radius:    8px;
-    padding:          4px 8px;
     position:         absolute;
     bottom:           100%;
     left:             50%;
+    z-index:          60;
+    visibility:       hidden;
     margin-left:      -30px;
+    border-radius:    8px;
+    padding:          4px 8px;
+    background-color: black;
     opacity:          0;
+    font-size:        16px;
+    color:            white;
+    text-align:       center;
     transition:       opacity 2s;
 }
 .bnd-tooltip:hover .bnd-tooltip-text 
 {
     visibility: visible;
     opacity:    1;
+}
+
+.new-tooltip 
+{
+    position: relative;
+    cursor: pointer;
+} 
+.new-tooltip-text 
+{
+    position:         absolute;
+    top:              0px;        /* from the top of the parent */
+    left:             0px;         /* from the left of the parent */
+    vertical-align:   top;         /* fixes issue with text moving up */
+    z-index:          60;
+    visibility:       hidden;
+    width:            auto;
+    border-radius:    6px;
+    padding:          10px 10px;
+    background-color: slategray;
+    font-size:        16px;
+    color:            #fff;
+    text-align:       center;
+}
+.new-tooltip:hover .new-tooltip-text 
+{
+    visibility: visible;
 }
 /* ------------------------------------------------------------ */
 /* Drop-down menu formatting                                    */
