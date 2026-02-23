@@ -85,7 +85,11 @@ h5{font-size: 12px}
 h6{font-size: 12px}
 @media screen and (600px <= width <= 1000px)
 {
-    h1{font-size: 24px}
+    h1
+    {
+        font-size:   24px;
+        white-space: normal;
+    }
     h2{font-size: 22px}
     h3{font-size: 20px}
     h4{font-size: 18px}
@@ -94,7 +98,11 @@ h6{font-size: 12px}
 }
 @media screen and (min-width: 1000px)
 {
-    h1{font-size: 28px}
+    h1
+    {
+        font-size:   28px;
+        white-space: normal;
+    }
     h2{font-size: 26px}
     h3{font-size: 24px}
     h4{font-size: 22px}
@@ -250,7 +258,7 @@ img
     width:            auto;
     margin-left:      auto;
     border:           none;
-    padding:          2px 24px 2px 10px;
+    padding:          0px 24px 0px 10px;
     font-size:        16px;
     color:            black;
     text-align:       center;
@@ -723,11 +731,6 @@ img
     background-color: lightgray;
     color:            black;
 }
-/* Display dropdown content when hovering over the menu title/contents */
-.bnd-dropdown-container:hover .bnd-dropdown-content
-{
-    display:          block;
-}
 .bnd-dropdown-content
 {
     position:         absolute;
@@ -745,13 +748,18 @@ img
     color:            black;
     cursor:           auto;
 }
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-dropdown-container:hover .bnd-dropdown-content
+{
+    display:          block;
+}
 .bnd-dropdown-button
 {
     width:            100%;
     text-align:       left;
     float:            none;
     outline:          0;
-
+    margin:           0;
     border:           none;
     display:          inline-block;
     padding:          8px 16px;
@@ -1238,11 +1246,12 @@ body.bnd-modal-open
 {
     .bnd-modal-content
     {
-        margin:0 10px;width:auto;
+        margin: 0 10px;
+        width:  auto;
     }
     .bnd-modal
     {
-        padding-top:30px
+        padding-top: 30px;
     }
     .bnd-hide-small
     {
