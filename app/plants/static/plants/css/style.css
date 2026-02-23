@@ -189,7 +189,7 @@ img
 .bnd-truncate 
 {
     display:        inline-block;
-    max-width:      50%;
+    max-width:      40%;
     overflow-x:     hidden;
     text-overflow:  ellipsis;
     vertical-align: top;        /* fixes issue with text moving up */
@@ -336,6 +336,20 @@ img
     text-align: left;
 }
 /* ------------------------------------------------------------ */
+/* Place the main content (scrollable) beneath the banner       */
+/* ------------------------------------------------------------ */
+.bnd-page-main
+{ 
+    margin-top: 100px; 
+    padding:    0.01em 16px;
+}
+.bnd-page-main:after
+{
+    content: "";
+    display: table;
+    clear:   both;
+}
+/* ------------------------------------------------------------ */
 /* Bloom chart navigation bar formatting                        */
 /* ------------------------------------------------------------ */
 .bnd-chart-tab-container
@@ -364,20 +378,6 @@ img
 {
     color:            white;
     background-color: gray;
-}
-/* ------------------------------------------------------------ */
-/* Place the main content (scrollable) beneath the banner       */
-/* ------------------------------------------------------------ */
-.bnd-page-main
-{ 
-    margin-top: 100px; 
-    padding:    0.01em 16px;
-}
-.bnd-page-main:after
-{
-    content: "";
-    display: table;
-    clear:   both;
 }
 /* ------------------------------------------------------------ */
 /*                                                              */
@@ -689,11 +689,11 @@ img
     position: relative;
     cursor: pointer;
 } 
-.new-tooltip-text 
+.new-tooltip-text
 {
     position:         absolute;
-    top:              0px;        /* from the top of the parent */
-    left:             0px;         /* from the left of the parent */
+    top:              0px;         /* from the top edge of the parent */
+    left:             0px;         /* from the left edge of the parent */
     vertical-align:   top;         /* fixes issue with text moving up */
     z-index:          60;
     visibility:       hidden;
