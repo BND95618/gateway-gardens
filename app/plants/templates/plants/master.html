@@ -75,7 +75,7 @@
           </div>
         </div>
         <!-- menu for small screens -->
-        <a href="javascript:void(0);" class="bnd-nav-phone-icon" onclick="myFunction()">&#9776;</a>
+        <a href="javascript:void(0);" class="bnd-nav-phone-icon" onclick="toggleVerticleNavMenu()">&#9776;</a>
       </nav>
     </div>
     <!-------------------------------------------------------------------------->
@@ -121,18 +121,28 @@
     {% endblock js %}
 
     <script>
-      // Toggle between adding and removing the "responsive" class to topnav  
-      // when the user clicks on the icon
-      function myFunction() 
+      // Toggle between adding and removing the "responsive" class from the small  
+      // screen verticle navigation menu when the user clicks on the menu icon
+      const id_nav = document.getElementById("id_nav");
+      function toggleVerticleNavMenu() 
       {
-        var x = document.getElementById("id_nav");
-        if (x.className === "bnd-page-nav") 
+        if (id_nav.className === "bnd-page-nav") 
         {
-          x.className += " responsive";
+          id_nav.className += " responsive";
         } 
         else 
         {
-          x.className = "bnd-page-nav";
+          id_nav.className = "bnd-page-nav";
+        }
+      }
+      // Close responsive verticle navigation menu when the user clicks outside of the menu
+      window.onclick = function(event) 
+      {
+        console.log(event.target);
+        if ((event.target.className != "bnd-page-nav responsive") && event.target.className != "bnd-nav-phone-icon")
+        {
+          console.log("event.target.className = ", event.target.className);
+          id_nav.className = "bnd-page-nav";
         }
       }
     </script>
