@@ -101,9 +101,9 @@ h6{font-size: 12px}
     h5{font-size: 20px}
     h6{font-size: 18px}
 }
-p, li                                              {font-size: 12px}
-p, li @media screen and (600px <= width <= 1000px) {font-size: 14px}
-p, li @media screen and (min-width: 1000px)        {font-size: 16px}
+p, li                                              {font-size: 16px}
+p, li @media screen and (600px <= width <= 1000px) {font-size: 18px}
+p, li @media screen and (min-width: 1000px)        {font-size: 20px}
 a {cursor:pointer}
 /* a:visited{color: darkred} */
 th {cursor: pointer}
@@ -1421,12 +1421,12 @@ body.bnd-modal-open
 /* ------------------------------------------------------------ */
 /* Margin formatting                                            */
 /* ------------------------------------------------------------ */
-.bnd-margin-none   { margin:0           !important }
-.bnd-margin        { margin:16px        !important }
-.bnd-margin-top    { margin-top:16px    !important }
-.bnd-margin-left   { margin-left:16px   !important }
-.bnd-margin-bottom { margin-bottom:16px !important }
-.bnd-margin-right  { margin-right:16px  !important }
+.bnd-margin-none   { margin:         0px }
+.bnd-margin        { margin:        16px }
+.bnd-margin-top    { margin-top:    16px }
+.bnd-margin-left   { margin-left:   16px }
+.bnd-margin-bottom { margin-bottom: 16px }
+.bnd-margin-right  { margin-right:  16px }
 /* ------------------------------------------------------------ */
 /* Border formatting                                            */
 /* ------------------------------------------------------------ */
