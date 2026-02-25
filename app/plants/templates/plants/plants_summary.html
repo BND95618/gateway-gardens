@@ -22,23 +22,33 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h1>
-    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-    Plant Finder
-    <span class="bnd-dropdown-container">
-      <button class="bnd-button-small">
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+
+  <div class="bnd-banner-title-container">
+    <h1>Garden/Plant Web Site</h1>
+  </div>
+
+  <div class="bnd-banner-scientific-name-container">
+    Scientific name: extra stuff extra stuff extra stuff extra stuff extra stuff 
+  </div>
+
+  <div class="bnd-banner-menu">
+    <div class="bnd-banner-menu-container">
+      <button class="bnd-banner-menu-icon">
         <i class="material-icons">menu</i>
       </button>
-      <div class="bnd-dropdown-content">
-        <button onclick="searchOpen()"     class="bnd-dropdown-button">Plant Search  </button>
-        <button onclick="column_chooser()" class="bnd-dropdown-button">Column Chooser</button>
-        <button onclick="plants_chart()"   class="bnd-dropdown-button">Bloom Charts  </button>
+      <div class="bnd-banner-menu-content">
+        <button onclick="searchOpen()"     class="bnd-banner-menu-item">Plant Search  </button>
+        <button onclick="column_chooser()" class="bnd-banner-menu-item">Column Chooser</button>
+        <button onclick="plants_chart()"   class="bnd-banner-menu-item">Bloom Charts  </button>
         {% if perms.plants.add_plant %}
-          <a href="{% url 'plants:plant_add' %}" class="bnd-dropdown-button">Add Plant</a>
+          <a href="{% url 'plants:plant_add' %}" class="bnd-banner-menu-item">Add Plant</a>
         {% endif %}
       </div>
-    </span>
-  </h1>
+    </div>
+  </div>
 {% endblock header-completion %}
 
 {% block content %}

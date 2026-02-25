@@ -85,11 +85,7 @@ h5{font-size: 12px}
 h6{font-size: 12px}
 @media screen and (600px <= width <= 1000px)
 {
-    h1
-    {
-        font-size:   24px;
-        white-space: normal;
-    }
+    h1{font-size: 24px}
     h2{font-size: 22px}
     h3{font-size: 20px}
     h4{font-size: 18px}
@@ -98,11 +94,7 @@ h6{font-size: 12px}
 }
 @media screen and (min-width: 1000px)
 {
-    h1
-    {
-        font-size:   28px;
-        white-space: normal;
-    }
+    h1{font-size: 28px;}
     h2{font-size: 26px}
     h3{font-size: 24px}
     h4{font-size: 22px}
@@ -183,26 +175,170 @@ img
 /* ------------------------------------------------------------ */
 /* Banner formatting                                            */
 /* ------------------------------------------------------------ */
-.bnd-page-header
+.bnd-page-banner
 {
-    padding:          0.01em 16px;
+    display:          flex;
+    flex-wrap:        nowrap;
+    align-items:      center; /* Vertically centers the content */
+    gap:              10px;
+    height:           60px;
+    padding:          0px 10px;
     color:            white;
     background-color: green;
 }
-.bnd-page-menu
-{
-    right:      0; 
-    font-size:  16px;
+.bnd-banner-logo-container, 
+.bnd-banner-title-container, 
+.bnd-banner-scientific-name-container, 
+.bnd-banner-menu
+{  
+    font-size:        20px;
+    @media screen and (600px <= width <= 1000px){font-size: 22px;}
+    @media screen and (min-width: 1000px)       {font-size: 26px;}
+    text-align:       left;
 }
-.bnd-truncate 
+
+/* Banner logo */
+.bnd-banner-logo-container{width: fit-content;}
+.bnd-banner-logo-container .bnd-banner-logo
 {
-    display:        inline-block;
-    max-width:      40%;
-    overflow-x:     hidden;
+    width:            28px; 
+    @media screen and (600px <= width <= 1000px){width: 34px;}
+    @media screen and (min-width: 1000px)       {width: 40px;}
+    height:           auto; 
+    padding:          4px;
+    background-color: white;
+    border-radius:    12px;
+}
+
+/* Banner Title */
+.bnd-banner-title-container{width: fit-content;}
+
+/* Banner scientific name */
+.bnd-banner-scientific-name-container
+{
+    flex-grow:      1;
+    overflow-x:     hidden;   /* Prevents tool tip positioning below name */
     text-overflow:  ellipsis;
-    vertical-align: top;        /* fixes issue with text moving up */
     white-space:    nowrap; 
 }
+.bnd-banner-scientific-name-tooltip 
+{
+    position: relative;
+    cursor: pointer;
+} 
+.bnd-banner-scientific-name-tooltip-text
+{
+    position:         absolute;
+    top:              0px;        /* from the top edge of the parent */
+    left:             0px;       /* from the left edge of the parent */
+    vertical-align:   top;         /* fixes issue with text moving up */
+    z-index:          60;
+    visibility:       hidden;
+    width:            auto;
+    border-radius:    6px;
+    padding:          10px 10px;
+    background-color: slategray;
+    font-size:        16px;
+    color:            #fff;
+    text-align:       center;
+}
+.bnd-banner-scientific-name-tooltip:hover .bnd-banner-scientific-name-tooltip-text 
+{
+    visibility: visible;
+}
+/* Banner audio player */
+.bnd-banner-audio-container{width: fit-content;}
+.bnd-audio-tooltip 
+{
+    position: relative;
+    cursor: pointer;
+} 
+.bnd-audio-tooltip-text
+{
+    position:         absolute;
+    top:              30px;        /* from the top edge of the parent */
+    left:             -60px;       /* from the left edge of the parent */
+    vertical-align:   top;         /* fixes issue with text moving up */
+    z-index:          60;
+    visibility:       hidden;
+    width:            auto;
+    border-radius:    6px;
+    padding:          10px 10px;
+    background-color: slategray;
+    font-size:        16px;
+    color:            #fff;
+    text-align:       center;
+}
+.bnd-audio-tooltip:hover .bnd-audio-tooltip-text 
+{
+    visibility: visible;
+}
+
+/* Banner drop-down menu */
+.bnd-banner-menu{width: fit-content;}
+.bnd-banner-menu-container
+{
+    position: relative;         /* required for place of dropdown menu */
+}
+.bnd-banner-menu-icon
+{
+    border:           none;
+    background-color: inherit;
+    color:            inherit;
+    cursor:           pointer;
+}
+.bnd-banner-menu .material-icons /* ensure that the font size is responsive */
+{
+    font-size: inherit;
+}
+.bnd-banner-menu-content
+{
+    display:          none;
+    position:         absolute;
+    right:            0; 
+    z-index:          1;
+    min-width:        140px;
+    margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
+    padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    font-size:        16px;
+    @media screen and (600px <= width <= 1000px){font-size: 14px;}
+    @media screen and (min-width: 1000px)       {font-size: 12px;}
+    line-height:      0.25;      /* set spacing between menu items */
+    color:            black;
+    cursor:           auto;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-banner-menu-container:hover .bnd-banner-menu-content
+{
+    display:          block;
+}
+.bnd-banner-menu-item
+{
+    display:          inline-block;
+    width:            100%;
+    text-align:       left;
+    margin:           0;
+    border:           none;
+    padding:          12px 16px;
+    vertical-align:   middle;
+    font-size:        16px;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-banner-menu-item:hover
+{
+    color:            black;
+    background-color: lightgray; 
+}
+
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting - responsive            */
 /* ------------------------------------------------------------ */
@@ -692,32 +828,6 @@ img
     visibility: visible;
     opacity:    1;
 }
-
-.new-tooltip 
-{
-    position: relative;
-    cursor: pointer;
-} 
-.new-tooltip-text
-{
-    position:         absolute;
-    top:              0px;         /* from the top edge of the parent */
-    left:             0px;         /* from the left edge of the parent */
-    vertical-align:   top;         /* fixes issue with text moving up */
-    z-index:          60;
-    visibility:       hidden;
-    width:            auto;
-    border-radius:    6px;
-    padding:          10px 10px;
-    background-color: slategray;
-    font-size:        16px;
-    color:            #fff;
-    text-align:       center;
-}
-.new-tooltip:hover .new-tooltip-text 
-{
-    visibility: visible;
-}
 /* ------------------------------------------------------------ */
 /* Drop-down menu formatting                                    */
 /* ------------------------------------------------------------ */
@@ -906,25 +1016,6 @@ img
 .bnd-image-thumbnail:hover
 { 
     opacity: 0.60;
-}
-.bnd-logo
-{
-    display:       inline-block;
-    width:         28px; 
-    height:        auto; 
-    margin:        -4px 4px -4px -4px;
-    padding:       4px;
-    border:        1px solid green; 
-    background-color: white;
-    border-radius: 16px;
-    @media screen and (600px <= width <= 1000px)
-    {
-        width: 34px;
-    }
-    @media screen and (min-width: 1000px)
-    {
-        width: 40px;
-    }
 }
 /* ------------------------------------------------------------ */
 /* Play audio formatting                                        */

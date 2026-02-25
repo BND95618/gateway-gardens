@@ -19,18 +19,27 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h1>
-    <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-    {{ garden.name }}
-    <span class="bnd-dropdown-container">
-      <button class="bnd-button-small">
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+
+  <div class="bnd-banner-title-container">
+    <h1>My Garden: {{ garden.name }}</h1>
+  </div>
+
+  <div class="bnd-banner-scientific-name-container"></div>
+
+  <div class="bnd-banner-menu">
+    <div class="bnd-banner-menu-container">
+      <button class="bnd-banner-menu-icon">
         <i class="material-icons">menu</i>
       </button>
-        <div class="bnd-dropdown-content">
-          <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a> 
-        </div>
-    </span>
-  </h1>
+      <div class="bnd-banner-menu-content">
+        <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a>
+      </div>
+    </div>
+  </div>
+
 {% endblock header-completion %}
 
 {% block content %}

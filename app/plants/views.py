@@ -695,6 +695,7 @@ def myplant_update(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
+    plant   = Plant.objects.get(id=myplant.plant.id)
     if request.POST:
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -731,6 +732,7 @@ def myplant_update(request, id):
                                               'notes'        : myplant.notes,
                                             })
         context = { 'myplant' : myplant,
+                    'plant'   : plant,
                     'form'    : form }
         return render(request, 'plants/myplant_update.html', context)
 
@@ -1096,6 +1098,7 @@ def myplant_comment(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
+    plant   = Plant.objects.get(id=myplant.plant.id)
     myplant_comment = MyPlantComment()
     if request.POST:
         form = MyPlantCommentForm(request.POST, request.FILES)
@@ -1109,6 +1112,7 @@ def myplant_comment(request, id):
     else:
         form = MyPlantCommentForm()
         context = { 'myplant' : myplant,
+                    'plant'   : plant,
                     'form'    : form,
                   }
         return render(request, 'plants/myplant_comment.html', context)

@@ -37,10 +37,13 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h1>
-    <img src="{% static 'plants/img/logo.png' %}" alt="No logo found" class="bnd-logo">
-    Fiddle
-  </h1>
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+  
+  <div class="bnd-banner-title-container">
+    <h1>Fiddle</h1>
+  </div>
 {% endblock header-completion %}
 
 {% block content %}

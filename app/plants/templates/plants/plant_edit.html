@@ -15,24 +15,50 @@
 
 {% block header-completion %}
   <!-- complete the header from master.html -->
-  <h1>
-    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-logo">
-    Update: {{ plant.commonName }}
-    <span>(</span>
-    <div class="bnd-truncate">
-      <span>{{ plant.genus }} {{ plant.species }}</span>
-      {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
-        <span class="bnd-variety">var. {{ plant.variety }}</span> 
-      {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
-        <span class="bnd-cultivar">'{{ plant.cultivar }}'</span>
-      {% endif %}
-    </div>
-    <span>)</span>
-    <span class="bnd-dropdown-container">
-      <button class="bnd-button-small">
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+
+  <div class="bnd-banner-title-container">
+    <h1>Update: {{ plant.commonName }}</h1>
+  </div>
+
+  <div class="bnd-banner-scientific-name-container">
+    <!-- <div class="bnd-banner-scientific-name-tooltip"> -->
+      <span>
+        ( 
+        {{ plant.genus }} {{ plant.species }}
+        {% if plant.variety != "tbd" and plant.variety != 'n/a' %}
+          var. {{ plant.variety }} 
+        {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' %}
+          {{ plant.cultivar}}'
+        {% endif %}
+        )
+      </span>
+      <!-- Tool Tip -->
+      <!-- <span class="bnd-banner-scientific-name-tooltip-text">Scientific Name</span> -->
+    <!-- </div> -->
+  </div>
+
+  <div class="bnd-banner-audio-container">
+    {% if plant.audio_name %}
+      <div class="bnd-audio-tooltip">
+        <audio id="player-2" src="{{ plant.audio_name.url }}"></audio>
+        <span onclick="document.getElementById('player-2').play()">
+          <i class="material-icons bnd-play-audio">volume_up</i>
+        </span>
+        <!-- Tool Tip -->
+        <span class="bnd-audio-tooltip-text">Pronounce</span>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="bnd-banner-menu">
+    <div class="bnd-banner-menu-container">
+      <button class="bnd-banner-menu-icon">
         <i class="material-icons">menu</i>
       </button>
-      <div class="bnd-dropdown-content">
+      <div class="bnd-banner-menu-content">
         <a target="_blank" class="bnd-dropdown-button" href="https://garden.org/">
           National Gardening Association
         </a>
@@ -55,8 +81,9 @@
           City of Davis - Climate-Ready Tree List
         </a>
       </div>
-    </span>
-  </h1>
+    </div>
+
+  </div>
 {% endblock header-completion %}
 
 {% block content %}
