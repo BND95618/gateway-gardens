@@ -101,15 +101,9 @@ h6{font-size: 12px}
     h5{font-size: 20px}
     h6{font-size: 18px}
 }
-p{font-size: 12px}
-@media screen and (600px <= width <= 1000px)
-{
-    p{font-size: 14px}
-}
-@media screen and (min-width: 1000px)
-{
-    p{font-size: 16px}
-}
+p, li                                              {font-size: 12px}
+p, li @media screen and (600px <= width <= 1000px) {font-size: 14px}
+p, li @media screen and (min-width: 1000px)        {font-size: 16px}
 a {cursor:pointer}
 /* a:visited{color: darkred} */
 th {cursor: pointer}
