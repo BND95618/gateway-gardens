@@ -57,7 +57,7 @@
     <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-sidebar-contents">
       {% csrf_token %}
       <!-- Plant Attributes -->
-      <h5 class="bnd-center"><i>Plant Details</i></h5>
+      <h6 class="bnd-center"><i>Plant Details</i></h6>
 
       <label for="id_type_x_search">Type:</label><br/>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select">
@@ -177,7 +177,7 @@
       <br/>
 
       <!-- Environmental Needs -->
-      <h5 class="bnd-center"><i>Environmental Needs</i></h5>
+      <h6 class="bnd-center"><i>Environmental Needs</i></h6>
 
       <label for="id_sun_exposure_search">Sun Exposure:</label><br/>
       <select id="id_sun_exposure_search" name="sun_exposure_search" class="bnd-select">
@@ -270,7 +270,7 @@
       </select>
       <br/>
       <!-- In My Garden? -->
-      <h5 class="bnd-center"><i>In My Garden?</i></h5>
+      <h6 class="bnd-center"><i>In My Garden?</i></h6>
 
       <label for="id_garden_search">All plants / My plants</label><br/>
       <select id="id_garden_search" name="garden_search" class="bnd-select">
@@ -292,7 +292,7 @@
       {% endif %}
 
         <!-- Admin stuff -->
-        <h5 class="bnd-center"><i>Admin stuff</i></h5>
+        <h6 class="bnd-center"><i>Admin stuff</i></h6>
         
         <label for="id_status_search">Status:</label><br/>
         <select id="id_status_search" name="status_search" class="bnd-select">

@@ -78,40 +78,40 @@ h1
     font-size:   20px;
     white-space: nowrap;
 }
-h2{font-size: 18px}
-h3{font-size: 16px}
-h4{font-size: 14px}
-h5{font-size: 12px}
-h6{font-size: 12px}
-p{font-size: 12px}
-li{font-size: 12px}
-label{font-size: 12px}
-select{font-size: 12px}
+h2    {font-size: 18px}
+h3    {font-size: 16px}
+h4    {font-size: 14px}
+h5    {font-size: 12px}
+h6    {font-size: 12px}
+p     {font-size: 12px}
+li    {font-size: 12px}
+label {font-size: 12px}
+select, select::picker(select){font-size: 12px}
 @media screen and (600px <= width <= 1000px)
 {
-    h1{font-size: 24px}
-    h2{font-size: 22px}
-    h3{font-size: 20px}
-    h4{font-size: 18px}
-    h5{font-size: 16px}
-    h6{font-size: 14px}
-    p{font-size:  14px}
-    li{font-size: 14px}
-    label{font-size: 14px}
-    select{font-size: 14px}
+    h1    {font-size: 24px}
+    h2    {font-size: 22px}
+    h3    {font-size: 20px}
+    h4    {font-size: 18px}
+    h5    {font-size: 16px}
+    h6    {font-size: 14px}
+    p     {font-size: 14px}
+    li    {font-size: 14px}
+    label {font-size: 14px}
+    select, select::picker(select){font-size: 14px}
 }
 @media screen and (min-width: 1000px)
 {
-    h1{font-size: 28px}
-    h2{font-size: 26px}
-    h3{font-size: 24px}
-    h4{font-size: 22px}
-    h5{font-size: 20px}
-    h6{font-size: 18px}
-    p{font-size: 16px}
-    li{font-size: 16px}
+    h1   {font-size: 28px}
+    h2   {font-size: 26px}
+    h3   {font-size: 24px}
+    h4   {font-size: 22px}
+    h5   {font-size: 20px}
+    h6   {font-size: 18px}
+    p    {font-size: 16px}
+    li   {font-size: 16px}
     label{font-size: 16px}
-    select{font-size: 16px}
+    select, select::picker(select){font-size: 16px}
 }
 a {cursor:pointer}
 /* a:visited{color: darkred} */
@@ -130,7 +130,14 @@ input
 }
 input:hover{background-color: whitesmoke}
 input:focus{background-color: whitesmoke}
-select{font: inherit}
+select, select::picker(select) 
+{
+  appearance:       base-select;     /* Allows formating of select element */
+  min-width:        100%;
+  padding:          0px 6px 0px 6px;
+  border-radius:    4px;
+  background-color: white;  
+}
 hr 
 {
     display:       block;
@@ -593,16 +600,6 @@ img
     border:  1px solid whitesmoke;
     width:   100%;
     cursor:  pointer;
-}
-/* ------------------------------------------------------------ */
-/* Input select formatting                                      */
-/* ------------------------------------------------------------ */
-.bnd-select
-{
-    padding:       9px 0;
-    width:         100%;
-    border:        none;
-    border-bottom: 1px solid whitesmoke;
 }
 /* ------------------------------------------------------------ */
 /* Button formatting                                            */
