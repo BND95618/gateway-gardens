@@ -83,6 +83,10 @@ h3{font-size: 16px}
 h4{font-size: 14px}
 h5{font-size: 12px}
 h6{font-size: 12px}
+p{font-size: 12px}
+li{font-size: 12px}
+label{font-size: 12px}
+select{font-size: 12px}
 @media screen and (600px <= width <= 1000px)
 {
     h1{font-size: 24px}
@@ -91,19 +95,24 @@ h6{font-size: 12px}
     h4{font-size: 18px}
     h5{font-size: 16px}
     h6{font-size: 14px}
+    p{font-size:  14px}
+    li{font-size: 14px}
+    label{font-size: 14px}
+    select{font-size: 14px}
 }
 @media screen and (min-width: 1000px)
 {
-    h1{font-size: 28px;}
+    h1{font-size: 28px}
     h2{font-size: 26px}
     h3{font-size: 24px}
     h4{font-size: 22px}
     h5{font-size: 20px}
     h6{font-size: 18px}
+    p{font-size: 16px}
+    li{font-size: 16px}
+    label{font-size: 16px}
+    select{font-size: 16px}
 }
-p, li                                              {font-size: 16px}
-p, li @media screen and (600px <= width <= 1000px) {font-size: 18px}
-p, li @media screen and (min-width: 1000px)        {font-size: 20px}
 a {cursor:pointer}
 /* a:visited{color: darkred} */
 th {cursor: pointer}
@@ -121,6 +130,7 @@ input
 }
 input:hover{background-color: whitesmoke}
 input:focus{background-color: whitesmoke}
+select{font: inherit}
 hr 
 {
     display:       block;
