@@ -523,14 +523,14 @@ img
 {
     display:              none;
     width:                100vw;
-    @media screen and (min-width: 1000px)
+    @media screen and (min-width: 600px)
     {
         width:            20%;
         max-width:        240px;
         min-width:        120px;
         max-height:       1000px;
         background-color: white;
-        overflow:         auto;
+        overflow-y:       auto;
         box-shadow:       var(--shadow-parameters);
         animation:        animateleft 0.4s;
     }
