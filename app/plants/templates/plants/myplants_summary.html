@@ -47,11 +47,12 @@
 {% endblock header-completion %}
 
 {% block content %}
+<div class="bnd-search-table-container-flex">
   <!-------------------------------------------------------------------------->
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
-  <div id="bnd-search-sidebar" class="bnd-sidebar">
-    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-sidebar-contents">
+  <div id="bnd-search-sidebar" class="bnd-table-search-container-flex">
+    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-table-search-contents-flex">
       {% csrf_token %}
 
       <!-- Plant Attributes -->
@@ -479,6 +480,7 @@
       {% endfor %}
     </table>
   </div>
+</div>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
@@ -680,12 +682,10 @@
     // Search menu - sidebar navigation scripts
     //-----------------------------------------------------------------------------
     function searchOpen() {
-      document.getElementById("tableContainer").style.marginLeft = "16%";
-      document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
+      document.getElementById("bnd-search-sidebar").classList.add("bnd-table-search-open-flex");
     }
     function searchClose() {
-      document.getElementById("tableContainer").style.marginLeft = "0%";
-      document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
+      document.getElementById("bnd-search-sidebar").classList.remove("bnd-table-search-open-flex");
     }
     //-----------------------------------------------------------------------------
     // Search menu - Reset all search criteria to 'Any'

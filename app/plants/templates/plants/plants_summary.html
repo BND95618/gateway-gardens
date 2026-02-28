@@ -50,11 +50,12 @@
 {% endblock header-completion %}
 
 {% block content %}
+<div class="bnd-search-table-container-flex">
   <!-------------------------------------------------------------------------->
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
-  <div id="bnd-search-sidebar" class="bnd-sidebar">
-    <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-sidebar-contents">
+  <div id="bnd-search-sidebar" class="bnd-table-search-container-flex">
+    <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-table-search-contents-flex">
       {% csrf_token %}
       <!-- Plant Attributes -->
       <h6 class="bnd-center"><i>Plant Details</i></h6>
@@ -327,8 +328,8 @@
   <!-------------------------------------------------------------------------->
   <!-- Plant Table                                                          -->
   <!-------------------------------------------------------------------------->
-  <div id="tableContainer">
-    <table id="plantTable" class="bnd-table">
+  <div id="tableContainer" class="bnd-table-container-flex">
+    <table id="plantTable" class="bnd-table-flex">
       <thead>
         <tr>
           <!-- Plant Attributes -->
@@ -404,7 +405,7 @@
             <!-- Admin -->
             <td>{{ plant.status }}                                    </td>
             <!-- Plant Details Icon/Link -->
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_details' plant.id %}">
                   <i    class="material-icons bnd-text-black">library_books</i>
@@ -414,7 +415,7 @@
             </td>
             <!-- Plant Update Icon/Link -->
             {% if perms.plants.change_plant %}
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:plant_edit' plant.id %}">
                   <i    class="material-icons bnd-text-black">edit</i>
@@ -425,7 +426,7 @@
             {% endif %}
             <!-- Plant Delete Icon/Link -->
             {% if perms.plants.delete_plant %}
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
                 <button onclick="plants_delete({{ plant.id }})" class="bnd-button-small">
                   <i    class="material-icons bnd-text-black">delete</i>
@@ -435,7 +436,7 @@
             </td>
             {% endif %}
             <!-- Add/remove plant to/from My Plants Icon/Link -->
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
                 {% if plant.plant_mine == "yes" %}
                   <button onclick="myplant_remove({{ plant.id }})" class="bnd-button-small">
@@ -455,6 +456,7 @@
       {% endfor %}
     </table>
   </div>
+</div>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
@@ -494,7 +496,7 @@
       <!-- Create the modal chart - Blooms -->
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
-          <table id="bloomTable" class="bnd-table">
+          <table id="bloomTable" class="bnd-table-flex">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and plant.bloom_months != '' %} 
@@ -511,7 +513,7 @@
       <!-- Create the modal chart - Bees -->
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
-          <table id="beeTable" class="bnd-table">
+          <table id="beeTable" class="bnd-table-flex">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and plant.bloom_months != '' %} 
@@ -528,7 +530,7 @@
       <!-- Create the modal chart - Butterflies -->
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
-          <table id="butterflyTable" class="bnd-table">
+          <table id="butterflyTable" class="bnd-table-flex">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
@@ -545,7 +547,7 @@
       <!-- Create the modal chart - Hummingbirds -->
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
-          <table id="hummingbirdTable" class="bnd-table">
+          <table id="hummingbirdTable" class="bnd-table-flex">
             {% include "plants/plants_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and plant.bloom_months != '' %} 
@@ -643,12 +645,10 @@
     // Search menu - sidebar navigation scripts
     //-----------------------------------------------------------------------------
     function searchOpen() {
-      document.getElementById("tableContainer").style.marginLeft = "16%";
-      document.getElementById("bnd-search-sidebar").classList.add("bnd-sidebar-open");
+      document.getElementById("bnd-search-sidebar").classList.add("bnd-table-search-open-flex");
     }
     function searchClose() {
-      document.getElementById("tableContainer").style.marginLeft = "0%";
-      document.getElementById("bnd-search-sidebar").classList.remove("bnd-sidebar-open");
+      document.getElementById("bnd-search-sidebar").classList.remove("bnd-table-search-open-flex");
     }
     //-----------------------------------------------------------------------------
     // Search menu - Reset all search criteria to 'Any'

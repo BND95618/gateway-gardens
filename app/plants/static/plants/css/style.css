@@ -207,7 +207,6 @@ img
     @media screen and (min-width: 1000px)       {font-size: 26px;}
     text-align:       left;
 }
-
 /* Banner logo */
 .bnd-banner-logo-container{width: fit-content;}
 .bnd-banner-logo-container .bnd-banner-logo
@@ -220,10 +219,8 @@ img
     background-color: white;
     border-radius:    12px;
 }
-
 /* Banner Title */
 .bnd-banner-title-container{width: fit-content;}
-
 /* Banner scientific name */
 .bnd-banner-scientific-name-container
 {
@@ -284,7 +281,6 @@ img
 {
     visibility: visible;
 }
-
 /* Banner drop-down menu */
 .bnd-banner-menu{width: fit-content;}
 .bnd-banner-menu-container
@@ -349,7 +345,6 @@ img
     color:            black;
     background-color: lightgray; 
 }
-
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting - responsive            */
 /* ------------------------------------------------------------ */
@@ -504,6 +499,155 @@ img
     content: "";
     display: table;
     clear:   both;
+}
+
+/* ------------------------------------------------------------ */
+/* Search/Table formatting - flexbox                            */
+/* ------------------------------------------------------------ */
+.bnd-search-table-container-flex
+{
+    display:              block;
+    @media screen and (min-width: 1000px)
+    {
+        display:          flex;
+        flex-direction:   row;
+        flex-wrap:        nowrap;
+        column-gap:       10px;
+        width:            100%;
+    }
+}
+/* ------------------------------------------------------------ */
+/* Vertical table search bar formatting - flexbox               */
+/* ------------------------------------------------------------ */
+.bnd-table-search-container-flex 
+{
+    display:              none;
+    width:                100vw;
+    @media screen and (min-width: 1000px)
+    {
+        width:            20%;
+        max-width:        240px;
+        min-width:        120px;
+        max-height:       1000px;
+        background-color: white;
+        overflow:         auto;
+        box-shadow:       var(--shadow-parameters);
+        animation:        animateleft 0.4s;
+    }
+}
+.bnd-table-search-contents-flex 
+{
+    padding:          0.01em 16px;
+    color:            black; 
+    background-color: gainsboro;
+}
+.bnd-table-search-open-flex 
+{
+    display:          block;
+}
+/* ------------------------------------------------------------ */
+/* Table formatting - flexbox                                   */
+/* ------------------------------------------------------------ */
+.bnd-table-container-flex
+{
+    z-index:             10;
+    @media screen and (min-width: 1000px)
+    {
+        flex-grow:       1;
+        /* max-height:      1000px; */
+        /* overflow:        auto; */
+    }
+}
+.bnd-table-flex
+{
+    display:         table;
+    border-collapse: separate; /* Required for sticky headers to work well with borders */
+    border-spacing:  0;
+    table-layout:    auto;     /* use the browsers automatic table layout algorithm */
+    width:           100%;     /* content dictates the width of the table */
+    box-shadow:      var(--shadow-parameters);
+}
+.bnd-table-flex th 
+{
+    display:          table-cell;
+    position:         sticky;
+    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    z-index:          20;                /* Ensure table headers are above table body data */
+    border:           1px solid slategray;
+    padding:          8px 8px 8px 8px;
+    background-color: slategray;
+    color:            white;
+    text-align:       left;
+    vertical-align:   top;
+}
+.bnd-table-flex th:first-child     {padding-left:  16px}
+.bnd-table-flex th:last-child      {padding-right: 16px}
+.bnd-table-flex tr:nth-child(odd)  {background-color:white}
+.bnd-table-flex tr:nth-child(even) {background-color:gainsboro}
+.bnd-table-flex tr:hover           {background-color:gray}
+.bnd-table-flex td 
+{
+    border:         1px solid lightgray;
+    padding:        8px 8px 4px 8px;
+    display:        table-cell;
+    text-align:     left;
+    vertical-align: top;
+}
+.bnd-table-flex td:first-child{padding-left:  16px}
+.bnd-table-flex td:last-child {padding-right: 16px}
+.bnd-table-icon-flex
+{
+    width:      10px;
+    text-align: center;
+}
+
+
+/* ------------------------------------------------------------ */
+/* Table formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-table
+{
+    display:         table;
+    border-collapse: separate; /* Required for sticky headers to work well with borders */
+    border-spacing:  0;
+    table-layout:    auto;     /* use the browsers automatic table layout algorithm */
+    width:           100%;     /* content dictates the width of the table */
+    padding-top:     10px;
+    box-shadow:      var(--shadow-parameters);
+}
+.bnd-table th 
+{
+    display:          table-cell;
+    position:         sticky;
+    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    z-index:          20;                /* Ensure table headers are above table body data */
+    border:           1px solid slategray;
+    padding:          8px 8px 8px 8px;
+    background-color: slategray;
+    color:            white;
+    text-align:       left;
+    vertical-align:   top;
+}
+.bnd-table th:first-child     {padding-left:  16px}
+.bnd-table th:last-child      {padding-right: 16px}
+.bnd-table tr                 {border-bottom: 1px solid gainsboro}
+.bnd-table tr:nth-child(odd)  {background-color:white}
+.bnd-table tr:nth-child(even) {background-color:gainsboro}
+.bnd-table tr:hover           {background-color:gray}
+.bnd-table td 
+{
+    border:         1px solid lightgray;
+    padding:        8px 8px 4px 8px;
+    display:        table-cell;
+    text-align:     left;
+    vertical-align: top;
+}
+.bnd-table td:first-child{padding-left:  16px}
+.bnd-table td:last-child {padding-right: 16px}
+.bnd-table-icon
+{
+    width:      10px;
+    text-align: center;
 }
 /* ------------------------------------------------------------ */
 /* Bloom chart navigation bar formatting                        */
@@ -892,32 +1036,6 @@ img
     background-color: lightgray; 
 }
 /* ------------------------------------------------------------ */
-/* Vertical navigation bar formatting                           */
-/* ------------------------------------------------------------ */
-.bnd-sidebar 
-{
-    height:           80%;
-    width:            15%;
-    margin:           8px 0% 0px 0px;
-    background-color: white;
-    position:         fixed;
-    z-index:          10;
-    overflow:         auto;
-    box-shadow:       var(--shadow-parameters);
-    animation:        animateleft 0.4s;
-    display:          none;
-}
-.bnd-sidebar-contents 
-{
-    padding:          0.01em 16px;
-    color:            black; 
-    background-color: gainsboro;
-}
-.bnd-sidebar-open 
-{
-    display:          block;
-}
-/* ------------------------------------------------------------ */
 /* Image formatting                                             */
 /* ------------------------------------------------------------ */
 .bnd-flex-image
@@ -961,7 +1079,6 @@ img
         max-width:    250px;
     }
 }
-
 .bnd-image
 {
     width:         100%; 
@@ -1011,7 +1128,6 @@ img
         margin-left:   15px;
     }
 }
-
 .bnd-image-left:hover,
 .bnd-image-right:hover,
 .bnd-image-thumbnail:hover
@@ -1021,10 +1137,7 @@ img
 /* ------------------------------------------------------------ */
 /* Play audio formatting                                        */
 /* ------------------------------------------------------------ */
-.bnd-play-audio
-{
-    cursor:pointer;
-}
+.bnd-play-audio{cursor:pointer}
 /* ------------------------------------------------------------ */
 /* Table formatting                                             */
 /* ------------------------------------------------------------ */
