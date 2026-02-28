@@ -507,7 +507,7 @@ img
 .bnd-search-table-container-flex
 {
     display:              block;
-    @media screen and (min-width: 1000px)
+    @media screen and (min-width: 600px)
     {
         display:          flex;
         flex-direction:   row;
@@ -551,7 +551,7 @@ img
 .bnd-table-container-flex
 {
     z-index:             10;
-    @media screen and (min-width: 1000px)
+    @media screen and (min-width: 600px)
     {
         flex-grow:       1;
         /* max-height:      1000px; */
@@ -600,8 +600,6 @@ img
     width:      10px;
     text-align: center;
 }
-
-
 /* ------------------------------------------------------------ */
 /* Table formatting                                             */
 /* ------------------------------------------------------------ */
