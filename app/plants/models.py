@@ -7,6 +7,7 @@ from django.urls         import reverse
 # Process uploaded images to ensure reasonable sizes for storaging and rendering performance
 from imagekit.models     import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from imagekit.processors import Transpose # correct iPhone image rotation when directly using the camera
 
 # Store Django uploaded files as UUID files or inside UUID directories
 from django_uuid_upload  import upload_to_uuid
@@ -189,7 +190,7 @@ class Plant(models.Model):
     audio_name        = models.FileField(upload_to=upload_to_uuid('audio/'), blank=True, null=True)
     # Images
     image_1           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                            processors = [ResizeToFill(400, 400)],
+                                            processors = [Transpose(), ResizeToFill(400, 400)],
                                             format     = 'JPEG',
                                             options    = {'quality': 100},
                                             blank      = True, 
