@@ -12,8 +12,6 @@ from django.contrib.auth            import authenticate, login, logout # User lo
 from django.contrib.auth.models     import User, Group                 # User signup
 from django.contrib.auth.decorators import login_required
 
-from PIL import Image, ExifTags
-
 from .models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
 
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
@@ -1532,9 +1530,6 @@ def plant_edit(request, id):
                 if (plant.image_1):
                     plant.image_1.delete(save=False)
                 plant.image_1 = request.FILES['image_1']
-
-                # correct_image_orientation(plant.image_1)
-
             plant.caption_1 = form.cleaned_data.get('caption_1')
             
             if 'image_2' in request.FILES:
@@ -2067,36 +2062,7 @@ def user_logout(request):
     logout(request)
     return render(request, 'plants/index.html')
 
-# 
-
-def correct_image_orientation(image_path):
-    """ Function to correct iPhone image orientification when accessing camera """
-    try:
-        image = Image.open(image_path)
-        
-        # Find the orientation tag
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation':
-                break
-        
-        exif = image._getexif()
-        if not exif:
-            return # No EXIF data, skip
-        
-        orientation_val = exif.get(orientation)
-        
-        # Rotate based on EXIF data
-        if orientation_val == 3:
-            image = image.rotate(180, expand=True)
-        elif orientation_val == 6:
-            image = image.rotate(270, expand=True)
-        elif orientation_val == 8:
-            image = image.rotate(90, expand=True)
-        
-        image.save(image_path)
-        image.close()
-    except (AttributeError, KeyError, IndexError, ValueError):
-        pass # Image does not have proper EXIF orientation
+#
 
 def string2list(string):
     """ Utility: convert list in string form to a list """
