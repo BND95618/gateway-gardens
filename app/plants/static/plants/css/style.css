@@ -19,7 +19,8 @@
       20: main content table th
       30: modals and tooltips
       40: modal headers
-      50: page navigation bar and page banner
+      50: page navigation bar
+      60: page banner
 
     Unit definitions:
       em:  Relative to the font-size of the element
@@ -171,17 +172,11 @@ img
 /* ------------------------------------------------------------ */
 /* Container for navigation bar and banner                      */
 /* ------------------------------------------------------------ */
-.bnd-container-top
+.bnd-page-flex
 {
-    position:         fixed;
-    top:              0;
-    left:             0;
-    z-index:          50;
-    width:            100%;
-    height:           100px; 
-    margin:           0px;
-    padding:          0px;
-    background-color: white;
+    display:          flex;
+    flex-direction:   column;
+    height:           100vh;
 }
 /* ------------------------------------------------------------ */
 /* Banner formatting                                            */
@@ -190,12 +185,24 @@ img
 {
     display:          flex;
     flex-wrap:        nowrap;
+    position:         fixed;
+    top:              0;
+    z-index:          60;
+    width:            100%;
+    height:           45px;
     align-items:      center; /* Vertically centers the content */
     gap:              10px;
-    height:           60px;
     padding:          0px 10px;
     color:            white;
     background-color: green;
+    @media screen and (600px <= width <= 1000px)
+    {
+        height:           55px;
+    }
+    @media screen and (min-width: 1000px)
+    {
+        height:           65px;
+    }
 }
 .bnd-banner-logo-container, 
 .bnd-banner-title-container, 
@@ -240,7 +247,6 @@ img
     top:              0px;        /* from the top edge of the parent */
     left:             0px;       /* from the left edge of the parent */
     vertical-align:   top;         /* fixes issue with text moving up */
-    z-index:          60;
     visibility:       hidden;
     width:            auto;
     border-radius:    6px;
@@ -266,8 +272,7 @@ img
     position:         absolute;
     top:              30px;        /* from the top edge of the parent */
     left:             -60px;       /* from the left edge of the parent */
-    vertical-align:   top;         /* fixes issue with text moving up */
-    z-index:          60;
+    vertical-align:   top;         /* fixes issue with text moving up */    
     visibility:       hidden;
     width:            auto;
     border-radius:    6px;
@@ -282,10 +287,10 @@ img
     visibility: visible;
 }
 /* Banner drop-down menu */
-.bnd-banner-menu{width: fit-content;}
 .bnd-banner-menu-container
 {
-    position: relative;         /* required for place of dropdown menu */
+    position: relative;         /* required for placement of dropdown menu */
+    width:    fit-content;
 }
 .bnd-banner-menu-icon
 {
@@ -302,8 +307,7 @@ img
 {
     display:          none;
     position:         absolute;
-    right:            0; 
-    z-index:          1;
+    right:            0;    
     min-width:        140px;
     margin:           0;
     border-style:     solid;
@@ -351,19 +355,24 @@ img
 .bnd-page-nav
 {
     display:          block;
-    align-items:      center;
+    position:         fixed;    /* prevent scrolling off screen */
+    top:              45px;     /* fixed position below banner  */
+    z-index:          50;
     width:            100%;
-    height:           auto;
+    height:           25px;
     margin:           0px;
     padding:          0px;
-    overflow:         auto;
     background-color: lightgray;
+    align-items:      center;
+    @media screen and (600px <= width <= 1000px)
+    {
+        top:          55px;     /* fixed position below banner  */
+    }
     @media screen and (min-width: 1000px)
     {
         display:      flex;
-        flex-wrap:    wrap;
-        width:        100%;
-        height:       auto;
+        flex-wrap:    nowrap;
+        top:          65px;     /* fixed position below banner  */
     }
 }
 /* web-site navigation links */
@@ -420,7 +429,6 @@ img
 {
     position:         absolute;
     right:            0; 
-    z-index:          1;
     display:          none;
     min-width:        160px;
     margin:           0;
@@ -473,7 +481,8 @@ img
 {
     float:      none;
     display:    block;
-    text-align: left;
+    background-color: lightgray;
+    text-align: center;
 }
 .bnd-page-nav.responsive .bnd-nav-dropdown-content 
 {
@@ -491,8 +500,17 @@ img
 /* ------------------------------------------------------------ */
 .bnd-page-main
 { 
-    margin-top: 100px; 
+    flex-grow:  1;
+    margin-top: 70px;   
     padding:    0.01em 16px;
+    @media screen and (600px <= width <= 1000px)
+    {
+        margin-top: 80px;     /* position content below banner/nav  */
+    }
+    @media screen and (min-width: 1000px)
+    {
+        margin-top: 90px;     /* position content below banner/nav  */
+    }
 }
 .bnd-page-main:after
 {
@@ -571,7 +589,7 @@ img
 {
     display:          table-cell;
     position:         sticky;
-    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              80px;             /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
     border:           1px solid slategray;
     padding:          8px 8px 8px 8px;
@@ -579,6 +597,14 @@ img
     color:            white;
     text-align:       left;
     vertical-align:   top;
+    @media screen and (600px <= width <= 1000px)
+    {
+        top:          90px;
+    }
+    @media screen and (min-width: 1000px)
+    {
+        top:          100px;
+    }
 }
 .bnd-table-flex th:first-child     {padding-left:  16px}
 .bnd-table-flex th:last-child      {padding-right: 16px}
@@ -617,7 +643,6 @@ img
 {
     display:          table-cell;
     position:         sticky;
-    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
     border:           1px solid slategray;
     padding:          8px 8px 8px 8px;
@@ -1153,14 +1178,22 @@ img
 {
     display:          table-cell;
     position:         sticky;
-    top:              100px;             /* Stick to the bottom edge of the fixed navbar/banner */
-    z-index:          20;                /* Ensure table headers are above table body data */
+    top:              80px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    z-index:          20;               /* Ensure table headers are above table body data */
     border:           1px solid slategray;
     padding:          8px 8px 8px 8px;
     background-color: slategray;
     color:            white;
     text-align:       left;
     vertical-align:   top;
+    @media screen and (600px <= width <= 1000px)
+    {
+        top:          90px;
+    }
+    @media screen and (min-width: 1000px)
+    {
+        top:          100px;
+    }
 }
 .bnd-table th:first-child     {padding-left:  16px}
 .bnd-table th:last-child      {padding-right: 16px}

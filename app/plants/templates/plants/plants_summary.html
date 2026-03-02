@@ -32,19 +32,17 @@
 
   <div class="bnd-banner-scientific-name-container"></div>
 
-  <div class="bnd-banner-menu">
-    <div class="bnd-banner-menu-container">
-      <button class="bnd-banner-menu-icon">
-        <i class="material-icons">menu</i>
-      </button>
-      <div class="bnd-banner-menu-content">
-        <button onclick="searchOpen()"     class="bnd-banner-menu-item">Plant Search  </button>
-        <button onclick="column_chooser()" class="bnd-banner-menu-item">Column Chooser</button>
-        <button onclick="plants_chart()"   class="bnd-banner-menu-item">Bloom Charts  </button>
-        {% if perms.plants.add_plant %}
-          <a href="{% url 'plants:plant_add' %}" class="bnd-banner-menu-item">Add Plant</a>
-        {% endif %}
-      </div>
+  <div class="bnd-banner-menu-container">
+    <button class="bnd-banner-menu-icon">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="bnd-banner-menu-content">
+      <button onclick="searchOpen()"     class="bnd-banner-menu-item">Plant Search  </button>
+      <button onclick="column_chooser()" class="bnd-banner-menu-item">Column Chooser</button>
+      <button onclick="plants_chart()"   class="bnd-banner-menu-item">Bloom Charts  </button>
+      {% if perms.plants.add_plant %}
+        <a href="{% url 'plants:plant_add' %}" class="bnd-banner-menu-item">Add Plant</a>
+      {% endif %}
     </div>
   </div>
 {% endblock header-completion %}

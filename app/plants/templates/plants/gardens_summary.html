@@ -29,14 +29,12 @@
 
   <div class="bnd-banner-scientific-name-container"></div>
 
-  <div class="bnd-banner-menu">
-    <div class="bnd-banner-menu-container">
-      <button class="bnd-banner-menu-icon">
-        <i class="material-icons">menu</i>
-      </button>
-      <div class="bnd-banner-menu-content">
-        <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a>
-      </div>
+  <div class="bnd-banner-menu-container">
+    <button class="bnd-banner-menu-icon">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="bnd-banner-menu-content">
+      <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a>
     </div>
   </div>
 
