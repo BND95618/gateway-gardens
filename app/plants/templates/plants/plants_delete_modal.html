@@ -1,9 +1,9 @@
 <!-- /app/plants/templates/plants/plants_delete_modal.html -->
-<div class="bnd-modal-content-300">
+<div class="bnd-modal-container">
   <header class="bnd-modal-header">
     <h4>Delete "{{ plant.commonName }}"?</h4>
   </header>
-  <form class="bnd-container" action="{% url 'plants:plants_delete' plant.id %}" method="post">
+  <form class="bnd-modal-contents" action="{% url 'plants:plants_delete' plant.id %}" method="post">
     {% csrf_token %}
     <footer class="bnd-modal-button-bar">
       <button type="submit" class="bnd-button-submit">Confirm</button>

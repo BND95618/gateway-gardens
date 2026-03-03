@@ -19,8 +19,9 @@
       20: main content table th
       30: modals and tooltips
       40: modal headers
-      50: page navigation bar
-      60: page banner
+      50: page nav/main spacer
+      60: page navigation bar
+      70: page banner
 
     Unit definitions:
       em:  Relative to the font-size of the element
@@ -58,11 +59,12 @@ html
 
 body
 {
-    margin:      0;             /* remove default */
-    padding:     0;             /* remove default */
-    font-family: chalkboard, verdana, sans-serif;
-    font-size:   16px;
-    line-height: 1.5;
+    margin:           0;             /* remove default */
+    padding:          0;             /* remove default */
+    background-color: whitesmoke;
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        16px;
+    line-height:      1.5;
 }
 section
 {
@@ -187,9 +189,9 @@ img
     flex-wrap:        nowrap;
     position:         fixed;
     top:              0;
-    z-index:          60;
+    z-index:          70;
     width:            100%;
-    height:           45px;
+    height:           48px;
     align-items:      center; /* Vertically centers the content */
     gap:              10px;
     padding:          0px 10px;
@@ -197,11 +199,11 @@ img
     background-color: green;
     @media screen and (600px <= width <= 1000px)
     {
-        height:           55px;
+        height:           56px;
     }
     @media screen and (min-width: 1000px)
     {
-        height:           65px;
+        height:           64px;
     }
 }
 .bnd-banner-logo-container, 
@@ -356,23 +358,23 @@ img
 {
     display:          block;
     position:         fixed;    /* prevent scrolling off screen */
-    top:              45px;     /* fixed position below banner  */
-    z-index:          50;
+    top:              48px;     /* fixed position below banner  */
+    z-index:          60;
     width:            100%;
-    height:           25px;
+    height:           24px;
     margin:           0px;
     padding:          0px;
     background-color: lightgray;
     align-items:      center;
     @media screen and (600px <= width <= 1000px)
     {
-        top:          55px;     /* fixed position below banner  */
+        top:          56px;     /* fixed position below banner  */
     }
     @media screen and (min-width: 1000px)
     {
         display:      flex;
         flex-wrap:    nowrap;
-        top:          65px;     /* fixed position below banner  */
+        top:          64px;     /* fixed position below banner  */
     }
 }
 /* web-site navigation links */
@@ -381,7 +383,7 @@ img
     display:          inline-block;
     width:            auto;
     border:           none;
-    padding:          2px 10px;
+    padding:          0px 10px;
     color:            black;
     text-align:       center;
     outline:          0;
@@ -496,20 +498,41 @@ img
     text-align: left;
 }
 /* ------------------------------------------------------------ */
+/* Create whitespace between banner/nav and table header        */
+/* ------------------------------------------------------------ */
+.bnd-page-nav-main-spacer
+{
+    position:         fixed;    /* prevent scrolling off screen */
+    top:              72px;     /* fixed position below nav     */
+    z-index:          50;
+    width:            100%;
+    height:           16px;
+    background-color: whitesmoke;
+    color:            whitesmoke;
+    @media screen and (600px <= width <= 1000px)
+    {
+        top:          80px;     /* fixed position below banner  */
+    }
+    @media screen and (min-width: 1000px)
+    {
+        top:          88px;     /* fixed position below banner  */
+    }
+}
+/* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
 /* ------------------------------------------------------------ */
 .bnd-page-main
 { 
     flex-grow:  1;
-    margin-top: 70px;   
+    margin-top: 88px;   
     padding:    0.01em 16px;
     @media screen and (600px <= width <= 1000px)
     {
-        margin-top: 80px;     /* position content below banner/nav  */
+        margin-top: 96px;     /* position content below banner/nav/mask  */
     }
     @media screen and (min-width: 1000px)
     {
-        margin-top: 90px;     /* position content below banner/nav  */
+        margin-top: 112px;     /* position content below banner/nav/mask  */
     }
 }
 .bnd-page-main:after
@@ -547,7 +570,7 @@ img
         max-width:        240px;
         min-width:        120px;
         max-height:       1000px;
-        background-color: white;
+        background-color: whitesmoke;
         overflow-y:       auto;
         box-shadow:       var(--shadow-parameters);
         animation:        animateleft 0.4s;
@@ -589,7 +612,7 @@ img
 {
     display:          table-cell;
     position:         sticky;
-    top:              80px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              104px;             /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
     border:           1px solid slategray;
     padding:          8px 8px 8px 8px;
@@ -599,11 +622,11 @@ img
     vertical-align:   top;
     @media screen and (600px <= width <= 1000px)
     {
-        top:          90px;
+        top:          96px;
     }
     @media screen and (min-width: 1000px)
     {
-        top:          100px;
+        top:          104px;
     }
 }
 .bnd-table-flex th:first-child     {padding-left:  16px}
@@ -1232,31 +1255,17 @@ img
     display:           none;             /* Hidden by default */
     overflow:          auto;             /* Enable scroll if needed */
 }
-.bnd-modal-content-300,
-.bnd-modal-content-400,
-.bnd-modal-content-500,
-.bnd-modal-content-600,
-.bnd-modal-content-700,
-.bnd-modal-content-800,
-.bnd-modal-content-900,
-.bnd-modal-content-1000
+.bnd-modal-container
 {
     position:         relative;
+    width:            fit-content;
+    min-width:        300px;
     margin:           auto;
     padding:          0;
     background-color: white;
     background-image: url(../img/leaves.png);
     animation:        animatezoom 0.6s;
 }
-
-.bnd-modal-content-300  { width:  300px }
-.bnd-modal-content-400  { width:  400px }
-.bnd-modal-content-500  { width:  500px }
-.bnd-modal-content-600  { width:  600px }
-.bnd-modal-content-700  { width:  700px }
-.bnd-modal-content-800  { width:  800px }
-.bnd-modal-content-900  { width:  900px }
-.bnd-modal-content-1000 { width: 1000px }
 
 .bnd-modal-header
 {
@@ -1270,6 +1279,10 @@ img
     border:           1px solid darkgray;
     padding:          4px 16px;
     background-color: gainsboro;
+}
+.bnd-modal-contents
+{
+    padding: 0.01em 16px;
 }
 .bnd-modal-image-container
 {

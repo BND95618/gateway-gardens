@@ -1,12 +1,12 @@
 <!-- /plants/templates/plants/myplant_todo_del_modal.html -->
-<div class="bnd-modal-content-300">
+<div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h4>Delete To Do Item</h4>
     </header>
     <!-- To Do delete - create form -->
     <form action="{% url 'plants:myplant_todo_del' myplant_todo.id %}" method="post">
       {% csrf_token %}
-      <div class="bnd-container">
+      <div class="bnd-modal-contents">
         <p>Are you sure?</p>
       </div>
       <div class="bnd-modal-button-bar">

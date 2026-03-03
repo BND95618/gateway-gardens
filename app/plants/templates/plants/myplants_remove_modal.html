@@ -1,10 +1,10 @@
 <!-- app/plants/templates/plants/myplants_remove_modal.html -->
 
-<div class="bnd-modal-content-300">
+<div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h3>Remove "{{ plant.commonName }}" from your garden?</h3>
     </header>
-    <form class="bnd-container" action="{% url 'plants:myplants_remove' plant.id %}" method="post">
+    <form class="bnd-modal-contents" action="{% url 'plants:myplants_remove' plant.id %}" method="post">
         {% csrf_token %}
         <footer class="bnd-modal-button-bar">
           <button type="submit" class="bnd-button-submit">Confirm</button>

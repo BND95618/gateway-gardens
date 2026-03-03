@@ -1,5 +1,5 @@
 <!-- /plants/templates/plants/myplants_todo_details_modal.html -->
-<div class="bnd-modal-content-800">
+<div class="bnd-modal-container">
     <header class="bnd-modal-header">
         <h4>To Do Item Details</h4>
         <!-- Close the modal -->
@@ -7,7 +7,7 @@
             class="bnd-button bnd-modal-close">&times;
         </span>
     </header>
-    <div class="bnd-container">
+    <div class="bnd-modal-contents">
         <p>Date:        {{ myplant_todo.date       }}</p>
         <p>Common Name: {{ myplant_todo.commonName }}</p>
         <p>Action:      {{ myplant_todo.action     }}</p>

@@ -1,66 +1,60 @@
 <!-- /plants/templates/plants/myplants_todo_add_modal.html -->
-<div class="bnd-modal-content-300">
-    <header class="bnd-modal-header">
-      <h4>Add To Do Item</h4>
-    </header>
-    <!-- To Do add - create form -->
-    <!-- Required for django_flatpickr - date input widget -->
-    {{ form.media }}
-    <form action="{% url 'plants:myplants_todo_add' myGarden.id%}" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
+<div class="bnd-modal-container">
+  <header class="bnd-modal-header">
+    <h4>Add To Do Item</h4>
+  </header>
+  <!-- To Do add - create form -->
+  <!-- Required for django_flatpickr - date input widget -->
+  {{ form.media }}
+  <form action="{% url 'plants:myplants_todo_add' myGarden.id%}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
-      <div class="bnd-container">
-        <label for="id_common_name">Common Name:</label><br/>
-        <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
-          <option value="---" selected> --- </option>
-          {% for myPlant in myPlants %}
-            <option value="{{ myPlant.plant.commonName }}">{{ myPlant.plant.commonName }}</option>
-          {% endfor %}
-        </select>
+    <div class="bnd-modal-contents">
+      <label for="id_common_name">Common Name:</label><br/>
+      <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
+        <option value="---" selected> --- </option>
+        {% for myPlant in myPlants %}
+          <option value="{{ myPlant.plant.commonName }}">{{ myPlant.plant.commonName }}</option>
+        {% endfor %}
+      </select>
       <br/>
-      </div>
 
-      <div class="bnd-container">
-        <label for="date">Date:</label>
-        <input type="date" id="id_date" name="date"/>
-        <br/>
-      </div>
+      <label for="date">Date:</label>
+      <input type="date" id="id_date" name="date"/>
+      <br/>
 
-      <div class="bnd-container">
-        <label for="id_action">Action:</label><br/>
-        <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
-          <option value="---" selected> --- </option>
-          {% for action in todo_action_opt %}
-            <option value="{{ action }}" >{{ action }}</option>
-          {% endfor %}
-        </select>
-        <br/>
-      </div>
+      <label for="id_action">Action:</label><br/>
+      <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
+        <option value="---" selected> --- </option>
+        {% for action in todo_action_opt %}
+          <option value="{{ action }}" >{{ action }}</option>
+        {% endfor %}
+      </select>
+      <br/>
 
-      <div class="bnd-container">
-        <label for="id_repeat">Repeat:</label><br/>
-        <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
-          <option value="---" selected> --- </option>
-          {% for repeat in todo_repeat_opt %}
-            <option value="{{ repeat }}" >{{ repeat }}</option>
-          {% endfor %}
-        </select>
-        <br/>
-      </div>
+      <label for="id_repeat">Repeat:</label><br/>
+      <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
+        <option value="---" selected> --- </option>
+        {% for repeat in todo_repeat_opt %}
+          <option value="{{ repeat }}" >{{ repeat }}</option>
+        {% endfor %}
+      </select>
+      <br/>
 
-      <div class="bnd-container">
-        <label for="id_details">Details:</label>
-         type="text" id="id_details" class="bnd-margin-bottom" name="details">
-        <br/>
-      <div class="bnd-modal-button-bar">
-        <!-- To Do add - submit -->
-        <button type="submit" class="bnd-button-submit">Submit</button>
-        <!-- To Do add - cancel -->
-        <button type="button"
-                onclick="document.getElementById('todo_add_modal').style.display='none'"
-                class="bnd-button-cancel">
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
+      <label for="id_details">Details:</label>
+      <input type="text" id="id_details" class="bnd-margin-bottom" name="details">
+      <br/>
+    </div>
+
+    <div class="bnd-modal-button-bar">
+      <!-- To Do add - submit -->
+      <button type="submit" class="bnd-button-submit">Submit</button>
+      <!-- To Do add - cancel -->
+      <button type="button"
+              onclick="document.getElementById('todo_add_modal').style.display='none'"
+              class="bnd-button-cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

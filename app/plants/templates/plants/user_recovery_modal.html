@@ -1,10 +1,10 @@
 <!-- /app/plants/templates/plants/user_recovery_modal.html -->
 
-<div class="bnd-modal-content-400">
+<div class="bnd-modal-container">
   <header class="bnd-modal-header">
     <h3>User Recovery - Under Construction</h3>
   </header>
-  <form class="bnd-container" action="{% url 'plants:user_recovery' %}" method="post">
+  <form class="bnd-modal-contents" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-button-bar">
       {{ form.as_p }}

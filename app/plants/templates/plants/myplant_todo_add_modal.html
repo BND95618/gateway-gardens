@@ -1,12 +1,12 @@
 <!-- /plants/templates/plants/myplant_todo_add_modal.html -->
-<div class="bnd-modal-content-500">
+<div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h4>Add To Do Item</h4>
     </header>
     <!-- To Do add - create form -->
     <form action="{% url 'plants:myplant_todo_add' myplant.id%}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="bnd-container">
+      <div class="bnd-modal-contents">
         {{ form.as_p }}
       </div>
       <div class="bnd-modal-button-bar">

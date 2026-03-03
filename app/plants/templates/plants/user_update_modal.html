@@ -1,6 +1,6 @@
 <!-- /app/plants/templates/plants/user_update_modal.html -->
 
-<div class="bnd-modal-content-400">
+<div class="bnd-modal-container">
   <header class="bnd-modal-header">
     <h3>User Update</h3>
     {% if messages %}
@@ -11,7 +11,7 @@
   </header>
   <form action="{% url 'plants:user_update' %}" method="post">
     {% csrf_token %}
-    <div class="bnd-container">
+    <div class="bnd-modal-contents">
       {{ form.as_p }}
     </div>
     <div class="bnd-modal-button-bar">

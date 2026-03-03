@@ -290,23 +290,24 @@
         <div style = "display: none">
       {% endif %}
 
-        <!-- Admin stuff -->
-        <h6 class="bnd-center"><i>Admin stuff</i></h6>
-        
-        <label for="id_status_search">Status:</label><br/>
-        <select id="id_status_search" name="status_search" class="bnd-select">
-          <option value="Any" >Any</option>
-          {% for x in status_opt %}
-            {% if x == status_search %}
-              <option value="{{ x }}" selected>{{ x }}</option>
-            {% elif x != "tbd" %}
-              <option value="{{ x }}"         >{{ x }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-        <br/>
+      <!-- Admin stuff -->
+      <h6 class="bnd-center"><i>Admin stuff</i></h6>
+      
+      <label for="id_status_search">Status:</label><br/>
+      <select id="id_status_search" name="status_search" class="bnd-select">
+        <option value="Any" >Any</option>
+        {% for x in status_opt %}
+          {% if x == status_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br/>
 
       </div>
+      <!--  -->
 
       <footer class="bnd-modal-button-bar">
         <!-- Button to initiate the search based upon the input criteria -->
@@ -475,7 +476,7 @@
   
   <!-- Plant Bloom Chart modal -->
   <div id="plants_chart_modal" class="bnd-modal">
-    <div class="bnd-modal-content-1000" >
+    <div class="bnd-modal-container-1000" >
       <header class="bnd-modal-header bnd-margin-none">
         <h3>
           Bloom Chart - Blooms by Month

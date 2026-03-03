@@ -1,5 +1,5 @@
 <!-- /plants/templates/plants/myplant_todo_edit_modal.html -->
-<div class="bnd-modal-content-300">
+<div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h4>Edit To Do Item</h4>
     </header>
@@ -8,7 +8,7 @@
     {{ form.media }}
     <form action="{% url 'plants:myplants_todo_edit' myplant_todo.id %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="bnd-container">
+      <div class="bnd-modal-contents">
         {{ form.as_p }}
       </div>
       <div class="bnd-modal-button-bar">

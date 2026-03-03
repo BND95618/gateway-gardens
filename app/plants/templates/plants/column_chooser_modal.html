@@ -1,13 +1,13 @@
 <!-- /app/plants/templates/plants/column_chooser_modal.html -->
 
-  <div class="bnd-modal-content-300">
+  <div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h3>Column Chooser</h3>
     </header>
     <!-- Upon 'submit' return to the 'column_chooser' view to save selection into the db -->
     <form action="{% url 'plants:column_chooser' %}" method="post">
       {% csrf_token %}
-      <div class="bnd-container">
+      <div class="bnd-modal-contents">
         {{ form.as_p }}
       </div>
       <footer class="bnd-modal-footer">
