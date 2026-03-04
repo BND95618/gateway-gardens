@@ -53,6 +53,7 @@
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
   <div id="bnd-search-sidebar" class="bnd-table-search-container-flex">
+    
     <form method="POST" action="{% url 'plants:plants_summary' %}" class="bnd-table-search-contents-flex">
       {% csrf_token %}
       <!-- Plant Attributes -->

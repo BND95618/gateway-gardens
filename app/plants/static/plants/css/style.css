@@ -84,20 +84,16 @@ h1
 h2    {font-size: 18px}
 h3    {font-size: 16px}
 h4    {font-size: 14px}
-h5    {font-size: 12px}
-h6    {font-size: 12px}
 p     {font-size: 12px}
 li    {font-size: 12px}
 label {font-size: 12px}
 select, select::picker(select){font-size: 12px}
 @media screen and (600px <= width <= 1000px)
 {
-    h1    {font-size: 24px}
-    h2    {font-size: 22px}
-    h3    {font-size: 20px}
-    h4    {font-size: 18px}
-    h5    {font-size: 16px}
-    h6    {font-size: 14px}
+    h1    {font-size: 20px}
+    h2    {font-size: 18px}
+    h3    {font-size: 16px}
+    h4    {font-size: 14px}
     p     {font-size: 14px}
     li    {font-size: 14px}
     label {font-size: 14px}
@@ -105,12 +101,10 @@ select, select::picker(select){font-size: 12px}
 }
 @media screen and (min-width: 1000px)
 {
-    h1   {font-size: 28px}
-    h2   {font-size: 26px}
-    h3   {font-size: 24px}
-    h4   {font-size: 22px}
-    h5   {font-size: 20px}
-    h6   {font-size: 18px}
+    h1   {font-size: 24px}
+    h2   {font-size: 22px}
+    h3   {font-size: 20px}
+    h4   {font-size: 18px}
     p    {font-size: 16px}
     li   {font-size: 16px}
     label{font-size: 16px}
@@ -535,12 +529,7 @@ img
         margin-top: 112px;     /* position content below banner/nav/mask  */
     }
 }
-.bnd-page-main:after
-{
-    content: "";
-    display: table;
-    clear:   both;
-}
+.bnd-page-main section:first-of-type{margin-top: -16px}
 
 /* ------------------------------------------------------------ */
 /* Search/Table formatting - flexbox                            */
@@ -568,7 +557,7 @@ img
     {
         width:            20%;
         max-width:        240px;
-        min-width:        120px;
+        min-width:        160px;
         max-height:       1000px;
         background-color: whitesmoke;
         overflow-y:       auto;
@@ -867,15 +856,51 @@ img
     grid-gap:         8px;
     background-color: green;
     padding:          10px;
+
     grid-template-areas:
-    'attributes     blooms         requirements   recommendations taxonomy       pests        '
-    'description    description    description    description     description    description        '
-    'pruning        pruning        pruning        pruning         pruning        pruning        '
-    'fertilization  fertilization  fertilization  fertilization   fertilization  fertilization        '
-    'propagation    propagation    propagation    propagation     propagation    propagation        '
-    'pests_diseases pests_diseases pests_diseases pests_diseases  pests_diseases pests_diseases '
-    'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation  pronunciation'
-    'images         images         images         images          images         images       ';
+    'attributes     '
+    'blooms         '         
+    'requirements   '   
+    'recommendations' 
+    'taxonomy       '       
+    'description    '
+    'pruning        '
+    'fertilization  '
+    'propagation    '
+    'pests_diseases '
+    'pests          '
+    'creator_notes  '
+    'pronunciation  '
+    'images         ';
+
+    @media screen and (600px <= width <= 1000px)
+    {
+        grid-template-areas:
+        'attributes      blooms         requirements  '       
+        'recommendations taxonomy       taxonomy      '       
+        'description     description    description   '
+        'pruning         pruning        pruning       '
+        'fertilization   fertilization  fertilization '
+        'propagation     propagation    propagation   '
+        'pests_diseases  pests_diseases pests_diseases '
+        'creator_notes   creator_notes  creator_notes '
+        'pronunciation   pronunciation  pronunciation'
+        'images          images         images        '
+        'pests  pests pests        '
+        ;
+    }
+    @media screen and (min-width: 1000px)
+    {
+        grid-template-areas:
+        'attributes     blooms         requirements   recommendations taxonomy       pests          '
+        'description    description    description    description     description    description    '
+        'pruning        pruning        pruning        pruning         pruning        pruning        '
+        'fertilization  fertilization  fertilization  fertilization   fertilization  fertilization  '
+        'propagation    propagation    propagation    propagation     propagation    propagation    '
+        'pests_diseases pests_diseases pests_diseases pests_diseases  pests_diseases pests_diseases '
+        'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation  pronunciation  '
+        'images         images         images         images          images         images         ';
+    }
 }
 
 .attributes      { grid-area: attributes;      }
@@ -1258,6 +1283,7 @@ img
 .bnd-modal-container
 {
     position:         relative;
+    top:              -34px;
     width:            fit-content;
     min-width:        300px;
     margin:           auto;
@@ -1271,7 +1297,7 @@ img
 {
     /* position */
     position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
-    top:              0px;    
+    top:              -34px;    
     z-index:          40;
     /* text */
     text-align:       center;
