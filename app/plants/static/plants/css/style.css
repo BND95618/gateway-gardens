@@ -913,8 +913,8 @@ img
 .pests_diseases  { grid-area: pests_diseases;  }
 .pests          
 { 
-    grid-area: pests;
-    height:   560px;
+    grid-area:  pests;
+    height:     fit-content;
     overflow-y: auto;
 }
 .pronunciation   { grid-area: pronunciation;   }
