@@ -36,7 +36,8 @@
       > active
 
     @media breakpoints
-      > iPad Air (3rd generation):  1112 x 834
+      > iPhone 16:                  393 x  852
+      > iPad Air (3rd generation):  834 x 1112
 */
 /* ------------------------------------------------------------ */
 /* CSS variables                                                */
@@ -363,16 +364,17 @@ img
     padding:          0px;
     background-color: lightgray;
     align-items:      center;
-    @media screen and (600px <= width <= 1112px)
+    @media screen and (600px <= width <= 852px)
     {
         top:          56px;     /* fixed position below banner  */
     }
-    @media screen and (min-width: 1113px)
+    @media screen and (853px <= width <= 1112px)
     {
         display:      flex;
         flex-wrap:    nowrap;
         top:          64px;     /* fixed position below banner  */
     }
+    @media screen and (min-width: 1113px){  }
 }
 /* web-site navigation links */
 .bnd-page-nav a
