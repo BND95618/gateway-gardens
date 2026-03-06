@@ -102,7 +102,7 @@ select, select::picker(select){font-size: 12px}
     label {font-size: 14px}
     select, select::picker(select){font-size: 14px}
 }
-@media screen and (min-width: 1112px)
+@media screen and (min-width: 1113px)
 {
     h1   {font-size: 24px}
     h2   {font-size: 22px}
@@ -198,7 +198,7 @@ img
     {
         height:           56px;
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         height:           64px;
     }
@@ -210,7 +210,7 @@ img
 {  
     font-size:        20px;
     @media screen and (600px <= width <= 1112px){font-size: 22px;}
-    @media screen and (min-width: 1112px)       {font-size: 26px;}
+    @media screen and (min-width: 1113px)       {font-size: 26px;}
     text-align:       left;
 }
 /* Banner logo */
@@ -219,7 +219,7 @@ img
 {
     width:            28px; 
     @media screen and (600px <= width <= 1112px){width: 34px;}
-    @media screen and (min-width: 1112px)       {width: 40px;}
+    @media screen and (min-width: 1113px)       {width: 40px;}
     height:           auto; 
     padding:          4px;
     background-color: white;
@@ -317,7 +317,7 @@ img
     box-shadow:       var(--shadow-parameters);
     font-size:        16px;
     @media screen and (600px <= width <= 1112px){font-size: 14px;}
-    @media screen and (min-width: 1112px)       {font-size: 12px;}
+    @media screen and (min-width: 1113px)       {font-size: 12px;}
     line-height:      0.25;      /* set spacing between menu items */
     color:            black;
     cursor:           auto;
@@ -367,7 +367,7 @@ img
     {
         top:          56px;     /* fixed position below banner  */
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         display:      flex;
         flex-wrap:    nowrap;
@@ -390,7 +390,7 @@ img
 .bnd-page-nav a:not(:first-child)
 {
     display: none;
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         display: block;
     }
@@ -414,7 +414,7 @@ img
     text-align:       center;
     outline:          0;
     text-decoration:  none;
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         display: block;
     }
@@ -454,7 +454,7 @@ img
 {
     float:   right;
     display: block;
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         display: none;
     }
@@ -469,7 +469,7 @@ img
     position: absolute;
     right:    0;
     top:      0;
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         display: none;
     }
@@ -510,7 +510,7 @@ img
     {
         top:          80px;     /* fixed position below banner  */
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         top:          88px;     /* fixed position below banner  */
     }
@@ -527,7 +527,7 @@ img
     {
         margin-top: 96px;     /* position content below banner/nav/mask  */
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         margin-top: 112px;     /* position content below banner/nav/mask  */
     }
@@ -616,7 +616,7 @@ img
     {
         top:          96px;
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         top:          104px;
     }
@@ -891,7 +891,7 @@ img
         'images          images         images         '
         ;
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         grid-template-areas:
         'attributes     blooms         requirements   recommendations taxonomy       pests          '
@@ -1179,7 +1179,7 @@ img
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
-    @media (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         width:         50%;
         max-width:     400px; 
@@ -1193,7 +1193,7 @@ img
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
-    @media (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         width:         50%;
         max-width:     400px; 
@@ -1240,7 +1240,7 @@ img
     {
         top:          90px;
     }
-    @media screen and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         top:          100px;
     }
@@ -1372,7 +1372,7 @@ body.bnd-modal-open
     {
         max-width: 500px;
     }
-    @media screen  and (min-width: 1112px)
+    @media screen and (min-width: 1113px)
     {
         max-width: 600px;
     }
