@@ -1315,10 +1315,25 @@ img
 {
     position:      relative;
     top:           20px;
-    max-width:     60vw;             /* 60% of the viewport width */
-    max-height:    80vh;             /* 80% of the viewport height */
+    max-width:     60vw;
+    max-height:    80vh;
     margin:        auto;             /* horizontally center element */
     animation:     animatezoom 0.6s;
+    @media screen and (600px <= width <= 852px)
+    {  
+        max-width:     90vw;
+        max-height:    90vh;
+    }
+    @media screen and (853px <= width <= 1112px)
+    {  
+        max-width:     90vw;
+        max-height:    90vh;
+    }
+    @media screen and (min-width: 1113px)
+    {
+        max-width:     60vw;
+        max-height:    80vh;
+    }
 }
 .bnd-modal-image
 {
