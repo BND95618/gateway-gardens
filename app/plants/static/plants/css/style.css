@@ -392,10 +392,9 @@ img
 .bnd-page-nav a:not(:first-child)
 {
     display: none;
-    @media screen and (min-width: 1113px)
-    {
-        display: block;
-    }
+    @media screen and (600px <= width <= 852px) {  }
+    @media screen and (853px <= width <= 1112px){ display: block }
+    @media screen and (min-width: 1113px)       { display: block }
 }
 .bnd-page-nav a:hover
 {
@@ -416,10 +415,9 @@ img
     text-align:       center;
     outline:          0;
     text-decoration:  none;
-    @media screen and (min-width: 1113px)
-    {
-        display: block;
-    }
+    @media screen and (600px <= width <= 852px) {  }
+    @media screen and (853px <= width <= 1112px){ display: block }
+    @media screen and (min-width: 1113px)       { display: block }
 }   
 .bnd-nav-dropdown-container:hover
 {
@@ -456,10 +454,9 @@ img
 {
     float:   right;
     display: block;
-    @media screen and (min-width: 1113px)
-    {
-        display: none;
-    }
+    @media screen and (600px <= width <= 852px) {  }
+    @media screen and (853px <= width <= 1112px){ display: none }
+    @media screen and (min-width: 1113px)       { display: none }
 }
 /* Style when menu icon is selected */
 .bnd-page-nav.responsive 
@@ -471,10 +468,9 @@ img
     position: absolute;
     right:    0;
     top:      0;
-    @media screen and (min-width: 1113px)
-    {
-        display: none;
-    }
+    @media screen and (600px <= width <= 852px) {  }
+    @media screen and (853px <= width <= 1112px){ display: none }
+    @media screen and (min-width: 1113px)       { display: none }
 }
 /* Style horizontal list of navigation links */
 .bnd-page-nav.responsive a,
