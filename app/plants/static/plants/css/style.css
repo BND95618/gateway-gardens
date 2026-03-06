@@ -529,7 +529,7 @@ img
         margin-top: 112px;     /* position content below banner/nav/mask  */
     }
 }
-.bnd-page-main section:first-of-type{margin-top: -16px}
+.bnd-page-main-top-margin-adjust{margin-top: -20px}
 
 /* ------------------------------------------------------------ */
 /* Search/Table formatting - flexbox                            */
@@ -1279,7 +1279,7 @@ img
     display:           none;             /* Hidden by default */
     overflow:          auto;             /* Enable scroll if needed */
 }
-.bnd-modal-container
+.bnd-modal-container, .bnd-chart-modal-container
 {
     position:         relative;
     top:              -34px;
@@ -1291,6 +1291,7 @@ img
     background-image: url(../img/leaves.png);
     animation:        animatezoom 0.6s;
 }
+.bnd-chart-modal-container{width: 1000px}
 
 .bnd-modal-header
 {
@@ -1431,6 +1432,7 @@ body.bnd-modal-open
 .bnd-calendar-container 
 {
     min-width:   800px;
+    margin-top:  32px;
     border:      1px solid darkgray;
     box-shadow:  var(--shadow-parameters);
     font-family: chalkboard, verdana, sans-serif;

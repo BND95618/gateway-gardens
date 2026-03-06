@@ -53,17 +53,19 @@
 {% endblock header-completion %}
 
 {% block content %}
-  <!-- Required for django_flatpickr -->
-  {{ form.media }}
-  <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bnd-button-submit">Submit</button>
-    <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-    <a href="{% url 'plants:myplants_summary' %}">
-      <button type="button" class="bnd-button-cancel">Cancel</button>
-    </a>
-  </form>
+  <div class="bnd-page-main-top-margin-adjust">
+    <!-- Required for django_flatpickr -->
+    {{ form.media }}
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="bnd-button-submit">Submit</button>
+      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
+      <a href="{% url 'plants:myplants_summary' %}">
+        <button type="button" class="bnd-button-cancel">Cancel</button>
+      </a>
+    </form>
+  </div>
 {% endblock content %}
 
 {% block js %}

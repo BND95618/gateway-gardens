@@ -22,16 +22,18 @@
 {% endblock header-completion %}
 
 {% block content %}
-  <form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="bnd-button-submit">Submit</button>
-    <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-    <a href="{% url 'plants:gardens_summary' %}">
-      <button type="button" class="bnd-button-cancel">Cancel</button>
-    </a>
-  </form>
-  <hr>
+  <section class="bnd-page-main-top-margin-adjust">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="bnd-button-submit">Submit</button>
+      <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
+      <a href="{% url 'plants:gardens_summary' %}">
+        <button type="button" class="bnd-button-cancel">Cancel</button>
+      </a>
+    </form>
+    <hr>
+  </section>
 
   <div class="bnd-flex-container">
     {% if garden.image_1 %}
