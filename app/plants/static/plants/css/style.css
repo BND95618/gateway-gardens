@@ -374,7 +374,12 @@ img
         flex-wrap:    nowrap;
         top:          64px;     /* fixed position below banner  */
     }
-    @media screen and (min-width: 1113px){  }
+    @media screen and (min-width: 1113px)
+    {  
+        display:      flex;
+        flex-wrap:    nowrap;
+        top:          64px;     /* fixed position below banner  */
+    }
 }
 /* web-site navigation links */
 .bnd-page-nav a
