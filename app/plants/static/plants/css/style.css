@@ -1316,6 +1316,11 @@ img
 {
     padding: 0.01em 16px;
 }
+/*
+> iPhone 16:                  393 x  852
+> iPad Air (3rd generation):  834 x 1112
+*/
+
 .bnd-modal-image-container
 {
     position:      relative;
@@ -1331,7 +1336,7 @@ img
     }
     @media screen and (853px <= width <= 1112px)
     {  
-        max-width:     auto;
+        max-width:     70vw;
         max-height:    90vh;
     }
     @media screen and (min-width: 1113px)
