@@ -1327,11 +1327,11 @@ img
     @media screen and (600px <= width <= 852px)
     {  
         max-width:     90vw;
-        max-height:    90vh;
+        max-height:    auto;
     }
     @media screen and (853px <= width <= 1112px)
     {  
-        max-width:     90vw;
+        max-width:     auto;
         max-height:    90vh;
     }
     @media screen and (min-width: 1113px)
