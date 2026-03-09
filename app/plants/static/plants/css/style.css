@@ -1182,7 +1182,7 @@ img
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
-    @media screen and (min-width: 833px)
+    @media screen and (min-width: 400px)
     {
         width:         50%;
         max-width:     400px; 
@@ -1196,7 +1196,7 @@ img
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
-    @media screen and (min-width: 833px)
+    @media screen and (min-width: 400px)
     {
         width:         50%;
         max-width:     400px; 
