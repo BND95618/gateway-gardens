@@ -29,64 +29,64 @@ class Garden(models.Model):
     # Images
     image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(600, 600)],
-                                        format     = 'JPEG',
-                                        options    = {'quality': 100},
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
                                         blank      = True, 
                                         null       = True)
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -191,29 +191,29 @@ class Plant(models.Model):
     # Images
     image_1           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                             processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'JPEG',
-                                            options    = {'quality': 100},
+                                            format     = 'WEBP',
+                                            options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_1         = models.CharField(max_length=64, default="tbd", blank=True)
     image_2           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                             processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'JPEG',
-                                            options    = {'quality': 100},
+                                            format     = 'WEBP',
+                                            options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_2         = models.CharField(max_length=64, default="tbd", blank=True)
     image_3           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                             processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'JPEG',
-                                            options    = {'quality': 100},
+                                            format     = 'WEBP',
+                                            options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_3         = models.CharField(max_length=64, default="tbd", blank=True)
     image_4           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                             processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'JPEG',
-                                            options    = {'quality': 100},
+                                            format     = 'WEBP',
+                                            options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_4         = models.CharField(max_length=64, default="tbd", blank=True)

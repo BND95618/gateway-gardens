@@ -859,9 +859,9 @@ img
 .grid-container
 { 
     display:          grid;
-    grid-gap:         8px;
+    grid-gap:         4px;
     background-color: green;
-    padding:          10px;
+    padding:          4px;
 
     grid-template-areas:
     'attributes     '
