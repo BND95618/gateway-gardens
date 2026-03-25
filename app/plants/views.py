@@ -7,6 +7,7 @@ from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect # Added for images
 from django.template  import loader
 from django.urls      import reverse
+from django.db.models import Q                # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 from django.contrib   import messages
 from django.contrib.auth            import authenticate, login, logout # User login/logout
 from django.contrib.auth.models     import User, Group                 # User signup
@@ -1129,6 +1130,7 @@ def plants_summary(request):
 
         # Get the search criteria from the "http request"
         # Plant Characteristics
+        common_name_search    = request.POST["common_name_search"]
         type_x_search         = request.POST["type_x_search"]
         bloom_color_search    = request.POST["bloom_color_search"]
         bloom_season_search   = request.POST["bloom_season_search"]
@@ -1155,6 +1157,7 @@ def plants_summary(request):
         for garden in gardens:
             if (garden.owner == request.user.username):
                 # Store the search criteria in the user's garden db table
+                garden.common_name_search    = common_name_search
                 garden.type_x_search         = type_x_search
                 garden.bloom_color_search    = bloom_color_search
                 garden.bloom_season_search   = bloom_season_search
@@ -1183,9 +1186,10 @@ def plants_summary(request):
 
         # Plant query -> Plants claimed by the current user or all plants in the database
         if garden_search == "Mine":
-            plants = Plant.objects.filter(myplants__owner = request.user.username) 
+            plants = Plant.objects.filter(Q(myplants__owner = request.user.username) & 
+                                          Q(commonName__icontains = common_name_search))
         else:
-            plants = Plant.objects.all()
+            plants = Plant.objects.filter(commonName__icontains = common_name_search)
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
@@ -1255,6 +1259,7 @@ def plants_summary(request):
                     # Admin
                     "status_opt"            : status_opt,
                     # Search option values from previous search if applicable else default of "Any"
+                    "common_name_search"    : common_name_search,
                     "type_x_search"         : type_x_search,
                     "bloom_color_search"    : bloom_color_search,
                     "bloom_season_search"   : bloom_season_search,
@@ -1287,6 +1292,7 @@ def plants_summary(request):
                 # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
                 # Get the user's previously stored search criteria
+                common_name_search    = garden.common_name_search
                 type_x_search         = garden.type_x_search
                 bloom_color_search    = garden.bloom_color_search
                 bloom_season_search   = garden.bloom_season_search
@@ -1393,6 +1399,7 @@ def plants_summary(request):
                     # Admin
                     "status_opt"            : status_opt,
                     # search field defaults
+                    "common_name_search"    : common_name_search,
                     "type_x_search"         : type_x_search,
                     "bloom_color_search"    : bloom_color_search,
                     "bloom_season_search"   : bloom_season_search,
