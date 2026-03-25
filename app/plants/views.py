@@ -1325,8 +1325,13 @@ def plants_summary(request):
         
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username) 
+        # Filter the plants db - "My plants" and "Common Name" substring
+        if garden_search == "Mine":
+            plants = Plant.objects.filter(Q(myplants__owner = request.user.username) & 
+                                          Q(commonName__icontains = common_name_search))
+        else:
+            plants = Plant.objects.filter(commonName__icontains = common_name_search)
         # Execute the search
-        plants   = Plant.objects.all()
         for plant in plants:
             # Run through the search criteria to select the plants to show
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
