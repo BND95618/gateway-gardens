@@ -51,9 +51,15 @@
   <div id="bnd-search-sidebar" class="bnd-table-search-container-flex">
     <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-table-search-contents-flex">
       {% csrf_token %}
+      <p class="bnd-center"><i>Plant Attributes</i></p>
 
       <!-- Plant Attributes -->
-      <p class="bnd-center"><i>Plant Attributes</i></p>
+      <label for="id_common_name_search">Common name:</label><br/>
+      <input type="text" 
+             id="id_common_name_search" 
+             class="bnd-input" 
+             name="common_name_search" 
+             value="{{ common_name_search }}">
 
       <label for="id_type_x_search">Type:</label><br/>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select">
@@ -688,6 +694,7 @@
     // Search menu - Reset all search criteria to 'Any'
     //----------------------------------------------------------------------------- 
     function searchReset() {
+      document.getElementById("id_common_name_search"    ).value = "Any";
       document.getElementById("id_type_x_search"         ).value = "Any";
       document.getElementById("id_bloom_color_search"    ).value = "Any";
       document.getElementById("id_bloom_season_search"   ).value = "Any";

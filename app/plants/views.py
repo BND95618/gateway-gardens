@@ -333,6 +333,7 @@ def myplants_summary(request):
     
         # Get the search criteria from the "http request"
         # Plant Characteristics
+        common_name_search      = request.POST["common_name_search"]
         type_x_search           = request.POST["type_x_search"]
         bloom_color_search      = request.POST["bloom_color_search"]
         bloom_season_search     = request.POST["bloom_season_search"]
@@ -361,6 +362,7 @@ def myplants_summary(request):
         for garden in gardens:
             if (garden.owner == request.user.username):
                 # Store the search criteria in the user's garden db table
+                garden.common_name_search  = common_name_search
                 garden.type_x_search       = type_x_search
                 garden.bloom_color_search  = bloom_color_search
                 garden.bloom_season_search = bloom_season_search
@@ -389,6 +391,8 @@ def myplants_summary(request):
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username)
+        # myplants = MyPlant.objects.filter(Q(owner = request.user.username) & 
+        #                                   Q(plant_commonName__icontains = common_name_search))
 
         # Execute the search
         for myplant in myplants:
@@ -410,7 +414,8 @@ def myplants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
-            if( ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
+            if( (common_name_search in myplant.plant.commonName) and
+                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
                 ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any") or (myplant.plant.bloom_color    == "tbd")) and
                 ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any") or (myplant.plant.bloom_season   == "tbd")) and
                 ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
@@ -442,6 +447,7 @@ def myplants_summary(request):
                 # Get the user's previously stored column display sections  
                 my_column_selection_list  = string2list(garden.my_column_selection)
                 # Get the user's previously stored search criteria
+                common_name_search    = garden.common_name_search
                 type_x_search         = garden.type_x_search
                 bloom_color_search    = garden.bloom_color_search
                 bloom_season_search   = garden.bloom_season_search
@@ -493,6 +499,7 @@ def myplants_summary(request):
                         "month_opt"          : month_opt,
                         
                         # search field defaults - plant attributes
+                        "common_name_search"     : common_name_search,
                         "type_x_search"          : type_x_search,
                         "bloom_color_search"     : bloom_color_search,
                         "bloom_season_search"    : bloom_season_search,
@@ -531,6 +538,7 @@ def myplants_summary(request):
                 # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
                 # Get the user's previously stored search criteria
+                common_name_search     = garden.common_name_search
                 type_x_search          = garden.type_x_search
                 bloom_color_search     = garden.bloom_color_search
                 bloom_season_search    = garden.bloom_season_search
@@ -562,6 +570,8 @@ def myplants_summary(request):
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username)
+        # myplants = MyPlant.objects.filter(Q(owner = request.user.username) & 
+        #                                   Q(plant_commonName__icontains = common_name_search))
 
         # Execute the search
         for myplant in myplants:
@@ -583,7 +593,8 @@ def myplants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
-            if( ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
+            if( (common_name_search in myplant.plant.commonName) and
+                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
                 ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any") or (myplant.plant.bloom_color    == "tbd")) and
                 ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any") or (myplant.plant.bloom_season   == "tbd")) and
                 ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
@@ -633,6 +644,7 @@ def myplants_summary(request):
                     "happiness_opt"          : happiness_opt,
                     "month_opt"              : month_opt,
                     # search field defaults - plant attributes
+                    "common_name_search"     : common_name_search,
                     "type_x_search"          : type_x_search,
                     "bloom_color_search"     : bloom_color_search,
                     "bloom_season_search"    : bloom_season_search,
