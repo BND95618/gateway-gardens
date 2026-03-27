@@ -132,11 +132,17 @@
       const id_nav = document.getElementById("id_nav");
       function toggleVerticleNavMenu() 
       {
-        if (id_nav.className === "bnd-page-nav") 
+        if (id_nav.className === "bnd-page-nav") // open verticle nav bav
         {
           id_nav.className += " responsive";
+          // Scroll to top of window
+          window.scrollTo({
+            top:      0,
+            left:     0,
+            behavior: 'smooth'
+          });
         } 
-        else 
+        else // close verticle nav bav
         {
           id_nav.className = "bnd-page-nav";
         }

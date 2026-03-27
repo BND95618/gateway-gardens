@@ -786,11 +786,10 @@ img
 /* ------------------------------------------------------------ */
 .bnd-input
 {
-    padding:          8px;
     display:          block;
     border:           1px solid black;
-    padding:          2px 6px 2px 6px;
     border-radius:    4px;
+    padding:          2px 6px 2px 6px;
     background-color: white;
     width:            100%;
     font-family:      chalkboard, verdana, sans-serif;
@@ -964,6 +963,10 @@ img
     background-color: lightgray;
     line-height:      80%;
     font-size:        12px;
+}
+#id_phonetic_spelling
+{
+    min-width:        200px;
 }
 .grid-container select 
 {
