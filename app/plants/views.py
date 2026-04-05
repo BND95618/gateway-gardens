@@ -24,8 +24,8 @@ from .forms  import PestAddUpdateForm
 # Define attribute select option arrays
 plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", 
                     "Succulent", "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
-bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "purple", "green", 
-                    "blue", "orange", "none"]
+bloom_color_opt  = ["tbd", "white", "yellow", "red", "pink", "pale pink", "lavendar", "purple",
+                    "green", "blue", "orange", "none"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]

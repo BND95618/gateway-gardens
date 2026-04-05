@@ -27,6 +27,7 @@ BLOOM_COLOR_CHOICES = (
 	('red',       'red'), 
 	('pink',      'pink'),
 	('pale pink', 'pale pink'),
+	('lavendar',  'lavendar'),
 	('purple',    'purple'),
 	('green',     'green'), 
 	('blue',      'blue'), 

@@ -1645,6 +1645,7 @@ body.bnd-modal-open
 .bnd-text-cyan      { color:cyan   }
 .bnd-text-blue      { color:blue   }
 .bnd-text-violet    { color:violet }
+.bnd-text-lavendar  { color:rgba(128, 0, 128, 0.414) }
 .bnd-text-purple    { color:purple }
 .bnd-text-black     { color:black  }
 
