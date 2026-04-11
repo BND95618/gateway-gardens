@@ -134,13 +134,13 @@
       {
         if (id_nav.className === "bnd-page-nav") // open verticle nav bav
         {
-          id_nav.className += " responsive";
           // Scroll to top of window
           window.scrollTo({
             top:      0,
             left:     0,
             behavior: 'smooth'
           });
+          id_nav.className += " responsive";
         } 
         else // close verticle nav bav
         {
@@ -153,7 +153,6 @@
         console.log(event.target);
         if ((event.target.className != "bnd-page-nav responsive") && event.target.className != "bnd-nav-phone-icon")
         {
-          console.log("event.target.className = ", event.target.className);
           id_nav.className = "bnd-page-nav";
         }
       }

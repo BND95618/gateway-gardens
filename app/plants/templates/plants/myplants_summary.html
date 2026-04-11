@@ -685,6 +685,12 @@
     // Search menu - sidebar navigation scripts
     //-----------------------------------------------------------------------------
     function searchOpen() {
+      // Scroll to top of window
+      window.scrollTo({
+            top:      0,
+            left:     0,
+            behavior: 'smooth'
+          });
       document.getElementById("bnd-search-sidebar").classList.add("bnd-table-search-open-flex");
     }
     function searchClose() {
