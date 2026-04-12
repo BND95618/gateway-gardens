@@ -1588,15 +1588,6 @@ body.bnd-modal-open
 /* ------------------------------------------------------------ */
 @media (max-width:600px)
 {
-    .bnd-modal-content
-    {
-        margin: 0 10px;
-        width:  auto;
-    }
-    .bnd-modal
-    {
-        padding-top: 30px;
-    }
     .bnd-hide-small
     {
         display:none;
