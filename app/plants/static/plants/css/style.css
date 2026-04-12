@@ -195,20 +195,16 @@ img
     top:              0;
     z-index:          70;
     width:            100%;
-    height:           48px;
     align-items:      center; /* Vertically centers the content */
     gap:              10px;
     padding:          0px 10px;
     color:            white;
     background-color: green;
-    @media screen and (600px <= width <= 1112px)
-    {
-        height:           56px;
-    }
-    @media screen and (min-width: 1113px)
-    {
-        height:           64px;
-    }
+    /* Responsive banner height */
+    height: 48px;
+    @media screen and (600px <= width <=  852px){ height: 56px }
+    @media screen and (853px <= width <= 1112px){ height: 56px }
+    @media screen and (min-width: 1113px)       { height: 64px }
 }
 .bnd-banner-logo-container, 
 .bnd-banner-title-container, 
@@ -225,7 +221,8 @@ img
 .bnd-banner-logo-container .bnd-banner-logo
 {
     width:            28px; 
-    @media screen and (600px <= width <= 1112px){width: 34px;}
+    @media screen and (600px <= width <=  852px){width: 34px;}
+    @media screen and (835px <= width <= 1112px){width: 34px;}
     @media screen and (min-width: 1113px)       {width: 40px;}
     height:           auto; 
     padding:          4px;
@@ -250,8 +247,8 @@ img
 .bnd-banner-scientific-name-tooltip-text
 {
     position:         absolute;
-    top:              0px;        /* from the top edge of the parent */
-    left:             0px;       /* from the left edge of the parent */
+    top:              0px;         /* from the top edge of the parent */
+    left:             0px;         /* from the left edge of the parent */
     vertical-align:   top;         /* fixes issue with text moving up */
     visibility:       hidden;
     width:            auto;
@@ -362,7 +359,6 @@ img
 {
     display:          block;
     position:         fixed;    /* prevent scrolling off screen */
-    top:              48px;     /* fixed position below banner  */
     z-index:          60;
     width:            100%;
     height:           24px;
@@ -370,21 +366,23 @@ img
     padding:          0px;
     background-color: lightgray;
     align-items:      center;
+    /* position nav below banner */
+    top:              48px;
     @media screen and (600px <= width <= 852px)
     {
-        top:          56px;     /* fixed position below banner  */
+        top:          56px;
     }
     @media screen and (853px <= width <= 1112px)
     {
         display:      flex;
         flex-wrap:    nowrap;
-        top:          56px;     /* fixed position below banner  */
+        top:          56px;
     }
     @media screen and (min-width: 1113px)
     {  
         display:      flex;
         flex-wrap:    nowrap;
-        top:          64px;     /* fixed position below banner  */
+        top:          64px;
     }
 }
 /* web-site navigation links */
@@ -508,21 +506,17 @@ img
 /* ------------------------------------------------------------ */
 .bnd-page-nav-main-spacer
 {
-    position:         fixed;    /* prevent scrolling off screen */
-    top:              72px;     /* fixed position below nav     */
+    position:         fixed;    /* prevent scrolling off screen */     
     z-index:          50;
     width:            100%;
     height:           16px;
     background-color: whitesmoke;
     color:            whitesmoke;
-    @media screen and (600px <= width <= 1112px)
-    {
-        top:          80px;     /* fixed position below banner  */
-    }
-    @media screen and (min-width: 1113px)
-    {
-        top:          88px;     /* fixed position below banner  */
-    }
+    /* position spacer below banner/nav/ */
+    top: 72px;
+    @media screen and (600px <= width <=  852px){ top: 72px }
+    @media screen and (853px <= width <= 1112px){ top: 80px }
+    @media screen and (min-width:        1113px){ top: 88px }
 }
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
@@ -530,16 +524,12 @@ img
 .bnd-page-main
 { 
     flex-grow:  1;
-    margin-top: 88px;   
     padding:    0.01em 16px;
-    @media screen and (600px <= width <= 1112px)
-    {
-        margin-top: 96px;     /* position content below banner/nav/mask  */
-    }
-    @media screen and (min-width: 1113px)
-    {
-        margin-top: 112px;     /* position content below banner/nav/mask  */
-    }
+    /* position content below banner/nav/mask  */
+    margin-top: 80px;   
+    @media screen and (600px <= width <=  852px){ margin-top:  88px }
+    @media screen and (853px <= width <= 1112px){ margin-top:  96px }
+    @media screen and (min-width:        1113px){ margin-top: 104px }
 }
 .bnd-page-main-top-margin-adjust{margin-top: -20px}
 
@@ -618,7 +608,7 @@ img
 {
     display:          table-cell;
     position:         sticky;
-    top:              104px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              88px;              /* Stick to the bottom edge of the fixed navbar/banner */
     z-index:          20;                /* Ensure table headers are above table body data */
     border:           1px solid slategray;
     padding:          8px 8px 8px 8px;
@@ -626,14 +616,9 @@ img
     color:            white;
     text-align:       left;
     vertical-align:   top;
-    @media screen and (600px <= width <= 1112px)
-    {
-        top:          96px;
-    }
-    @media screen and (min-width: 1113px)
-    {
-        top:          104px;
-    }
+    @media screen and (600px <= width <=  852px){top:  88px}
+    @media screen and (853px <= width <= 1112px){top:  96px}
+    @media screen and (min-width: 1113px)       {top: 104px}
 }
 .bnd-table-flex th:first-child     {padding-left:  16px}
 .bnd-table-flex th:last-child      {padding-right: 16px}
