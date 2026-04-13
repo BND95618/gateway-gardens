@@ -1597,7 +1597,11 @@ def plant_edit(request, id):
         sun_exposure_list = string2list(plant.sun_exposure)
         soil_type_list    = string2list(plant.soil_type)
         # Get the full list of pests in the database
-        pests = Pest.objects.all().order_by('pest_type', 'pest_name')
+
+        pests = Pest.objects.filter(Q(pest_type = 'Insect' ) | Q(pest_type = 'Disease') ).order_by('pest_type', 'pest_name')
+        print("DEBUG: pests =", pests)
+        # pests = Pest.objects.all().order_by('pest_type', 'pest_name')
+        
         # Get the pests currently associated with this particular plant
         pests_current = Pest.objects.filter(plants__id=plant.id).order_by('pest_type', 'pest_name')
         pest_name_list = []
