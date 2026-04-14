@@ -48,8 +48,8 @@
   <!-------------------------------------------------------------------------->
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
-  <div id="bnd-search-sidebar" class="bnd-table-search-container-flex">
-    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-table-search-contents-flex">
+  <div id="bnd-search-sidebar" class="bnd-search-container-flex">
+    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-search-contents-flex">
       {% csrf_token %}
       <p class="bnd-center"><i>Plant Attributes</i></p>
 
@@ -691,10 +691,10 @@
             left:     0,
             behavior: 'smooth'
           });
-      document.getElementById("bnd-search-sidebar").classList.add("bnd-table-search-open-flex");
+      document.getElementById("bnd-search-sidebar").classList.add("bnd-search-open-flex");
     }
     function searchClose() {
-      document.getElementById("bnd-search-sidebar").classList.remove("bnd-table-search-open-flex");
+      document.getElementById("bnd-search-sidebar").classList.remove("bnd-search-open-flex");
     }
     //-----------------------------------------------------------------------------
     // Search menu - Reset all search criteria to 'Any'
