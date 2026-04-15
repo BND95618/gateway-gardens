@@ -1302,7 +1302,11 @@ img
     background-image: url(../img/leaves.png);
     animation:        animatezoom 0.6s;
 }
-.bnd-chart-modal-container{width: 1000px}
+.bnd-chart-modal-container
+{
+    top:              -34px;
+    width:            1000px;
+}
 
 .bnd-modal-header
 {

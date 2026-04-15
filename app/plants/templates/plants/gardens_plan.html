@@ -87,6 +87,13 @@
                             {% endif %}
                         {% endfor %}
                     </optgroup>
+                    <optgroup label="Forb">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Forb" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
                     <optgroup label="Groundcover">
                         {% for plant in plants %}
                             {% if plant.type_x == "Groundcover" %}
