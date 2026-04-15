@@ -1389,7 +1389,7 @@ body.bnd-modal-open
     top:      0;
 }
 #bloomTable, #beeTable, #butterflyTable, #hummingbirdTable { width: 100%; }
-#plants_chart_modal th { top: 100px; }
+#plants_chart_modal th { top: 0px; }         /* place table right under modal tabs */
 #plants_chart_modal footer { padding: 0px; }
 /* ------------------------------------------------------------ */
 /* Slide show formatting                                        */
