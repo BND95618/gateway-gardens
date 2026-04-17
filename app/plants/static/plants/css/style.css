@@ -1679,3 +1679,79 @@ body.bnd-modal-open
 /* ------------------------------------------------------------ */
 .bnd-padding-small  {padding:4px 8px!important}
 /* ------------------------------------------------------------ */
+/* Print formatting                                             */
+/* ------------------------------------------------------------ */
+@page {
+    margin: 0.5in;
+}
+@media print {
+    /*  */
+    body { 
+        margin:           0;
+        background-color: white;
+        color:            black;
+        font-size:        12pt; 
+    }
+    /*  */
+    .bnd-page-banner
+    {
+        position:      static;
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 8px;
+        border-color:  black;
+    }
+    /*  */
+    .bnd-banner-menu-container,
+    .bnd-banner-audio-container,
+    .bnd-page-nav, 
+    .bnd-page-nav-main-spacer,
+    #plant_comments,
+    .bnd-page-footer
+    { 
+        display: none; 
+    }
+    /*  */
+    .bnd-page-main
+    {
+        margin-top: 16px;
+    }
+    .bnd-flex-item
+    {
+        border-style: none;
+    }
+    .bnd-section
+    {
+        box-shadow:       none;
+    }
+    .bnd-section-header,
+    .bnd-section-contents
+    {
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 0px;
+        border-color:  black;
+    }
+    h1, h2, h3, h4, h5, .bnd-banner-scientific-name-container
+    {
+        margin: 0px;
+        color: black;
+    }
+    /*  */
+    .bnd-flex-image
+    { 
+        max-width:        160px;
+        padding:          0px;
+        box-shadow:       none;
+        break-inside:     avoid;
+    }
+    .bnd-image-thumbnail,
+    .bnd-image-thumbnail-caption
+    { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
+    }
+
+}
+/* ------------------------------------------------------------ */
