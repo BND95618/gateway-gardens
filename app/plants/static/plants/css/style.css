@@ -73,7 +73,7 @@ body
 section
 {
     margin-top:    16px;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 h1,h2,h3,h4,h5,h6
 {
@@ -728,13 +728,14 @@ img
 }
 .bnd-section-header
 {
-    padding:          0.01em 16px;
+    padding:          0.1em 12px;
     color:            white;
     background-color: green;
 }
+.bnd-section-header h4 {margin: 4px 0px}
 .bnd-section-contents
 {
-    padding:          0.01em 16px;
+    padding:          0.01em 12px;
     color:            black;    
     background-color: whitesmoke;
     white-space:      normal;
@@ -756,7 +757,7 @@ img
 {
     display:          flex;
     flex-direction:   row;
-    flex-wrap:        wrap;
+    flex-wrap:        nowrap;
     column-gap:       16px;
     row-gap:          16px;
     width:            100%;
@@ -1715,6 +1716,7 @@ body.bnd-modal-open
     .bnd-page-main
     {
         margin-top: 16px;
+        padding:    0px;
     }
     .bnd-flex-item
     {
@@ -1727,10 +1729,17 @@ body.bnd-modal-open
     .bnd-section-header,
     .bnd-section-contents
     {
-        border-style:  solid;
         border-width:  2px;
         border-radius: 0px;
         border-color:  black;
+    }
+    .bnd-section-header
+    {
+        border-style:  solid;
+    }
+    .bnd-section-contents
+    {
+        border-style:  none solid solid solid;
     }
     h1, h2, h3, h4, h5, .bnd-banner-scientific-name-container
     {
