@@ -69,16 +69,28 @@ body
     font-family:      chalkboard, verdana, sans-serif;
     font-size:        16px;
     line-height:      1.5;
+    @media print
+    {
+        margin:           0;
+        background-color: white;
+        color:            black;
+        font-size:        12pt; 
+    }
 }
 section
 {
     margin-top:    16px;
     margin-bottom: 0px;
 }
-h1,h2,h3,h4,h5,h6
+h1, h2, h3, h4, h5, h6
 {
     font-weight: 400;
     margin:      10px 0px;
+    @media print
+    {
+        margin: 0px;
+        color: black;
+    }
 }
 h1
 {
@@ -205,6 +217,14 @@ img
     @media screen and (600px <= width <=  852px){ height: 56px }
     @media screen and (853px <= width <= 1112px){ height: 56px }
     @media screen and (min-width: 1113px)       { height: 64px }
+    @media print
+    {
+        position:      static;
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 8px;
+        border-color:  black;
+    }
 }
 .bnd-banner-logo-container, 
 .bnd-banner-title-container, 
@@ -238,6 +258,11 @@ img
     overflow-x:     hidden;   /* Prevents tool tip positioning below name */
     text-overflow:  ellipsis;
     white-space:    nowrap; 
+    @media print
+    {
+        margin: 0px;
+        color: black;
+    }
 }
 .bnd-banner-scientific-name-tooltip 
 {
@@ -264,7 +289,11 @@ img
     visibility: visible;
 }
 /* Banner audio player */
-.bnd-banner-audio-container{width: fit-content;}
+.bnd-banner-audio-container
+{
+    width: fit-content;
+    @media print { display: none; }
+}
 .bnd-audio-tooltip 
 {
     position: relative;
@@ -294,6 +323,7 @@ img
 {
     position: relative;         /* required for placement of dropdown menu */
     width:    fit-content;
+    @media print { display: none; }
 }
 .bnd-banner-menu-icon
 {
@@ -384,6 +414,7 @@ img
         flex-wrap:    nowrap;
         top:          64px;
     }
+    @media print { display: none; }
 }
 /* web-site navigation links */
 .bnd-page-nav a
@@ -517,6 +548,7 @@ img
     @media screen and (600px <= width <=  852px){ top: 72px }
     @media screen and (853px <= width <= 1112px){ top: 80px }
     @media screen and (min-width:        1113px){ top: 88px }
+    @media print { display: none; }
 }
 /* ------------------------------------------------------------ */
 /* Place the main content (scrollable) beneath the banner       */
@@ -530,6 +562,11 @@ img
     @media screen and (600px <= width <=  852px){ margin-top:  88px }
     @media screen and (853px <= width <= 1112px){ margin-top:  96px }
     @media screen and (min-width:        1113px){ margin-top: 104px }
+    @media print
+    {
+        margin-top: 16px;
+        padding:    0px;
+    }
 }
 .bnd-page-main-top-margin-adjust{margin-top: -20px}
 
@@ -725,12 +762,20 @@ img
     border-width:     1px;
     border-color:     green;
     box-shadow:       var(--shadow-parameters);
+    @media print { box-shadow:       none; }
 }
 .bnd-section-header
 {
     padding:          0.1em 12px;
     color:            white;
     background-color: green;
+    @media print
+    {
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 0px;
+        border-color:  black; 
+    }
 }
 .bnd-section-header h4 {margin: 4px 0px}
 .bnd-section-contents
@@ -739,6 +784,13 @@ img
     color:            black;    
     background-color: whitesmoke;
     white-space:      normal;
+    @media print
+    {
+        border-style:  none solid solid solid;
+        border-width:  2px;
+        border-radius: 0px;
+        border-color:  black; 
+    }
 }
 .bnd-section-contents p
 {
@@ -767,7 +819,8 @@ img
     flex-grow:        1;     /* ability of item to grow   */
     flex-shrink:      1;     /* ability of item to shrink */
     border:           1px solid slategray; 
-    background-color: whitesmoke;        
+    background-color: whitesmoke; 
+    @media print { border-style: none; }       
 }
 /* ------------------------------------------------------------ */
 /* Element positioning                                          */
@@ -1130,10 +1183,14 @@ img
     padding:          4px;
     box-shadow:       var(--shadow-parameters);
     background-color: whitesmoke;
-    @media screen and (min-width: 600px)
-    {
-        max-width: 260px;
-    }       
+    @media screen and (min-width: 600px) { max-width: 260px; }    
+    @media print
+    { 
+        max-width:        160px;
+        padding:          0px;
+        box-shadow:       none;
+        break-inside:     avoid;
+    }   
 }
 .bnd-image-thumbnail
 {
@@ -1145,6 +1202,12 @@ img
     @media screen and (min-width: 600px)
     {
         max-width:     250px;
+    }
+    @media print
+    { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
     }
 }
 .bnd-image-thumbnail-caption
@@ -1159,6 +1222,12 @@ img
     @media screen and (min-width: 600px)
     {
         max-width:    250px;
+    }
+    @media print
+    { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
     }
 }
 .bnd-image
@@ -1573,6 +1642,7 @@ body.bnd-modal-open
     text-align:       center;
     color:            white;
     background-color: green;
+    @media print { display: none; }
 }
 /* ------------------------------------------------------------ */
 /* */
@@ -1685,82 +1755,8 @@ body.bnd-modal-open
 @page {
     margin: 0.5in;
 }
-@media print {
-    /*  */
-    body { 
-        margin:           0;
-        background-color: white;
-        color:            black;
-        font-size:        12pt; 
-    }
-    /*  */
-    .bnd-page-banner
-    {
-        position:      static;
-        border-style:  solid;
-        border-width:  2px;
-        border-radius: 8px;
-        border-color:  black;
-    }
-    /*  */
-    .bnd-banner-menu-container,
-    .bnd-banner-audio-container,
-    .bnd-page-nav, 
-    .bnd-page-nav-main-spacer,
-    #plant_comments,
-    .bnd-page-footer
-    { 
-        display: none; 
-    }
-    /*  */
-    .bnd-page-main
-    {
-        margin-top: 16px;
-        padding:    0px;
-    }
-    .bnd-flex-item
-    {
-        border-style: none;
-    }
-    .bnd-section
-    {
-        box-shadow:       none;
-    }
-    .bnd-section-header,
-    .bnd-section-contents
-    {
-        border-width:  2px;
-        border-radius: 0px;
-        border-color:  black;
-    }
-    .bnd-section-header
-    {
-        border-style:  solid;
-    }
-    .bnd-section-contents
-    {
-        border-style:  none solid solid solid;
-    }
-    h1, h2, h3, h4, h5, .bnd-banner-scientific-name-container
-    {
-        margin: 0px;
-        color: black;
-    }
-    /*  */
-    .bnd-flex-image
-    { 
-        max-width:        160px;
-        padding:          0px;
-        box-shadow:       none;
-        break-inside:     avoid;
-    }
-    .bnd-image-thumbnail,
-    .bnd-image-thumbnail-caption
-    { 
-        max-width:        140px;
-        margin:           10px 10px 0px 10px;
-        break-inside:     avoid;
-    }
-
+@media print
+{
+    #plant_comments { display: none; }
 }
 /* ------------------------------------------------------------ */
