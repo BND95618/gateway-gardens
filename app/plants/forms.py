@@ -533,7 +533,7 @@ class MyPlantAddUpdateForm(forms.Form):
 		)
 
 class MyPlantToDoForm(forms.Form):
-	date = forms.DateField(
+	todo_date = forms.DateField(
 		label="Due Date",
 		required=True,
 		widget=forms.DateInput( 
@@ -544,21 +544,21 @@ class MyPlantToDoForm(forms.Form):
 				format='%Y-%m-%d'
 			),
         )
-	action = forms.ChoiceField(
+	todo_action = forms.ChoiceField(
 		label="Action",
 		initial=' ',
 		choices = TODO_ACTION_CHOICES, 
 		required=True,
 		widget=forms.RadioSelect
 		)
-	repeat = forms.ChoiceField(
+	todo_repeat = forms.ChoiceField(
 		label="Repeat",
 		initial=' ',
 		choices = TODO_REPEAT_CHOICES, 
 		required=True,
 		widget=forms.RadioSelect
 		)
-	details = forms.CharField(
+	todo_details = forms.CharField(
 		label="Details", 
 		max_length=128, 
 		required=True,

@@ -10,7 +10,8 @@
     {% csrf_token %}
 
     <div class="bnd-modal-contents">
-      <label for="id_common_name">Common Name:</label><br/>
+      <label for="id_common_name">Common Name:</label>
+      <br/>
       <select id="id_common_name" name="common_name" class="bnd-select bnd-margin-bottom">
         <option value="---" selected> --- </option>
         {% for myPlant in myPlants %}
@@ -19,30 +20,34 @@
       </select>
       <br/>
 
-      <label for="date">Date:</label>
-      <input type="date" id="id_date" name="date"/>
+      <label for="todo_date">Date:</label>
+      <br/>
+      <input type="date" id="id_todo_date" name="todo_date"/>
       <br/>
 
-      <label for="id_action">Action:</label><br/>
-      <select id="id_action" name="action" class="bnd-select bnd-margin-bottom">
+      <label for="id_todo_action">Action:</label>
+      <br/>
+      <select id="id_todo_action" name="todo_action" class="bnd-select bnd-margin-bottom">
         <option value="---" selected> --- </option>
-        {% for action in todo_action_opt %}
-          <option value="{{ action }}" >{{ action }}</option>
+        {% for todo_action in todo_action_opt %}
+          <option value="{{ todo_action }}" >{{ todo_action }}</option>
         {% endfor %}
       </select>
       <br/>
 
-      <label for="id_repeat">Repeat:</label><br/>
-      <select id="id_repeat" name="repeat" class="bnd-select bnd-margin-bottom">
+      <label for="id_todo_repeat">Repeat:</label>
+      <br/>
+      <select id="id_todo_repeat" name="todo_repeat" class="bnd-select bnd-margin-bottom">
         <option value="---" selected> --- </option>
-        {% for repeat in todo_repeat_opt %}
-          <option value="{{ repeat }}" >{{ repeat }}</option>
+        {% for todo_repeat in todo_repeat_opt %}
+          <option value="{{ todo_repeat }}" >{{ todo_repeat }}</option>
         {% endfor %}
       </select>
       <br/>
 
-      <label for="id_details">Details:</label>
-      <input type="text" id="id_details" class="bnd-margin-bottom" name="details">
+      <label for="id_todo_details">Details:</label>
+      <br/>
+      <input type="text" id="id_todo_details" class="bnd-margin-bottom" name="todo_details">
       <br/>
     </div>
 

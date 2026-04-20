@@ -822,10 +822,10 @@ def myplants_todo_add(request, id):
         # Get the rest of the To Do item attributes
         myplant_todo.owner    = request.user.username
         myplant_todo.complete = False
-        myplant_todo.date     = request.POST["date"]
-        myplant_todo.action   = request.POST["action"]
-        myplant_todo.repeat   = request.POST["repeat"]
-        myplant_todo.details  = request.POST["details"]
+        myplant_todo.date     = request.POST["todo_date"]
+        myplant_todo.action   = request.POST["todo_action"]
+        myplant_todo.repeat   = request.POST["todo_repeat"]
+        myplant_todo.details  = request.POST["todo_details"]
         
         myplant_todo.save()
 
@@ -856,10 +856,10 @@ def myplants_todo_edit(request, id):
         # Get the rest of the To Do item attributes
         myplant_todo.owner    = request.user.username
         myplant_todo.complete = False
-        myplant_todo.date     = request.POST["date"]
-        myplant_todo.action   = request.POST["action"]
-        myplant_todo.repeat   = request.POST["repeat"]
-        myplant_todo.details  = request.POST["details"]
+        myplant_todo.date     = request.POST["todo_date"]
+        myplant_todo.action   = request.POST["todo_action"]
+        myplant_todo.repeat   = request.POST["todo_repeat"]
+        myplant_todo.details  = request.POST["todo_details"]
         myplant_todo.save()
         return HttpResponseRedirect(reverse('plants:myplants_todo'))
     else:
@@ -1009,18 +1009,18 @@ def myplant_todo_add(request, id):
         if form.is_valid():
             myplant_todo.owner    = request.user.username
             myplant_todo.complete = False
-            myplant_todo.date     = form.cleaned_data.get("date")
-            myplant_todo.action   = form.cleaned_data.get("action")
-            myplant_todo.details  = form.cleaned_data.get("details")
-            myplant_todo.repeat   = form.cleaned_data.get("repeat")
+            myplant_todo.date     = form.cleaned_data.get("todo_date")
+            myplant_todo.action   = form.cleaned_data.get("todo_action")
+            myplant_todo.details  = form.cleaned_data.get("todo_details")
+            myplant_todo.repeat   = form.cleaned_data.get("todo_repeat")
             # link the To Do item to the specific plant
             myplant_todo.myplant = myplant
             myplant_todo.save()
         return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 
     else:
-        form = MyPlantToDoForm()
-        context = { 'myplant' : myplant,
-                    'form'    : form,
+        context = { 'myplant'         : myplant,
+                    'todo_action_opt' : todo_action_opt,
+                    'todo_repeat_opt' : todo_repeat_opt,
                   }
         return render(request, 'plants/myplant_todo_add_modal.html', context)
     
@@ -1034,23 +1034,22 @@ def myplant_todo_edit(request, id):
     if request.POST:
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
-            myplant_todo.date     = form.cleaned_data.get("date")
-            myplant_todo.action   = form.cleaned_data.get("action")
-            myplant_todo.details  = form.cleaned_data.get("details")
-            myplant_todo.repeat   = form.cleaned_data.get("repeat")
+            myplant_todo.date     = form.cleaned_data.get("todo_date")
+            myplant_todo.action   = form.cleaned_data.get("todo_action")
+            myplant_todo.details  = form.cleaned_data.get("todo_details")
+            myplant_todo.repeat   = form.cleaned_data.get("todo_repeat")
             myplant_todo.save()
         return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
     # Populate the edit modal fields and render the modal
     else:
-        #
-        form = MyPlantToDoForm(initial={ 'date'    : myplant_todo.date,
-                                         'action'  : myplant_todo.action,
-                                         'details' : myplant_todo.details,
-                                         'repeat'  : myplant_todo.repeat 
-                                        })
         context = {     
-                    'myplant_todo' : myplant_todo,
-                    'form'         : form,
+                    'myplant_todo'    : myplant_todo,
+                    'todo_action_opt' : todo_action_opt,
+                    'todo_repeat_opt' : todo_repeat_opt,
+                    'todo_date'       : myplant_todo.date,
+                    'todo_action'     : myplant_todo.action,
+                    'todo_details'    : myplant_todo.details,
+                    'todo_repeat'     : myplant_todo.repeat 
                   }
         return render(request, 'plants/myplant_todo_edit_modal.html', context)
     

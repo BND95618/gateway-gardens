@@ -1,25 +1,56 @@
 <!-- /plants/templates/plants/myplant_todo_edit_modal.html -->
 <div class="bnd-modal-container">
-    <header class="bnd-modal-header">
-      <h4>Edit To Do Item</h4>
-    </header>
-    <!-- To Do edit - create form -->
-    <!-- Required for django_flatpickr - date input widget -->
-    {{ form.media }}
-    <form action="{% url 'plants:myplant_todo_edit' myplant_todo.id %}" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="bnd-modal-contents">
-        {{ form.as_p }}
-      </div>
-      <div class="bnd-modal-button-bar">
-        <!-- To Do edit - submit -->
-        <button type="submit" class="bnd-button-submit">Submit</button>
-        <!-- To Do edit - cancel -->
-        <button type="button"
-                onclick="document.getElementById('todo_edit_modal').style.display='none'"
-                class="bnd-button-cancel">
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
+  <header class="bnd-modal-header">
+    <h4>Edit To Do Item</h4>
+  </header>
+  <!-- To Do edit - create form -->
+  <!-- Required for django_flatpickr - date input widget -->
+  {{ form.media }}
+  <form action="{% url 'plants:myplant_todo_edit' myplant_todo.id %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="bnd-modal-contents">
+      <label for="todo_date">Date:</label><br/>
+      <input type="date" id="id_todo_date" name="todo_date" value="{{ myplant_todo.date|date:'Y-m-d' }}"/>
+      <br/>
+
+      <label for="id_todo_action">Action:</label><br/>
+      <select id="id_todo_action" name="todo_action" class="bnd-select bnd-margin-bottom">
+        {% for todo_action in todo_action_opt %}
+          {% if todo_action == myplant_todo.action %}
+            <option value="{{ todo_action }}" selected>{{ todo_action }}</option>
+          {% else %}
+            <option value="{{ todo_action }}"         >{{ todo_action }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br/>
+
+      <label for="id_todo_repeat">Repeat:</label><br/>
+      <select id="id_todo_repeat" name="todo_repeat" class="bnd-select bnd-margin-bottom">
+        {% for todo_repeat in todo_repeat_opt %}
+          {% if todo_repeat == myplant_todo.repeat %}
+            <option value="{{ todo_repeat }}" selected>{{ todo_repeat }}</option>
+          {% else %}
+            <option value="{{ todo_repeat }}"         >{{ todo_repeat }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br/>
+
+      <label for="id_todo_details">Details:</label><br/>
+      <input type="text" id="id_todo_details" name="todo_details" value="{{myplant_todo.details}}"/>
+      <br/>
+    </div>
+
+    <div class="bnd-modal-button-bar">
+      <!-- To Do add - submit -->
+      <button type="submit" class="bnd-button-submit">Submit</button>
+      <!-- To Do add - cancel -->
+      <button type="button"
+              onclick="document.getElementById('todo_edit_modal').style.display='none'"
+              class="bnd-button-cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

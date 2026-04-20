@@ -1233,6 +1233,26 @@ body.bnd-modal-open {
     right:    0;
     top:      0;
 }
+#id_todo_date { 
+    margin-bottom:    8px;
+    padding:          2px 6px 2px 6px;
+    border-width:     1px;
+    border-radius:    4px;
+    background-color: white; 
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        16px;
+}
+#id_todo_details { 
+    min-width:        400px; 
+    line-height:      100%;
+    margin-bottom:    8px;
+    padding:          2px 6px 2px 6px;
+    border-width:     1px;
+    border-radius:    4px;
+    background-color: white;
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        16px;
+}
 #bloomTable, #beeTable, #butterflyTable, #hummingbirdTable { width: 100%; }
 #plants_chart_modal th { top: 0px; }         /* place table right under modal tabs */
 #plants_chart_modal footer { padding: 0px; }
