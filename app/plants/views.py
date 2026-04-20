@@ -849,7 +849,7 @@ def myplants_todo_edit(request, id):
     myplant_todo = MyPlantToDo.objects.get(id=id)
 
     if request.POST:
-        common_name   = request.POST["common_name"]
+        common_name = request.POST["common_name"]
         for myplant in myplants:
             if myplant.plant.commonName == common_name:
                 myplant_todo.myplant = myplant
