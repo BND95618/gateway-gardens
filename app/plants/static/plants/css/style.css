@@ -723,7 +723,13 @@ img {
         column-gap:     16px;
         row-gap:        16px;
     }
-    @media print { flex-wrap:    nowrap; }
+    @media print { 
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      nowrap;
+        column-gap:     16px;
+        row-gap:        16px; 
+    }
 }
 .bnd-flex-item {
     flex-grow:        1;     /* ability of item to grow   */
