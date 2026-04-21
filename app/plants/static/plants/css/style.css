@@ -824,7 +824,7 @@ img {
     grid-gap:         4px;
     background-color: green;
     padding:          4px;
-
+    grid-template-columns: 1fr;
     grid-template-areas:
     'attributes     '
     'blooms         '         
@@ -842,6 +842,7 @@ img {
     'images         ';
 
     @media screen and (600px <= width <= 1112px) {
+        grid-template-columns: 1fr 1fr 1fr;
         grid-template-areas:
         'attributes      blooms         requirements   '       
         'recommendations taxonomy       pests          '       
@@ -852,10 +853,10 @@ img {
         'pests_diseases  pests_diseases pests_diseases '
         'creator_notes   creator_notes  creator_notes  ' 
         'pronunciation   pronunciation  pronunciation  '
-        'images          images         images         '
-        ;
+        'images          images         images         ';
     }
     @media screen and (min-width: 1113px) {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas:
         'attributes     blooms         requirements   recommendations taxonomy       pests          '
         'description    description    description    description     description    description    '
