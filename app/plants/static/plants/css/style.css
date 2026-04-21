@@ -719,9 +719,9 @@ img {
     @media screen and (min-width: 600px) {
         display:        flex;
         flex-direction: row;
-        flex-wrap:      wrap;
+        flex-wrap:      nowrap;
         column-gap:     16px;
-        row-gap:        16px;
+        row-gap:        0px;
     }
     @media print { 
         display:        flex;
@@ -1047,7 +1047,7 @@ img {
     flex-grow:        1;     /* ability of item to grow   */
     flex-shrink:      1;     /* ability of item to shrink */
     width:            100%;
-    margin:           auto;
+    margin:           16px auto auto auto;
     border:           1px solid slategray; 
     padding:          4px;
     box-shadow:       var(--shadow-parameters);
