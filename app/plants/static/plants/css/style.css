@@ -731,6 +731,24 @@ img {
         row-gap:        16px; 
     }
 }
+.bnd-flex-container-wrap
+{
+    width:              100%;
+    @media screen and (min-width: 600px) {
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      wrap;
+        column-gap:     16px;
+        row-gap:        0px;
+    }
+    @media print { 
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      nowrap;
+        column-gap:     16px;
+        row-gap:        16px; 
+    }
+}
 .bnd-flex-item {
     flex-grow:        1;     /* ability of item to grow   */
     flex-shrink:      1;     /* ability of item to shrink */
@@ -888,10 +906,6 @@ img {
 .images          { grid-area: images;          }
 .creator_notes   { grid-area: creator_notes;   }
 
-.grid-container .flex-item {
-    min-width:        160px;
-    max-width:        600px;
-}
 .grid-container > div {
     background-color: whitesmoke;
     text-align:       left;
@@ -931,18 +945,17 @@ img {
 .grid-container input[type="checkbox"] {
     cursor: pointer;
 }
-.grid-container .images img {
-    display:      block;
-    margin-left:  auto;
-    margin-right: auto;
-}
 .grid-container .images input[type="file"] {
-    width:        100%;
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
+    width:            100%;
+    border-style:     solid;
+    border-color:    black;
+    border-width:     1px;
+    background-color: whitesmoke;
 }
-.grid-container .images input[type="text"] { width:  100%; }
+.grid-container .images input[type="text"] { 
+    width:            100%; 
+    background-color: whitesmoke;
+}
 .grid-container .images a            { display: none; }
 .grid-container .creator_notes label { display: inline-block; }
 /* ------------------------------------------------------------ */
@@ -1062,7 +1075,7 @@ img {
     }   
 }
 .bnd-image-thumbnail {
-    width:         90vw; 
+    width:         100%; 
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;

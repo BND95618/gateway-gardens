@@ -243,10 +243,10 @@
       <div class="images">
         <fieldset>
           <legend>Images:</legend>
-          <div class="bnd-flex-container">
+          <div class="bnd-flex-container-wrap">
             <!-- Image 1 -->
-            <figure class="flex-item">
-              <fieldset>
+            <figure>
+              <fieldset class="bnd-flex-image">
                 <legend>Image 1:</legend>
                 <label for="id_image_1">Filename:</label>
                 {{ form.image_1 }}
@@ -256,14 +256,14 @@
 
                 {% if plant.image_1 %}
                   <hr>
-                  <img src="{{ plant.image_1.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-                  <figcaption>{{ plant.caption_1 }}</figcaption>
+                  <img class="bnd-image-thumbnail" src="{{ plant.image_1.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
             <!-- Image 2 -->
-            <figure class="flex-item">
-              <fieldset>
+            <figure>
+              <fieldset class="bnd-flex-image">
                 <legend>Image 2:</legend>
                 <label for="id_image_2">Filename:</label>
                 {{ form.image_2 }}
@@ -273,14 +273,14 @@
 
                 {% if plant.image_2 %}
                   <hr>
-                  <img src="{{ plant.image_2.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-                  <figcaption>{{ plant.caption_2 }}</figcaption>
+                  <img class="bnd-image-thumbnail" src="{{ plant.image_2.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
 `             <!-- Image 3 -->
-            <figure class="flex-item">
-              <fieldset>
+            <figure>
+              <fieldset class="bnd-flex-image">
                 <legend>Image 3:</legend>
                 <label for="id_image_3">Filename:</label>
                 {{ form.image_3 }}
@@ -290,14 +290,14 @@
 
                 {% if plant.image_3 %}
                   <hr>
-                  <img src="{{ plant.image_3.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-                  <figcaption>{{ plant.caption_3 }}</figcaption>
+                  <img class="bnd-image-thumbnail" src="{{ plant.image_3.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
             <!-- Image 4 -->
-            <figure class="flex-item">
-              <fieldset>
+            <figure>
+              <fieldset class="bnd-flex-image">
                 <legend>Image 4:</legend>
                 <label for="id_image_4">Filename:</label>
                 {{ form.image_4 }}
@@ -307,8 +307,8 @@
 
                 {% if plant.image_4 %}
                   <hr>
-                  <img src="{{ plant.image_4.url }}" class="bnd-image-thumbnail" onclick="imageModalOpen(this)" alt="No image found">
-                  <figcaption>{{ plant.caption_4 }}</figcaption>
+                  <img class="bnd-image-thumbnail" src="{{ plant.image_4.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
