@@ -157,7 +157,7 @@ class Plant(models.Model):
     pollinators       = models.CharField(max_length=72,  default="tbd", blank=True)
     ca_native         = models.CharField(max_length=8,   default="tbd", blank=True)
     ucd_all_star      = models.CharField(max_length=8,   default="tbd", blank=True)
-    davis_trees       = models.CharField(max_length=8,   default="tbd", blank=True)
+    davis_trees       = models.CharField(max_length=8,   default="no",  blank=True)
     sunset_z14        = models.CharField(max_length=8,   default="tbd", blank=True)
     sun_exposure      = models.CharField(max_length=128, default="tbd", blank=True)
     water_rqmts       = models.CharField(max_length=64,  default="tbd", blank=True)

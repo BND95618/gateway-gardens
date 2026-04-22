@@ -62,7 +62,6 @@ UCD_ALL_STAR_CHOICES = (
 	("No",  "No"),
 )
 DAVIS_TREE_CHOICES = (
-	("tbd", "tbd"),
 	("Yes", "Yes"),
 	("No",  "No"),
 )
@@ -667,7 +666,7 @@ class PlantAddUpdateForm(forms.Form):
 		)	
 	davis_trees = forms.ChoiceField(
 		label="Davis Climate-Ready Trees",
-		initial = 'tbd',
+		initial = 'no',
 		choices = DAVIS_TREE_CHOICES, 
 		widget=forms.RadioSelect,
 		required=False,
