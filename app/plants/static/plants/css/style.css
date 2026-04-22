@@ -65,10 +65,12 @@ body {
     padding:          0;             /* remove default */
     background-color: whitesmoke;
     font-family:      chalkboard, verdana, sans-serif;
-    font-size:        16px;
+    font-size:        12px;
     line-height:      1.5;
-    @media print
-    {
+    @media screen and (600px <= width <=  852px) { font-size: 12px; }
+    @media screen and (853px <= width <= 1112px) { font-size: 14px; }
+    @media screen and (min-width: 1113px)        { font-size: 16px; }
+    @media print {
         margin:           0;
         background-color: white;
         color:            black;
@@ -88,11 +90,11 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 h1 {
-    font-size:   20px;
+    font-size:   18px;
     white-space: nowrap;
 }
-h2    { font-size: 18px; }
-h3    { font-size: 16px; }
+h2    { font-size: 14px; }
+h3    { font-size: 14px; }
 h4    { font-size: 14px; }
 h5    { font-size: 14px; }
 h6    { font-size: 14px; }
