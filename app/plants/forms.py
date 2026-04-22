@@ -666,7 +666,7 @@ class PlantAddUpdateForm(forms.Form):
 		)	
 	davis_trees = forms.ChoiceField(
 		label="Davis Climate-Ready Trees",
-		initial = 'no',
+		initial = 'No',
 		choices = DAVIS_TREE_CHOICES, 
 		widget=forms.RadioSelect,
 		required=False,
