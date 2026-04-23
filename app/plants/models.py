@@ -92,7 +92,9 @@ class Garden(models.Model):
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     # Save the user's selection for plant search criteria
-    common_name_search     = models.CharField(max_length=32, default="Any", blank=True)
+    common_name_search     = models.CharField(max_length=32, default="",    blank=True)
+    genus_search           = models.CharField(max_length=32, default="",    blank=True)
+    species_search         = models.CharField(max_length=32, default="",    blank=True)
     type_x_search          = models.CharField(max_length=32, default="Any", blank=True)
     bloom_color_search     = models.CharField(max_length=32, default="Any", blank=True)
     bloom_season_search    = models.CharField(max_length=32, default="Any", blank=True)

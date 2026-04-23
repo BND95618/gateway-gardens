@@ -53,14 +53,29 @@
       {% csrf_token %}
       <p class="bnd-center"><i>Plant Attributes</i></p>
 
-      <!-- Plant Attributes -->
-      <label for="id_common_name_search">Common name:</label><br/>
-      <input type="text" 
-             id="id_common_name_search" 
-             class="bnd-input" 
-             name="common_name_search" 
-             value="{{ common_name_search }}">
+      <!-- Plant Naming -->
+      <label for = "id_common_name_search">Common name:</label><br/>
+      <input type  = "text" 
+             id    = "id_common_name_search" 
+             class = "bnd-input" 
+             name  = "common_name_search" 
+             value = "{{ common_name_search }}">
 
+      <label for = "id_genus_search">Genus:</label><br/>
+      <input type  = "text" 
+             id    = "id_genus_search" 
+             class = "bnd-input" 
+             name  = "genus_search" 
+             value = "{{ genus_search }}">
+                    
+      <label for = "id_species_search">Species:</label><br/>
+      <input type  = "text" 
+             id    = "id_species_search" 
+             class = "bnd-input" 
+             name  = "species_search" 
+             value = "{{ species_search }}">
+                     
+      <!-- Plant Attributes -->
       <label for="id_type_x_search">Type:</label><br/>
       <select id="id_type_x_search" name="type_x_search" class="bnd-select">
         <option value="Any" >Any</option>
@@ -701,6 +716,8 @@
     //----------------------------------------------------------------------------- 
     function searchReset() {
       document.getElementById("id_common_name_search"    ).value = "";
+      document.getElementById("id_genus_search"          ).value = "";
+      document.getElementById("id_species_search"        ).value = "";
       document.getElementById("id_type_x_search"         ).value = "Any";
       document.getElementById("id_bloom_color_search"    ).value = "Any";
       document.getElementById("id_bloom_season_search"   ).value = "Any";
