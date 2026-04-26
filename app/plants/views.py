@@ -421,26 +421,26 @@ def myplants_summary(request):
             if( (common_name_search     in myplant.plant.commonName) and
                 (genus_search           in myplant.plant.genus)      and
                 (species_search         in myplant.plant.species)    and
-                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any")) and
-                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any")) and
-                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any")) and
-                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any")) and
-                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any")) and
-                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and
-                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any")) and
-                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any")) and
-                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any")) and
-                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any")) and
-                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any")) and
-                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any")) and
+                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
+                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any") or (myplant.plant.bloom_color    == "tbd")) and
+                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any") or (myplant.plant.bloom_season   == "tbd")) and
+                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
+                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any") or (myplant.plant.ca_native      == "tbd")) and
+                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (myplant.plant.ucd_all_star   == "tbd")) and
+                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any") or (myplant.plant.davis_trees    == "tbd")) and
+                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any") or (myplant.plant.sunset_z14     == "tbd")) and
+                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any") or (myplant.plant.sun_exposure   == "tbd")) and
+                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any") or (myplant.plant.water_rqmts    == "tbd")) and
+                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any") or (myplant.plant.soil_type      == "tbd")) and
+                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any") or (myplant.plant.heat_tolerance == "tbd")) and
                 (pH_hit)          and
                 (usda_zone_hit)   and
                 (sunset_zone_hit) and
                 (bloom_month_hit) and
-                ((my_sun_exposure_search == myplant.sun_exposure) or (my_sun_exposure_search == "Any")) and
-                ((my_water_level_search  == myplant.water_level)  or (my_water_level_search  == "Any")) and
-                ((my_soil_type_search    == myplant.soil_type)    or (my_soil_type_search    == "Any")) and
-                ((my_happiness_search    == myplant.happiness)    or (my_happiness_search    == "Any"))
+                ((my_sun_exposure_search == myplant.sun_exposure) or (my_sun_exposure_search == "Any") or (myplant.sun_exposure == "tbd")) and
+                ((my_water_level_search  == myplant.water_level)  or (my_water_level_search  == "Any") or (myplant.water_level  == "tbd")) and
+                ((my_soil_type_search    == myplant.soil_type)    or (my_soil_type_search    == "Any") or (myplant.soil_type    == "tbd")) and
+                ((my_happiness_search    == myplant.happiness)    or (my_happiness_search    == "Any") or (myplant.happiness    == "tbd"))
                 ):
                 myplant.show = "yes"
             else:
@@ -608,26 +608,26 @@ def myplants_summary(request):
             if( (common_name_search     in myplant.plant.commonName) and
                 (genus_search           in myplant.plant.genus)      and
                 (species_search         in myplant.plant.species)    and
-                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any")) and
-                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any")) and
-                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any")) and
-                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any")) and
-                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any")) and
-                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and
-                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any")) and
-                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any")) and
-                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any")) and
-                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any")) and
-                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any")) and
-                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any")) and
+                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any") or (myplant.plant.type_x         == "tbd")) and
+                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any") or (myplant.plant.bloom_color    == "tbd")) and
+                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any") or (myplant.plant.bloom_season   == "tbd")) and
+                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any") or (myplant.plant.pollinators    == "tbd")) and
+                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any") or (myplant.plant.ca_native      == "tbd")) and
+                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any") or (myplant.plant.ucd_all_star   == "tbd")) and
+                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any") or (myplant.plant.davis_trees    == "tbd")) and
+                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any") or (myplant.plant.sunset_z14     == "tbd")) and
+                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any") or (myplant.plant.sun_exposure   == "tbd")) and
+                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any") or (myplant.plant.water_rqmts    == "tbd")) and
+                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any") or (myplant.plant.soil_type      == "tbd")) and
+                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any") or (myplant.plant.heat_tolerance == "tbd")) and
                 (pH_hit)          and
                 (usda_zone_hit)   and
                 (sunset_zone_hit) and
                 (bloom_month_hit) and
-                ((my_sun_exposure_search == myplant.sun_exposure) or (my_sun_exposure_search == "Any")) and
-                ((my_water_level_search  == myplant.water_level)  or (my_water_level_search  == "Any")) and
-                ((my_soil_type_search    == myplant.soil_type)    or (my_soil_type_search    == "Any")) and
-                ((my_happiness_search    == myplant.happiness)    or (my_happiness_search    == "Any"))
+                ((my_sun_exposure_search == myplant.sun_exposure) or (my_sun_exposure_search == "Any") or (myplant.sun_exposure == "tbd")) and
+                ((my_water_level_search  == myplant.water_level)  or (my_water_level_search  == "Any") or (myplant.water_level  == "tbd")) and
+                ((my_soil_type_search    == myplant.soil_type)    or (my_soil_type_search    == "Any") or (myplant.soil_type    == "tbd")) and
+                ((my_happiness_search    == myplant.happiness)    or (my_happiness_search    == "Any") or (myplant.happiness    == "tbd"))
                 ):
                 myplant.show = "yes"
             else:
@@ -1235,19 +1235,19 @@ def plants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
-            if ((type_x_search         == plant.type_x)         or (type_x_search         == "Any")) and \
-               ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-               ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-               ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any")) and \
-               ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any")) and \
+            if ((type_x_search         == plant.type_x)         or (type_x_search         == "Any") or (plant.type_x         == "tbd")) and \
+               ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any") or (plant.bloom_color    == "tbd")) and \
+               ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any") or (plant.bloom_season   == "tbd")) and \
+               ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any") or (plant.pollinators    == "tbd")) and \
+               ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any") or (plant.ca_native      == "tbd")) and \
                ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-               ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-               ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-               ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-               ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any")) and \
-               ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
-               ((status_search         == plant.status)         or (status_search         == "Any")) and \
+               ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any") or (plant.davis_trees    == "tbd")) and \
+               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any") or (plant.sunset_z14     == "tbd")) and \
+               ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any") or (plant.sun_exposure   == "tbd")) and \
+               ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any") or (plant.water_rqmts    == "tbd")) and \
+               ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any") or (plant.soil_type      == "tbd")) and \
+               ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any") or (plant.heat_tolerance == "tbd")) and \
+               ((status_search         == plant.status)         or (status_search         == "Any") or (plant.status         == "tbd")) and \
                (pH_hit) and \
                (usda_zone_hit) and \
                (sunset_zone_hit) and \
@@ -1385,19 +1385,19 @@ def plants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
-            if  ((type_x_search         == plant.type_x)         or (type_x_search         == "Any")) and \
-                ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-                ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-                ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any")) and \
-                ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any")) and \
+            if  ((type_x_search         == plant.type_x)         or (type_x_search         == "Any") or (plant.type_x         == "tbd")) and \
+                ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any") or (plant.bloom_color    == "tbd")) and \
+                ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any") or (plant.bloom_season   == "tbd")) and \
+                ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any") or (plant.pollinators    == "tbd")) and \
+                ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any") or (plant.ca_native      == "tbd")) and \
                 ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-                ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-                ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-                ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-                ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-                ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any")) and \
-                ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
-                ((status_search         == plant.status)         or (status_search         == "Any")) and \
+                ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any") or (plant.davis_trees    == "tbd")) and \
+                ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any") or (plant.sunset_z14     == "tbd")) and \
+                ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any") or (plant.sun_exposure   == "tbd")) and \
+                ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any") or (plant.water_rqmts    == "tbd")) and \
+                ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any") or (plant.soil_type      == "tbd")) and \
+                ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any") or (plant.heat_tolerance == "tbd")) and \
+                ((status_search         == plant.status)         or (status_search         == "Any") or (plant.status         == "tbd")) and \
                 (pH_hit) and \
                 (usda_zone_hit) and \
                 (sunset_zone_hit) and \
@@ -1519,7 +1519,7 @@ def plant_add(request):
     plant = Plant()
     plant.save()
     # Give the new plant a default common name and status
-    plant.commonName = "< New Plant " + str(plant.id) + " >"
+    plant.commonName = "< New Plant " + str(plant.id) + ">"
     plant.status     = "Development"
     plant.save()
     # Edit the newly created plant
@@ -2150,6 +2150,8 @@ def string_display(string):
 def pH_check(target, lower_limit, upper_limit):
     if (target == "Any"):
         hit = True
+    elif ((lower_limit == 'tbd') or (upper_limit == 'tbd')):
+        hit = True
     elif ((target >= lower_limit) and (target <= upper_limit)):
         hit = True
     else:
@@ -2164,6 +2166,20 @@ def usda_zone_check(target, lower_limit, upper_limit):
     else:
         target_adj = target
 
+    if lower_limit == "tbd":
+        lower_limit_adj = "00a"
+    elif (lower_limit.find("a") == 1 or lower_limit.find("b")== 1):
+        lower_limit_adj = "0" + lower_limit[0:2]
+    else:
+        lower_limit_adj = lower_limit[0:3]
+
+    if upper_limit == "tbd":
+        upper_limit_adj = "99b"
+    elif (upper_limit.find("a") == 1 or upper_limit.find("b")== 1):
+        upper_limit_adj = "0" + upper_limit[0:2]
+    else:
+        upper_limit_adj = upper_limit[0:3]
+
     if (target == "Any"):
         hit = True
     elif (target_adj >= lower_limit_adj) and (target_adj <= upper_limit_adj):
@@ -2174,7 +2190,7 @@ def usda_zone_check(target, lower_limit, upper_limit):
 
 def sunset_zone_check(target, range, options):
     zone_list =[]
-    if target == "Any":
+    if target == "Any" or range == "tbd":
         hit = True
     else:
         # Convert range into a list of single zones or ranges of zones (form of x-y)
@@ -2210,7 +2226,7 @@ def sunset_zone_check(target, range, options):
 
 def bloom_month_check(target, start, end, options):
     options_2x = options + options
-    if (target == "Any") or (start == "None") or (end == "None"):
+    if (target == "Any") or (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
         hit = True
     else:
         begin = False
@@ -2232,7 +2248,7 @@ def bloom_month_check(target, start, end, options):
 def bloom_month_list(start, end, options):
     options_2x = options + options
     list = []
-    if (start == "None") or (end == "None"):
+    if (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
        return(list)
     begin = False
     for option in options_2x:
