@@ -2190,8 +2190,10 @@ def usda_zone_check(target, lower_limit, upper_limit):
 
 def sunset_zone_check(target, range, options):
     zone_list =[]
-    if target == "Any" or range == "tbd":
+    if target == "Any":
         hit = True
+    elif range == "tbd":
+        hit = False
     else:
         # Convert range into a list of single zones or ranges of zones (form of x-y)
         temp_1 = range.strip()
@@ -2226,8 +2228,10 @@ def sunset_zone_check(target, range, options):
 
 def bloom_month_check(target, start, end, options):
     options_2x = options + options
-    if (target == "Any") or (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
+    if (target == "Any"):
         hit = True
+    elif (start == "tbd") or (start == "None") or (end == "tbd") or (end == "None"):
+        hit = False
     else:
         begin = False
         for option in options_2x:
