@@ -598,7 +598,7 @@ img {
     text-align:       left;
     vertical-align:   top;
     /* Stick to the bottom edge of the fixed navbar/banner */
-    top:              80px;              
+    top:              72px;              
     @media screen and (400px <= width <= 849px) {top:  88px}
     @media screen and (850px <= width <= 999px) {top:  96px}
     @media screen and (min-width: 1000px)       {top: 104px}
