@@ -601,7 +601,7 @@ img {
     top:              80px;              
     @media screen and (400px <= width <= 849px) {top:  88px}
     @media screen and (850px <= width <= 999px) {top:  96px}
-    @media screen and (min-width: 1000px)        {top: 104px}
+    @media screen and (min-width: 1000px)       {top: 104px}
 }
 .bnd-table-flex th:first-child     {padding-left:  16px}
 .bnd-table-flex th:last-child      {padding-right: 16px}
