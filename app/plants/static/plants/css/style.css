@@ -374,7 +374,7 @@ img {
     top:              48px;
     @media screen and (400px <= width <= 849px) { 
         top:          56px; 
-        height:       18px;
+        height:       18xxx px;
     }
     @media screen and (850px <= width <= 999px) {
         display:      flex;
@@ -520,12 +520,21 @@ img {
 /* ------------------------------------------------------------ */
 .bnd-page-main { 
     flex-grow:  1;
-    padding:    0.01em 16px;
+    padding:    0.01em 4px;
     /* position content below banner/nav/mask  */
     margin-top: 88px;   
-    @media screen and (400px <= width <= 849px) { margin-top:  96px }
-    @media screen and (850px <= width <= 999px) { margin-top:  96px }
-    @media screen and (min-width:        853px) { margin-top: 104px }
+    @media screen and (400px <= width <= 849px) { 
+        margin-top:  96px;
+        padding:     0.01em 8px;
+    }
+    @media screen and (850px <= width <= 999px) { 
+        margin-top:  96px;
+        padding:     0.01em 4px;
+    }
+    @media screen and (min-width:        853px) { 
+        margin-top:  104px;
+        padding:     0.01em 16px; 
+    }
     @media print {
         margin-top: 16px;
         padding:    0px;
