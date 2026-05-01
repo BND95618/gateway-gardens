@@ -453,9 +453,9 @@ img {
 .bnd-page-nav a.bnd-nav-phone-icon {
     float:   right;
     display: block;
-    @media screen and (400px <= width <= 849px) { display: none; }
+    @media screen and (400px <= width <= 849px) { display: block; }
     @media screen and (850px <= width <= 999px) { display: none; }
-    @media screen and (min-width: 1000px)        { display: none; }
+    @media screen and (min-width: 1000px)       { display: none; }
 }
 /* Style when menu icon is selected */
 .bnd-page-nav.responsive { position: relative; }
@@ -463,9 +463,9 @@ img {
     position: absolute;
     right:    0;
     top:      0;
-    @media screen and (400px <= width <= 849px) { display: none; }
+    @media screen and (400px <= width <= 849px) { display: block; }
     @media screen and (850px <= width <= 999px) { display: none; }
-    @media screen and (min-width: 1000px)        { display: none; }
+    @media screen and (min-width: 1000px)       { display: none; }
 }
 /* Style horizontal list of navigation links */
 .bnd-page-nav.responsive a,
