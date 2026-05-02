@@ -1380,10 +1380,6 @@ def plants_summary(request):
                                           )
         # Execute the search
         for plant in plants:
-
-            plant.creator = "Brent"
-            plant.save()
-            
             # Run through the search criteria to select the plants to show
             pH_hit = pH_check(pH_search, plant.pH_min, plant.pH_max)
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
