@@ -419,15 +419,19 @@ img {
     width:            auto;
     margin-left:      auto;
     border:           none;
-    padding:          0px 24px 0px 10px;
-    font-size:        16px;
     color:            black;
     text-align:       center;
     outline:          0;
     text-decoration:  none;
     @media screen and (400px <= width <= 849px) { display: none;  }
-    @media screen and (850px <= width <= 999px) { display: block; }
-    @media screen and (min-width: 1000px)        { display: block; }
+    @media screen and (850px <= width <= 999px) { 
+        display:      block; 
+        padding:      0px 18px 0px 10px;
+    }
+    @media screen and (min-width: 1000px)       { 
+        display:      block; 
+        padding:      0px 18px 0px 10px;
+    }
 }   
 .bnd-nav-dropdown-container:hover {
     color:            white;

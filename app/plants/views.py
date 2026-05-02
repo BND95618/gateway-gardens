@@ -1521,6 +1521,7 @@ def plant_add(request):
     # Give the new plant a default common name and status
     plant.commonName = "< New Plant " + str(plant.id) + " >"
     plant.status     = "Development"
+    plant.creator    = request.user.username
     plant.save()
     # Edit the newly created plant
     return HttpResponseRedirect(reverse('plants:plant_edit', args=(plant.id,))) 
