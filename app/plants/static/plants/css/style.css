@@ -1022,10 +1022,17 @@ img {
 /* ------------------------------------------------------------ */
 /* Plant taxonomy formatting                                    */
 /* ------------------------------------------------------------ */
-.bnd-cultivar { text-transform: capitalize; }
+.bnd-subspecies {
+    font-style:     normal;
+    text-transform: lowercase;
+}
 .bnd-variety {
     font-style:     italic;
     text-transform: lowercase;
+}
+.bnd-cultivar {
+    font-style:     normal;
+    text-transform: capitalize; 
 }
 /* ------------------------------------------------------------ */
 /* Tool Tip formatting                                          */

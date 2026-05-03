@@ -187,6 +187,7 @@ class Plant(models.Model):
     family            = models.CharField(max_length=64, default="tbd", blank=True)
     genus             = models.CharField(max_length=64, default="tbd", blank=True)
     species           = models.CharField(max_length=64, default="tbd", blank=True)
+    subspecies        = models.CharField(max_length=64, default="tbd", blank=True)
     variety           = models.CharField(max_length=64, default="tbd", blank=True)
     cultivar          = models.CharField(max_length=64, default="tbd", blank=True)
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)

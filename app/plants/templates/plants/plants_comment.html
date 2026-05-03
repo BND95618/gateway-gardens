@@ -25,7 +25,9 @@
       <span>
         ( 
         {{ plant.genus }} {{ plant.species }}
-        {% if plant.variety != "tbd" and plant.variety != 'n/a' and plant.variety != ''%}
+        {% if plant.subspecies != "tbd" and plant.subspecies != 'n/a' and plant.subspecies != ''%}
+          ssp. {{ plant.subspecies }} 
+        {% elif plant.variety != "tbd" and plant.variety != 'n/a' and plant.variety != ''%}
           var. {{ plant.variety }} 
         {% elif plant.cultivar != "tbd" and plant.cultivar != 'n/a' and plant.cultivar != ''%}
           '{{ plant.cultivar}}'

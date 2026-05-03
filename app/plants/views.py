@@ -1569,6 +1569,7 @@ def plant_edit(request, id):
             plant.family        = form.cleaned_data.get('family')
             plant.genus         = form.cleaned_data.get('genus')
             plant.species       = form.cleaned_data.get('species')
+            plant.subspecies    = form.cleaned_data.get('subspecies')
             plant.variety       = form.cleaned_data.get('variety')
             plant.cultivar      = form.cleaned_data.get('cultivar')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
@@ -1689,6 +1690,7 @@ def plant_edit(request, id):
                                             'family'            : plant.family,
                                             'genus'             : plant.genus,
                                             'species'           : plant.species,
+                                            'subspecies'        : plant.subspecies,
                                             'variety'           : plant.variety,
                                             'cultivar'          : plant.cultivar,
                                             'phonetic_spelling' : plant.phonetic_spelling,

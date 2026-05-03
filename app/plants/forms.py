@@ -210,11 +210,11 @@ MONTH_CHOICES = (
 	("None", "None")
 )
 COLUMN_CHOICES = (
-	("Common Name",      "Common Name"),
-	("Genus/Species",    "Genus/Species"),
-	("Variety/Cultivar", "Variety/Cultivar"),
+	("Common Name",                 "Common Name"),
+	("Genus/Species",               "Genus/Species"),
+	("Subspecies/Variety/Cultivar", "Subspecies/Variety/Cultivar"),
 	# Plant Characteristics
-	("Type",             "Type"),
+	("Type",                        "Type"),
 	("Height",           "Height"),
 	("Width", 		     "Width"),
 	("Bloom Color",      "Bloom Color"),
@@ -237,9 +237,9 @@ COLUMN_CHOICES = (
 	("Status",           "Status"),
 )
 MY_COLUMN_CHOICES = (
-	("Common Name",      "Common Name"),
-	("Genus/Species",    "Genus/Species"),
-	("Variety/Cultivar", "Variety/Cultivar"),
+	("Common Name",                 "Common Name"),
+	("Genus/Species",               "Genus/Species"),
+	("Subspecies/Variety/Cultivar", "Subspecies/Variety/Cultivar"),
 	# Plant Characteristics
 	("Type",             "Type"),
 	("Height",           "Height"),
@@ -815,15 +815,21 @@ class PlantAddUpdateForm(forms.Form):
 		max_length=255, 
 		required=False
 		)
+	subspecies = forms.CharField(
+		label="Subspecies",
+		initial="", 
+		max_length=255, 
+		required=False
+		)
 	variety = forms.CharField(
 		label="Variety",
-		initial="tbd", 
+		initial="", 
 		max_length=255, 
 		required=False
 		)
 	cultivar = forms.CharField(
 		label="Cultivar",
-		initial="tbd", 
+		initial="", 
 		max_length=255, 
 		required=False
 		)
