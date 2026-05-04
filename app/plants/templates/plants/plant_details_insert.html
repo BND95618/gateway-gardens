@@ -53,9 +53,15 @@
       <p>Family:            {{ plant.family }}</p>
       <p>Genus:             {{ plant.genus }}</p>
       <p>Species:           {{ plant.species }}</p>
-      <p>Subspecies:        {{ plant.subspecies }}</p>
-      <p>Variety:           {{ plant.variety }}</p>
-      <p>Cultivar:          {{ plant.cultivar }}</p>
+      {% if plant.subspecies != 'tbd' and plant.subspecies != '' %} 
+        <p>Subspecies:        {{ plant.subspecies }}</p>
+      {% endif %}
+      {% if plant.variety != 'tbd' and plant.variety != '' %} 
+        <p>Variety:           {{ plant.variety }}</p>
+      {% endif %}
+      {% if plant.cultivar != 'tbd' and plant.cultivar != '' %} 
+        <p>Cultivar:          {{ plant.cultivar }}</p>
+      {% endif %}
       <p>Phonetic Spelling: {{ plant.phonetic_spelling }}</p>
     </div>
   </section>
