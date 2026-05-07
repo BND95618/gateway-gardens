@@ -330,7 +330,6 @@ def myplants_summary(request):
 
     # Executed when search request is submitted
     if request.method == 'POST':
-    
         # Get the search criteria from the "http request"
         # Plant Characteristics
         common_name_search      = request.POST["common_name_search"]
@@ -394,9 +393,8 @@ def myplants_summary(request):
                 my_column_selection_list  = string2list(garden.column_selection)
 
         # Obtain the plants that the current user has claimed for their garden
-        myplants = MyPlant.objects.filter(owner = request.user.username)
-        # myplants = MyPlant.objects.filter(Q(owner = request.user.username) & 
-        #                                   Q(plant_commonName__icontains = common_name_search))
+        myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
+                                          Q(status = 'in_my_garden'))
 
         # Execute the search
         for myplant in myplants:
@@ -581,9 +579,8 @@ def myplants_summary(request):
             return HttpResponseRedirect(reverse('plants:gardens_add'))
 
         # Obtain the plants that the current user has claimed for their garden
-        myplants = MyPlant.objects.filter(owner = request.user.username)
-        # myplants = MyPlant.objects.filter(Q(owner = request.user.username) & 
-        #                                   Q(plant_commonName__icontains = common_name_search))
+        myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
+                                          Q(status = 'in_my_garden'))
 
         # Execute the search
         for myplant in myplants:
@@ -687,7 +684,57 @@ def myplants_summary(request):
                     'my_column_selection'    : my_column_selection_list, }
         return HttpResponse(template.render(context, request))
 
-def myplants_add(request, id):
+def myplant_status(request, id):
+    """ Set the selected plant's status  """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    #
+    plant = Plant.objects.get(id=id)
+    myplants = MyPlant.objects.filter(owner = request.user.username)
+    if request.POST:
+        print("DEBUG: Got to myplant status view - POST")
+        my_plant_status = request.POST["my_plant_status"]
+        print("DEBUG: my_plant_status =", my_plant_status)
+
+        # Cases where the user already has a my_plant associated with the plant
+        for myplant in myplants:
+            if myplant.plant == plant:
+                if my_plant_status == "not_in_my_garden":
+                    myplant.delete()
+                    return HttpResponseRedirect(reverse('plants:plants_summary'))
+                elif my_plant_status == 'in_my_garden':
+                    return HttpResponseRedirect(reverse('plants:myplant_update', args=(myplant.id,)))
+                elif my_plant_status == 'wish_list':
+                    myplant.delete()
+                    myplant.plant  = plant
+                    myplant.status = 'wish_list'
+                    myplant.save()
+                    return HttpResponseRedirect(reverse('plants:plants_summary'))
+        # Cases where the user currently has no my_plant associated with the plant
+        if my_plant_status == "not_in_my_garden":
+            return HttpResponseRedirect(reverse('plants:plants_summary'))
+        elif my_plant_status == 'in_my_garden':
+            return HttpResponseRedirect(reverse('plants:myplant_add', args=(plant.id,)))
+        elif my_plant_status == 'wish_list':
+            myplant = MyPlant()
+            myplant.plant  = plant
+            myplant.status = 'wish_list'
+            myplant.owner  = request.user.username
+            myplant.save()
+            return HttpResponseRedirect(reverse('plants:plants_summary'))
+        return HttpResponseRedirect(reverse('plants:plants_summary')) 
+    else:
+        print("DEBUG: Got to myplant status view - Not POST")
+        # Find my current status (if one exists) for the plant
+        status = "not_in_my_garden"
+        for myplant in myplants:
+            if myplant.plant == plant:
+                status = myplant.status
+        context = { 'plant'  : plant,
+                    'status' : status, }
+        return render(request, 'plants/myplant_status_modal.html', context)
+    
+def myplant_add(request, id):
     """ Associate a 'plant' to 'myplant' """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -710,14 +757,16 @@ def myplants_add(request, id):
             myplant.notes        = form.cleaned_data.get("notes")        #
             myplant.plant        = plant                                 # link myplant to the specific plant
             # Build list of bloom months
-            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt)   
+            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt) 
+            # Set plant status to "in my garden"  
+            myplant.status = 'in_my_garden'
             myplant.save()
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         form = MyPlantAddUpdateForm()
         context = { 'plant' : plant,
                     'form'  : form }
-        return render(request, 'plants/myplants_add.html', context)
+        return render(request, 'plants/myplant_add.html', context)
     
 def myplant_update(request, id):
     """ Update details related a specific My Plant """
@@ -740,7 +789,9 @@ def myplant_update(request, id):
             myplant.happiness    = form.cleaned_data.get("happiness")    #
             myplant.notes        = form.cleaned_data.get("notes")        #
             # Build list of bloom months
-            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt)   
+            myplant.bloom_months = bloom_month_list(myplant.bloom_start, myplant.bloom_end, month_opt)
+            # Set plant status to "in my garden"  
+            myplant.status = 'in_my_garden'   
             myplant.save()
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
     else:
@@ -765,7 +816,7 @@ def myplant_update(request, id):
                     'form'    : form }
         return render(request, 'plants/myplant_update.html', context)
 
-def myplants_delete(request, id):
+def myplant_delete(request, id):
     """ Delete selected plant from the MyPlants database table """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -775,25 +826,9 @@ def myplants_delete(request, id):
         return HttpResponseRedirect(reverse('plants:myplants_summary')) 
     else:
         context = {'myplant': myplant}
-        return render(request, 'plants/myplants_delete_modal.html', context)
+        return render(request, 'plants/myplant_delete_modal.html', context)
 
-def myplants_remove(request, id):
-    """ Remove selected plant from the MyPlants database  """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    #
-    plant = Plant.objects.get(id=id)
-    if request.POST:
-        myplants = MyPlant.objects.filter(owner = request.user.username) 
-        for myplant in myplants:
-            if myplant.plant == plant:
-                myplant.delete()
-        return HttpResponseRedirect(reverse('plants:plants_summary')) 
-    else:
-        context = { 'plant' : plant }
-        return render(request, 'plants/myplants_remove_modal.html', context)
-
-#
+# 
 
 def myplants_todo(request):
     if not request.user.is_authenticated:
@@ -1216,8 +1251,16 @@ def plants_summary(request):
         myplants = MyPlant.objects.filter(owner = request.user.username) 
 
         # Plant query -> Plants claimed by the current user or all plants in the database
-        if garden_search == "Mine":
+        if garden_search == "In My Garden":
+            plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
+                                          Q(myplants__status      = "in_my_garden")        &
+                                          Q(commonName__icontains = common_name_search)    &
+                                          Q(genus__icontains      = genus_search)          &
+                                          Q(species__icontains    = species_search)
+                                          )
+        elif garden_search == "My Wish List":
             plants = Plant.objects.filter(Q(myplants__owner = request.user.username)    & 
+                                          Q(myplants__status      = "wish_list")        & 
                                           Q(commonName__icontains = common_name_search) &
                                           Q(genus__icontains      = genus_search)       &
                                           Q(species__icontains    = species_search)
@@ -1267,13 +1310,18 @@ def plants_summary(request):
             plant.water_rqmts    = string_display(plant.water_rqmts)
             plant.soil_type      = string_display(plant.soil_type)
             plant.heat_tolerance = string_display(plant.heat_tolerance)
-            # check to determine if the current user has claimed the plant
+
+            # Set the plnt status regarding its status wrt my_plants 
+            plant.plant_mine = 'not_in_my_garden'
             for myplant in myplants:
                 if myplant.plant == plant:
-                    plant.plant_mine = "yes"
-                    break # Found the plant in my plants
-                else:
-                    plant.plant_mine = "no"
+                    if myplant.status == 'in_my_garden':
+                        plant.plant_mine = 'in_my_garden' 
+                        break # Found the plant in myplants  
+                    elif myplant.status == 'wish_list':
+                        plant.plant_mine = 'wish_list'
+                        break # Found the plant in myplants
+
         # Send selected plant details to template
         context = { "plants"                : plants,
                     # Search attributes
@@ -1367,17 +1415,26 @@ def plants_summary(request):
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username) 
         # Filter the plants db - "My plants" and "Common Name" substring
-        if garden_search == "Mine":
+        if garden_search == "In My Garden":
             plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
+                                          Q(myplants__status      = "in_my_garden")        &
+                                          Q(commonName__icontains = common_name_search)    &
+                                          Q(genus__icontains      = genus_search)          &
+                                          Q(species__icontains    = species_search)
+                                          )
+        elif garden_search == "My Wish List":
+            plants = Plant.objects.filter(Q(myplants__owner = request.user.username)    & 
+                                          Q(myplants__status      = "wish_list")        & 
                                           Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search) &
+                                          Q(genus__icontains      = genus_search)       &
                                           Q(species__icontains    = species_search)
                                           )
         else:
             plants = Plant.objects.filter(Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search) &
+                                          Q(genus__icontains      = genus_search)       &
                                           Q(species__icontains    = species_search)
                                           )
+
         # Execute the search
         for plant in plants:
             # Run through the search criteria to select the plants to show
@@ -1419,14 +1476,16 @@ def plants_summary(request):
             plant.water_rqmts    = string_display(plant.water_rqmts)
             plant.soil_type      = string_display(plant.soil_type)
             plant.heat_tolerance = string_display(plant.heat_tolerance)
-            # Check to see if the current user has claimed the plant
+            # Set the plnt status regarding its status wrt my_plants 
+            plant.plant_mine = 'not_in_my_garden'
             for myplant in myplants:
                 if myplant.plant == plant:
-                    plant.plant_mine = "yes"
-                    break # Found the plant in my plants
-                else:
-                    plant.plant_mine = "no"
-
+                    if myplant.status == 'in_my_garden':
+                        plant.plant_mine = 'in_my_garden' 
+                        break # Found the plant in myplants  
+                    elif myplant.status == 'wish_list':
+                        plant.plant_mine = 'wish_list'
+                        break # Found the plant in myplants
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
         context = { "plants"                : plants,

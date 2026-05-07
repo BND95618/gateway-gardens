@@ -25,16 +25,15 @@ urlpatterns = [
     path('plant_details_modal',       views.plant_details_modal, name='plant_details_modal'),
     path('planner_edit_modal',        views.planner_edit_modal,  name='planner_edit_modal'),
     #
-
-    path('myplants_add/<int:id>',     views.myplants_add,        name='myplants_add'),
-    path('myplants_delete/<int:id>',  views.myplants_delete,     name='myplants_delete'),
-    path('myplants_remove/<int:id>',  views.myplants_remove,     name='myplants_remove'),
     path('myplants_summary',          views.myplants_summary,    name='myplants_summary'),
     path('my_column_chooser',         views.my_column_chooser,   name='my_column_chooser'),
     #
+    path('myplant_status/<int:id>',    views.myplant_status,      name='myplant_status'),
     path('myplant_details/<int:id>',   views.myplant_details,     name='myplant_details'),
-    path('myplant_edit/<int:id>',    views.myplant_update,      name='myplant_update'),
+    path('myplant_add/<int:id>',       views.myplant_add,         name='myplant_add'),
+    path('myplant_edit/<int:id>',      views.myplant_update,      name='myplant_update'),
     path('myplant_comment/<int:id>',   views.myplant_comment,     name='myplant_comment'),
+    path('myplant_delete/<int:id>',    views.myplant_delete,      name='myplant_delete'),
     path('myplant_todo_add/<int:id>',  views.myplant_todo_add,    name='myplant_todo_add'),
     path('myplant_todo_edit/<int:id>', views.myplant_todo_edit,   name='myplant_todo_edit'),
     path('myplant_todo_del/<int:id>',  views.myplant_todo_del,    name='myplant_todo_del'),

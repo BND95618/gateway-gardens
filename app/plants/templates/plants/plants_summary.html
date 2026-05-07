@@ -297,11 +297,17 @@
       <label for="id_garden_search">All plants / My plants</label><br/>
       <select id="id_garden_search" name="garden_search" class="bnd-select">
         {% if garden_search == "Any" %}
-          <option value="Any"  selected>Any </option>
-          <option value="Mine"         >Mine</option>
-        {% else %}
-          <option value="Any"          >Any </option>
-          <option value="Mine" selected>Mine</option>
+          <option value="Any"          selected>Any </option>
+          <option value="In My Garden"         >In My Garden</option>
+          <option value="My Wish List"         >My Wish List</option>
+        {% elif garden_search == "In My Garden" %}
+          <option value="Any"                  >Any </option>
+          <option value="In My Garden" selected>In My Garden</option>
+          <option value="My Wish List"         >My Wish List</option>
+        {% elif garden_search == "My Wish List" %}
+          <option value="Any"                   >Any </option>
+          <option value="In My Garden"          >In My Garden</option>
+          <option value="My Wish List"  selected>My Wish List</option>
         {% endif %}
       </select>
       <br/>
@@ -459,20 +465,22 @@
               </div>
             </td>
             {% endif %}
-            <!-- Add/remove plant to/from My Plants Icon/Link -->
+
+            <!-- My Plant Status Icon/Link -->
             <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                {% if plant.plant_mine == "yes" %}
-                  <button onclick="myplant_remove({{ plant.id }})" class="bnd-button-small">
+                <button onclick="myplant_status({{ plant.id }})" class="bnd-button-small">
+                  {% if plant.plant_mine == "in_my_garden" %}
                     <i    class="material-icons bnd-text-black">check</i>
-                    <span class="bnd-tooltip-text">MyPlant</span>
-                  </button>
-                {% else %}
-                  <a href="{% url 'plants:myplants_add' plant.id %}">
+                    <span class="bnd-tooltip-text">In my garden</span>
+                  {% elif plant.plant_mine == "wish_list" %}
+                    <i    class="material-icons bnd-text-black">shopping_cart</i>
+                    <span class="bnd-tooltip-text">My Wish List</span>
+                  {% else %}
                     <i    class="material-icons bnd-text-black">add</i>
-                    <span class="bnd-tooltip-text">MyPlant</span>
-                  </a>
-                {% endif %}
+                    <span class="bnd-tooltip-text">Not in Garden</span>
+                  {% endif %}
+                </button>
               </div>
             </td>
           </tr>
@@ -487,6 +495,11 @@
   <!-- Plant Delete modal - html to be inserted by Javascript -->
   <div id="plants_delete_modal" class="bnd-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
+  </div>
+
+  <!-- My Plant Status modal - html to be inserted by Javascript -->
+  <div id="myplant_status_modal" class="bnd-modal">s
+    <p>My Plant Status form HTML to be Inserted Here!</p>
   </div>
 
   <!-- My Plant Remove modal - html to be inserted by Javascript -->
@@ -720,6 +733,22 @@
         .then(html => {plants_delete_modal.innerHTML = html;})
       // Display the plant delete modal
       plants_delete_modal.style.display='block';
+      // Freeze the main body while the modal is open
+      document.body.classList.add("bnd-modal-open");
+    }
+    //-----------------------------------------------------------------------------
+    // My Plant Status Modal Script
+    //-----------------------------------------------------------------------------
+    function myplant_status(id)
+    {
+      console.log("DEBUG: Got to Plnt Status Modal Script");
+      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
+      url = "/myplant_status/" + id
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {myplant_status_modal.innerHTML = html;})
+      // Display the plant delete modal
+      myplant_status_modal.style.display='block'
       // Freeze the main body while the modal is open
       document.body.classList.add("bnd-modal-open");
     }

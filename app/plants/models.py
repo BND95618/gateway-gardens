@@ -230,7 +230,7 @@ class Plant(models.Model):
     plant_show        = models.CharField(max_length=8,  default="no", blank=True)
     # Indicates if a user has indicated that a particular plant is in their garden
     # during the plant filtering process
-    plant_mine        = models.CharField(max_length=8,  default="no", blank=True)
+    plant_mine        = models.CharField(max_length=16,  default="no", blank=True)
     #
     gardens           = models.ManyToManyField(Garden, related_name="plants", blank=True)
     # 
@@ -283,6 +283,7 @@ class MyPlant(models.Model):
     pH           = models.CharField(max_length=16,  default="tbd", blank=True)
     happiness    = models.CharField(max_length=32,  default="tbd", blank=True)
     notes        = QuillField(blank=True, null=True)
+    status       = models.CharField(max_length=16,  default="not_in_my_garden", blank=True)
     # Tags a plant for display/hidden in a summary table
     show         = models.CharField(max_length=8,   default="no", blank=True)
     # Save the user's most recent To Do table sort column and direction

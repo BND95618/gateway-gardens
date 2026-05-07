@@ -489,7 +489,7 @@
             <!-- MyPlant Delete Icon/Link -->
             <td class="bnd-center">
               <div class="bnd-tooltip">
-                <button onclick="myplants_delete({{ myplant.id }})" class="bnd-button-small">
+                <button onclick="myplant_delete({{ myplant.id }})" class="bnd-button-small">
                   <i class="material-icons bnd-text-black" >delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
@@ -505,7 +505,7 @@
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
   <!-- MyPlant Delete modal - html to be inserted by Javascript -->
-  <div id="myplants_delete_modal" class="bnd-modal">
+  <div id="myplant_delete_modal" class="bnd-modal">
     <p> MyPlant delete form HTML to be Inserted Here! </p>
   </div>
 
@@ -744,16 +744,16 @@
     //-----------------------------------------------------------------------------
     // Delete Plant Modal Script
     //-----------------------------------------------------------------------------
-    function myplants_delete(id) {
+    function myplant_delete(id) {
       // Get the MyPlant delete modal
-      const myplants_delete_modal  = document.getElementById('myplants_delete_modal')
+      const myplant_delete_modal  = document.getElementById('myplant_delete_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/myplants_delete/" + id
+      url = "/myplant_delete/" + id
       fetch(url)
         .then(response => response.text())
-        .then(html => {myplants_delete_modal.innerHTML = html;})
+        .then(html => {myplant_delete_modal.innerHTML = html;})
       // Display the plant delete modal
-      myplants_delete_modal.style.display='block'
+      myplant_delete_modal.style.display='block'
     }
     //-----------------------------------------------------------------------------
     // Bloom Chart Modal - Open the modal
@@ -878,9 +878,9 @@
         plants_chart_modal.style.display = "none";
         document.body.classList.remove('bnd-modal-open');
       }
-      else if (event.target == myplants_delete_modal) 
+      else if (event.target == myplant_delete_modal) 
       {
-        myplants_delete_modal.style.display = "none";
+        myplant_delete_modal.style.display = "none";
         document.body.classList.remove('bnd-modal-open');
       }
     }
