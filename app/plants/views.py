@@ -1479,6 +1479,8 @@ def plants_summary(request):
             # Set the plnt status regarding its status wrt my_plants 
             plant.plant_mine = 'not_in_my_garden'
             for myplant in myplants:
+                myplant.status = 'in_my_garden'
+                myplant.save()
                 if myplant.plant == plant:
                     if myplant.status == 'in_my_garden':
                         plant.plant_mine = 'in_my_garden' 
