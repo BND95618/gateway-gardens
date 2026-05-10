@@ -26,7 +26,7 @@ plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial"
                     "Succulent", "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
 bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "pink", "pale pink", "lavendar", "purple",
                     "green", "blue", "orange", "none"]
-bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "None"]
+bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "Infrequent", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
@@ -2360,7 +2360,9 @@ def fiddle(request):
     if request.method == 'POST':
         return render(request, 'plants/fiddle.html')
     else:
-        return render(request, 'plants/fiddle.html')
+        plants = Plant.objects.all()
+        context = { 'plants' : plants }
+        return render(request, 'plants/fiddle.html', context)
 
 def debug(request):
     """ Render the Debug Page for debugging of new functions """

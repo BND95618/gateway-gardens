@@ -37,12 +37,13 @@ BLOOM_COLOR_CHOICES = (
 	('none',         'none'),
 ) 
 BLOOM_SEASON_CHOICES = (
-	("tbd",    "tbd"),
-	("Spring", "Spring"), 
-	("Summer", "Summer"), 
-	("Fall",   "Fall"),
-	("Winter", "Winter"),
-	("None",   "None"),
+	("tbd",        "tbd"),
+	("Spring",     "Spring"), 
+	("Summer",     "Summer"), 
+	("Fall",       "Fall"),
+	("Winter",     "Winter"),
+	("Infrequent", "Infrequent"),
+	("None",       "None"),
 )
 POLLINATORS_CHOICES = (
 	("tbd",          "tbd"),

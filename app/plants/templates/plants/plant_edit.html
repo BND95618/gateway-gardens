@@ -405,8 +405,9 @@
       alert("ERROR: USDA Zone Min > USDA Zone Max");
       return false;
     }
-
+    //----------------------------------------------------------------------------- 
     // Check Sunset Zone values and range format
+    //-----------------------------------------------------------------------------
     let sunset_zones = document.forms["plantForm"]["sunset_zones"].value;
     // Get the list of valid sunset zones and put into JS array
     let sunset_zones_opt = {{ sunset_zones_opt|safe }};
