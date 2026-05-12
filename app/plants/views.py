@@ -32,7 +32,7 @@ ca_native_opt    = ["tbd", "Yes", "No"]
 ucd_all_star_opt = ["tbd", "Yes", "No"]
 davis_trees_opt  = ["Yes", "No"]
 sunset_z14_opt   = ["tbd", "Yes", "No"]
-sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade"]
+sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade", "Afternoon Shade"]
 water_rqmts_opt  = ["tbd", "Very Low", "Low", "Medium", "High", "Very High"]
 pH_opt           = ["tbd", 
                     "5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", 

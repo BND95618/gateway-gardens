@@ -72,11 +72,12 @@ SUNSET_Z14_CHOICES = (
 	("No",  "No"),
 )
 SUN_EXPOSURE_CHOICES = (
-	("tbd",           "tbd"),
-	("Full Sun",      "Full Sun"),
-	("Partial Sun",   "Partial Sun"),
-	("Partial Shade", "Partial Shade"),
-	("Full Shade",    "Full Shade"),
+	("tbd",             "tbd"),
+	("Full Sun",        "Full Sun"),
+	("Partial Sun",     "Partial Sun"),
+	("Partial Shade",   "Partial Shade"),
+	("Full Shade",      "Full Shade"),
+	("Afternoon Shade", "Afternoon Shade")
 )
 WATER_RQMTS_CHOICES = (
 	("tbd",       "tbd"),
@@ -736,7 +737,7 @@ class PlantAddUpdateForm(forms.Form):
 		required=False,
 	)
 	pruning = QuillFormField(
-		label="Pruning Considerations",
+		label="Maintenance & Pruning Considerations",
 		initial="tbd",
 		required=False,
 	)
