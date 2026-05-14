@@ -404,11 +404,11 @@
             <!-- Plant Attributes -->
             <td>{{ plant.commonName                     }}</td>
             <td>{{ plant.genus }} {{ plant.species}}      </td>
-            {% if plant.subspecies != "n/a" and plant.subspecies != "tbd" %}
+            {% if plant.subspecies != "n/a" and plant.subspecies != "tbd" and plant.subspecies != "" %}
               <td class="bnd-subspecies">{{ plant.subspecies}}</td>
-            {% elif plant.variety != "n/a" and plant.variety != "tbd" %}
+            {% elif plant.variety != "n/a" and plant.variety != "tbd" and plant.variety != "" %}
               <td class="bnd-variety">{{ plant.variety}}</td>
-            {% elif plant.cultivar != "n/a" and plant.cultivar != "tbd" %}
+            {% elif plant.cultivar != "n/a" and plant.cultivar != "tbd" and plant.cultivar != "" %}
               <td class="bnd-cultivar">'{{ plant.cultivar}}'</td>
             {% else %}
               <td>---</td>
