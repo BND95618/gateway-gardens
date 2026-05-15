@@ -73,6 +73,13 @@
                             {% endif %}
                         {% endfor %}
                     </optgroup>
+                    <optgroup label="Bulb">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Bulb" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
+                    </optgroup>
                     <optgroup label="Fern">
                         {% for plant in plants %}
                             {% if plant.type_x == "Fern" %}
@@ -80,16 +87,16 @@
                             {% endif %}
                         {% endfor %}
                     </optgroup>
-                    <optgroup label="Grass">
+                    <optgroup label="Forb">
                         {% for plant in plants %}
-                            {% if plant.type_x == "Grass" %}
+                            {% if plant.type_x == "Forb" %}
                                 <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
                             {% endif %}
                         {% endfor %}
                     </optgroup>
-                    <optgroup label="Forb">
+                    <optgroup label="Grass">
                         {% for plant in plants %}
-                            {% if plant.type_x == "Forb" %}
+                            {% if plant.type_x == "Grass" %}
                                 <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
                             {% endif %}
                         {% endfor %}

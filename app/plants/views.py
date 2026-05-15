@@ -22,7 +22,7 @@ from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 from .forms  import PestAddUpdateForm
 
 # Define attribute select option arrays
-plant_types      = ["tbd", "Annual", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", "Forb", 
+plant_types      = ["tbd", "Annual", "Bulb", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", "Forb", 
                     "Succulent", "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
 bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "pink", "pale pink", "lavendar", "purple",
                     "green", "blue", "orange", "none"]

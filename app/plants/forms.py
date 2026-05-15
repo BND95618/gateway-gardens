@@ -9,9 +9,10 @@ from django.core.validators   import URLValidator
 TYPE_CHOICES = (
 	("tbd",            "tbd"),
 	("Annual",         "Annual"),
+	("Bulb",           "Bulb"),
 	("Fern",           "Fern"),
-	("Grass",          "Grass"),
 	("Forb",           "Forb"),
+	("Grass",          "Grass"),
 	("Groundcover",    "Groundcover"),
 	("Perennial",      "Perennial"),
 	("Shrub",          "Shrub"),
