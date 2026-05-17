@@ -59,7 +59,6 @@ CA_NATIVE_CHOICES = (
 	("No",  "No"),
 )
 UCD_ALL_STAR_CHOICES = (
-	("tbd", "tbd"),
 	("Yes", "Yes"),
 	("No",  "No"),
 )
@@ -662,7 +661,7 @@ class PlantAddUpdateForm(forms.Form):
 		)
 	ucd_all_star = forms.ChoiceField(
 		label="UCD All-Star",
-		initial = 'tbd',
+		initial = 'No',
 		choices = UCD_ALL_STAR_CHOICES, 
 		widget=forms.RadioSelect,
 		required=False,

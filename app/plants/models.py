@@ -158,7 +158,7 @@ class Plant(models.Model):
     bloom_months      = models.CharField(max_length=128, default="tbd", blank=True)
     pollinators       = models.CharField(max_length=72,  default="tbd", blank=True)
     ca_native         = models.CharField(max_length=8,   default="tbd", blank=True)
-    ucd_all_star      = models.CharField(max_length=8,   default="tbd", blank=True)
+    ucd_all_star      = models.CharField(max_length=8,   default="No",  blank=True)
     davis_trees       = models.CharField(max_length=8,   default="No",  blank=True)
     sunset_z14        = models.CharField(max_length=8,   default="tbd", blank=True)
     sun_exposure      = models.CharField(max_length=128, default="tbd", blank=True)

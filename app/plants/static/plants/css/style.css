@@ -827,14 +827,27 @@ img {
 .bnd-button-cancel {
     border:           none;
     display:          inline-block;
-    padding:          8px 16px;
+    padding:          4px 4px;
     vertical-align:   middle;
     overflow:         hidden;
-    font-size:        16px;
+    font-size:        12px;
     text-decoration:  none;
     text-align:       center;
     cursor:           pointer;
     white-space:      nowrap;
+    @media screen and (400px <= width <= 849px) { 
+        padding:       6px 6px;
+        font-size:     12px; 
+    }
+    @media screen and (850px <= width <= 999px) { 
+        padding:       4px 4px;
+        font-size:     12px;
+    }
+    @media screen and (min-width: 1000px)       { 
+        padding:       4px 8px;
+        font-size:     14px; 
+    }
+}
 }
 .bnd-button-small {
     display:          inline-block;

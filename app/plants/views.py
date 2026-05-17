@@ -29,7 +29,7 @@ bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "pink", "pa
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "Infrequent", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
-ucd_all_star_opt = ["tbd", "Yes", "No"]
+ucd_all_star_opt = ["Yes", "No"]
 davis_trees_opt  = ["Yes", "No"]
 sunset_z14_opt   = ["tbd", "Yes", "No"]
 sun_exposure_opt = ["tbd", "Full Sun", "Partial Sun", "Partial Shade", "Full Shade", "Afternoon Shade"]
@@ -1463,6 +1463,10 @@ def plants_summary(request):
                 plant.plant_show = "yes"
             else:
                 plant.plant_show = "no"
+
+            # TEMP: UCD All-Star db adjustment
+            if (plant.ucd_all_star == "tbd"):
+                plant.ucd_all_star = "No"
 
             # Save the plant show flag to the database
             plant.save()
