@@ -1464,10 +1464,6 @@ def plants_summary(request):
             else:
                 plant.plant_show = "no"
 
-            # TEMP: UCD All-Star db adjustment
-            if (plant.ucd_all_star == "tbd"):
-                plant.ucd_all_star = "No"
-
             # Save the plant show flag to the database
             plant.save()
 
