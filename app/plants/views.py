@@ -1423,15 +1423,15 @@ def plants_summary(request):
                                           Q(species__icontains    = species_search)
                                           )
         elif garden_search == "My Wish List":
-            plants = Plant.objects.filter(Q(myplants__owner = request.user.username)    & 
-                                          Q(myplants__status      = "wish_list")        & 
-                                          Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search)       &
+            plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
+                                          Q(myplants__status      = "wish_list")           & 
+                                          Q(commonName__icontains = common_name_search)    &
+                                          Q(genus__icontains      = genus_search)          &
                                           Q(species__icontains    = species_search)
                                           )
         else:
-            plants = Plant.objects.filter(Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search)       &
+            plants = Plant.objects.filter(Q(commonName__icontains = common_name_search)    &
+                                          Q(genus__icontains      = genus_search)          &
                                           Q(species__icontains    = species_search)
                                           )
 
