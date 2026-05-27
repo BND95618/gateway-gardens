@@ -39,8 +39,9 @@ pH_opt           = ["tbd",
                     "6.0", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "6.9",
                     "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9",
                     "8.0"]
-soil_type_opt      = ["tbd", "Sandy", "Loamy", "Clay"]
-heat_tolerance_opt = ["tbd", "Poor", "fair", "Good", "Excellent"]
+soil_type_opt       = ["tbd", "Sandy", "Loamy", "Clay"]
+heat_tolerance_opt  = ["tbd", "Poor", "Fair", "Good", "Excellent"]
+deer_resistance_opt = ["tbd", "Poor", "Fair", "Good", "Excellent"]
 usda_zones_opt     = ["tbd", "1a", "1b",  "2a",  "2b",  "3a",  "3b", "4a", "4b",
                              "5a", "5b",  "6a",  "6b",  "7a",  "7b", "8a", "8b",
                              "9a", "9b", "10a", "10b", "11a", "11b"]
@@ -290,7 +291,8 @@ def plant_details_modal(request):
         plant.bloom_season   = string_display(plant.bloom_season)
         plant.pollinators    = string_display(plant.pollinators)
         plant.soil_type      = string_display(plant.soil_type)
-        plant.heat_tolerance = string_display(plant.heat_tolerance)
+        plant.heat_tolerance  = string_display(plant.heat_tolerance)
+        plant.deer_resistance = string_display(plant.deer_resistance)
 
         context = { "plant" : plant }
         return render(request, 'plants/plant_details_modal.html', context)
@@ -350,6 +352,7 @@ def myplants_summary(request):
         soil_type_search        = request.POST["soil_type_search"]
         pH_search               = request.POST["pH_search"]
         heat_tolerance_search   = request.POST["heat_tolerance_search"]
+        deer_resistance_search  = request.POST["deer_resistance_search"]
         usda_zone_search        = request.POST["usda_zone_search"]
         sunset_zone_search      = request.POST["sunset_zone_search"]
         # Garden Environment
@@ -380,6 +383,7 @@ def myplants_summary(request):
                 garden.pH_search           = pH_search
                 garden.soil_type_search    = soil_type_search
                 garden.heat_tolerance_search  = heat_tolerance_search
+                garden.deer_resistance_search = deer_resistance_search
                 garden.usda_zone_search       = usda_zone_search
                 garden.sunset_zone_search     = sunset_zone_search
                 #
@@ -406,7 +410,8 @@ def myplants_summary(request):
             myplant.plant.sun_exposure   = string_display(myplant.plant.sun_exposure)
             myplant.plant.water_rqmts    = string_display(myplant.plant.water_rqmts)
             myplant.plant.soil_type      = string_display(myplant.plant.soil_type)
-            myplant.plant.heat_tolerance = string_display(myplant.plant.heat_tolerance)
+            myplant.plant.heat_tolerance  = string_display(myplant.plant.heat_tolerance)
+            myplant.plant.deer_resistance = string_display(myplant.plant.deer_resistance)
             # clean up the list display
             myplant.sun_exposure = string_display(myplant.sun_exposure)
             myplant.water_level  = string_display(myplant.water_level)
@@ -416,21 +421,22 @@ def myplants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
-            if( (common_name_search     in myplant.plant.commonName) and \
-                (genus_search           in myplant.plant.genus)      and \
-                (species_search         in myplant.plant.species)    and \
-                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any")) and \
-                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any")) and \
-                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any")) and \
-                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any")) and \
-                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
+            if( (common_name_search      in myplant.plant.commonName) and \
+                (genus_search            in myplant.plant.genus)      and \
+                (species_search          in myplant.plant.species)    and \
+                ((type_x_search          == myplant.plant.type_x)          or (type_x_search         == "Any")) and \
+                ((bloom_color_search     in myplant.plant.bloom_color)     or (bloom_color_search    == "Any")) and \
+                ((bloom_season_search    in myplant.plant.bloom_season)    or (bloom_season_search   == "Any")) and \
+                ((pollinators_search     in myplant.plant.pollinators)     or (pollinators_search    == "Any")) and \
+                ((ca_native_search       == myplant.plant.ca_native)       or (ca_native_search      == "Any")) and \
+                ((ucd_all_star_search    == myplant.plant.ucd_all_star)    or (ucd_all_star_search   == "Any")) and \
+                ((davis_trees_search     == myplant.plant.davis_trees)     or (davis_trees_search    == "Any")) and \
+                ((sunset_z14_search      == myplant.plant.sunset_z14)      or (sunset_z14_search     == "Any")) and \
+                ((sun_exposure_search    in myplant.plant.sun_exposure)    or (sun_exposure_search   == "Any")) and \
+                ((water_rqmts_search     in myplant.plant.water_rqmts)     or (water_rqmts_search    == "Any")) and \
+                ((soil_type_search       in myplant.plant.soil_type)       or (soil_type_search      == "Any")) and \
+                ((heat_tolerance_search  in myplant.plant.heat_tolerance)  or (heat_tolerance_search == "Any")) and \
+                ((deer_resistance_search in myplant.plant.deer_resistance) or (deer_resistance_search == "Any")) and \
                 (pH_hit)          and \
                 (usda_zone_hit)   and \
                 (sunset_zone_hit) and \
@@ -451,101 +457,6 @@ def myplants_summary(request):
                 # Get the user's previously stored column display sections  
                 my_column_selection_list  = string2list(garden.my_column_selection)
                 # Get the user's previously stored search criteria
-                common_name_search    = garden.common_name_search
-                genus_search          = garden.genus_search
-                species_search        = garden.species_search
-                type_x_search         = garden.type_x_search
-                bloom_color_search    = garden.bloom_color_search
-                bloom_season_search   = garden.bloom_season_search
-                bloom_month_search    = garden.bloom_month_search
-                pollinators_search    = garden.pollinators_search
-                ca_native_search      = garden.ca_native_search
-                ucd_all_star_search   = garden.ucd_all_star_search
-                davis_trees_search    = garden.davis_trees_search
-                sunset_z14_search     = garden.sunset_z14_search
-                sun_exposure_search   = garden.sun_exposure_search
-                water_rqmts_search    = garden.water_rqmts_search
-                pH_search             = garden.pH_search
-                soil_type_search      = garden.soil_type_search
-                heat_tolerance_search = garden.heat_tolerance_search
-                usda_zone_search      = garden.usda_zone_search
-                sunset_zone_search    = garden.sunset_zone_search
-                #
-                my_sun_exposure_search   = garden.my_sun_exposure_search
-                my_water_level_search    = garden.my_water_level_search
-                my_soil_type_search      = garden.my_soil_type_search
-                my_happiness_search      = garden.my_happiness_search
-                #
-                user_garden_found     = True
-                break # once the user's garden is found exit the loop
-
-            # the current user needs to have a registered garden
-            if (user_garden_found == False):
-                return HttpResponseRedirect(reverse('plants:gardens_add'))
-
-            context = { "myplants"          : myplants,
-                        # search field options - plant attributes
-                        "plant_types"        : plant_types,
-                        "bloom_color_opt"    : bloom_color_opt,
-                        "bloom_season_opt"   : bloom_season_opt,
-                        "pollinators_opt"    : pollinators_opt,
-                        "ucd_all_star_opt"   : ucd_all_star_opt,
-                        "davis_trees_opt"    : davis_trees_opt,
-                        "sunset_z14_opt"     : sunset_z14_opt,
-                        "ca_native_opt"      : ca_native_opt,
-                        # search field options - plant requirements & garden environment
-                        "sun_exposure_opt"   : sun_exposure_opt,
-                        "water_rqmts_opt"    : water_rqmts_opt,
-                        "soil_type_opt"      : soil_type_opt,
-                        "pH_opt"             : pH_opt,
-                        "heat_tolerance_opt" : heat_tolerance_opt,
-                        "usda_zones_opt"     : usda_zones_opt,
-                        "sunset_zones_opt"   : sunset_zones_opt,
-                        "happiness_opt"      : happiness_opt,
-                        "month_opt"          : month_opt,
-                        
-                        # search field defaults - plant attributes
-                        "common_name_search"     : common_name_search,
-                        "genus_search"           : genus_search,
-                        "species_search"         : species_search,
-                        "type_x_search"          : type_x_search,
-                        "bloom_color_search"     : bloom_color_search,
-                        "bloom_season_search"    : bloom_season_search,
-                        "bloom_month_search"     : bloom_month_search,
-                        "pollinators_search"     : pollinators_search,
-                        'ca_native_search'       : ca_native_search,
-                        'ucd_all_star_search'    : ucd_all_star_search,
-                        'davis_trees_search'     : davis_trees_search,
-                        'sunset_z14_search'      : sunset_z14_search,
-                        # search field defaults - plant requirements
-                        "sun_exposure_search"    : sun_exposure_search,
-                        "water_rqmts_search"     : water_rqmts_search,
-                        "soil_type_search"       : soil_type_search,
-                        "pH_search"              : pH_search,
-                        "heat_tolerance_search"  : heat_tolerance_search,
-                        "usda_zone_search"       : usda_zone_search,
-                        "sunset_zone_search"     : sunset_zone_search,
-                        # search field defaults - my plant conditions 
-                        "my_sun_exposure_search" : my_sun_exposure_search,
-                        "my_water_level_search"  : my_water_level_search,
-                        "my_soil_type_search"    : my_soil_type_search,
-                        "my_happiness_search"    : my_happiness_search,
-                        # table column selection
-                        "my_column_selection" : my_column_selection_list, 
-                      }
-            
-        return render(request, "plants/myplants_summary.html", context)
-
-    # Executed when plants summary page is initialized
-    else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column display sections
-        user_garden_found = False
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                # Get the user's previously stored column display sections
-                column_selection_list  = string2list(garden.column_selection)
-                # Get the user's previously stored search criteria
                 common_name_search     = garden.common_name_search
                 genus_search           = garden.genus_search
                 species_search         = garden.species_search
@@ -563,15 +474,114 @@ def myplants_summary(request):
                 pH_search              = garden.pH_search
                 soil_type_search       = garden.soil_type_search
                 heat_tolerance_search  = garden.heat_tolerance_search
+                deer_resistance_search = garden.deer_resistance_search
                 usda_zone_search       = garden.usda_zone_search
                 sunset_zone_search     = garden.sunset_zone_search
                 #
-                my_sun_exposure_search = garden.my_sun_exposure_search
-                my_water_level_search  = garden.my_water_level_search
-                my_soil_type_search    = garden.my_soil_type_search
-                my_happiness_search    = garden.my_happiness_search
-
+                my_sun_exposure_search   = garden.my_sun_exposure_search
+                my_water_level_search    = garden.my_water_level_search
+                my_soil_type_search      = garden.my_soil_type_search
+                my_happiness_search      = garden.my_happiness_search
+                #
                 user_garden_found     = True
+                break # once the user's garden is found exit the loop
+
+            # the current user needs to have a registered garden
+            if (user_garden_found == False):
+                return HttpResponseRedirect(reverse('plants:gardens_add'))
+
+            context = { "myplants"            : myplants,
+                        # search field options - plant attributes
+                        "plant_types"         : plant_types,
+                        "bloom_color_opt"     : bloom_color_opt,
+                        "bloom_season_opt"    : bloom_season_opt,
+                        "pollinators_opt"     : pollinators_opt,
+                        "ucd_all_star_opt"    : ucd_all_star_opt,
+                        "davis_trees_opt"     : davis_trees_opt,
+                        "sunset_z14_opt"      : sunset_z14_opt,
+                        "ca_native_opt"       : ca_native_opt,
+                        # search field options - plant requirements & garden environment
+                        "sun_exposure_opt"    : sun_exposure_opt,
+                        "water_rqmts_opt"     : water_rqmts_opt,
+                        "soil_type_opt"       : soil_type_opt,
+                        "pH_opt"              : pH_opt,
+                        "heat_tolerance_opt"  : heat_tolerance_opt,
+                        "deer_resistance_opt" : deer_resistance_opt,
+                        "usda_zones_opt"      : usda_zones_opt,
+                        "sunset_zones_opt"    : sunset_zones_opt,
+                        "happiness_opt"       : happiness_opt,
+                        "month_opt"           : month_opt,
+                        
+                        # search field defaults - plant attributes
+                        "common_name_search"      : common_name_search,
+                        "genus_search"            : genus_search,
+                        "species_search"          : species_search,
+                        "type_x_search"           : type_x_search,
+                        "bloom_color_search"      : bloom_color_search,
+                        "bloom_season_search"     : bloom_season_search,
+                        "bloom_month_search"      : bloom_month_search,
+                        "pollinators_search"      : pollinators_search,
+                        'ca_native_search'        : ca_native_search,
+                        'ucd_all_star_search'     : ucd_all_star_search,
+                        'davis_trees_search'      : davis_trees_search,
+                        'sunset_z14_search'       : sunset_z14_search,
+                        # search field defaults - plant requirements
+                        "sun_exposure_search"     : sun_exposure_search,
+                        "water_rqmts_search"      : water_rqmts_search,
+                        "soil_type_search"        : soil_type_search,
+                        "pH_search"               : pH_search,
+                        "heat_tolerance_search"   : heat_tolerance_search,
+                        "deer_resistance_search"  : deer_resistance_search,
+                        "usda_zone_search"        : usda_zone_search,
+                        "sunset_zone_search"      : sunset_zone_search,
+                        # search field defaults - my plant conditions 
+                        "my_sun_exposure_search"  : my_sun_exposure_search,
+                        "my_water_level_search"   : my_water_level_search,
+                        "my_soil_type_search"     : my_soil_type_search,
+                        "my_happiness_search"     : my_happiness_search,
+                        # table column selection
+                        "my_column_selection"     : my_column_selection_list, 
+                      }
+            
+        return render(request, "plants/myplants_summary.html", context)
+
+    # Executed when plants summary page is initialized
+    else:
+        gardens = Garden.objects.filter(owner = request.user.username)
+        # Get the user's previously stored column display sections
+        user_garden_found = False
+        for garden in gardens:
+            if (garden.owner == request.user.username):
+                # Get the user's previously stored column display sections
+                column_selection_list  = string2list(garden.column_selection)
+                # Get the user's previously stored search criteria
+                common_name_search      = garden.common_name_search
+                genus_search            = garden.genus_search
+                species_search          = garden.species_search
+                type_x_search           = garden.type_x_search
+                bloom_color_search      = garden.bloom_color_search
+                bloom_season_search     = garden.bloom_season_search
+                bloom_month_search      = garden.bloom_month_search
+                pollinators_search      = garden.pollinators_search
+                ca_native_search        = garden.ca_native_search
+                ucd_all_star_search     = garden.ucd_all_star_search
+                davis_trees_search      = garden.davis_trees_search
+                sunset_z14_search       = garden.sunset_z14_search
+                sun_exposure_search     = garden.sun_exposure_search
+                water_rqmts_search      = garden.water_rqmts_search
+                pH_search               = garden.pH_search
+                soil_type_search        = garden.soil_type_search
+                heat_tolerance_search   = garden.heat_tolerance_search
+                deer_resistance_search  = garden.deer_resistance_search
+                usda_zone_search        = garden.usda_zone_search
+                sunset_zone_search      = garden.sunset_zone_search
+                #
+                my_sun_exposure_search  = garden.my_sun_exposure_search
+                my_water_level_search   = garden.my_water_level_search
+                my_soil_type_search     = garden.my_soil_type_search
+                my_happiness_search     = garden.my_happiness_search
+
+                user_garden_found       = True
                 break # once the user's garden is found exit the loop
 
         # the current user needs to have a registered garden
@@ -585,14 +595,15 @@ def myplants_summary(request):
         # Execute the search
         for myplant in myplants:
             # format multiselect attributes to remove [, ', and ]
-            myplant.plant.bloom_color    = string_display(myplant.plant.bloom_color)
-            myplant.plant.bloom_season   = string_display(myplant.plant.bloom_season)
-            myplant.bloom_months         = string_display(myplant.plant.bloom_months)
-            myplant.plant.pollinators    = string_display(myplant.plant.pollinators)
-            myplant.plant.sun_exposure   = string_display(myplant.plant.sun_exposure)
-            myplant.plant.water_rqmts    = string_display(myplant.plant.water_rqmts)
-            myplant.plant.soil_type      = string_display(myplant.plant.soil_type)
-            myplant.plant.heat_tolerance = string_display(myplant.plant.heat_tolerance)
+            myplant.plant.bloom_color     = string_display(myplant.plant.bloom_color)
+            myplant.plant.bloom_season    = string_display(myplant.plant.bloom_season)
+            myplant.bloom_months          = string_display(myplant.plant.bloom_months)
+            myplant.plant.pollinators     = string_display(myplant.plant.pollinators)
+            myplant.plant.sun_exposure    = string_display(myplant.plant.sun_exposure)
+            myplant.plant.water_rqmts     = string_display(myplant.plant.water_rqmts)
+            myplant.plant.soil_type       = string_display(myplant.plant.soil_type)
+            myplant.plant.heat_tolerance  = string_display(myplant.plant.heat_tolerance)
+            myplant.plant.deer_resistance = string_display(myplant.plant.deer_resistance)
             # clean up the list display
             myplant.sun_exposure = string_display(myplant.sun_exposure)
             myplant.water_level  = string_display(myplant.water_level)
@@ -602,21 +613,22 @@ def myplants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, myplant.plant.usda_zone_min, myplant.plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, myplant.plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, myplant.bloom_start, myplant.bloom_end, month_opt)
-            if( (common_name_search     in myplant.plant.commonName) and \
-                (genus_search           in myplant.plant.genus)      and \
-                (species_search         in myplant.plant.species)    and \
-                ((type_x_search         == myplant.plant.type_x)         or (type_x_search         == "Any")) and \
-                ((bloom_color_search    in myplant.plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-                ((bloom_season_search   in myplant.plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-                ((pollinators_search    in myplant.plant.pollinators)    or (pollinators_search    == "Any")) and \
-                ((ca_native_search      == myplant.plant.ca_native)      or (ca_native_search      == "Any")) and \
-                ((ucd_all_star_search   == myplant.plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-                ((davis_trees_search    == myplant.plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-                ((sunset_z14_search     == myplant.plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-                ((sun_exposure_search   in myplant.plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-                ((water_rqmts_search    in myplant.plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-                ((soil_type_search      in myplant.plant.soil_type)      or (soil_type_search      == "Any")) and \
-                ((heat_tolerance_search in myplant.plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
+            if( (common_name_search      in myplant.plant.commonName) and \
+                (genus_search            in myplant.plant.genus)      and \
+                (species_search          in myplant.plant.species)    and \
+                ((type_x_search          == myplant.plant.type_x)          or (type_x_search          == "Any")) and \
+                ((bloom_color_search     in myplant.plant.bloom_color)     or (bloom_color_search     == "Any")) and \
+                ((bloom_season_search    in myplant.plant.bloom_season)    or (bloom_season_search    == "Any")) and \
+                ((pollinators_search     in myplant.plant.pollinators)     or (pollinators_search     == "Any")) and \
+                ((ca_native_search       == myplant.plant.ca_native)       or (ca_native_search       == "Any")) and \
+                ((ucd_all_star_search    == myplant.plant.ucd_all_star)    or (ucd_all_star_search    == "Any")) and \
+                ((davis_trees_search     == myplant.plant.davis_trees)     or (davis_trees_search     == "Any")) and \
+                ((sunset_z14_search      == myplant.plant.sunset_z14)      or (sunset_z14_search      == "Any")) and \
+                ((sun_exposure_search    in myplant.plant.sun_exposure)    or (sun_exposure_search    == "Any")) and \
+                ((water_rqmts_search     in myplant.plant.water_rqmts)     or (water_rqmts_search     == "Any")) and \
+                ((soil_type_search       in myplant.plant.soil_type)       or (soil_type_search       == "Any")) and \
+                ((heat_tolerance_search  in myplant.plant.heat_tolerance)  or (heat_tolerance_search  == "Any")) and \
+                ((deer_resistance_search in myplant.plant.deer_resistance) or (deer_resistance_search == "Any")) and \
                 (pH_hit)          and \
                 (usda_zone_hit)   and \
                 (sunset_zone_hit) and \
@@ -650,6 +662,7 @@ def myplants_summary(request):
                     "soil_type_opt"          : soil_type_opt,
                     "pH_opt"                 : pH_opt,
                     "heat_tolerance_opt"     : heat_tolerance_opt,
+                    "deer_resistance_opt"    : deer_resistance_opt,
                     "usda_zones_opt"         : usda_zones_opt,
                     "sunset_zones_opt"       : sunset_zones_opt,
                     "happiness_opt"          : happiness_opt,
@@ -673,6 +686,7 @@ def myplants_summary(request):
                     "soil_type_search"       : soil_type_search,
                     "pH_search"              : pH_search,
                     "heat_tolerance_search"  : heat_tolerance_search,
+                    "deer_resistance_search" : deer_resistance_search,
                     "usda_zone_search"       : usda_zone_search,
                     "sunset_zone_search"     : sunset_zone_search,
                     # search field defaults - my plant conditions
@@ -1035,6 +1049,7 @@ def myplant_details(request, id):
     plant.water_rqmts    = string_display(plant.water_rqmts)
     plant.soil_type      = string_display(plant.soil_type)
     plant.heat_tolerance = string_display(plant.heat_tolerance)
+    plant.deer_tolerance = string_display(plant.deer_tolerance)
     # get all To Do items related to the plant
     myplant_todos        = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
@@ -1192,57 +1207,59 @@ def plants_summary(request):
 
         # Get the search criteria from the "http request"
         # Plant Characteristics
-        common_name_search    = request.POST["common_name_search"]
-        genus_search          = request.POST["genus_search"]
-        species_search        = request.POST["species_search"]
-        type_x_search         = request.POST["type_x_search"]
-        bloom_color_search    = request.POST["bloom_color_search"]
-        bloom_season_search   = request.POST["bloom_season_search"]
-        bloom_month_search    = request.POST["bloom_month_search"]
-        pollinators_search    = request.POST["pollinators_search"]
-        ca_native_search      = request.POST["ca_native_search"]
-        ucd_all_star_search   = request.POST["ucd_all_star_search"]
-        davis_trees_search    = request.POST["davis_trees_search"]
-        sunset_z14_search     = request.POST["sunset_z14_search"]
+        common_name_search     = request.POST["common_name_search"]
+        genus_search           = request.POST["genus_search"]
+        species_search         = request.POST["species_search"]
+        type_x_search          = request.POST["type_x_search"]
+        bloom_color_search     = request.POST["bloom_color_search"]
+        bloom_season_search    = request.POST["bloom_season_search"]
+        bloom_month_search     = request.POST["bloom_month_search"]
+        pollinators_search     = request.POST["pollinators_search"]
+        ca_native_search       = request.POST["ca_native_search"]
+        ucd_all_star_search    = request.POST["ucd_all_star_search"]
+        davis_trees_search     = request.POST["davis_trees_search"]
+        sunset_z14_search      = request.POST["sunset_z14_search"]
         # Plant Requirements
-        sun_exposure_search   = request.POST["sun_exposure_search"]
-        water_rqmts_search    = request.POST["water_rqmts_search"]
-        pH_search             = request.POST["pH_search"]
-        soil_type_search      = request.POST["soil_type_search"]
-        heat_tolerance_search = request.POST["heat_tolerance_search"]
-        usda_zone_search      = request.POST["usda_zone_search"]
-        sunset_zone_search    = request.POST["sunset_zone_search"]
-        garden_search         = request.POST["garden_search"]
+        sun_exposure_search    = request.POST["sun_exposure_search"]
+        water_rqmts_search     = request.POST["water_rqmts_search"]
+        pH_search              = request.POST["pH_search"]
+        soil_type_search       = request.POST["soil_type_search"]
+        heat_tolerance_search  = request.POST["heat_tolerance_search"]
+        deer_resistance_search = request.POST["deer_resistance_search"]
+        usda_zone_search       = request.POST["usda_zone_search"]
+        sunset_zone_search     = request.POST["sunset_zone_search"]
+        garden_search          = request.POST["garden_search"]
         # Admin
-        status_search         = request.POST["status_search"]
+        status_search          = request.POST["status_search"]
 
         # Store the search criteria and get the previously stored column selections for the user
         gardens = Garden.objects.filter(owner = request.user.username)
         for garden in gardens:
             if (garden.owner == request.user.username):
                 # Store the search criteria in the user's garden db table
-                garden.common_name_search    = common_name_search
-                garden.genus_search          = genus_search
-                garden.species_search        = species_search
-                garden.type_x_search         = type_x_search
-                garden.bloom_color_search    = bloom_color_search
-                garden.bloom_season_search   = bloom_season_search
-                garden.bloom_month_search    = bloom_month_search
-                garden.pollinators_search    = pollinators_search
-                garden.ca_native_search      = ca_native_search
-                garden.ucd_all_star_search   = ucd_all_star_search
-                garden.davis_trees_search    = davis_trees_search
-                garden.sunset_z14_search     = sunset_z14_search
-                garden.sun_exposure_search   = sun_exposure_search
-                garden.water_rqmts_search    = water_rqmts_search
-                garden.pH_search             = pH_search
-                garden.soil_type_search      = soil_type_search
-                garden.heat_tolerance_search = heat_tolerance_search
-                garden.usda_zone_search      = usda_zone_search
-                garden.sunset_zone_search    = sunset_zone_search
-                garden.garden_search         = garden_search
+                garden.common_name_search     = common_name_search
+                garden.genus_search           = genus_search
+                garden.species_search         = species_search
+                garden.type_x_search          = type_x_search
+                garden.bloom_color_search     = bloom_color_search
+                garden.bloom_season_search    = bloom_season_search
+                garden.bloom_month_search     = bloom_month_search
+                garden.pollinators_search     = pollinators_search
+                garden.ca_native_search       = ca_native_search
+                garden.ucd_all_star_search    = ucd_all_star_search
+                garden.davis_trees_search     = davis_trees_search
+                garden.sunset_z14_search      = sunset_z14_search
+                garden.sun_exposure_search    = sun_exposure_search
+                garden.water_rqmts_search     = water_rqmts_search
+                garden.pH_search              = pH_search
+                garden.soil_type_search       = soil_type_search
+                garden.heat_tolerance_search  = heat_tolerance_search
+                garden.deer_resistance_search = deer_resistance_search
+                garden.usda_zone_search       = usda_zone_search
+                garden.sunset_zone_search     = sunset_zone_search
+                garden.garden_search          = garden_search
                 # Admin
-                garden.status_search         = status_search
+                garden.status_search          = status_search
                 garden.save()
                 # Get the user's previously stored column display sections
                 column_selection_list  = string2list(garden.column_selection)
@@ -1278,19 +1295,20 @@ def plants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
-            if ((type_x_search         == plant.type_x)         or (type_x_search         == "Any")) and \
-               ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-               ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-               ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any")) and \
-               ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any")) and \
-               ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-               ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-               ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-               ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-               ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-               ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any")) and \
-               ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
-               ((status_search         == plant.status)         or (status_search         == "Any")) and \
+            if ((type_x_search          == plant.type_x)          or (type_x_search          == "Any")) and \
+               ((bloom_color_search     in plant.bloom_color)     or (bloom_color_search     == "Any")) and \
+               ((bloom_season_search    in plant.bloom_season)    or (bloom_season_search    == "Any")) and \
+               ((pollinators_search     in plant.pollinators)     or (pollinators_search     == "Any")) and \
+               ((ca_native_search       == plant.ca_native)       or (ca_native_search       == "Any")) and \
+               ((ucd_all_star_search    == plant.ucd_all_star)    or (ucd_all_star_search    == "Any")) and \
+               ((davis_trees_search     == plant.davis_trees)     or (davis_trees_search     == "Any")) and \
+               ((sunset_z14_search      == plant.sunset_z14)      or (sunset_z14_search      == "Any")) and \
+               ((sun_exposure_search    in plant.sun_exposure)    or (sun_exposure_search    == "Any")) and \
+               ((water_rqmts_search     == plant.water_rqmts)     or (water_rqmts_search     == "Any")) and \
+               ((soil_type_search       in plant.soil_type)       or (soil_type_search       == "Any")) and \
+               ((heat_tolerance_search  == plant.heat_tolerance)  or (heat_tolerance_search  == "Any")) and \
+               ((deer_resistance_search == plant.deer_resistance) or (deer_resistance_search == "Any")) and \
+               ((status_search          == plant.status)          or (status_search          == "Any")) and \
                (pH_hit) and \
                (usda_zone_hit) and \
                (sunset_zone_hit) and \
@@ -1303,13 +1321,14 @@ def plants_summary(request):
             # Save the plant show flag to the database
             plant.save()
             # format multiselect attributes to remove [, ', and ]
-            plant.bloom_color    = string_display(plant.bloom_color)
-            plant.bloom_season   = string_display(plant.bloom_season)
-            plant.pollinators    = string_display(plant.pollinators)
-            plant.sun_exposure   = string_display(plant.sun_exposure)
-            plant.water_rqmts    = string_display(plant.water_rqmts)
-            plant.soil_type      = string_display(plant.soil_type)
-            plant.heat_tolerance = string_display(plant.heat_tolerance)
+            plant.bloom_color     = string_display(plant.bloom_color)
+            plant.bloom_season    = string_display(plant.bloom_season)
+            plant.pollinators     = string_display(plant.pollinators)
+            plant.sun_exposure    = string_display(plant.sun_exposure)
+            plant.water_rqmts     = string_display(plant.water_rqmts)
+            plant.soil_type       = string_display(plant.soil_type)
+            plant.heat_tolerance  = string_display(plant.heat_tolerance)
+            plant.deer_resistance = string_display(plant.deer_resistance)
 
             # Set the plnt status regarding its status wrt my_plants 
             plant.plant_mine = 'not_in_my_garden'
@@ -1338,6 +1357,7 @@ def plants_summary(request):
                     "pH_opt"                : pH_opt,
                     "soil_type_opt"         : soil_type_opt,
                     "heat_tolerance_opt"    : heat_tolerance_opt,
+                    "deer_resistance_opt"   : deer_resistance_opt,
                     "usda_zones_opt"        : usda_zones_opt,
                     "sunset_zones_opt"      : sunset_zones_opt,
                     "month_opt"             : month_opt,
@@ -1360,7 +1380,8 @@ def plants_summary(request):
                     "water_rqmts_search"    : water_rqmts_search,
                     "pH_search"             : pH_search,
                     "soil_type_search"      : soil_type_search,
-                    "heat_tolerance_search" : heat_tolerance_search,
+                    "heat_tolerance_search"  : heat_tolerance_search,
+                    "deer_resistance_search" : deer_resistance_search,
                     "usda_zone_search"      : usda_zone_search,
                     "sunset_zone_search"    : sunset_zone_search,
                     'garden_search'         : garden_search,
@@ -1395,7 +1416,8 @@ def plants_summary(request):
                 water_rqmts_search    = garden.water_rqmts_search
                 pH_search             = garden.pH_search
                 soil_type_search      = garden.soil_type_search
-                heat_tolerance_search = garden.heat_tolerance_search
+                heat_tolerance_search  = garden.heat_tolerance_search
+                deer_resistance_search = garden.deer_resistance_search
                 usda_zone_search      = garden.usda_zone_search
                 sunset_zone_search    = garden.sunset_zone_search
                 garden_search         = garden.garden_search
@@ -1442,19 +1464,20 @@ def plants_summary(request):
             usda_zone_hit = usda_zone_check(usda_zone_search, plant.usda_zone_min, plant.usda_zone_max)
             sunset_zone_hit = sunset_zone_check(sunset_zone_search, plant.sunset_zones, sunset_zones_opt)
             bloom_month_hit = bloom_month_check(bloom_month_search, plant.bloom_start, plant.bloom_end, month_opt)
-            if  ((type_x_search         == plant.type_x)         or (type_x_search         == "Any")) and \
-                ((bloom_color_search    in plant.bloom_color)    or (bloom_color_search    == "Any")) and \
-                ((bloom_season_search   in plant.bloom_season)   or (bloom_season_search   == "Any")) and \
-                ((pollinators_search    in plant.pollinators)    or (pollinators_search    == "Any")) and \
-                ((ca_native_search      == plant.ca_native)      or (ca_native_search      == "Any")) and \
-                ((ucd_all_star_search   == plant.ucd_all_star)   or (ucd_all_star_search   == "Any")) and \
-                ((davis_trees_search    == plant.davis_trees)    or (davis_trees_search    == "Any")) and \
-                ((sunset_z14_search     == plant.sunset_z14)     or (sunset_z14_search     == "Any")) and \
-                ((sun_exposure_search   in plant.sun_exposure)   or (sun_exposure_search   == "Any")) and \
-                ((water_rqmts_search    == plant.water_rqmts)    or (water_rqmts_search    == "Any")) and \
-                ((soil_type_search      in plant.soil_type)      or (soil_type_search      == "Any")) and \
-                ((heat_tolerance_search == plant.heat_tolerance) or (heat_tolerance_search == "Any")) and \
-                ((status_search         == plant.status)         or (status_search         == "Any")) and \
+            if  ((type_x_search          == plant.type_x)          or (type_x_search          == "Any")) and \
+                ((bloom_color_search     in plant.bloom_color)     or (bloom_color_search     == "Any")) and \
+                ((bloom_season_search    in plant.bloom_season)    or (bloom_season_search    == "Any")) and \
+                ((pollinators_search     in plant.pollinators)     or (pollinators_search     == "Any")) and \
+                ((ca_native_search       == plant.ca_native)       or (ca_native_search       == "Any")) and \
+                ((ucd_all_star_search    == plant.ucd_all_star)    or (ucd_all_star_search    == "Any")) and \
+                ((davis_trees_search     == plant.davis_trees)     or (davis_trees_search     == "Any")) and \
+                ((sunset_z14_search      == plant.sunset_z14)      or (sunset_z14_search      == "Any")) and \
+                ((sun_exposure_search    in plant.sun_exposure)    or (sun_exposure_search    == "Any")) and \
+                ((water_rqmts_search     == plant.water_rqmts)     or (water_rqmts_search     == "Any")) and \
+                ((soil_type_search       in plant.soil_type)       or (soil_type_search       == "Any")) and \
+                ((heat_tolerance_search  == plant.heat_tolerance)  or (heat_tolerance_search  == "Any")) and \
+                ((deer_resistance_search == plant.deer_resistance) or (deer_resistance_search == "Any")) and \
+                ((status_search          == plant.status)          or (status_search          == "Any")) and \
                 (pH_hit) and \
                 (usda_zone_hit) and \
                 (sunset_zone_hit) and \
@@ -1468,14 +1491,15 @@ def plants_summary(request):
             plant.save()
 
             # format multiselect attributes to remove [, ', and ]
-            plant.bloom_color    = string_display(plant.bloom_color)
-            plant.bloom_season   = string_display(plant.bloom_season)
-            plant.bloom_months   = string_display(plant.bloom_months)
-            plant.pollinators    = string_display(plant.pollinators)
-            plant.sun_exposure   = string_display(plant.sun_exposure)
-            plant.water_rqmts    = string_display(plant.water_rqmts)
-            plant.soil_type      = string_display(plant.soil_type)
-            plant.heat_tolerance = string_display(plant.heat_tolerance)
+            plant.bloom_color     = string_display(plant.bloom_color)
+            plant.bloom_season    = string_display(plant.bloom_season)
+            plant.bloom_months    = string_display(plant.bloom_months)
+            plant.pollinators     = string_display(plant.pollinators)
+            plant.sun_exposure    = string_display(plant.sun_exposure)
+            plant.water_rqmts     = string_display(plant.water_rqmts)
+            plant.soil_type       = string_display(plant.soil_type)
+            plant.heat_tolerance  = string_display(plant.heat_tolerance)
+            plant.deer_resistance = string_display(plant.deer_resistance)
             # Set the plnt status regarding its status wrt my_plants 
             plant.plant_mine = 'not_in_my_garden'
             for myplant in myplants:
@@ -1488,52 +1512,54 @@ def plants_summary(request):
                         break # Found the plant in myplants
         # Send selected plant details to template
         template = loader.get_template("plants/plants_summary.html")
-        context = { "plants"                : plants,
-                    "myplants"              : myplants,
+        context = { "plants"                 : plants,
+                    "myplants"               : myplants,
                     # search field options
-                    "plant_types"           : plant_types,
-                    "bloom_color_opt"       : bloom_color_opt,
-                    "bloom_season_opt"      : bloom_season_opt,
-                    "pollinators_opt"       : pollinators_opt,
-                    "ca_native_opt"         : ca_native_opt,
-                    "ucd_all_star_opt"      : ucd_all_star_opt,
-                    "davis_trees_opt"       : davis_trees_opt,
-                    "sunset_z14_opt"        : sunset_z14_opt,
-                    "sun_exposure_opt"      : sun_exposure_opt,
-                    "water_rqmts_opt"       : water_rqmts_opt,
-                    "pH_opt"                : pH_opt,
-                    "soil_type_opt"         : soil_type_opt,
-                    "heat_tolerance_opt"    : heat_tolerance_opt,
-                    "usda_zones_opt"        : usda_zones_opt,
-                    "sunset_zones_opt"      : sunset_zones_opt,
-                    "month_opt"             : month_opt,
+                    "plant_types"            : plant_types,
+                    "bloom_color_opt"        : bloom_color_opt,
+                    "bloom_season_opt"       : bloom_season_opt,
+                    "pollinators_opt"        : pollinators_opt,
+                    "ca_native_opt"          : ca_native_opt,
+                    "ucd_all_star_opt"       : ucd_all_star_opt,
+                    "davis_trees_opt"        : davis_trees_opt,
+                    "sunset_z14_opt"         : sunset_z14_opt,
+                    "sun_exposure_opt"       : sun_exposure_opt,
+                    "water_rqmts_opt"        : water_rqmts_opt,
+                    "pH_opt"                 : pH_opt,
+                    "soil_type_opt"          : soil_type_opt,
+                    "heat_tolerance_opt"     : heat_tolerance_opt,
+                    "deer_resistance_opt"    : deer_resistance_opt,
+                    "usda_zones_opt"         : usda_zones_opt,
+                    "sunset_zones_opt"       : sunset_zones_opt,
+                    "month_opt"              : month_opt,
                     # Admin
-                    "status_opt"            : status_opt,
+                    "status_opt"             : status_opt,
                     # search field defaults
-                    "common_name_search"    : common_name_search,
-                    "genus_search"          : genus_search,
-                    "species_search"        : species_search,
-                    "type_x_search"         : type_x_search,
-                    "bloom_color_search"    : bloom_color_search,
-                    "bloom_season_search"   : bloom_season_search,
-                    "bloom_month_search"    : bloom_month_search,
-                    "pollinators_search"    : pollinators_search,
-                    'ca_native_search'      : ca_native_search,
-                    'ucd_all_star_search'   : ucd_all_star_search,
-                    'davis_trees_search'    : davis_trees_search,
-                    'sunset_z14_search'     : sunset_z14_search,
-                    "sun_exposure_search"   : sun_exposure_search,
-                    "water_rqmts_search"    : water_rqmts_search,
-                    "soil_type_search"      : soil_type_search,
-                    "pH_search"             : pH_search,
-                    "heat_tolerance_search" : heat_tolerance_search,
-                    "usda_zone_search"      : usda_zone_search,
-                    "sunset_zone_search"    : sunset_zone_search,
-                    'garden_search'         : garden_search,
+                    "common_name_search"     : common_name_search,
+                    "genus_search"           : genus_search,
+                    "species_search"         : species_search,
+                    "type_x_search"          : type_x_search,
+                    "bloom_color_search"     : bloom_color_search,
+                    "bloom_season_search"    : bloom_season_search,
+                    "bloom_month_search"     : bloom_month_search,
+                    "pollinators_search"     : pollinators_search,
+                    'ca_native_search'       : ca_native_search,
+                    'ucd_all_star_search'    : ucd_all_star_search,
+                    'davis_trees_search'     : davis_trees_search,
+                    'sunset_z14_search'      : sunset_z14_search,
+                    "sun_exposure_search"    : sun_exposure_search,
+                    "water_rqmts_search"     : water_rqmts_search,
+                    "soil_type_search"       : soil_type_search,
+                    "pH_search"              : pH_search,
+                    "heat_tolerance_search"  : heat_tolerance_search,
+                    "deer_resistance_search" : deer_resistance_search,
+                    "usda_zone_search"       : usda_zone_search,
+                    "sunset_zone_search"     : sunset_zone_search,
+                    'garden_search'          : garden_search,
                     # Admin
-                    'status_search'         : status_search,
+                    'status_search'          : status_search,
                     # table column selection
-                    'column_selection'      : column_selection_list,
+                    'column_selection'       : column_selection_list,
               }
         
     return HttpResponse(template.render(context, request))
@@ -1593,44 +1619,45 @@ def plant_edit(request, id):
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
-            plant.status        = form.cleaned_data.get('status')
-            plant.commonName    = form.cleaned_data.get('commonName')
-            plant.type_x        = form.cleaned_data.get('type_x')
-            plant.bloom_color   = form.cleaned_data.get('bloom_color')
-            plant.bloom_season  = form.cleaned_data.get('bloom_season')
-            plant.bloom_start   = form.cleaned_data.get('bloom_start')
-            plant.bloom_end     = form.cleaned_data.get('bloom_end')
-            plant.height_feet   = form.cleaned_data.get('height_feet')
-            plant.height_inch   = form.cleaned_data.get('height_inch')
-            plant.width_feet    = form.cleaned_data.get('width_feet')
-            plant.width_inch    = form.cleaned_data.get('width_inch')
-            plant.pollinators   = form.cleaned_data.get('pollinators')
-            plant.ca_native     = form.cleaned_data.get('ca_native')
-            plant.ucd_all_star  = form.cleaned_data.get('ucd_all_star')
-            plant.davis_trees   = form.cleaned_data.get('davis_trees')
-            plant.sunset_z14    = form.cleaned_data.get('sunset_z14')
-            plant.sun_exposure  = form.cleaned_data.get('sun_exposure')
-            plant.water_rqmts   = form.cleaned_data.get('water_rqmts')
-            plant.pH_min        = form.cleaned_data.get('pH_min')
-            plant.pH_max        = form.cleaned_data.get('pH_max')
-            plant.soil_type     = form.cleaned_data.get('soil_type')
-            plant.heat_tolerance = form.cleaned_data.get('heat_tolerance')
-            plant.usda_zone_min = form.cleaned_data.get('usda_zone_min')
-            plant.usda_zone_max = form.cleaned_data.get('usda_zone_max')
-            plant.sunset_zones  = form.cleaned_data.get('sunset_zones')
-            plant.kingdom       = form.cleaned_data.get('kingdom')
-            plant.subkingdom    = form.cleaned_data.get('subkingdom')
-            plant.superdivision = form.cleaned_data.get('superdivision')
-            plant.division      = form.cleaned_data.get('division')
-            plant.class_x       = form.cleaned_data.get('class_x')
-            plant.subclass      = form.cleaned_data.get('subclass')
-            plant.order         = form.cleaned_data.get('order')
-            plant.family        = form.cleaned_data.get('family')
-            plant.genus         = form.cleaned_data.get('genus')
-            plant.species       = form.cleaned_data.get('species')
-            plant.subspecies    = form.cleaned_data.get('subspecies')
-            plant.variety       = form.cleaned_data.get('variety')
-            plant.cultivar      = form.cleaned_data.get('cultivar')
+            plant.status          = form.cleaned_data.get('status')
+            plant.commonName      = form.cleaned_data.get('commonName')
+            plant.type_x          = form.cleaned_data.get('type_x')
+            plant.bloom_color     = form.cleaned_data.get('bloom_color')
+            plant.bloom_season    = form.cleaned_data.get('bloom_season')
+            plant.bloom_start     = form.cleaned_data.get('bloom_start')
+            plant.bloom_end       = form.cleaned_data.get('bloom_end')
+            plant.height_feet     = form.cleaned_data.get('height_feet')
+            plant.height_inch     = form.cleaned_data.get('height_inch')
+            plant.width_feet      = form.cleaned_data.get('width_feet')
+            plant.width_inch      = form.cleaned_data.get('width_inch')
+            plant.pollinators     = form.cleaned_data.get('pollinators')
+            plant.ca_native       = form.cleaned_data.get('ca_native')
+            plant.ucd_all_star    = form.cleaned_data.get('ucd_all_star')
+            plant.davis_trees     = form.cleaned_data.get('davis_trees')
+            plant.sunset_z14      = form.cleaned_data.get('sunset_z14')
+            plant.sun_exposure    = form.cleaned_data.get('sun_exposure')
+            plant.water_rqmts     = form.cleaned_data.get('water_rqmts')
+            plant.pH_min          = form.cleaned_data.get('pH_min')
+            plant.pH_max          = form.cleaned_data.get('pH_max')
+            plant.soil_type       = form.cleaned_data.get('soil_type')
+            plant.heat_tolerance  = form.cleaned_data.get('heat_tolerance')
+            plant.deer_resistance = form.cleaned_data.get('deer_resistance')
+            plant.usda_zone_min   = form.cleaned_data.get('usda_zone_min')
+            plant.usda_zone_max   = form.cleaned_data.get('usda_zone_max')
+            plant.sunset_zones    = form.cleaned_data.get('sunset_zones')
+            plant.kingdom         = form.cleaned_data.get('kingdom')
+            plant.subkingdom      = form.cleaned_data.get('subkingdom')
+            plant.superdivision   = form.cleaned_data.get('superdivision')
+            plant.division        = form.cleaned_data.get('division')
+            plant.class_x         = form.cleaned_data.get('class_x')
+            plant.subclass        = form.cleaned_data.get('subclass')
+            plant.order           = form.cleaned_data.get('order')
+            plant.family          = form.cleaned_data.get('family')
+            plant.genus           = form.cleaned_data.get('genus')
+            plant.species         = form.cleaned_data.get('species')
+            plant.subspecies      = form.cleaned_data.get('subspecies')
+            plant.variety         = form.cleaned_data.get('variety')
+            plant.cultivar        = form.cleaned_data.get('cultivar')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
 
             # Check to see if the request includes an audio filefor genus/species
@@ -1731,6 +1758,7 @@ def plant_edit(request, id):
                                             'pH_max'            : plant.pH_max,
                                             'soil_type'         : soil_type_list,
                                             'heat_tolerance'    : plant.heat_tolerance,
+                                            'deer_resistance'   : plant.deer_resistance,
                                             'usda_zone_max'     : plant.usda_zone_max,
                                             'usda_zone_min'     : plant.usda_zone_min,
                                             'sunset_zones'      : plant.sunset_zones,

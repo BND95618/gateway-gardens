@@ -2778,26 +2778,27 @@
                     downloadedPlant = tempPlantObject[0];
 
                     // Populate the plant data fields
-                    this.commonName   = downloadedPlant.commonName;
-                    this.genus        = downloadedPlant.genus;
-                    this.species      = downloadedPlant.species;
-                    this.type_x       = downloadedPlant.type_x;
-                    this.bloom_color  = downloadedPlant.bloom_color;
-                    this.bloom_season = downloadedPlant.bloom_season;
-                    this.pollinators  = downloadedPlant.pollinators;
-                    this.height_feet  = downloadedPlant.height_feet;
-                    this.height_inch  = downloadedPlant.height_inch;
-                    this.width_feet   = downloadedPlant.width_feet;
-                    this.width_inch   = downloadedPlant.width_inch;
-                    this.sun_exposure = downloadedPlant.sun_exposure;
-                    this.water_rqmts  = downloadedPlant.water_rqmts;
-                    this.pH_min       = downloadedPlant.pH_min;
-                    this.pH_max       = downloadedPlant.pH_max;
-                    this.soil_type    = downloadedPlant.soil_type;
-                    this.heat_tolerance = downloadedPlant.heat_tolerance;
+                    this.commonName      = downloadedPlant.commonName;
+                    this.genus           = downloadedPlant.genus;
+                    this.species         = downloadedPlant.species;
+                    this.type_x          = downloadedPlant.type_x;
+                    this.bloom_color     = downloadedPlant.bloom_color;
+                    this.bloom_season    = downloadedPlant.bloom_season;
+                    this.pollinators     = downloadedPlant.pollinators;
+                    this.height_feet     = downloadedPlant.height_feet;
+                    this.height_inch     = downloadedPlant.height_inch;
+                    this.width_feet      = downloadedPlant.width_feet;
+                    this.width_inch      = downloadedPlant.width_inch;
+                    this.sun_exposure    = downloadedPlant.sun_exposure;
+                    this.water_rqmts     = downloadedPlant.water_rqmts;
+                    this.pH_min          = downloadedPlant.pH_min;
+                    this.pH_max          = downloadedPlant.pH_max;
+                    this.soil_type       = downloadedPlant.soil_type;
+                    this.heat_tolerance  = downloadedPlant.heat_tolerance;
+                    this.deer_resistance = downloadedPlant.deer_resistance;
                     // Populate the plant shape fields
-                    this.shape.label  = this.commonName;
-                    this.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;
+                    this.shape.label     = this.commonName;
+                    this.shape.radius    = (this.width_feet * 12 + this.width_inch) / 2;
                     // Refresh the screen to show the newly added plant
                     drawScreen();
                 });
@@ -2860,23 +2861,24 @@
                                                  this.nextZIndex,
                                                  "circle");
                 // Populate the plant data fields
-                duplicatePlant.commonName   = this.commonName;
-                duplicatePlant.genus        = this.genus;
-                duplicatePlant.species      = this.species;
-                duplicatePlant.type_x       = this.type_x;
-                duplicatePlant.bloom_color  = this.bloom_color;
-                duplicatePlant.bloom_season = this.bloom_season;
-                duplicatePlant.pollinators  = this.pollinators;
-                duplicatePlant.height_feet  = this.height_feet;
-                duplicatePlant.height_inch  = this.height_inch;
-                duplicatePlant.width_feet   = this.width_feet;
-                duplicatePlant.width_inch   = this.width_inch;
-                duplicatePlant.sun_exposure = this.sun_exposure;
-                duplicatePlant.water_rqmts  = this.water_rqmts;
-                duplicatePlant.pH_min       = this.pH_min;
-                duplicatePlant.pH_max       = this.pH_max;
-                duplicatePlant.soil_type    = this.soil_type;
-                duplicatePlant.heat_tolerance = this.heat_tolerance;
+                duplicatePlant.commonName      = this.commonName;
+                duplicatePlant.genus           = this.genus;
+                duplicatePlant.species         = this.species;
+                duplicatePlant.type_x          = this.type_x;
+                duplicatePlant.bloom_color     = this.bloom_color;
+                duplicatePlant.bloom_season    = this.bloom_season;
+                duplicatePlant.pollinators     = this.pollinators;
+                duplicatePlant.height_feet     = this.height_feet;
+                duplicatePlant.height_inch     = this.height_inch;
+                duplicatePlant.width_feet      = this.width_feet;
+                duplicatePlant.width_inch      = this.width_inch;
+                duplicatePlant.sun_exposure    = this.sun_exposure;
+                duplicatePlant.water_rqmts     = this.water_rqmts;
+                duplicatePlant.pH_min          = this.pH_min;
+                duplicatePlant.pH_max          = this.pH_max;
+                duplicatePlant.soil_type       = this.soil_type;
+                duplicatePlant.heat_tolerance  = this.heat_tolerance;
+                duplicatePlant.deer_resistance = this.deer_resistance;
                 // Populate the plant shape fields
                 duplicatePlant.shape.label  = this.commonName;
                 duplicatePlant.shape.radius = (this.width_feet * 12 + this.width_inch) / 2;

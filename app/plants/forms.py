@@ -134,6 +134,13 @@ HEAT_TOLERANCE_CHOICES = (
 	("Good",      "Good"),
 	("Excellent", "Excellent"),
 )
+DEER_RESISTANCE_CHOICES = (
+	("tbd",       "tbd"),
+	("Poor",      "Poor"),
+	("Fair",      "Fair"),
+	("Good",      "Good"),
+	("Excellent", "Excellent"),
+)
 USDA_ZONE_CHOICES = (
 	("tbd",               "tbd"),
 	("1a (-60F to -55F)", "1a (-60F to -55F)"),
@@ -233,6 +240,7 @@ COLUMN_CHOICES = (
 	("Soil Type",        "Soil Type"),
 	("pH Range",         "pH Range"),
 	("Heat Tolerance",   "Heat Tolerance"),
+	("Deer Resistance",  "Deer Resistance"),
 	("USDA Zones",       "USDA Zones"),
 	("Sunset Zones",     "Sunset Zones"),
 	# Admin
@@ -260,6 +268,7 @@ MY_COLUMN_CHOICES = (
 	("Soil Type",        "Soil Type"),
 	("pH Range",         "pH Range"),
 	("Heat Tolerance",   "Heat Tolerance"),
+	("Deer Resistance",  "Deer Resistance"),
 	("USDA Zones",       "USDA Zones"),
 	("Sunset Zones",     "Sunset Zones"), 
 	# Garden Environment
@@ -712,6 +721,11 @@ class PlantAddUpdateForm(forms.Form):
 	heat_tolerance = forms.ChoiceField(
 		label="Heat Tolerance",
 		choices = HEAT_TOLERANCE_CHOICES, 
+		required=False,
+		)
+	deer_resistance = forms.ChoiceField(
+		label="Deer Resistance",
+		choices = DEER_RESISTANCE_CHOICES, 
 		required=False,
 		)
 	usda_zone_min = forms.ChoiceField(

@@ -261,6 +261,19 @@
       </select>
       <br/>
 
+      <label for="id_deer_resistance_search">Deer Resistance:</label><br/>
+      <select id="id_deer_resistance_search" name="deer_resistance_search" class="bnd-select">
+        <option value="Any" >Any</option>
+        {% for x in deer_resistance_opt %}
+          {% if x == deer_resistance_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br/>
+
       <label for="id_usda_zone_search">USDA Zone:</label><br/>
       <select id="id_usda_zone_search" name="usda_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
@@ -381,22 +394,23 @@
           <th onclick="sortTable(12, 'plantTable')" class="bnd-center">Davis Trees</th>
           <th onclick="sortTable(13, 'plantTable')" class="bnd-center">Sunset Z14</th>
           <!-- Plant Requirements -->
-          <th onclick="sortTable(14, 'plantTable')">Sun Exposure   </th>
-          <th onclick="sortTable(15, 'plantTable')">Water Rqmts    </th>
-          <th onclick="sortTable(16, 'plantTable')">Soil Type      </th>
-          <th onclick="sortTable(17, 'plantTable')">pH Range       </th>
-          <th onclick="sortTable(18, 'plantTable')">Heat Tolerance </th>
-          <th onclick="sortTable(19, 'plantTable')">USDA Zones     </th>
-          <th onclick="sortTable(20, 'plantTable')">Sunset Zones   </th>
+          <th onclick="sortTable(14, 'plantTable')">Sun Exposure    </th>
+          <th onclick="sortTable(15, 'plantTable')">Water Rqmts     </th>
+          <th onclick="sortTable(16, 'plantTable')">Soil Type       </th>
+          <th onclick="sortTable(17, 'plantTable')">pH Range        </th>
+          <th onclick="sortTable(18, 'plantTable')">Heat Tolerance  </th>
+          <th onclick="sortTable(19, 'plantTable')">Deer Resistance </th>
+          <th onclick="sortTable(20, 'plantTable')">USDA Zones      </th>
+          <th onclick="sortTable(21, 'plantTable')">Sunset Zones    </th>
           <!-- Garden Environment -->
-          <th onclick="sortTable(21, 'plantTable')">Location           </th>
-          <th onclick="sortTable(22, 'plantTable')">My Sun Exposure    </th>
-          <th onclick="sortTable(23, 'plantTable')">My Water Level     </th>
-          <th onclick="sortTable(24, 'plantTable')">My Soil Type       </th>
-          <th onclick="sortTable(25, 'plantTable')">My pH              </th>
-          <th onclick="sortTable(26, 'plantTable')">My Bloom Color     </th>
-          <th onclick="sortTable(27, 'plantTable')">My Bloom Start/End </th>
-          <th onclick="sortTable(28, 'plantTable')" class="bnd-table-icon">Happy?</th>
+          <th onclick="sortTable(22, 'plantTable')">Location           </th>
+          <th onclick="sortTable(23, 'plantTable')">My Sun Exposure    </th>
+          <th onclick="sortTable(24, 'plantTable')">My Water Level     </th>
+          <th onclick="sortTable(25, 'plantTable')">My Soil Type       </th>
+          <th onclick="sortTable(26, 'plantTable')">My pH              </th>
+          <th onclick="sortTable(27, 'plantTable')">My Bloom Color     </th>
+          <th onclick="sortTable(28, 'plantTable')">My Bloom Start/End </th>
+          <th onclick="sortTable(29, 'plantTable')" class="bnd-table-icon">Happy?</th>
           <!-- Button Placeholders -->
           <th class="bnd-table-icon"></th>
           <th class="bnd-table-icon"></th>
@@ -418,25 +432,26 @@
             {% else %}
               <td>---</td>
             {% endif %}
-            <td>{{ myplant.plant.type_x }}                                     </td>
-            <td>{{ myplant.plant.height_feet }} ft {{ plant.height_inch }} in  </td>
-            <td>{{ myplant.plant.width_feet  }} ft {{ plant.width_inch  }} in  </td>
-            <td>{{ myplant.plant.bloom_color |cut:"["|cut:"]"   }}             </td>
-            <td>{{ myplant.plant.bloom_season|cut:"["|cut:"]"   }}             </td>
-            <td>{{ myplant.plant.bloom_start }}-{{ myplant.plant.bloom_end }} </td>
-            <td>{{ myplant.plant.pollinators |cut:"["|cut:"]"   }}             </td>
+            <td>{{ myplant.plant.type_x }}                                       </td>
+            <td>{{ myplant.plant.height_feet }} ft {{ plant.height_inch }} in    </td>
+            <td>{{ myplant.plant.width_feet  }} ft {{ plant.width_inch  }} in    </td>
+            <td>{{ myplant.plant.bloom_color |cut:"["|cut:"]"   }}               </td>
+            <td>{{ myplant.plant.bloom_season|cut:"["|cut:"]"   }}               </td>
+            <td>{{ myplant.plant.bloom_start }}-{{ myplant.plant.bloom_end }}    </td>
+            <td>{{ myplant.plant.pollinators |cut:"["|cut:"]"   }}               </td>
             <td class="bnd-center">{{ plant.ca_native    }}                      </td>
             <td class="bnd-center">{{ plant.ucd_all_star }}                      </td>
             <td class="bnd-center">{{ plant.davis_trees  }}                      </td>
             <td class="bnd-center">{{ plant.sunset_z14   }}                      </td>
             <!-- Plant Requirements -->
-            <td>{{ myplant.plant.sun_exposure|cut:"["|cut:"]"                }}</td>
-            <td>{{ myplant.plant.water_rqmts                                 }}</td>
-            <td>{{ myplant.plant.soil_type                                   }}</td>
+            <td>{{ myplant.plant.sun_exposure|cut:"["|cut:"]"                       }}</td>
+            <td>{{ myplant.plant.water_rqmts                                        }}</td>
+            <td>{{ myplant.plant.soil_type                                          }}</td>
             <td>{{ myplant.plant.pH_min }} to {{ myplant.plant.pH_max }}              </td>
             <td>{{ myplant.plant.heat_tolerance                                     }}</td>
+            <td>{{ myplant.plant.deer_resistance                                    }}</td>
             <td>{{ myplant.plant.usda_zone_min }} to {{ myplant.plant.usda_zone_max }}</td>
-            <td>{{ myplant.plant.sunset_zones }}                              </td>
+            <td>{{ myplant.plant.sunset_zones }}                                      </td>
             <!-- Garden Environment -->
             <td>{{ myplant.location         }}</td>
             <td>{{ myplant.sun_exposure     }}</td>
@@ -637,7 +652,7 @@
                               'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season', 'Bloom Range',
                               'Pollinators', 'CA Native', 'Davis Trees', 'UCD All-Star', 'Sunset Z14',
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
-                              'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
+                              'Heat Tolerance', 'Deer Resistance', 'USDA Zones', 'Sunset Zones',
                               'My Location', 'My Sun Exposure', 'My Water Level', 'My Soil Type', 'My pH', 
                               'My Bloom Color', 'My Bloom Range', 'Happy?',
                               ];                
@@ -668,17 +683,18 @@
         else if (column_options[i] == "Soil Type")        { column_index = 16; }
         else if (column_options[i] == "pH Range")         { column_index = 17; }
         else if (column_options[i] == "Heat Tolerance")   { column_index = 18; }
-        else if (column_options[i] == "USDA Zones")       { column_index = 19; }
-        else if (column_options[i] == "Sunset Zones")     { column_index = 20; }
+        else if (column_options[i] == "Deer Resistance")  { column_index = 19; }
+        else if (column_options[i] == "USDA Zones")       { column_index = 20; }
+        else if (column_options[i] == "Sunset Zones")     { column_index = 21; }
 
-        else if (column_options[i] == "My Location")      { column_index = 21; } 
-        else if (column_options[i] == "My Sun Exposure")  { column_index = 22; } 
-        else if (column_options[i] == "My Water Level")   { column_index = 23; } 
-        else if (column_options[i] == "My Soil Type")     { column_index = 24; }
-        else if (column_options[i] == "My pH")            { column_index = 25; }
-        else if (column_options[i] == "My Bloom Color")   { column_index = 26; }
-        else if (column_options[i] == "My Bloom Range")   { column_index = 27; }
-        else if (column_options[i] == "Happy?")           { column_index = 28; }
+        else if (column_options[i] == "My Location")      { column_index = 22; } 
+        else if (column_options[i] == "My Sun Exposure")  { column_index = 23; } 
+        else if (column_options[i] == "My Water Level")   { column_index = 24; } 
+        else if (column_options[i] == "My Soil Type")     { column_index = 25; }
+        else if (column_options[i] == "My pH")            { column_index = 26; }
+        else if (column_options[i] == "My Bloom Color")   { column_index = 27; }
+        else if (column_options[i] == "My Bloom Range")   { column_index = 28; }
+        else if (column_options[i] == "Happy?")           { column_index = 29; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection_safe.includes(column_options[i]))
@@ -718,29 +734,30 @@
     // Search menu - Reset all search criteria to 'Any'
     //----------------------------------------------------------------------------- 
     function searchReset() {
-      document.getElementById("id_common_name_search"    ).value = "";
-      document.getElementById("id_genus_search"          ).value = "";
-      document.getElementById("id_species_search"        ).value = "";
-      document.getElementById("id_type_x_search"         ).value = "Any";
-      document.getElementById("id_bloom_color_search"    ).value = "Any";
-      document.getElementById("id_bloom_season_search"   ).value = "Any";
-      document.getElementById("id_bloom_month_search"    ).value = "Any";
-      document.getElementById("id_pollinators_search"    ).value = "Any";
-      document.getElementById("id_ca_native_search"      ).value = "Any";
-      document.getElementById("id_ucd_all_star_search"   ).value = "Any";
-      document.getElementById("id_davis_trees_search"    ).value = "Any";
-      document.getElementById("id_sunset_z14_search"     ).value = "Any";
-      document.getElementById("id_sun_exposure_search"   ).value = "Any";
-      document.getElementById("id_water_rqmts_search"    ).value = "Any";
-      document.getElementById("id_soil_type_search"      ).value = "Any";
-      document.getElementById("id_pH_search"             ).value = "Any";
-      document.getElementById("id_heat_tolerance_search" ).value = "Any";
-      document.getElementById("id_usda_zone_search"      ).value = "Any";
-      document.getElementById("id_sunset_zone_search"    ).value = "Any";
-      document.getElementById("id_my_sun_exposure_search").value = "Any";
-      document.getElementById("id_my_water_level_search" ).value = "Any";
-      document.getElementById("id_my_soil_type_search"   ).value = "Any";
-      document.getElementById("id_status_search"         ).value = "Any";
+      document.getElementById("id_common_name_search"     ).value = "";
+      document.getElementById("id_genus_search"           ).value = "";
+      document.getElementById("id_species_search"         ).value = "";
+      document.getElementById("id_type_x_search"          ).value = "Any";
+      document.getElementById("id_bloom_color_search"     ).value = "Any";
+      document.getElementById("id_bloom_season_search"    ).value = "Any";
+      document.getElementById("id_bloom_month_search"     ).value = "Any";
+      document.getElementById("id_pollinators_search"     ).value = "Any";
+      document.getElementById("id_ca_native_search"       ).value = "Any";
+      document.getElementById("id_ucd_all_star_search"    ).value = "Any";
+      document.getElementById("id_davis_trees_search"     ).value = "Any";
+      document.getElementById("id_sunset_z14_search"      ).value = "Any";
+      document.getElementById("id_sun_exposure_search"    ).value = "Any";
+      document.getElementById("id_water_rqmts_search"     ).value = "Any";
+      document.getElementById("id_soil_type_search"       ).value = "Any";
+      document.getElementById("id_pH_search"              ).value = "Any";
+      document.getElementById("id_heat_tolerance_search"  ).value = "Any";
+      document.getElementById("id_deer_resistance_search" ).value = "Any";
+      document.getElementById("id_usda_zone_search"       ).value = "Any";
+      document.getElementById("id_sunset_zone_search"     ).value = "Any";
+      document.getElementById("id_my_sun_exposure_search" ).value = "Any";
+      document.getElementById("id_my_water_level_search"  ).value = "Any";
+      document.getElementById("id_my_soil_type_search"    ).value = "Any";
+      document.getElementById("id_status_search"          ).value = "Any";
     }
     //-----------------------------------------------------------------------------
     // Delete Plant Modal Script

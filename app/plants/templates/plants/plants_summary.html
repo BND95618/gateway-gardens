@@ -266,6 +266,19 @@
       </select>
       <br/>
 
+      <label for="id_deer_resistance_search">Deer Resistance:</label><br/>
+      <select id="id_deer_resistance_search" name="deer_resistance_search" class="bnd-select">
+        <option value="Any" >Any</option>
+        {% for x in deer_resistance_opt %}
+          {% if x == deer_resistance_search %}
+            <option value="{{ x }}" selected>{{ x }}</option>
+          {% elif x != "tbd" %}
+            <option value="{{ x }}"         >{{ x }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <br/>
+
       <label for="id_usda_zone_search">USDA Zone:</label><br/>
       <select id="id_usda_zone_search" name="usda_zone_search" class="bnd-select">
         <option value="Any" >Any</option>
@@ -376,14 +389,15 @@
           <th onclick="sortTable(12, 'plantTable')" class="bnd-center">Davis trees</th>
           <th onclick="sortTable(13, 'plantTable')" class="bnd-center">Sunset Z14</th>
           <!-- Plant Requirements -->
-          <th onclick="sortTable(14, 'plantTable')">Sun Exposure   </th>
-          <th onclick="sortTable(15, 'plantTable')">Water Rqmts    </th>
-          <th onclick="sortTable(16, 'plantTable')">Soil Type      </th>
-          <th onclick="sortTable(17, 'plantTable')">pH Range       </th>
-          <th onclick="sortTable(18, 'plantTable')">Heat Tolerance </th>
-          <th onclick="sortTable(19, 'plantTable')">USDA Zones     </th>
-          <th onclick="sortTable(20, 'plantTable')">Sunset Zones   </th>
-          <th onclick="sortTable(21, 'plantTable')">Status         </th>
+          <th onclick="sortTable(14, 'plantTable')">Sun Exposure    </th>
+          <th onclick="sortTable(15, 'plantTable')">Water Rqmts     </th>
+          <th onclick="sortTable(16, 'plantTable')">Soil Type       </th>
+          <th onclick="sortTable(17, 'plantTable')">pH Range        </th>
+          <th onclick="sortTable(18, 'plantTable')">Heat Tolerance  </th>
+          <th onclick="sortTable(19, 'plantTable')">Deer Resistance </th>
+          <th onclick="sortTable(20, 'plantTable')">USDA Zones      </th>
+          <th onclick="sortTable(21, 'plantTable')">Sunset Zones    </th>
+          <th onclick="sortTable(22, 'plantTable')">Status          </th>
           <!-- Plant Detail header placeholder -->
           <th class="bnd-center"></th>
           <!-- Plant Update header placeholder -->
@@ -430,6 +444,7 @@
             <td>{{ plant.soil_type                      }}</td>
             <td>{{ plant.pH_min }} to {{ plant.pH_max }}              </td>
             <td>{{ plant.heat_tolerance                             }}</td>
+            <td>{{ plant.deer_resistance                            }}</td>
             <td>{{ plant.usda_zone_min }} to {{ plant.usda_zone_max }}</td>
             <td>{{ plant.sunset_zones }}                              </td>
             <!-- Admin -->
@@ -632,7 +647,7 @@
                               'Type', 'Height', 'Width', 'Bloom Color', 'Bloom Season', 'Bloom Range',
                               'Pollinators', 'CA Native', 'UCD All-Star', 'Davis Trees', 'Sunset Z14',
                               'Sun Exposure', 'Water Rqmts', 'Soil Type', 'pH Range', 
-                              'Heat Tolerance', 'USDA Zones', 'Sunset Zones',
+                              'Heat Tolerance', 'Deer Resistance', 'USDA Zones', 'Sunset Zones',
                               'Status',
       ]
       let column_index = 0;
@@ -660,9 +675,10 @@
         else if (column_options[i] == "Soil Type")        { column_index = 16; }
         else if (column_options[i] == "pH Range")         { column_index = 17; }
         else if (column_options[i] == "Heat Tolerance")   { column_index = 18; }
-        else if (column_options[i] == "USDA Zones")       { column_index = 19; }
-        else if (column_options[i] == "Sunset Zones")     { column_index = 20; }
-        else if (column_options[i] == "Status")           { column_index = 21; }
+        else if (column_options[i] == "Deer Resistance")  { column_index = 19; }
+        else if (column_options[i] == "USDA Zones")       { column_index = 20; }
+        else if (column_options[i] == "Sunset Zones")     { column_index = 21; }
+        else if (column_options[i] == "Status")           { column_index = 22; }
         else { console.log("ERROR: column_index not set!"); }
         // Check to see if the current column should be shown or hidden
         if (column_selection_safe.includes(column_options[i])){
@@ -698,27 +714,28 @@
     // Search menu - Reset all search criteria to 'Any'
     //-----------------------------------------------------------------------------   
     function searchReset() {
-      document.getElementById("id_common_name_search"   ).value = "";
-      document.getElementById("id_genus_search"         ).value = "";
-      document.getElementById("id_species_search"       ).value = "";
-      document.getElementById("id_type_x_search"        ).value = "Any";
-      document.getElementById("id_bloom_color_search"   ).value = "Any";
-      document.getElementById("id_bloom_season_search"  ).value = "Any";
-      document.getElementById("id_bloom_month_search"   ).value = "Any";
-      document.getElementById("id_pollinators_search"   ).value = "Any";
-      document.getElementById("id_ca_native_search"     ).value = "Any";
-      document.getElementById("id_ucd_all_star_search"  ).value = "Any";
-      document.getElementById("id_davis_trees_search"   ).value = "Any";
-      document.getElementById("id_sunset_z14_search"    ).value = "Any";
-      document.getElementById("id_sun_exposure_search"  ).value = "Any";
-      document.getElementById("id_water_rqmts_search"   ).value = "Any";
-      document.getElementById("id_soil_type_search"     ).value = "Any";
-      document.getElementById("id_pH_search"            ).value = "Any";
-      document.getElementById("id_heat_tolerance_search").value = "Any";
-      document.getElementById("id_usda_zone_search"     ).value = "Any";
-      document.getElementById("id_sunset_zone_search"   ).value = "Any";
-      document.getElementById("id_garden_search"        ).value = "Any";
-      document.getElementById("id_status_search"        ).value = "Any";
+      document.getElementById("id_common_name_search"    ).value = "";
+      document.getElementById("id_genus_search"          ).value = "";
+      document.getElementById("id_species_search"        ).value = "";
+      document.getElementById("id_type_x_search"         ).value = "Any";
+      document.getElementById("id_bloom_color_search"    ).value = "Any";
+      document.getElementById("id_bloom_season_search"   ).value = "Any";
+      document.getElementById("id_bloom_month_search"    ).value = "Any";
+      document.getElementById("id_pollinators_search"    ).value = "Any";
+      document.getElementById("id_ca_native_search"      ).value = "Any";
+      document.getElementById("id_ucd_all_star_search"   ).value = "Any";
+      document.getElementById("id_davis_trees_search"    ).value = "Any";
+      document.getElementById("id_sunset_z14_search"     ).value = "Any";
+      document.getElementById("id_sun_exposure_search"   ).value = "Any";
+      document.getElementById("id_water_rqmts_search"    ).value = "Any";
+      document.getElementById("id_soil_type_search"      ).value = "Any";
+      document.getElementById("id_pH_search"             ).value = "Any";
+      document.getElementById("id_heat_tolerance_search" ).value = "Any";
+      document.getElementById("id_deer_resistance_search").value = "Any";
+      document.getElementById("id_usda_zone_search"      ).value = "Any";
+      document.getElementById("id_sunset_zone_search"    ).value = "Any";
+      document.getElementById("id_garden_search"         ).value = "Any";
+      document.getElementById("id_status_search"         ).value = "Any";
     }
     //-----------------------------------------------------------------------------
     // Delete Plant Modal Script
