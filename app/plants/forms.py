@@ -28,6 +28,7 @@ BLOOM_COLOR_CHOICES = (
 	('creamy white', 'creamy white'),
 	('yellow',       'yellow'),
 	('red',          'red'), 
+	('burgundy',     'burgundy'), 
 	('pink',         'pink'),
 	('pale pink',    'pale pink'),
 	('lavendar',     'lavendar'),
@@ -285,6 +286,7 @@ MY_COLUMN_CHOICES = (
 PEST_TYPE_CHOICES = (
 	("tbd",     "tbd"),
 	("Insect",  "Insect"),
+	("Mollusk", "Mollusk"),
 	("Disease", "Disease"),
 	("Weed",    "Weed"),
 )

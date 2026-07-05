@@ -1553,6 +1553,7 @@ body.bnd-modal-open {
 /* Text Colors */
 .bnd-text-white     { color:white  }
 .bnd-text-red       { color:red    }
+.bnd-text-burgundy  { color:rgb(128, 0, 32) }
 .bnd-text-pink      { color:pink   }
 .bnd-text-lightpink { color:lightpink }
 .bnd-text-orange    { color:orange }

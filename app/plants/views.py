@@ -24,8 +24,8 @@ from .forms  import PestAddUpdateForm
 # Define attribute select option arrays
 plant_types      = ["tbd", "Annual", "Bulb", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", "Forb", 
                     "Succulent", "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
-bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "pink", "pale pink", "lavendar", "purple",
-                    "green", "blue", "orange", "none"]
+bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "burgundy", "pink", "pale pink", 
+                    "lavendar", "purple", "green", "blue", "orange", "none"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "Infrequent", "None"]
 pollinators_opt  = ["tbd", "Bees", "Butterflies", "Hummingbirds", "None"]
 ca_native_opt    = ["tbd", "Yes", "No"]
@@ -1723,7 +1723,7 @@ def plant_edit(request, id):
         soil_type_list    = string2list(plant.soil_type)
         # Get the full list of pests in the database
 
-        pests = Pest.objects.filter(Q(pest_type = 'Insect' ) | Q(pest_type = 'Disease') ).order_by('pest_type', 'pest_name')
+        pests = Pest.objects.filter( Q(pest_type = 'Insect' ) | Q(pest_type = 'Disease') | Q(pest_type = 'Mollusk') ).order_by('pest_type', 'pest_name')
         print("DEBUG: pests =", pests)
         # pests = Pest.objects.all().order_by('pest_type', 'pest_name')
         

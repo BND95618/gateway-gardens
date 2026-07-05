@@ -173,6 +173,21 @@
           {% endfor %}
         </fieldset>
         <fieldset>
+          <legend>Mollusk:</legend>
+          <label for="id_tbd">
+            <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
+            tbd
+          </label>
+          {% for pest in pests %}
+            {% if pest.pest_type == "Mollusk" %}
+              <label for="id_{{ pest }}">
+                <input type="checkbox" id="id_{{ pest }}" name="pest_list" value="{{ pest }}"/>
+                {{ pest }}
+              </label>
+            {% endif %}
+          {% endfor %}
+        </fieldset>
+        <fieldset>
           <legend>Disease:</legend>
           <label for="id_tbd">
             <input type="checkbox" id="id_tbd" name="pest_list" value="TBD" checked/>
