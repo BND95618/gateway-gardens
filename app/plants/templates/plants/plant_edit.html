@@ -351,10 +351,70 @@
 
 {% block js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- --------------------------- -->
-<!-- Form Validation Javascript  -->
-<!-- --------------------------- -->
+
 <script>
+  //-----------------------------------------------------------------------------
+  // Clear/set pollinators TBD value
+  //-----------------------------------------------------------------------------
+  const pollinators_checkboxes = document.querySelectorAll('input[name="pollinators"]');
+
+  pollinators_checkboxes.forEach((checkbox) =>
+  {
+    checkbox.addEventListener('change', (event) => {check_tbd(pollinators_checkboxes)});
+  });
+  //-----------------------------------------------------------------------------
+  // Clear/set bloom_color TBD value
+  //-----------------------------------------------------------------------------
+  const bloom_color_checkboxes = document.querySelectorAll('input[name="bloom_color"]');
+
+  bloom_color_checkboxes.forEach((checkbox) =>
+  {
+    checkbox.addEventListener('change', (event) => {check_tbd(bloom_color_checkboxes)});
+  });
+  //-----------------------------------------------------------------------------
+  // Clear/set bloom_season TBD value
+  //-----------------------------------------------------------------------------
+  const bloom_season_checkboxes = document.querySelectorAll('input[name="bloom_season"]');
+
+  bloom_season_checkboxes.forEach((checkbox) =>
+  {
+    checkbox.addEventListener('change', (event) => {check_tbd(bloom_season_checkboxes)});
+  });
+  //-----------------------------------------------------------------------------
+  // Clear/set sun_exposure TBD value
+  //-----------------------------------------------------------------------------
+  const sun_exposure_checkboxes = document.querySelectorAll('input[name="sun_exposure"]');
+
+  sun_exposure_checkboxes.forEach((checkbox) =>
+  {
+    checkbox.addEventListener('change', (event) => {check_tbd(sun_exposure_checkboxes)});
+  });
+  //-----------------------------------------------------------------------------
+  // Clear/set soil_type TBD value
+  //-----------------------------------------------------------------------------
+  const soil_type_checkboxes = document.querySelectorAll('input[name="soil_type"]');
+
+  soil_type_checkboxes.forEach((checkbox) =>
+  {
+    checkbox.addEventListener('change', (event) => {check_tbd(soil_type_checkboxes)});
+  });
+  //-----------------------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------------------
+  function check_tbd (checkboxes)
+  {
+    checkboxes[0].checked = true;
+    for(i=1; i < checkboxes.length; i++)
+    {
+      if(checkboxes[i].checked)
+      {
+        checkboxes[0].checked = false;
+      }
+    }
+  }
+  //-----------------------------------------------------------------------------
+  // Form Validation Javascript  -->
+  //-----------------------------------------------------------------------------
   // AR: Move to common JS file
   function validatePlantForm() 
   {
@@ -484,11 +544,9 @@
      return true;
     }
   }
-</script>
-<!-- --------------------------- -->
-<!-- Checkbox checker            -->
-<!-- --------------------------- -->
-<script>
+//-----------------------------------------------------------------------------
+// Checkbox checker
+//-----------------------------------------------------------------------------
   // if a selection is made then tbd is unchecked
   // if no selection is made then set tbd to checked
   function tbdCheck(checkbox_name) 
@@ -504,12 +562,9 @@
     }
     return;
   }
-</script>
-<!-- ---------------------------- -->
-<!-- Audio recorder Javascript    -->
-<!-- ---------------------------- -->
-<script>
-  // --------------------------------------------------
+  //-----------------------------------------------------------------------------
+  // Audio recorder Javascript
+  //-----------------------------------------------------------------------------
   // Set up basic variables for app
   // > mainSection contains thw audio visualizer & record/stop buttons
   // > soundClips contain the player for the recorded audio
@@ -697,7 +752,9 @@
       canvasCtx.stroke();
     }
   }
-  // --------------------------------------------------
+  //-----------------------------------------------------------------------------
+  //
+  //-----------------------------------------------------------------------------
   window.onresize = function () 
   {
     canvas.width = mainSection.offsetWidth;
@@ -705,21 +762,20 @@
 
   window.onresize();
 
-</script>
-
-<!-- Scroll to top of page -->
-<script>
+  //-----------------------------------------------------------------------------
+  // Scroll to top of page
+  //-----------------------------------------------------------------------------
   function scrollToTop() 
   {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
   }
+  //-----------------------------------------------------------------------------
+  // On Page load functions - modern version of windows.onload
+  //-----------------------------------------------------------------------------
+  document.addEventListener('DOMContentLoaded', (event) => 
+  {
+    scrollToTop();
+  });
 </script>
-
-<!-- On Page load functions -->
-<script>
-  // Scroll to top of page
-  window.onload = scrollToTop();
-</script>
-<!-- ---------------------------- -->
 {% endblock js %}
