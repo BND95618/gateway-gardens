@@ -604,6 +604,9 @@ def myplants_summary(request):
             myplant.plant.soil_type       = string_display(myplant.plant.soil_type)
             myplant.plant.heat_tolerance  = string_display(myplant.plant.heat_tolerance)
             myplant.plant.deer_resistance = string_display(myplant.plant.deer_resistance)
+            # Create short version od usda_zones for table display
+            myplant.plant.usda_zone_min = myplant.plant.usda_zone_min.split()[0]
+            myplant.plant.usda_zone_max = myplant.plant.usda_zone_max.split()[0]
             # clean up the list display
             myplant.sun_exposure = string_display(myplant.sun_exposure)
             myplant.water_level  = string_display(myplant.water_level)
