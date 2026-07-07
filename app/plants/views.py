@@ -1500,6 +1500,11 @@ def plants_summary(request):
             plant.soil_type       = string_display(plant.soil_type)
             plant.heat_tolerance  = string_display(plant.heat_tolerance)
             plant.deer_resistance = string_display(plant.deer_resistance)
+
+            # Create short version od usda_zones for table display
+            plant.usda_zone_min = plant.usda_zone_min.split()[0]
+            plant.usda_zone_max = plant.usda_zone_max.split()[0]
+
             # Set the plnt status regarding its status wrt my_plants 
             plant.plant_mine = 'not_in_my_garden'
             for myplant in myplants:
