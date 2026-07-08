@@ -71,10 +71,10 @@
         <tbody>
           <tr>
             <!-- To Do complete -->
-            <td class="bnd-center">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button class="bnd-button-small" onclick="todo_done({{ todo.id }})">
-                  <i class="material-icons">
+                <button class="bnd-button-table" onclick="todo_done({{ todo.id }})">
+                  <i class="material-icons bnd-text-black">
                     {% if todo.complete %}
                       check_box
                     {% else %}
@@ -93,19 +93,19 @@
             <td>{{ todo.repeat   }}</td>
             <td>{{ todo.details  }}</td>
             <!-- To Do edit -->
-            <td class="bnd-center">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button class="bnd-button-small" onclick="todo_edit({{ todo.id }})">
-                  <i class="material-icons">edit</i>
+                <button class="bnd-button-table" onclick="todo_edit({{ todo.id }})">
+                  <i class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </button>
               </div>
             </td>
             <!-- To Do delete -->
-            <td class="bnd-center">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button class="bnd-button-small" onclick="todo_delete({{ todo.id }})">
-                  <i class="material-icons">delete</i>
+                <button class="bnd-button-table" onclick="todo_delete({{ todo.id }})">
+                  <i class="material-icons bnd-text-black">delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
               </div>

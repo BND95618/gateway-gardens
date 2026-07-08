@@ -863,6 +863,20 @@ img {
     cursor:           pointer;
     white-space:      nowrap;
 }
+.bnd-button-table {
+    display:          inline-block;
+    margin:           0;
+    border:           none;
+    padding:          0;
+    background-color: transparent;
+    vertical-align:   middle;
+    overflow:         hidden;
+    text-decoration:  none;
+    color:            transparent;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
 .bnd-button-submit {
     color:            #fff; 
     background-color: green;

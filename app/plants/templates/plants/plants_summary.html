@@ -473,7 +473,7 @@
             {% if perms.plants.delete_plant %}
             <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button onclick="plants_delete({{ plant.id }})" class="bnd-button-small">
+                <button onclick="plants_delete({{ plant.id }})" class="bnd-button-table">
                   <i    class="material-icons bnd-text-black">delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
@@ -484,7 +484,7 @@
             <!-- My Plant Status Icon/Link -->
             <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button onclick="myplant_status({{ plant.id }})" class="bnd-button-small">
+                <button onclick="myplant_status({{ plant.id }})" class="bnd-button-table">
                   {% if plant.plant_mine == "in_my_garden" %}
                     <i    class="material-icons bnd-text-black">check</i>
                     <span class="bnd-tooltip-text">In my garden</span>

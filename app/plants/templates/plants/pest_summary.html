@@ -88,9 +88,9 @@
           {% endif %}
           <!-- Pest Delete Icon/Link -->
           {% if perms.plants.delete_plant %}
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button onclick="pest_delete({{ pest.id }})" class="bnd-button-small">
+                <button onclick="pest_delete({{ pest.id }})" class="bnd-button-table">
                   <i class="material-icons bnd-text-black">delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
