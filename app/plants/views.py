@@ -590,7 +590,7 @@ def myplants_summary(request):
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
-                                          Q(status = 'in_my_garden'))
+                                          Q(status = 'in_my_garden')).order_by('plant__commonName')
 
         # Execute the search
         for myplant in myplants:
@@ -858,8 +858,8 @@ def myplants_todo(request):
         if (request.user.username == garden.owner):
             myGarden = garden
 
-    # Obtain all of the To Do items for the current user
-    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username)
+    # Obtain all of the To Do items for the current user and sort by date
+    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username).order_by('date')
 
     context = { 'myGarden'    : myGarden,
                 "myplants_todo" : myplants_todos, }
