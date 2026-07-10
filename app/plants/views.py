@@ -1272,24 +1272,27 @@ def plants_summary(request):
 
         # Plant query -> Plants claimed by the current user or all plants in the database
         if garden_search == "In My Garden":
-            plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
-                                          Q(myplants__status      = "in_my_garden")        &
-                                          Q(commonName__icontains = common_name_search)    &
-                                          Q(genus__icontains      = genus_search)          &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(myplants__owner       = request.user.username) & 
+                Q(myplants__status      = "in_my_garden")        &
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
         elif garden_search == "My Wish List":
-            plants = Plant.objects.filter(Q(myplants__owner = request.user.username)    & 
-                                          Q(myplants__status      = "wish_list")        & 
-                                          Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search)       &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(myplants__owner       = request.user.username) & 
+                Q(myplants__status      = "wish_list")           & 
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
         else:
-            plants = Plant.objects.filter(Q(commonName__icontains = common_name_search) &
-                                          Q(genus__icontains      = genus_search)       &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
 
         # Run through the search criteria to select the plants to show
         for plant in plants:
@@ -1441,24 +1444,27 @@ def plants_summary(request):
         myplants = MyPlant.objects.filter(owner = request.user.username) 
         # Filter the plants db - "My plants" and "Common Name" substring
         if garden_search == "In My Garden":
-            plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
-                                          Q(myplants__status      = "in_my_garden")        &
-                                          Q(commonName__icontains = common_name_search)    &
-                                          Q(genus__icontains      = genus_search)          &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(myplants__owner       = request.user.username) & 
+                Q(myplants__status      = "in_my_garden")        &
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
         elif garden_search == "My Wish List":
-            plants = Plant.objects.filter(Q(myplants__owner       = request.user.username) & 
-                                          Q(myplants__status      = "wish_list")           & 
-                                          Q(commonName__icontains = common_name_search)    &
-                                          Q(genus__icontains      = genus_search)          &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(myplants__owner       = request.user.username) & 
+                Q(myplants__status      = "wish_list")           & 
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
         else:
-            plants = Plant.objects.filter(Q(commonName__icontains = common_name_search)    &
-                                          Q(genus__icontains      = genus_search)          &
-                                          Q(species__icontains    = species_search)
-                                          )
+            plants = Plant.objects.filter(
+                Q(commonName__icontains = common_name_search)    &
+                Q(genus__icontains      = genus_search)          &
+                Q(species__icontains    = species_search)
+            ).order_by("commonName")
 
         # Execute the search
         for plant in plants:
