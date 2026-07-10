@@ -1042,21 +1042,21 @@ def myplant_details(request, id):
     # Uses the id to locate the correct record in the MyPlant table
     myplant = MyPlant.objects.get(id=id)
     # format multiselect attributes to remove [, ', and ]
-    myplant.sun_exposure = string_display(myplant.sun_exposure)
-    plant                = Plant.objects.get(id=myplant.plant.id)
+    myplant.sun_exposure  = string_display(myplant.sun_exposure)
+    plant                 = Plant.objects.get(id=myplant.plant.id)
     # format multiselect attributes to remove [, ', and ] 
-    plant.bloom_color    = string_display(plant.bloom_color)
-    plant.bloom_season   = string_display(plant.bloom_season)
-    plant.pollinators    = string_display(plant.pollinators)
-    plant.sun_exposure   = string_display(plant.sun_exposure)
-    plant.water_rqmts    = string_display(plant.water_rqmts)
-    plant.soil_type      = string_display(plant.soil_type)
-    plant.heat_tolerance = string_display(plant.heat_tolerance)
-    plant.deer_tolerance = string_display(plant.deer_tolerance)
+    plant.bloom_color     = string_display(plant.bloom_color)
+    plant.bloom_season    = string_display(plant.bloom_season)
+    plant.pollinators     = string_display(plant.pollinators)
+    plant.sun_exposure    = string_display(plant.sun_exposure)
+    plant.water_rqmts     = string_display(plant.water_rqmts)
+    plant.soil_type       = string_display(plant.soil_type)
+    plant.heat_tolerance  = string_display(plant.heat_tolerance)
+    plant.deer_resistance = string_display(plant.deer_resistance)
     # get all To Do items related to the plant
-    myplant_todos        = MyPlantToDo.objects.filter(myplant__pk=id)
+    myplant_todos         = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
-    myplant_comments     = MyPlantComment.objects.filter(myplant__pk=id) 
+    myplant_comments      = MyPlantComment.objects.filter(myplant__pk=id) 
 
     template = loader.get_template("plants/myplant_details.html")
     context  = { "myplant"          : myplant, 
