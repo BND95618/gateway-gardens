@@ -2,9 +2,8 @@
 
 from django import forms 
 from django_quill.forms       import QuillFormField
-from django_flatpickr.widgets import DatePickerInput, TimePickerInput, DateTimePickerInput
-import datetime
 from django.core.validators   import URLValidator
+import datetime
 
 TYPE_CHOICES = (
 	("tbd",            "tbd"),
@@ -478,9 +477,9 @@ class GardenAddUpdateForm(forms.Form):
 		
 class MyPlantAddUpdateForm(forms.Form):
 	date_planted = forms.DateField(
-		widget=DatePickerInput(),
 		label="Date Planted",
 		required=False,
+		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
 		)
 	location = forms.CharField(
 		label='Location', 
@@ -548,13 +547,7 @@ class MyPlantToDoForm(forms.Form):
 	todo_date = forms.DateField(
 		label="Due Date",
 		required=True,
-		widget=forms.DateInput( 
-			attrs=
-				{'type'        : 'date',
-	 			 'min'         : datetime.date.today(),
-				},
-				format='%Y-%m-%d'
-			),
+		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
         )
 	todo_action = forms.ChoiceField(
 		label="Action",

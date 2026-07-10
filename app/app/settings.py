@@ -53,8 +53,6 @@ INSTALLED_APPS = [
     'imagekit',
     # Rich text editor
     'django_quill',
-    # Calendar for selecting dates
-    'django_flatpickr',
 ]
 
 MIDDLEWARE = [
@@ -213,12 +211,6 @@ else:
 # AR: Login redirection should be fixed
 LOGIN_REDIRECT_URL  = "/plants/index"
 LOGOUT_REDIRECT_URL = "/plants/index"
-
-# Global settings for all django_flatpickr inputs
-DJANGO_FLATPICKR = {
-    # Name of the theme to use - https://flatpickr.js.org/themes/
-    "theme_name": "dark",
-}
 
 # Quill Rich Text Editor configuration
 QUILL_CONFIGS = {

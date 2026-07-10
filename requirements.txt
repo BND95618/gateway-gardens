@@ -44,10 +44,6 @@ django-imagekit==6.0.0
 # https://pypi.org/project/django-quill-editor/
 django-quill-editor==0.1.42
 
-# Python: Graphical date/time entry package
-# https://pypi.org/project/django-flatpickr/
-django-flatpickr==2.0.3
-
 # Python: E-mail address syntax and deliverability validation library
 # https://pypi.org/project/email-validator/
 email-validator==2.3.0 # 2.2.0

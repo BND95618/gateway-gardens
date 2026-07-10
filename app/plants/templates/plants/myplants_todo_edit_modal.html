@@ -4,7 +4,6 @@
     <h4>Edit To Do Item</h4>
   </header>
   <!-- To Do add - create form -->
-  <!-- Required for django_flatpickr - date input widget -->
   {{ form.media }}
   <form action="{% url 'plants:myplants_todo_edit' myplant_todo.id%}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
