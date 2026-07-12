@@ -15,9 +15,6 @@ from imagekit.processors import Transpose # correct iPhone image rotation when d
 # Integrate Quill editor with Django project
 from django_quill.fields import QuillField
 
-# Store Django uploaded files as UUID files or inside UUID directories
-from django_uuid_upload  import upload_to_uuid
-
 def get_file_path(instance, filename):
     """
     Generates dynamic upload path:
