@@ -604,7 +604,7 @@ def myplants_summary(request):
             myplant.plant.soil_type       = string_display(myplant.plant.soil_type)
             myplant.plant.heat_tolerance  = string_display(myplant.plant.heat_tolerance)
             myplant.plant.deer_resistance = string_display(myplant.plant.deer_resistance)
-            # Create short version od usda_zones for table display
+            # Create short version of usda_zones for table display
             myplant.plant.usda_zone_min = myplant.plant.usda_zone_min.split()[0]
             myplant.plant.usda_zone_max = myplant.plant.usda_zone_max.split()[0]
             # clean up the list display
@@ -1510,7 +1510,7 @@ def plants_summary(request):
             plant.heat_tolerance  = string_display(plant.heat_tolerance)
             plant.deer_resistance = string_display(plant.deer_resistance)
 
-            # Create short version od usda_zones for table display
+            # Create short version of usda_zones for table display
             plant.usda_zone_min = plant.usda_zone_min.split()[0]
             plant.usda_zone_max = plant.usda_zone_max.split()[0]
 
@@ -1674,7 +1674,7 @@ def plant_edit(request, id):
             plant.cultivar        = form.cleaned_data.get('cultivar')
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
 
-            # Check to see if the request includes an audio filefor genus/species
+            # Check to see if the request includes an audio file for genus/species
             if 'blob' in request.FILES:
                 # Check to if there is an exiting audio file for the plant in the db
                 if (plant.audio_name):

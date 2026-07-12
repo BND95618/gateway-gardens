@@ -1,5 +1,8 @@
 # app/plants/models.py
 
+import os
+import uuid  # Used to generate unique filenames for images
+
 from django.db           import models
 from django.conf         import settings
 from django.urls         import reverse
@@ -9,13 +12,30 @@ from imagekit.models     import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from imagekit.processors import Transpose # correct iPhone image rotation when directly using the camera
 
-# Store Django uploaded files as UUID files or inside UUID directories
-from django_uuid_upload  import upload_to_uuid
-
 # Integrate Quill editor with Django project
 from django_quill.fields import QuillField
 
-# from uuid import uuid4 - youtube tutorial used this for image uniqueness (1:36:00)
+# Store Django uploaded files as UUID files or inside UUID directories
+from django_uuid_upload  import upload_to_uuid
+
+def get_file_path(instance, filename):
+    """
+    Generates dynamic upload path:
+    - Images: images/{uuid}.{ext}
+    - Audio: audio/{uuid}.{ext}
+    - Ignores original, only saves a single renamed file.
+    - Example path: MEDIA_ROOT/images/filename.jpg
+    """
+    ext = filename.split('.')[-1].lower()
+    unique_name = f"{uuid.uuid4()}.{ext}"
+    
+    # Determine the subdirectory based on file extension
+    if ext in ['jpg', 'jpeg', 'png', 'webp', 'gif']:
+        return os.path.join('images', unique_name)
+    elif ext in ['mp3', 'wav', 'flac', 'ogg']:
+        return os.path.join('audio', unique_name)
+    
+    return os.path.join('audio', unique_name) # Fallback
 
 class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
@@ -27,7 +47,7 @@ class Garden(models.Model):
     sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
     question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
-    image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_1       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -35,7 +55,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_2       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -43,7 +63,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_3       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -51,7 +71,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_4       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -59,7 +79,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_5       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -67,7 +87,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_6       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -75,7 +95,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_7       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -83,7 +103,7 @@ class Garden(models.Model):
                                         null       = True)
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
 
-    image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_8       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -193,30 +213,33 @@ class Plant(models.Model):
     variety           = models.CharField(max_length=64, default="tbd", blank=True)
     cultivar          = models.CharField(max_length=64, default="tbd", blank=True)
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)
-    audio_name        = models.FileField(upload_to=upload_to_uuid('audio/'), blank=True, null=True)
+    # Scientific name pronunciation audio
+    audio_name        = models.FileField(upload_to     = get_file_path, 
+                                         blank         = True, 
+                                         null          = True)
     # Images
-    image_1           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_1           = ProcessedImageField(upload_to  = get_file_path,
                                             processors = [Transpose(), ResizeToFill(400, 400)],
                                             format     = 'WEBP',
                                             options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_1         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_2           = ProcessedImageField(upload_to  = get_file_path,
                                             processors = [Transpose(), ResizeToFill(400, 400)],
                                             format     = 'WEBP',
                                             options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_2         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_3           = ProcessedImageField(upload_to  = get_file_path,
                                             processors = [Transpose(), ResizeToFill(400, 400)],
                                             format     = 'WEBP',
                                             options    = {'quality': 80},
                                             blank      = True, 
                                             null       = True)
     caption_3         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4           = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+    image_4           = ProcessedImageField(upload_to  = get_file_path,
                                             processors = [Transpose(), ResizeToFill(400, 400)],
                                             format     = 'WEBP',
                                             options    = {'quality': 80},
