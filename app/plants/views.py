@@ -1678,9 +1678,7 @@ def plant_edit(request, id):
             if 'blob' in request.FILES:
                 # Check to if there is an exiting audio file for the plant in the db
                 if (plant.audio_name):
-                    # Delete old audio file
                     plant.audio_name.delete(save=False)
-                # Save new audio file
                 plant.audio_name = request.FILES['blob']
                 
             plant.description    = form.cleaned_data.get('description')

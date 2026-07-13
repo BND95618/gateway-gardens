@@ -38,3 +38,7 @@ django-quill-editor==0.1.42
 # Python: E-mail address syntax and deliverability validation library
 # https://pypi.org/project/email-validator/
 email-validator==2.3.0
+
+# Python: Uniqifies uploded images and captured audio
+# https://pypi.org/project/django-uuid-upload/
+django-uuid-upload==1.0.0
