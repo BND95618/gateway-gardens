@@ -1725,7 +1725,7 @@ def plant_edit(request, id):
                     if (pest.pest_name == pest_item):
                         pest.plants.add(plant)
 
-        return HttpResponseRedirect(reverse('plants:plants_summary'))
+        return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,)))
     else:
         # convert string-based lists (retrieved from db) to true Python lists
         bloom_color_list  = string2list(plant.bloom_color)
