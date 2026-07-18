@@ -93,8 +93,7 @@
         id       = "id_plantForm"
         action   = "" 
         method   = "post" 
-        enctype  = "multipart/form-data"
-        onsubmit = "validatePlantForm()">
+        enctype  = "multipart/form-data" >
     {% csrf_token %}
     <div class="grid-container">
       <!-- Attributes -->
@@ -638,41 +637,14 @@
         soundClips.appendChild(clipContainer);
 
         audio.controls = true;
-        const blob = new Blob(chunks, { type: mediaRecorder.mimeType });
+        // declare the audioBlob and make it global
+        const audioBlob = new Blob(chunks, { type: mediaRecorder.mimeType });
+        globalThis.audioBlob = audioBlob;
+        
         chunks = [];
-        const audioURL = window.URL.createObjectURL(blob);
+
+        const audioURL = window.URL.createObjectURL(audioBlob);
         audio.src = audioURL;
-        // -------------------------------------------------- 
-        // Use fetch to upload the audio to the server when the form is submitted
-        // --------------------------------------------------
-        id_plantForm.onsubmit = async (event) => {
-          event.preventDefault();
-          //
-          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-          // Get the form plus the audio recording data entered by the user
-          let formData  = new FormData(id_plantForm);
-          formData.append('blob', blob, 'audio_file');
-          // Send the form plus the audio recording data entered by the user
-          // NOTE: The url must be set for add versus update
-          const postURL = window.location.pathname;
-          // Make the POST request and return a promise
-          fetch(postURL, 
-          {
-            method: "POST",
-            headers: 
-            {
-                'X-CSRFToken' : csrfToken
-            },
-            body: formData
-          })
-          .then(response => response.json())
-          .then(result => console.log('POST was a success: ${result}'))
-          .catch(error => console.error('An error occurred: ${error}'))
-          // AR: Go to plant details page for plant
-          // let returnURL = window.location.pathname;
-          let returnURL = "{% url 'plants:plants_summary' %}";
-          window.location.href = returnURL;
-        };
       };
       // --------------------------------------------------
       // As recording progresses, collect the audio data
@@ -776,6 +748,61 @@
   document.addEventListener('DOMContentLoaded', (event) => 
   {
     scrollToTop();
+  });
+
+  //----------------------------------------------------------------------------- 
+  // Upload form data plus audio to the server
+  //-----------------------------------------------------------------------------
+  document.getElementById('id_plantForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    //
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // Get the form plus the audio recording data entered by the user
+    const form = event.target;
+    const formData  = new FormData(form);
+
+    // Append the audioBlob recording to the FormData object
+    formData.append('audioBlob', audioBlob, 'audio_file');
+
+    console.log("DEBUG: POST user inputs to server");
+
+    // Send the form plus the audio recording data entered by the user
+    const postURL = window.location.pathname;
+
+    // Make the POST request and return a promise
+    try {
+      const response = await fetch(postURL, 
+      {
+        method: "POST",
+        headers: 
+        {
+          'X-CSRFToken' : csrfToken
+        },
+        body: formData
+      });
+
+      if (response.ok) 
+      {
+        const data = await response.json();
+        console.log('Success:', data);
+        // Handle your JSON response here (e.g., update DOM)
+        let returnURL = "{% url 'plants:plant_details' plant.id %}";
+        window.location.href = returnURL;
+      } 
+      else 
+      {
+        console.error('Server Error:', response.status);
+      }
+    } 
+    catch (error) 
+    {
+        console.error('Network error:', error);
+    }
+
+    // alert("DEBUG: Pause");
+
   });
 </script>
 {% endblock js %}

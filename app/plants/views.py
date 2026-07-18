@@ -1675,17 +1675,20 @@ def plant_edit(request, id):
             plant.phonetic_spelling = form.cleaned_data.get('phonetic_spelling')
 
             # Check to see if the request includes an audio file for genus/species
-            if 'blob' in request.FILES:
+            if 'audioBlob' in request.FILES:
                 # Check to if there is an exiting audio file for the plant in the db
                 if (plant.audio_name):
                     plant.audio_name.delete(save=False)
-                plant.audio_name = request.FILES['blob']
+                plant.audio_name = request.FILES['audioBlob']
                 
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
             plant.fertilization  = form.cleaned_data.get('fertilization')
             plant.propagation    = form.cleaned_data.get('propagation')
             plant.pests_diseases = form.cleaned_data.get('pests_diseases')
+
+            print("DEBUG: Got to image processing")
+
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
                 if (plant.image_1):
@@ -1725,7 +1728,13 @@ def plant_edit(request, id):
                     if (pest.pest_name == pest_item):
                         pest.plants.add(plant)
 
-        return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,)))
+        # return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,)))
+        response_data = {
+            'status': 'success',
+            'message': f'Received audio successfully',
+            # 'file_size': audio_file.size
+        }
+        return JsonResponse(response_data)
     else:
         # convert string-based lists (retrieved from db) to true Python lists
         bloom_color_list  = string2list(plant.bloom_color)
