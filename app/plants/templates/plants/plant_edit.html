@@ -763,8 +763,11 @@
     const form = event.target;
     const formData  = new FormData(form);
 
-    // Append the audioBlob recording to the FormData object
-    formData.append('audioBlob', audioBlob, 'audio_file');
+    if (typeof audioBlob !== 'undefined' && audioBlob !== null)
+    {
+      // Append the audioBlob recording to the FormData object
+      formData.append('audioBlob', audioBlob, 'audio_file');
+    }
 
     console.log("DEBUG: POST user inputs to server");
 
