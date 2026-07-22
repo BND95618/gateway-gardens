@@ -48,7 +48,6 @@ class Garden(models.Model):
     question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
     image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_1       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -57,7 +56,6 @@ class Garden(models.Model):
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_2       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -66,7 +64,6 @@ class Garden(models.Model):
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_3       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -75,7 +72,6 @@ class Garden(models.Model):
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_4       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -84,7 +80,6 @@ class Garden(models.Model):
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_5       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -93,7 +88,6 @@ class Garden(models.Model):
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_6       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -102,7 +96,6 @@ class Garden(models.Model):
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_7       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -111,7 +104,6 @@ class Garden(models.Model):
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
 
     image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_8       = ProcessedImageField(upload_to  = get_file_path,
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
                                         options    = {'quality': 80},
@@ -227,38 +219,34 @@ class Plant(models.Model):
                                          blank         = True, 
                                          null          = True)
     # Images
-    image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_1           = ProcessedImageField(upload_to  = get_file_path,
-                                            processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'WEBP',
-                                            options    = {'quality': 80},
-                                            blank      = True, 
-                                            null       = True)
-    caption_1         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_2           = ProcessedImageField(upload_to  = get_file_path,
-                                            processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'WEBP',
-                                            options    = {'quality': 80},
-                                            blank      = True, 
-                                            null       = True)
-    caption_2         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_3           = ProcessedImageField(upload_to  = get_file_path,
-                                            processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'WEBP',
-                                            options    = {'quality': 80},
-                                            blank      = True, 
-                                            null       = True)
-    caption_3         = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-    #$$ image_4           = ProcessedImageField(upload_to  = get_file_path,
-                                            processors = [Transpose(), ResizeToFill(400, 400)],
-                                            format     = 'WEBP',
-                                            options    = {'quality': 80},
-                                            blank      = True, 
-                                            null       = True)
-    caption_4         = models.CharField(max_length=64, default="tbd", blank=True)
+    image_1   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    format     = 'WEBP',
+                    options    = {'quality': 80},
+                    blank      = True, 
+                    null       = True)
+    caption_1 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_2   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    format     = 'WEBP',
+                    options    = {'quality': 80},
+                    blank      = True, 
+                    null       = True)
+    caption_2 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_3   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    format     = 'WEBP',
+                    options    = {'quality': 80},
+                    blank      = True, 
+                    null       = True)
+    caption_3 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_4   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    format     = 'WEBP',
+                    options    = {'quality': 80},
+                    blank      = True, 
+                    null       = True)
+    caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
     # Administrative stuff
     creator           = models.CharField(max_length=64, default="tbd", blank=True)
     creation_date     = models.DateField(auto_now_add=True)

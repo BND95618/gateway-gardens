@@ -339,12 +339,13 @@
       </div>
     </div>
     <br/>
-    <button type="submit" class="bnd-button-submit">Submit</button>
-    <button type="button" class="bnd-button bnd-yellow bnd-round-medium" onclick="validatePlantForm()">Check</button>
-    <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium">Reset </button>
+    <button type="submit" class="bnd-button-submit" id="id_submit"                                    >Submit</button>
+    <button type="button" class="bnd-button bnd-yellow bnd-round-medium" onclick="validatePlantForm()">Check </button>
+    <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium"                              >Reset </button>
     <a href="{% url 'plants:plants_summary' %}">
       <button type="button" class="bnd-button-cancel">Cancel</button>
     </a>
+    <div id="status"></div>
   </form>
 {% endblock content %}
 
@@ -749,46 +750,131 @@
   {
     scrollToTop();
   });
-
   //----------------------------------------------------------------------------- 
-  // Upload form data plus audio to the server
+  // Upload form data, compressed images, and audio to the server
   //-----------------------------------------------------------------------------
-  document.getElementById('id_plantForm').addEventListener('submit', async function(event) {
+  const form         = document.getElementById('id_plantForm');
+  const imageInput_1 = document.getElementById('id_image_1');
+  const imageInput_2 = document.getElementById('id_image_2');
+  const imageInput_3 = document.getElementById('id_image_3');
+  const imageInput_4 = document.getElementById('id_image_4');
+  const submitBtn    = document.getElementById('id_submit');
+  const statusDiv    = document.getElementById('status');
+     
+  form.addEventListener('submit', async (event) => {
+    // Prevent standard browser form submission
     event.preventDefault();
-
-    //
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    // Get the form plus the audio recording data entered by the user
-    const form = event.target;
-    const formData  = new FormData(form);
-
-    if (typeof audioBlob !== 'undefined' && audioBlob !== null)
+    // Get images
+    const file_1 = imageInput_1.files[0];
+    const file_2 = imageInput_2.files[0];
+    const file_3 = imageInput_3.files[0];
+    const file_4 = imageInput_4.files[0];
+    // Declare compressed image blobs
+    let compressedBlob_1 = null;
+    let compressedBlob_2 = null;
+    let compressedBlob_3 = null;
+    let compressedBlob_4 = null;
+    // 
+    try 
     {
+      // Update UI state
+      submitBtn.disabled = true;
+      //----------------------------------------------------------------------------
+      // Wait for the image compression promise to resolve
+      //----------------------------------------------------------------------------
+      if (file_1)
+      {
+        console.log("DEBUG: Starting image compression - Image 1");
+        statusDiv.innerText = "Compressing Image 1... Please wait.";
+        compressedBlob_1 = await compressImage(file_1, 800, 0.8);
+        console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 1");
+        
+      }
+      if (file_2)
+      {
+        console.log("DEBUG: Starting image compression - Image 2");
+        statusDiv.innerText = "Compressing Image 2... Please wait.";
+        compressedBlob_2 = await compressImage(file_2, 800, 0.8);
+        console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 2");
+      }
+      if (file_3)
+      {
+        console.log("DEBUG: Starting image compression - Image 3");
+        statusDiv.innerText = "Compressing Image 3... Please wait.";
+        compressedBlob_3 = await compressImage(file_3, 800, 0.8);
+        console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 3");
+      }
+      if (file_4)
+      {
+        console.log("DEBUG: Starting image compression - Image 4");
+        statusDiv.innerText = "Compressing Image 4... Please wait.";
+        compressedBlob_4 = await compressImage(file_4, 800, 0.8);
+        console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 4");
+      }
+      //----------------------------------------------------------------------------
+      //
+      //----------------------------------------------------------------------------
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      // Get the form plus the audio recording data entered by the user
+      const formData  = new FormData(form);
+      //----------------------------------------------------------------------------
+      // Append the compressed images recording to the FormData object
+      //----------------------------------------------------------------------------
+      if (typeof compressedBlob_1 !== 'undefined' && compressedBlob_1 !== null)
+      {
+        console.log("DEBUG: Compressed image 1 exists");
+        formData.delete('image_1');
+        formData.append('image_1', compressedBlob_1, 'image_1.jpg');
+      }
+      if (typeof compressedBlob_2 !== 'undefined' && compressedBlob_2 !== null)
+      {
+        console.log("DEBUG: Compressed image 2 exists");
+        formData.delete('image_2');
+        formData.append('image_2', compressedBlob_2, 'image_2.jpg');
+      }
+      if (typeof compressedBlob_3 !== 'undefined' && compressedBlob_3 !== null)
+      {
+        console.log("DEBUG: Compressed image 3 exists");
+        formData.delete('image_3');
+        formData.append('image_3', compressedBlob_3, 'image_3.jpg');
+      }
+      if (typeof compressedBlob_4 !== 'undefined' && compressedBlob_4 !== null)
+      {
+        console.log("DEBUG: Compressed image 4 exists");
+        formData.delete('image_4');
+        formData.append('image_4', compressedBlob_4, 'image_4.jpg');
+      }
+      //----------------------------------------------------------------------------
       // Append the audioBlob recording to the FormData object
-      formData.append('audioBlob', audioBlob, 'audio_file');
-    }
-
-    console.log("DEBUG: POST user inputs to server");
-
-    // Send the form plus the audio recording data entered by the user
-    const postURL = window.location.pathname;
-
-    // Make the POST request and return a promise
-    try {
+      //----------------------------------------------------------------------------
+      if (typeof audioBlob !== 'undefined' && audioBlob !== null)
+      {
+        formData.append('audioBlob', audioBlob, 'audio_file');
+      }
+      //----------------------------------------------------------------------------
+      // Send the form plus the audio recording data entered by the user
+      //----------------------------------------------------------------------------
+      console.log("DEBUG: POST user inputs to server");
+      statusDiv.innerText = "Upload in process...";
+      const postURL = window.location.pathname;
       const response = await fetch(postURL, 
       {
-        method: "POST",
-        headers: 
-        {
-          'X-CSRFToken' : csrfToken
-        },
-        body: formData
+        method:  "POST",
+        headers: {'X-CSRFToken' : csrfToken},
+        body:    formData
       });
-
       if (response.ok) 
       {
         const data = await response.json();
+        statusDiv.innerText = "Upload successful!";
         console.log('Success:', data);
         // Handle your JSON response here (e.g., update DOM)
         let returnURL = "{% url 'plants:plant_details' plant.id %}";
@@ -803,9 +889,57 @@
     {
         console.error('Network error:', error);
     }
-
-    // alert("DEBUG: Pause");
-
+    alert("DEBUG: Pause");
   });
+  //----------------------------------------------------------------------------- 
+  // Asynchronous Image Compression Function
+  //----------------------------------------------------------------------------- 
+  function compressImage(file, maxWidth, quality) 
+  {
+    return new Promise((resolve, reject) => 
+    {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+                
+      reader.onload = (event) => 
+      {
+        const img = new Image();
+        img.src = event.target.result;
+            
+        img.onload = () => 
+        {
+          // Calculate new constrained dimensions maintaining aspect ratio
+          let width = img.width;
+          let height = img.height;
+                
+          if (width > maxWidth) 
+          {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+          // Setup Canvas element
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;      
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          // Export to standard JPEG blob with custom lossy quality settings
+          canvas.toBlob((blob) => 
+          {
+            if (blob) 
+            {
+              resolve(blob);
+            } 
+            else 
+            {
+              reject(new Error('Canvas compression failed'));
+            }
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = (err) => reject(err);
+      };
+      reader.onerror = (err) => reject(err);
+    });
+  }
 </script>
 {% endblock js %}
