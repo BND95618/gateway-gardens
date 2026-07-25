@@ -277,7 +277,11 @@
 
                 {% if plant.image_1 %}
                   <hr>
-                  <img class="bnd-image-thumbnail" src="{{ plant.image_1.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <img id      = "id_image_1_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "{{ plant.image_1.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
                 {% endif %}
               </fieldset>
@@ -294,7 +298,11 @@
 
                 {% if plant.image_2 %}
                   <hr>
-                  <img class="bnd-image-thumbnail" src="{{ plant.image_2.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <img id      = "id_image_2_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "{{ plant.image_2.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
                 {% endif %}
               </fieldset>
@@ -311,7 +319,11 @@
 
                 {% if plant.image_3 %}
                   <hr>
-                  <img class="bnd-image-thumbnail" src="{{ plant.image_3.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <img id      = "id_image_3_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "{{ plant.image_3.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
                 {% endif %}
               </fieldset>
@@ -328,7 +340,11 @@
 
                 {% if plant.image_4 %}
                   <hr>
-                  <img class="bnd-image-thumbnail" src="{{ plant.image_4.url }}" onclick="imageModalOpen(this)" alt="No image found">
+                  <img id      = "id_image_4_preview" 
+                       class   = "bnd-image-thumbnail"
+                       src     = "{{ plant.image_4.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
                 {% endif %}
               </fieldset>
@@ -544,9 +560,9 @@
      return true;
     }
   }
-//-----------------------------------------------------------------------------
-// Checkbox checker
-//-----------------------------------------------------------------------------
+  //-----------------------------------------------------------------------------
+  // Checkbox checker
+  //-----------------------------------------------------------------------------
   // if a selection is made then tbd is unchecked
   // if no selection is made then set tbd to checked
   function tbdCheck(checkbox_name) 
@@ -941,5 +957,49 @@
       reader.onerror = (err) => reject(err);
     });
   }
+
+  //-----------------------------------------------------------------------------
+  // Function: Update preview image when new image is selected
+  //-----------------------------------------------------------------------------
+  // Watch for image source changes
+  const image_1_input   = document.getElementById('id_image_1');
+  const image_2_input   = document.getElementById('id_image_2');
+  const image_3_input   = document.getElementById('id_image_3');
+  const image_4_input   = document.getElementById('id_image_4');
+  //
+  const image_1_preview = document.getElementById('id_image_1_preview');
+  const image_2_preview = document.getElementById('id_image_2_preview');
+  const image_3_preview = document.getElementById('id_image_3_preview');
+  const image_4_preview = document.getElementById('id_image_4_preview');
+
+  // Listen for any character changes in the input fields
+  image_1_input.addEventListener('change', async (event) => 
+  {
+    console.log("DEBUG: Image 1 source updated", image_1_input.value);
+    updatePreviewImage(image_1_input.files[0], image_1_preview);
+  });
+  image_2_input.addEventListener('change', async (event) => 
+  {
+    console.log("DEBUG: Image 2 source updated", image_2_input.value);
+    updatePreviewImage(image_2_input.files[0], image_2_preview);
+  });
+  image_3_input.addEventListener('change', async (event) => 
+  {
+    console.log("DEBUG: Image 3 source updated", image_3_input.value);
+    updatePreviewImage(image_3_input.files[0], image_3_preview);
+  });
+  image_4_input.addEventListener('change', async (event) => 
+  {
+    console.log("DEBUG: Image 4 source updated", image_4_input.value);
+    updatePreviewImage(image_4_input.files[0], image_4_preview);
+  });
+  //-----------------------------------------------------------------------------
+  // Function: Update the preview image
+  //-----------------------------------------------------------------------------
+  function updatePreviewImage(file, image_preview)
+  {
+    image_preview.src = URL.createObjectURL(file);
+  }
+
 </script>
 {% endblock js %}
