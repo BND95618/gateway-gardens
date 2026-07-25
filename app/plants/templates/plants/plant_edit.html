@@ -283,6 +283,14 @@
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
+                {% else %}
+                  <hr>
+                  <img id      = "id_image_1_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "Insert Image Here!">
+                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
@@ -304,6 +312,14 @@
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
+                {% else %}
+                  <hr>
+                  <img id      = "id_image_2_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "Insert Image Here!">
+                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>  
                 {% endif %}
               </fieldset>
             </figure>
@@ -325,6 +341,14 @@
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
+                {% else %}
+                  <hr>
+                  <img id      = "id_image_3_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "Insert Image Here!">
+                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
@@ -346,6 +370,14 @@
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
+                {% else %}
+                  <hr>
+                  <img id      = "id_image_4_preview" 
+                       class   = "bnd-image-thumbnail" 
+                       src     = "" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "Insert Image Here!">
+                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
                 {% endif %}
               </fieldset>
             </figure>
@@ -961,36 +993,31 @@
   //-----------------------------------------------------------------------------
   // Function: Update preview image when new image is selected
   //-----------------------------------------------------------------------------
-  // Watch for image source changes
+  // Select image file input field
   const image_1_input   = document.getElementById('id_image_1');
   const image_2_input   = document.getElementById('id_image_2');
   const image_3_input   = document.getElementById('id_image_3');
   const image_4_input   = document.getElementById('id_image_4');
-  //
+  // Select image preview
   const image_1_preview = document.getElementById('id_image_1_preview');
   const image_2_preview = document.getElementById('id_image_2_preview');
   const image_3_preview = document.getElementById('id_image_3_preview');
   const image_4_preview = document.getElementById('id_image_4_preview');
-
   // Listen for any character changes in the input fields
   image_1_input.addEventListener('change', async (event) => 
   {
-    console.log("DEBUG: Image 1 source updated", image_1_input.value);
     updatePreviewImage(image_1_input.files[0], image_1_preview);
   });
   image_2_input.addEventListener('change', async (event) => 
   {
-    console.log("DEBUG: Image 2 source updated", image_2_input.value);
     updatePreviewImage(image_2_input.files[0], image_2_preview);
   });
   image_3_input.addEventListener('change', async (event) => 
   {
-    console.log("DEBUG: Image 3 source updated", image_3_input.value);
     updatePreviewImage(image_3_input.files[0], image_3_preview);
   });
   image_4_input.addEventListener('change', async (event) => 
   {
-    console.log("DEBUG: Image 4 source updated", image_4_input.value);
     updatePreviewImage(image_4_input.files[0], image_4_preview);
   });
   //-----------------------------------------------------------------------------
