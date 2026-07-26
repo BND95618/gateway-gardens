@@ -269,119 +269,118 @@
             <figure>
               <fieldset class="bnd-flex-image">
                 <legend>Image 1:</legend>
-                <label for="id_image_1">Filename:</label>
-                {{ form.image_1 }}
-                <br/>
-                <label for="id_caption_1">Caption:</label>
-                {{ form.caption_1 }}
-
                 {% if plant.image_1 %}
-                  <hr>
                   <img id      = "id_image_1_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "{{ plant.image_1.url }}" 
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
-                {% else %}
                   <hr>
+                  <div id = "id_image_1_file_input">
+                    {{ form.image_1 }}
+                  </div>
+                {% else %}
                   <img id      = "id_image_1_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "" 
                        onclick = "imageModalOpen(this)" 
-                       alt     = "Insert Image Here!">
-                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  {{ form.image_1 }}
                 {% endif %}
+                <label for="id_caption_1">Enter caption:</label>
+                {{ form.caption_1 }}
               </fieldset>
             </figure>
             <!-- Image 2 -->
             <figure>
               <fieldset class="bnd-flex-image">
                 <legend>Image 2:</legend>
-                <label for="id_image_2">Filename:</label>
-                {{ form.image_2 }}
-                <br/>
-                <label for="id_caption_2">Caption:</label>
-                {{ form.caption_2 }}
-
                 {% if plant.image_2 %}
-                  <hr>
                   <img id      = "id_image_2_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "{{ plant.image_2.url }}" 
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
-                {% else %}
                   <hr>
+                  <div id = "id_image_2_file_input">
+                    {{ form.image_2 }}
+                  </div>
+                {% else %}
                   <img id      = "id_image_2_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "" 
                        onclick = "imageModalOpen(this)" 
-                       alt     = "Insert Image Here!">
-                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>  
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  {{ form.image_2 }}
                 {% endif %}
+                <label for="id_caption_2">Enter caption:</label>
+                {{ form.caption_2 }}
               </fieldset>
             </figure>
-`             <!-- Image 3 -->
+`           <!-- Image 3 -->
             <figure>
               <fieldset class="bnd-flex-image">
                 <legend>Image 3:</legend>
-                <label for="id_image_3">Filename:</label>
-                {{ form.image_3 }}
-                <br/>
-                <label for="id_caption_3">Caption:</label>
-                {{ form.caption_3 }}
-
                 {% if plant.image_3 %}
-                  <hr>
                   <img id      = "id_image_3_preview" 
-                       class   = "bnd-image-thumbnail" 
-                       src     = "{{ plant.image_3.url }}" 
-                       onclick = "imageModalOpen(this)" 
-                       alt     = "No image found">
+                      class   = "bnd-image-thumbnail" 
+                      src     = "{{ plant.image_3.url }}" 
+                      onclick = "imageModalOpen(this)" 
+                      alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
-                {% else %}
                   <hr>
-                  <img id      = "id_image_3_preview" 
-                       class   = "bnd-image-thumbnail" 
-                       src     = "" 
-                       onclick = "imageModalOpen(this)" 
-                       alt     = "Insert Image Here!">
-                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
+                  <div id = "id_image_3_file_input">
+                    {{ form.image_3 }}
+                  </div>
+                {% else %}
+                  <img id     = "id_image_3_preview" 
+                      class   = "bnd-image-thumbnail" 
+                      src     = "" 
+                      onclick = "imageModalOpen(this)" 
+                      alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  {{ form.image_3 }}
                 {% endif %}
+                <label for="id_caption_3">Enter caption:</label>
+                {{ form.caption_3 }}
               </fieldset>
             </figure>
             <!-- Image 4 -->
             <figure>
               <fieldset class="bnd-flex-image">
                 <legend>Image 4:</legend>
-                <label for="id_image_4">Filename:</label>
-                {{ form.image_4 }}
-                <br/>
-                <label for="id_caption_4">Caption:</label>
-                {{ form.caption_4 }}
-
                 {% if plant.image_4 %}
-                  <hr>
                   <img id      = "id_image_4_preview" 
-                       class   = "bnd-image-thumbnail"
-                       src     = "{{ plant.image_4.url }}" 
-                       onclick = "imageModalOpen(this)" 
-                       alt     = "No image found">
+                      class   = "bnd-image-thumbnail" 
+                      src     = "{{ plant.image_4.url }}" 
+                      onclick = "imageModalOpen(this)" 
+                      alt     = "No image found">
                   <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
-                {% else %}
                   <hr>
-                  <img id      = "id_image_4_preview" 
-                       class   = "bnd-image-thumbnail" 
-                       src     = "" 
-                       onclick = "imageModalOpen(this)" 
-                       alt     = "Insert Image Here!">
-                  <figcaption class="bnd-image-thumbnail-caption">TBD</figcaption>
+                  <div id = "id_image_4_file_input">
+                    {{ form.image_4 }}
+                  </div>
+                {% else %}
+                  <img id     = "id_image_4_preview" 
+                      class   = "bnd-image-thumbnail" 
+                      src     = "" 
+                      onclick = "imageModalOpen(this)" 
+                      alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  {{ form.image_4 }}
                 {% endif %}
+                <label for="id_caption_3">Enter caption:</label>
+                {{ form.caption_4 }}
               </fieldset>
             </figure>
-
           </div>
         </fieldset>
       </div>
@@ -797,7 +796,43 @@
   document.addEventListener('DOMContentLoaded', (event) => 
   {
     scrollToTop();
+    //
+    const container_1 = document.getElementById('id_image_1_file_input');
+    cleanUpImageSelector(container_1);
+    const container_2 = document.getElementById('id_image_2_file_input');
+    cleanUpImageSelector(container_2)
+    const container_3 = document.getElementById('id_image_3_file_input');
+    cleanUpImageSelector(container_3)
+    const container_4 = document.getElementById('id_image_4_file_input');
+    cleanUpImageSelector(container_4)
   });
+  //----------------------------------------------------------------------------- 
+  // Function: remove unwaned text/tags from image selector
+  //----------------------------------------------------------------------------- 
+  function cleanUpImageSelector(container)
+  {
+
+    // const textToHide = ' Currently: ';
+    // Wrap the specific text in a span with display:none
+    // container.innerHTML = container.innerHTML.replace(textToHide, `<span style="display: none;">${textToHide}</span>`);
+
+    const link = container.querySelector("a");
+    if (link) {
+      link.remove();
+    }
+    const input = container.querySelector('input');
+    if (input) {
+      input.remove();
+    }
+    const label = container.querySelector('label');
+    if (label) {
+      label.remove();
+    }
+    const br = container.querySelector('br');
+    if (br) {
+      br.remove();
+    }
+  }
   //----------------------------------------------------------------------------- 
   // Upload form data, compressed images, and audio to the server
   //-----------------------------------------------------------------------------
@@ -937,7 +972,6 @@
     {
         console.error('Network error:', error);
     }
-    alert("DEBUG: Pause");
   });
   //----------------------------------------------------------------------------- 
   // Asynchronous Image Compression Function
