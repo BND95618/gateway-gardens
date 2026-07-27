@@ -284,7 +284,6 @@
                   <img id      = "id_image_1_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "" 
-                       onclick = "imageModalOpen(this)" 
                        alt     = "--- Image displays here ---">
                   <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
@@ -313,7 +312,6 @@
                   <img id      = "id_image_2_preview" 
                        class   = "bnd-image-thumbnail" 
                        src     = "" 
-                       onclick = "imageModalOpen(this)" 
                        alt     = "--- Image displays here ---">
                   <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
@@ -328,7 +326,7 @@
               <fieldset class="bnd-flex-image">
                 <legend>Image 3:</legend>
                 {% if plant.image_3 %}
-                  <img id      = "id_image_3_preview" 
+                  <img id     = "id_image_3_preview" 
                       class   = "bnd-image-thumbnail" 
                       src     = "{{ plant.image_3.url }}" 
                       onclick = "imageModalOpen(this)" 
@@ -342,7 +340,6 @@
                   <img id     = "id_image_3_preview" 
                       class   = "bnd-image-thumbnail" 
                       src     = "" 
-                      onclick = "imageModalOpen(this)" 
                       alt     = "--- Image displays here ---">
                   <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
@@ -357,7 +354,7 @@
               <fieldset class="bnd-flex-image">
                 <legend>Image 4:</legend>
                 {% if plant.image_4 %}
-                  <img id      = "id_image_4_preview" 
+                  <img id     = "id_image_4_preview" 
                       class   = "bnd-image-thumbnail" 
                       src     = "{{ plant.image_4.url }}" 
                       onclick = "imageModalOpen(this)" 
@@ -370,8 +367,7 @@
                 {% else %}
                   <img id     = "id_image_4_preview" 
                       class   = "bnd-image-thumbnail" 
-                      src     = "" 
-                      onclick = "imageModalOpen(this)" 
+                      src     = ""  
                       alt     = "--- Image displays here ---">
                   <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
@@ -394,6 +390,14 @@
     </a>
     <div id="status"></div>
   </form>
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <div id="image_modal" class="bnd-modal" onclick="imageModalClose(this)">
+    <div class="bnd-modal-image-container">
+      <img id="image" class="bnd-modal-image">
+    </div>
+  </div>
 {% endblock content %}
 
 {% block js %}
@@ -796,43 +800,7 @@
   document.addEventListener('DOMContentLoaded', (event) => 
   {
     scrollToTop();
-    //
-    const container_1 = document.getElementById('id_image_1_file_input');
-    cleanUpImageSelector(container_1);
-    const container_2 = document.getElementById('id_image_2_file_input');
-    cleanUpImageSelector(container_2)
-    const container_3 = document.getElementById('id_image_3_file_input');
-    cleanUpImageSelector(container_3)
-    const container_4 = document.getElementById('id_image_4_file_input');
-    cleanUpImageSelector(container_4)
   });
-  //----------------------------------------------------------------------------- 
-  // Function: remove unwaned text/tags from image selector
-  //----------------------------------------------------------------------------- 
-  function cleanUpImageSelector(container)
-  {
-
-    // const textToHide = ' Currently: ';
-    // Wrap the specific text in a span with display:none
-    // container.innerHTML = container.innerHTML.replace(textToHide, `<span style="display: none;">${textToHide}</span>`);
-
-    const link = container.querySelector("a");
-    if (link) {
-      link.remove();
-    }
-    const input = container.querySelector('input');
-    if (input) {
-      input.remove();
-    }
-    const label = container.querySelector('label');
-    if (label) {
-      label.remove();
-    }
-    const br = container.querySelector('br');
-    if (br) {
-      br.remove();
-    }
-  }
   //----------------------------------------------------------------------------- 
   // Upload form data, compressed images, and audio to the server
   //-----------------------------------------------------------------------------
@@ -973,57 +941,6 @@
         console.error('Network error:', error);
     }
   });
-  //----------------------------------------------------------------------------- 
-  // Asynchronous Image Compression Function
-  //----------------------------------------------------------------------------- 
-  function compressImage(file, maxWidth, quality) 
-  {
-    return new Promise((resolve, reject) => 
-    {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-                
-      reader.onload = (event) => 
-      {
-        const img = new Image();
-        img.src = event.target.result;
-            
-        img.onload = () => 
-        {
-          // Calculate new constrained dimensions maintaining aspect ratio
-          let width = img.width;
-          let height = img.height;
-                
-          if (width > maxWidth) 
-          {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-          // Setup Canvas element
-          const canvas = document.createElement('canvas');
-          canvas.width = width;
-          canvas.height = height;      
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          // Export to standard JPEG blob with custom lossy quality settings
-          canvas.toBlob((blob) => 
-          {
-            if (blob) 
-            {
-              resolve(blob);
-            } 
-            else 
-            {
-              reject(new Error('Canvas compression failed'));
-            }
-          }, 'image/jpeg', quality);
-        };
-        img.onerror = (err) => reject(err);
-      };
-      reader.onerror = (err) => reject(err);
-    });
-  }
-
   //-----------------------------------------------------------------------------
   // Function: Update preview image when new image is selected
   //-----------------------------------------------------------------------------
