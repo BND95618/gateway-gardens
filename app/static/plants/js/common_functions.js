@@ -1,6 +1,73 @@
 // app/plants/static/plants/js/common_functions.js
 
+//----------------------------------------------------------------------------- 
+  // Asynchronous Image Compression Function
+  //----------------------------------------------------------------------------- 
+function compressImage(file, maxWidth, quality) 
+{
+    return new Promise((resolve, reject) => 
+    {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+                
+        reader.onload = (event) => 
+        {
+        const img = new Image();
+        img.src = event.target.result;
+            
+        img.onload = () => 
+        {
+            // Calculate new constrained dimensions maintaining aspect ratio
+            let width = img.width;
+            let height = img.height;
+                
+            if (width > maxWidth) 
+            {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+            }
+            // Setup Canvas element
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;      
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            // Export to standard JPEG blob with custom lossy quality settings
+            canvas.toBlob((blob) => 
+            {
+            if (blob) 
+            {
+                resolve(blob);
+            } 
+            else 
+            {
+                reject(new Error('Canvas compression failed'));
+            }
+            }, 'image/jpeg', quality);
+        };
+        img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+    });
+}
+// -------------------------------------------------------------------------- //
+// Expand image via modal
+// -------------------------------------------------------------------------- //
+function imageModalOpen(element) {
+    document.getElementById("image").src = element.src;
+    document.getElementById("image_modal").style.display = "block";
+    // Freeze the main body while the modal is open
+    // AR: freeze page when modal is open
+    // document.body.classList.add("bnd-modal-open");
+}
+function imageModalClose(element) {
+element.style.display = "none";
+// Unfreeze the main body
+document.body.classList.remove("bnd-modal-open");
+}
+// -------------------------------------------------------------------------- //
 // Table sort script - alphetically - toggle between ascending and descending
+// -------------------------------------------------------------------------- //
 function sortTable(n, tableID) 
 {
     let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

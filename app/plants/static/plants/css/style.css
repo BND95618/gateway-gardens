@@ -77,6 +77,13 @@ body {
         font-size:        12pt; 
     }
 }
+/* Freeze background while modal is open */
+/* AR: Get this working                  */
+html:has(dialog[open]),
+body:has(dialog[open]) { 
+    overflow: hidden; 
+}
+
 section {
     margin-top:    16px;
     margin-bottom: 0px;

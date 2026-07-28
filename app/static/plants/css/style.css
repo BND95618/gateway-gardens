@@ -1,1 +1,1640 @@
-/* app/plants/static/plants/css/style.css */
+/* app/plants/static/plants/css/style.css
+    Basic Selectors
+    > Element Selectors = tag
+    > Class Selectors   = '.'
+    > ID Selectors      = '#'
+
+    Combinators:
+    > descendant selector       = space
+    > child selector            = >
+    > adjacent sibling selector = +
+    > general sibling selector  = ~
+
+    Pseudo=classes and Pseudo-elements
+    > Pseudo-classes  = :   current state or position in the document tree
+    > Pseudo-elements = ::  target a specific part of an element
+
+    z-index values:
+      10: search sidebar
+      20: main content table th
+      30: modals and tooltips
+      40: modal headers
+      50: page nav/main spacer
+      60: page navigation bar
+      70: page banner
+
+    Unit definitions:
+      em:  Relative to the font-size of the element
+      rem: Relative to font-size of the root element
+      px:  pixels (1px = 1/96th of 1in)
+
+    Pseudo-class selector order:
+      > link
+      > visited
+      > hover
+      > focus
+      > active
+
+    @media breakpoints
+      > iPhone 16:                  393 x  1000
+      > iPad Air (3rd generation):  834 x 1112
+*/
+/* ------------------------------------------------------------ */
+/* CSS variables                                                */
+/* ------------------------------------------------------------ */
+:root 
+{
+    --shadow-parameters: 5px 10px 18px darkgray;
+}
+/* ------------------------------------------------------------ */
+/* HTML element formatting                                      */
+/* ------------------------------------------------------------ */
+html{
+    box-sizing:  border-box;    /* use the new box model */
+    margin:      0;             /* remove default */
+    padding:     0;             /* remove default */
+    overflow-x:  hidden;
+}
+/* ------------------------------------------------------------ */
+/* Global formatting ("HTML and CSS p. 472)                     */
+/* ------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: inherit; }
+
+body {
+    margin:           0;             /* remove default */
+    padding:          0;             /* remove default */
+    background-color: whitesmoke;
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        14px;
+    line-height:      1.5;
+    @media screen and (400px <= width <= 849px) { font-size: 14px; }
+    @media screen and (850px <= width <= 999px) { font-size: 14px; }
+    @media screen and (min-width: 1000px)       { font-size: 16px; }
+    @media print {
+        margin:           0;
+        background-color: white;
+        color:            black;
+        font-size:        12pt; 
+    }
+}
+/* Freeze background while modal is open */
+/* AR: Get this working                  */
+html:has(dialog[open]),
+body:has(dialog[open]) { 
+    overflow: hidden; 
+}
+
+section {
+    margin-top:    16px;
+    margin-bottom: 0px;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+    margin:      10px 0px;
+    @media print {
+        margin: 0px;
+        color: black;
+    }
+}
+h1 {
+    font-size:   18px;
+    white-space: nowrap;
+}
+h2    { font-size: 14px; }
+h3    { font-size: 14px; }
+h4    { font-size: 14px; }
+h5    { font-size: 14px; }
+h6    { font-size: 14px; }
+p     { font-size: 12px; }
+li    { font-size: 12px; }
+label { font-size: 12px; }
+select, select::picker(select) { font-size: 12px; }
+@media screen and (400px <= width <= 849px) {
+    h1    {font-size: 20px}
+    h2    {font-size: 18px}
+    h3    {font-size: 16px}
+    h4    {font-size: 14px}
+    h5    {font-size: 14px}
+    h6    {font-size: 14px}
+    p     {font-size: 14px}
+    li    {font-size: 14px}
+    label {font-size: 14px}
+    select, select::picker(select){font-size: 14px}
+}
+@media screen and (850px <= width <= 999px) {
+    h1   {font-size: 24px}
+    h2   {font-size: 22px}
+    h3   {font-size: 20px}
+    h4   {font-size: 18px}
+    h5   {font-size: 16px}
+    h6   {font-size: 16px}
+    p    {font-size: 16px}
+    li   {font-size: 16px}
+    label{font-size: 16px}
+    select, select::picker(select){font-size: 16px}
+}
+@media screen and (min-width: 850px) {
+    h1   {font-size: 24px}
+    h2   {font-size: 22px}
+    h3   {font-size: 20px}
+    h4   {font-size: 18px}
+    h5   {font-size: 16px}
+    h6   {font-size: 16px}
+    p    {font-size: 16px}
+    li   {font-size: 16px}
+    label{font-size: 16px}
+    select, select::picker(select){font-size: 16px}
+}
+a { cursor:pointer; }
+/* a:visited{color: darkred} */
+th { cursor: pointer; }
+button {
+    font:           inherit;
+    margin:         0;
+    overflow:       visible;
+    text-transform: none;
+}
+input {
+    line-height: 80%;
+    background-color: lightgray;
+}
+input:hover{background-color: whitesmoke}
+input:focus{background-color: whitesmoke}
+select, select::picker(select) {
+  appearance:       base-select;     /* Allows formating of select element */
+  min-width:        100%;
+  padding:          0px 6px 0px 6px;
+  border-radius:    4px;
+  background-color: white;  
+}
+hr {
+    display:       block;
+    margin-top:    1.0em;
+    margin-bottom: 0.5em;
+    margin-left:   auto;
+    margin-right:  auto;
+    border-style:  inset;
+    border-width:  1px;
+}
+img {
+    vertical-align: middle;
+    border-style:   none;
+}
+/* ------------------------------------------------------------ */
+/* bnd-container provides equality for all HTML container       */
+/* elements: margins, paddings, alignments, fonts and colors    */
+/* ------------------------------------------------------------ */
+.bnd-container { padding: 0.01em 16px; }
+.bnd-container, 
+.bnd-container {
+    content: "";
+    display: table;
+    clear:   both;
+}
+/* ------------------------------------------------------------ */
+/* Container for navigation bar and banner                      */
+/* ------------------------------------------------------------ */
+.bnd-page-flex {
+    display:          flex;
+    flex-direction:   column;
+    height:           100vh;
+}
+/* ------------------------------------------------------------ */
+/* Banner formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-page-banner {
+    display:          flex;
+    flex-wrap:        nowrap;
+    position:         fixed;
+    top:              0;
+    z-index:          70;
+    width:            100%;
+    align-items:      center; /* Vertically centers the content */
+    gap:              10px;
+    padding:          0px 10px;
+    color:            white;
+    background-color: green;
+    /* Responsive banner height */
+    height: 48px;
+    @media screen and (400px <= width <= 849px) { height: 56px }
+    @media screen and (850px <= width <= 999px) { height: 56px }
+    @media screen and (min-width: 1000px)       { height: 64px }
+    @media print {
+        position:      static;
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 8px;
+        border-color:  black;
+    }
+}
+.bnd-banner-logo-container, 
+.bnd-banner-title-container, 
+.bnd-banner-scientific-name-container, 
+.bnd-banner-menu {  
+    font-size:        20px;
+    @media screen and (400px <= width <= 849px) { font-size: 22px; }
+    @media screen and (850px <= width <= 999px) { font-size: 22px; }
+    @media screen and (min-width: 1000px)        { font-size: 26px; }
+    text-align:       left;
+}
+/* Banner logo */
+.bnd-banner-logo-container{ width: fit-content; }
+.bnd-banner-logo-container .bnd-banner-logo {
+    width:            28px; 
+    @media screen and (400px <= width <= 849px) { width: 34px; }
+    @media screen and (850px <= width <= 999px) { width: 34px; }
+    @media screen and (min-width: 1000px)        { width: 40px; }
+    height:           auto; 
+    padding:          4px;
+    background-color: white;
+    border-radius:    12px;
+}
+/* Banner Title */
+.bnd-banner-title-container{ width: fit-content; }
+/* Banner scientific name */
+.bnd-banner-scientific-name-container {
+    flex-grow:      1;
+    overflow-x:     hidden;   /* Prevents tool tip positioning below name */
+    text-overflow:  ellipsis;
+    white-space:    nowrap; 
+    @media print {
+        margin: 0px;
+        color: black;
+    }
+}
+.bnd-banner-scientific-name-tooltip {
+    position: relative;
+    cursor: pointer;
+} 
+.bnd-banner-scientific-name-tooltip-text {
+    position:         absolute;
+    top:              0px;         /* from the top edge of the parent */
+    left:             0px;         /* from the left edge of the parent */
+    vertical-align:   top;         /* fixes issue with text moving up */
+    visibility:       hidden;
+    width:            auto;
+    border-radius:    6px;
+    padding:          10px 10px;
+    background-color: slategray;
+    font-size:        16px;
+    color:            #fff;
+    text-align:       center;
+}
+.bnd-banner-scientific-name-tooltip:hover .bnd-banner-scientific-name-tooltip-text {
+    visibility: visible;
+}
+/* Banner audio player */
+.bnd-banner-audio-container {
+    width: fit-content;
+    @media print { display: none; }
+}
+.bnd-audio-tooltip {
+    position: relative;
+    cursor: pointer;
+} 
+.bnd-audio-tooltip-text {
+    position:         absolute;
+    top:              30px;        /* from the top edge of the parent */
+    left:             -60px;       /* from the left edge of the parent */
+    vertical-align:   top;         /* fixes issue with text moving up */    
+    visibility:       hidden;
+    width:            auto;
+    border-radius:    6px;
+    padding:          10px 10px;
+    background-color: slategray;
+    font-size:        16px;
+    color:            #fff;
+    text-align:       center;
+}
+.bnd-audio-tooltip:hover .bnd-audio-tooltip-text {
+    visibility: visible;
+}
+/* Banner drop-down menu */
+.bnd-banner-menu-container {
+    position: relative;         /* required for placement of dropdown menu */
+    width:    fit-content;
+    @media print { display: none; }
+}
+.bnd-banner-menu-icon {
+    border:           none;
+    background-color: inherit;
+    color:            inherit;
+    cursor:           pointer;
+}
+/* ensure that the font size is responsive */
+.bnd-banner-menu .material-icons { font-size: inherit; }
+.bnd-banner-menu-content {
+    display:          none;
+    position:         absolute;
+    right:            0;    
+    min-width:        140px;
+    margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
+    padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    font-size:        16px;
+    @media screen and (400px <= width <= 849px) { font-size: 14px; }
+    @media screen and (850px <= width <= 999px) { font-size: 14px; }
+    @media screen and (min-width: 1000px)        { font-size: 12px; }
+    line-height:      0.25;      /* set spacing between menu items */
+    color:            black;
+    cursor:           auto;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-banner-menu-container:hover .bnd-banner-menu-content { display: block; }
+.bnd-banner-menu-item {
+    display:          inline-block;
+    width:            100%;
+    text-align:       left;
+    margin:           0;
+    border:           none;
+    padding:          12px 16px;
+    vertical-align:   middle;
+    font-size:        16px;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-banner-menu-item:hover {
+    color:            black;
+    background-color: lightgray; 
+}
+/* ------------------------------------------------------------ */
+/* Horizontal navigation bar formatting - responsive            */
+/* ------------------------------------------------------------ */
+.bnd-page-nav {
+    display:          block;
+    position:         fixed;    /* prevent scrolling off screen */
+    z-index:          60;
+    width:            100%;
+    height:           24px;
+    margin:           0px;
+    padding:          0px;
+    background-color: lightgray;
+    align-items:      center;
+    /* position nav below banner */
+    top:              48px;
+    @media screen and (400px <= width <= 849px) { 
+        top:          56px; 
+        height:       24px;
+    }
+    @media screen and (850px <= width <= 999px) {
+        display:      flex;
+        flex-wrap:    nowrap;
+        top:          56px; 
+        height:       24px;
+    }
+    @media screen and (min-width: 1000px) {  
+        display:      flex;
+        flex-wrap:    nowrap;
+        top:          64px; 
+        height:       24px;
+    }
+    @media print { display: none; }
+}
+/* web-site navigation links */
+.bnd-page-nav a {
+    display:          inline-block;
+    width:            auto;
+    border:           none;
+    padding:          0px 10px;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+}
+/* hide all navigation links except for "Home" unless large screen */
+.bnd-page-nav a:not(:first-child) {
+    display: none;
+    @media screen and (400px <= width <= 849px) { display: none;  }
+    @media screen and (850px <= width <= 999px) { display: block; }
+    @media screen and (min-width: 1000px)       { display: block; }
+}
+.bnd-page-nav a:hover {
+    color:            white;
+    background-color: gray;
+}
+/* user authentication drop-down - only display for large screens */
+.bnd-nav-dropdown-container {
+    display:          none;
+    right:            0;
+    width:            auto;
+    margin-left:      auto;
+    border:           none;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+    @media screen and (400px <= width <= 849px) { display: none;  }
+    @media screen and (850px <= width <= 999px) { 
+        display:      block; 
+        padding:      0px 18px 0px 10px;
+    }
+    @media screen and (min-width: 1000px)       { 
+        display:      block; 
+        padding:      0px 18px 0px 10px;
+    }
+}   
+.bnd-nav-dropdown-container:hover {
+    color:            white;
+    background-color: gray;
+}
+.bnd-nav-dropdown-content {
+    position:         absolute;
+    right:            0; 
+    display:          none;
+    min-width:        160px;
+    margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
+    padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    font-size:        16px;
+    color:            black;
+    line-height:      0.25;      /* set spacing between menu items */
+    cursor:           auto;
+}   
+/* Display dropdown content when hovering over the menu item */
+.bnd-nav-dropdown-container:hover .bnd-nav-dropdown-content { display: block; }
+/* Menu icon for hidden navigation links */
+/* - small screens - show                */
+/* - large screens - hide                */
+.bnd-page-nav a.bnd-nav-phone-icon {
+    float:   right;
+    display: block;
+    @media screen and (400px <= width <= 849px) { display: block; }
+    @media screen and (850px <= width <= 999px) { display: none; }
+    @media screen and (min-width: 1000px)       { display: none; }
+}
+/* Style when menu icon is selected */
+.bnd-page-nav.responsive { position: relative; }
+.bnd-page-nav.responsive a.bnd-nav-phone-icon {
+    position: absolute;
+    right:    0;
+    top:      0;
+    @media screen and (400px <= width <= 849px) { display: block; }
+    @media screen and (850px <= width <= 999px) { display: none; }
+    @media screen and (min-width: 1000px)       { display: none; }
+}
+/* Style horizontal list of navigation links */
+.bnd-page-nav.responsive a,
+.bnd-page-nav.responsive .bnd-nav-dropdown-container {
+    float:      none;
+    display:    block;
+    background-color: lightgray;
+    text-align: center;
+}
+.bnd-page-nav.responsive .bnd-nav-dropdown-content {
+    position:   relative;
+    width:      100px;
+}
+.bnd-page-nav.responsive .bnd-nav-dropdown-container .bnd-dropdown-button {
+    display:    block;
+    width:      100%;
+    text-align: left;
+}
+/* ------------------------------------------------------------ */
+/* Create whitespace between banner/nav and table header        */
+/* ------------------------------------------------------------ */
+.bnd-page-nav-main-spacer {
+    position:         fixed;    /* prevent scrolling off screen */     
+    z-index:          50;
+    width:            100%;
+    background-color: whitesmoke;
+    color:            whitesmoke;
+    /* position spacer below banner/nav/ */
+    top:              66px;
+    height:           8px;
+    @media screen and (400px <= width <=  849px) { 
+        top:          74px;
+        height:       16px;
+    }
+    @media screen and (850px <= width <= 999px) {
+        top:          80px;
+        height:       16px;
+    }
+    @media screen and (min-width: 1000px) { 
+        top:          88px;
+        height:       16px;
+     }
+    @media print { display: none; }
+}
+/* ------------------------------------------------------------ */
+/* Place the main content (scrollable) beneath the banner       */
+/* ------------------------------------------------------------ */
+.bnd-page-main { 
+    flex-grow:  1;
+    padding:    0.01em 4px;
+    /* position content below banner/nav/mask  */
+    margin-top: 88px;   
+    @media screen and (400px <= width <= 849px) { 
+        margin-top:  96px;
+        padding:     0.01em 8px;
+    }
+    @media screen and (850px <= width <= 999px) { 
+        margin-top:  96px;
+        padding:     0.01em 4px;
+    }
+    @media screen and (min-width:        853px) { 
+        margin-top:  104px;
+        padding:     0.01em 16px; 
+    }
+    @media print {
+        margin-top: 16px;
+        padding:    0px;
+    }
+}
+.bnd-page-main-top-margin-adjust{ margin-top: -20px; }
+/* ------------------------------------------------------------ */
+/* Search bar and table formatting - flexbox                    */
+/* > full screen width for phone screens (portrait)             */
+/* ------------------------------------------------------------ */
+.bnd-search-table-container-flex {
+    display:              block;
+    @media screen and (min-width: 400px) {
+        display:          flex;
+        flex-direction:   row;
+        flex-wrap:        nowrap;
+        column-gap:       10px;
+        width:            100%;
+    }
+}
+/* ------------------------------------------------------------ */
+/* Vertical table search bar formatting - flexbox               */
+/* ------------------------------------------------------------ */
+.bnd-search-container-flex {
+    display:              none;
+    width:                100vw;
+    @media screen and (min-width: 400px) {
+        width:            20%;
+        max-width:        240px;
+        min-width:        160px;
+        max-height:       1000px;
+        min-height:       0px;
+        background-color: whitesmoke;
+        overflow-y:       auto;
+        box-shadow:       var(--shadow-parameters);
+        animation:        animateleft 0.4s;
+    }
+}
+.bnd-search-contents-flex {
+    margin:           0px 12px 0px 0px;
+    padding:          0.01em 16px;
+    color:            black;
+    background-color: gainsboro;
+    @media screen and (min-width: 400px)
+    {
+        margin: 0px;
+    }
+}
+.bnd-search-open-flex {
+    display:          block;
+}
+/* ------------------------------------------------------------ */
+/* Table formatting - flexbox                                   */
+/* ------------------------------------------------------------ */
+.bnd-table-container-flex {
+    z-index:             10;
+    @media screen and (min-width: 400px) { flex-grow: 1; }
+}
+.bnd-table-flex {
+    display:         table;
+    border-collapse: separate; /* Required for sticky headers to work well with borders */
+    border-spacing:  0;
+    table-layout:    auto;     /* use the browsers automatic table layout algorithm */
+    width:           100%;     /* content dictates the width of the table */
+    box-shadow:      var(--shadow-parameters);
+}
+.bnd-table-flex th {
+    display:          table-cell;
+    position:         sticky;
+    z-index:          20;                /* Ensure table headers are above table body data */
+    border:           1px solid slategray;
+    padding:          8px 8px 8px 8px;
+    background-color: slategray;
+    color:            white;
+    text-align:       left;
+    vertical-align:   top;
+    /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              72px;              
+    @media screen and (400px <= width <= 849px) {top:  88px}
+    @media screen and (850px <= width <= 999px) {top:  96px}
+    @media screen and (min-width: 1000px)       {top: 104px}
+}
+.bnd-table-flex th:first-child     {padding-left:  16px}
+.bnd-table-flex th:last-child      {padding-right: 16px}
+.bnd-table-flex tr:nth-child(odd)  {background-color:white}
+.bnd-table-flex tr:nth-child(even) {background-color:gainsboro}
+.bnd-table-flex tr:hover           {background-color:gray}
+.bnd-table-flex td  {
+    border:         1px solid lightgray;
+    padding:        8px 8px 4px 8px;
+    display:        table-cell;
+    text-align:     left;
+    vertical-align: top;
+}
+.bnd-table-flex td:first-child{padding-left:  16px}
+.bnd-table-flex td:last-child {padding-right: 16px}
+.bnd-table-icon-flex {
+    width:      10px;
+    text-align: center;
+}
+/* ------------------------------------------------------------ */
+/* Table formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-table {
+    display:         table;
+    border-collapse: separate; /* Required for sticky headers to work well with borders */
+    border-spacing:  0;
+    table-layout:    auto;     /* use the browsers automatic table layout algorithm */
+    width:           100%;     /* content dictates the width of the table */
+    padding-top:     10px;
+    box-shadow:      var(--shadow-parameters);
+}
+.bnd-table th {
+    display:          table-cell;
+    position:         sticky;
+    top:              80px;             /* Stick to the bottom edge of the fixed navbar/banner */
+    z-index:          20;                /* Ensure table headers are above table body data */
+    border:           1px solid slategray;
+    padding:          8px 8px 8px 8px;
+    background-color: slategray;
+    color:            white;
+    text-align:       left;
+    vertical-align:   top;
+    @media screen and (400px <= width <= 849px) { top:  90px; }
+    @media screen and (850px <= width <= 999px) { top:  90px; }
+    @media screen and (min-width: 1000px)        { top: 100px; }
+}
+.bnd-table th:first-child     {padding-left:  16px}
+.bnd-table th:last-child      {padding-right: 16px}
+.bnd-table tr                 {border-bottom: 1px solid gainsboro}
+.bnd-table tr:nth-child(odd)  {background-color:white}
+.bnd-table tr:nth-child(even) {background-color:gainsboro}
+.bnd-table tr:hover           {background-color:gray}
+.bnd-table td {
+    border:         1px solid lightgray;
+    padding:        8px 8px 4px 8px;
+    display:        table-cell;
+    text-align:     left;
+    vertical-align: top;
+}
+.bnd-table td:first-child { padding-left:  16px; }
+.bnd-table td:last-child  { padding-right: 16px; }
+.bnd-table-icon {
+    width:      10px;
+    text-align: center;
+}
+/* ------------------------------------------------------------ */
+/* Bloom chart navigation bar formatting                        */
+/* ------------------------------------------------------------ */
+.bnd-chart-tab-container {
+    display:          flex;
+    flex-wrap:        wrap;
+    align-items:      center;
+    width:            100%;
+    margin:           0px;
+    padding:          0px;
+    list-style-type:  none;        /* no list element bullerts */
+    overflow:         hidden;
+    background-color: lightgray;
+}
+.bnd-chart-tab {
+    width:            auto;        /* small screen default */
+    border:           none;
+    padding:          0px 0px;
+    color:            black;
+    text-align:       center;
+    outline:          0;
+    text-decoration:  none;
+}
+.bnd-chart-tab:hover {
+    color:            white;
+    background-color: gray;
+}
+/* ------------------------------------------------------------ */
+/*                                                              */
+/* ------------------------------------------------------------ */
+.bnd-section {
+    border-width:     1px;
+    border-color:     green;
+    box-shadow:       var(--shadow-parameters);
+    @media print { box-shadow: none; }
+}
+.bnd-section-header {
+    padding:          0.1em 12px;
+    color:            white;
+    background-color: green;
+    @media print {
+        border-style:  solid;
+        border-width:  2px;
+        border-radius: 0px;
+        border-color:  black; 
+    }
+}
+.bnd-section-header h4 {margin: 4px 0px}
+.bnd-section-contents {
+    padding:          0.01em 12px;
+    color:            black;    
+    background-color: whitesmoke;
+    white-space:      normal;
+    @media print {
+        border-style:  none solid solid solid;
+        border-width:  2px;
+        border-radius: 0px;
+        border-color:  black; 
+    }
+}
+.bnd-section-contents p {
+    margin-block-start: 0.25em;
+    margin-block-end:   0.25em;
+}
+/* ------------------------------------------------------------ */
+/* Stop floating previous section's image to ensure this        */
+/* section's text starts correctly                              */
+/* ------------------------------------------------------------ */
+.bnd-endfloat { clear:both; }
+/* ------------------------------------------------------------ */
+/* Responsive layout - flex                                    */
+/* ------------------------------------------------------------ */
+.bnd-flex-container
+{
+    width:              100%;
+    @media screen and (min-width: 400px) {
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      nowrap;
+        column-gap:     16px;
+        row-gap:        0px;
+    }
+    @media print { 
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      nowrap;
+        column-gap:     16px;
+        row-gap:        16px; 
+    }
+}
+.bnd-flex-container-wrap
+{
+    width:              100%;
+    @media screen and (min-width: 400px) {
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      wrap;
+        column-gap:     4px;
+        row-gap:        0px;
+    }
+    @media print { 
+        display:        flex;
+        flex-direction: row;
+        flex-wrap:      nowrap;
+        column-gap:     16px;
+        row-gap:        16px; 
+    }
+}
+.bnd-flex-item {
+    flex-grow:        1;     /* ability of item to grow   */
+    flex-shrink:      1;     /* ability of item to shrink */
+    border:           1px solid slategray; 
+    background-color: whitesmoke; 
+    @media print { border-style: none; }       
+}
+/* ------------------------------------------------------------ */
+/* Element positioning                                          */
+/* ------------------------------------------------------------ */
+.bnd-right { float:right!important }
+/* ------------------------------------------------------------ */
+/* Input formatting used in Django forms                         */
+/* ------------------------------------------------------------ */
+.bnd-input {
+    display:          block;
+    border:           1px solid black;
+    border-radius:    4px;
+    padding:          2px 6px 2px 6px;
+    background-color: white;
+    width:            100%;
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        14px;
+    cursor:           pointer;
+}
+/* ------------------------------------------------------------ */
+/* Button formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-button,
+.bnd-button-submit,
+.bnd-button-reset,
+.bnd-button-cancel {
+    border:           none;
+    display:          inline-block;
+    padding:          4px 4px;
+    vertical-align:   middle;
+    overflow:         hidden;
+    font-size:        12px;
+    text-decoration:  none;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
+    @media screen and (400px <= width <= 849px) { 
+        padding:       6px 6px;
+        font-size:     12px; 
+    }
+    @media screen and (850px <= width <= 999px) { 
+        padding:       4px 4px;
+        font-size:     12px;
+    }
+    @media screen and (min-width: 1000px)       { 
+        padding:       4px 8px;
+        font-size:     14px; 
+    }
+}
+}
+.bnd-button-small {
+    display:          inline-block;
+    margin:           0;
+    border:           none;
+    padding:          0;
+    background-color: inherit;
+    vertical-align:   middle;
+    overflow:         hidden;
+    text-decoration:  none;
+    color:            inherit;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-button-table {
+    display:          inline-block;
+    margin:           0;
+    border:           none;
+    padding:          0;
+    background-color: transparent;
+    vertical-align:   middle;
+    overflow:         hidden;
+    text-decoration:  none;
+    color:            transparent;
+    text-align:       center;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-button-submit {
+    color:            #fff; 
+    background-color: green;
+    border-color:     green;
+    border-radius:    4px;
+}
+.bnd-button-reset {
+    color:            white; 
+    border-color:     gray;
+    background-color: gray;
+    border-radius:    4px;
+}
+.bnd-button-cancel {
+    color:            white; 
+    border-color:     red;
+    background-color: red;
+    border-radius:    4px;
+}
+.bnd-button:hover,
+.bnd-button-submit:hover,
+.bnd-button-cancel:hover {
+    color:            white;
+    background-color: gray;
+}
+.bnd-button:disabled {
+    cursor:  not-allowed;
+    opacity: 0.3;
+}
+/* ------------------------------------------------------------ */
+/* Plant Add/Update Form formatting                             */
+/* ------------------------------------------------------------ */
+.grid-container { 
+    display:          grid;
+    grid-gap:         4px;
+    background-color: green;
+    padding:          4px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+    'attributes     '
+    'blooms         '         
+    'requirements   '   
+    'recommendations' 
+    'taxonomy       '       
+    'description    '
+    'pruning        '
+    'fertilization  '
+    'propagation    '
+    'pests_diseases '
+    'pests          '
+    'creator_notes  '
+    'pronunciation  '
+    'images         ';
+
+    @media screen and (400px <= width <= 849px) {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+        'attributes      blooms         requirements   '       
+        'recommendations taxonomy       pests          '       
+        'description     description    description    '
+        'pruning         pruning        pruning        '
+        'fertilization   fertilization  fertilization  '
+        'propagation     propagation    propagation    '
+        'pests_diseases  pests_diseases pests_diseases '
+        'creator_notes   creator_notes  creator_notes  ' 
+        'pronunciation   pronunciation  pronunciation  '
+        'images          images         images         ';
+    }@media screen and (850px <= width <= 999px) {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-areas:
+        'attributes      blooms         requirements   '       
+        'recommendations taxonomy       pests          '       
+        'description     description    description    '
+        'pruning         pruning        pruning        '
+        'fertilization   fertilization  fertilization  '
+        'propagation     propagation    propagation    '
+        'pests_diseases  pests_diseases pests_diseases '
+        'creator_notes   creator_notes  creator_notes  ' 
+        'pronunciation   pronunciation  pronunciation  '
+        'images          images         images         ';
+    }
+    @media screen and (min-width: 1000px) {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas:
+        'attributes     blooms         requirements   recommendations taxonomy       pests          '
+        'description    description    description    description     description    description    '
+        'pruning        pruning        pruning        pruning         pruning        pruning        '
+        'fertilization  fertilization  fertilization  fertilization   fertilization  fertilization  '
+        'propagation    propagation    propagation    propagation     propagation    propagation    '
+        'pests_diseases pests_diseases pests_diseases pests_diseases  pests_diseases pests_diseases '
+        'creator_notes  creator_notes  creator_notes  creator_notes   pronunciation  pronunciation  '
+        'images         images         images         images          images         images         ';
+    }
+}
+
+.attributes      { grid-area: attributes;      }
+.blooms          { grid-area: blooms;          }
+.requirements    { grid-area: requirements;    }
+.recommendations { grid-area: recommendations; }
+.description     { grid-area: description;     }
+.pruning         { grid-area: pruning;         }
+.fertilization   { grid-area: fertilization;   }
+.propagation     { grid-area: propagation;     }
+.pests_diseases  { grid-area: pests_diseases;  }
+.pests           { 
+    grid-area:  pests;
+    height:     fit-content;
+    overflow-y: auto;
+}
+.pronunciation   { grid-area: pronunciation;   }
+.taxonomy        { grid-area: taxonomy;        }
+.images          { grid-area: images;          }
+.creator_notes   { grid-area: creator_notes;   }
+
+.grid-container > div {
+    background-color: whitesmoke;
+    text-align:       left;
+    padding:          8px 8px;
+    font-size:        12px;
+}
+.grid-container label {
+    display:    block;
+    min-width:  3em;
+    text-align: left;
+    font-size:  12px;
+}
+.grid-container input {
+    border-width:     2px;
+    background-color: lightgray;
+    line-height:      80%;
+    font-size:        12px;
+}
+#id_phonetic_spelling { min-width: 200px; }
+.grid-container select {
+    display:          inline-block; 
+    min-width:        10px;
+    border-width:     2px;
+    background-color: lightgray;
+    text-align:       left;
+    line-height:      80%;
+    font-size:        12px; 
+}
+.grid-container input:hover,
+.grid-container input:focus,
+.grid-container select:hover,
+.grid-container select:focus {
+    background-color: whitesmoke
+}
+.grid-container select,
+.grid-container input[type="radio"],
+.grid-container input[type="checkbox"] {
+    cursor: pointer;
+}
+.grid-container .images input[type="file"] {
+    width:            100%;
+    border-style:     solid;
+    border-color:    black;
+    border-width:     1px;
+    background-color: whitesmoke;
+}
+.grid-container .images input[type="text"] { 
+    width:            100%; 
+    background-color: whitesmoke;
+}
+.grid-container .images a            { display: none; }
+.grid-container .creator_notes label { display: inline-block; }
+/* ------------------------------------------------------------ */
+/* Hide the element                                             */
+/* ------------------------------------------------------------ */
+.bnd-hide{ display:none!important }
+/* ------------------------------------------------------------ */
+/* Plant taxonomy formatting                                    */
+/* ------------------------------------------------------------ */
+.bnd-subspecies {
+    font-style:     normal;
+    text-transform: lowercase;
+}
+.bnd-variety {
+    font-style:     italic;
+    text-transform: lowercase;
+}
+.bnd-cultivar {
+    font-style:     normal;
+    text-transform: capitalize; 
+}
+/* ------------------------------------------------------------ */
+/* Tool Tip formatting                                          */
+/* ------------------------------------------------------------ */
+.bnd-tooltip {
+    position: relative;
+    display:  inline-block;
+    cursor:   pointer; 
+}
+.bnd-tooltip-text {
+    position:         absolute;
+    bottom:           100%;
+    left:             50%;
+    z-index:          60;
+    visibility:       hidden;
+    margin-left:      -30px;
+    border-radius:    8px;
+    padding:          4px 8px;
+    background-color: black;
+    opacity:          0;
+    font-size:        16px;
+    color:            white;
+    text-align:       center;
+    transition:       opacity 2s;
+}
+.bnd-tooltip:hover .bnd-tooltip-text {
+    visibility: visible;
+    opacity:    1;
+}
+/* ------------------------------------------------------------ */
+/* Drop-down menu formatting                                    */
+/* ------------------------------------------------------------ */
+.bnd-dropdown-container {
+    position: relative;
+    float:    right;
+    cursor:   pointer;
+}
+.bnd-dropdown-container:hover > .bnd-button:first-child {
+    background-color: lightgray;
+    color:            black;
+}
+.bnd-dropdown-content {
+    position:         absolute;
+    right:            0; 
+    z-index:          1;
+    display:          none;
+    min-width:        160px;
+    margin:           0;
+    border-style:     solid;
+    border-width:     1px;
+    border-color:     lightgray;
+    padding:          0;
+    background-color: white;
+    box-shadow:       var(--shadow-parameters);
+    font-size:        16px;
+    line-height:      0.25;      /* set spacing between menu items */
+    color:            black;
+    cursor:           auto;
+}
+/* Display dropdown content when hovering over the menu title/contents */
+.bnd-dropdown-container:hover .bnd-dropdown-content {
+    display:          block;
+}
+.bnd-dropdown-button {
+    width:            100%;
+    text-align:       left;
+    float:            none;
+    outline:          0;
+    margin:           0;
+    border:           none;
+    display:          inline-block;
+    padding:          12px 16px;
+    vertical-align:   middle;
+    overflow:         hidden;
+    font-size:        16px;
+    text-decoration:  none;
+    color:            inherit;
+    background-color: inherit;
+    cursor:           pointer;
+    white-space:      nowrap;
+}
+.bnd-dropdown-button:hover {
+    color:            black;
+    background-color: lightgray; 
+}
+/* ------------------------------------------------------------ */
+/* Image formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-flex-image {
+    flex-grow:        1;     /* ability of item to grow   */
+    flex-shrink:      1;     /* ability of item to shrink */
+    width:            100%;
+    margin:           16px auto auto auto;
+    border:           1px solid slategray; 
+    padding:          8px;
+    box-shadow:       var(--shadow-parameters);
+    background-color: whitesmoke;
+    @media screen and (min-width: 400px) { max-width: 260px; }    
+    @media print { 
+        max-width:        160px;
+        padding:          0px;
+        box-shadow:       none;
+        break-inside:     avoid;
+    }   
+}
+.bnd-image-thumbnail {
+    width:         100%; 
+    aspect-ratio:  1;
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    cursor:        pointer;
+    @media screen and (min-width: 400px) { max-width: 250px; }
+    @media print { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
+    }
+}
+.bnd-image-thumbnail-caption {
+    width:            100%;
+    margin-top:       6px; 
+    background-color: lightgray;
+    text-align:       center;
+    color:            darkslategray;
+    font-style:       italic;
+    padding:          2px;
+    @media screen and (min-width: 400px) { max-width: 250px; }
+    @media print { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
+    }
+}
+.bnd-image {
+    width:         100%; 
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 24px;
+}
+.bnd-image-caption {
+    margin-top:       16px;
+    padding:          0px 16px;
+    color:            black; 
+    background-color: gainsboro;
+    border:4px solid  green;
+    border-radius:    16px;
+    position:         absolute;
+    left:             50%;
+    top:              0;
+    transform:        translate(-50%,0%);
+}
+
+.bnd-image-left {
+    width:         100%;
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    @media screen and (min-width: 400px) {
+        width:         50%;
+        max-width:     400px; 
+        float:         left; 
+        margin-right:  20px;
+    }
+}
+.bnd-image-right {
+    width:         100%;
+    height:        auto; 
+    border:        4px solid green; 
+    border-radius: 16px;
+    @media screen and (min-width: 400px) {
+        width:         50%;
+        max-width:     400px; 
+        float:         right;
+        margin-left:   15px;
+    }
+}
+.bnd-image-left:hover,
+.bnd-image-right:hover,
+.bnd-image-thumbnail:hover { 
+    opacity: 0.60;
+}
+/* ------------------------------------------------------------ */
+/* Play audio formatting                                        */
+/* ------------------------------------------------------------ */
+.bnd-play-audio{ cursor:pointer; }
+/* ------------------------------------------------------------ */
+/* Modal formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-modal {
+    position:          fixed;            /* Stay in place */
+    top:               0;
+    left:              0;
+    z-index:           30;               /* Sit above the main content */
+    width:             100%;             /* Full width */
+    height:            100%;             /* Full height */
+    padding-top:       140px;            /* Position below navbar and page header */
+    background-color: rgba(0,0,0,0.6); /* Gray-out background w/ opacity */
+    display:           none;             /* Hidden by default */
+    overflow:          auto;             /* Enable scroll if needed */
+}
+.bnd-modal-container, .bnd-chart-modal-container {
+    position:         relative;
+    top:              -34px;
+    width:            fit-content;
+    min-width:        300px;
+    margin:           auto;
+    padding:          0;
+    background-color: white;
+    background-image: url(../img/leaves.png);
+    animation:        animatezoom 0.6s;
+}
+.bnd-chart-modal-container {
+    top:              -34px;
+    width:            1000px;
+}
+
+.bnd-modal-header {
+    /* position */
+    position:         sticky; /* Stick to the bottom edge of the fixed navbar/banner */
+    top:              -34px;    
+    z-index:          40;
+    /* text */
+    text-align:       center;
+    /* box model */
+    border:           1px solid darkgray;
+    padding:          4px 16px;
+    background-color: gainsboro;
+}
+.bnd-modal-contents {
+    padding: 0.01em 16px;
+}
+.bnd-modal-image-container {
+    position:      relative;
+    top:           10px;
+    max-width:     60vw;
+    max-height:    80vh;
+    margin:        auto;             /* horizontally center element */
+    animation:     animatezoom 0.6s;
+    @media screen and (400px <= width <= 849px) {
+        max-width:     90vw;
+        max-height:    auto;
+    }
+    @media screen and (850px <= width <= 999px) {  
+        max-width:     50vw;
+        max-height:    90vh;
+    }
+    @media screen and (850px <= width <= 999px) {  
+        max-width:     70vw;
+        max-height:    90vh;
+    }
+    @media screen and (min-width: 1000px) {
+        max-width:     60vw;
+        max-height:    80vh;
+    }
+}
+.bnd-modal-image {
+    width:         100%;              /* fill the container */
+    height:        100%;              /* fill the container */
+    object-fit:    cover;             /* crop as necesary to maintain aspect ratio */
+    border:        4px solid green; 
+    border-radius: 16px;
+    box-shadow:    var(--shadow-parameters);
+}
+.bnd-modal-footer {
+    margin:           0px;
+    padding:          16px;
+    border:           1px solid darkgray;
+    text-align:       center;
+    background-color: gainsboro;
+}
+.bnd-modal-button-bar {
+    margin-top: 16px;
+    padding:    0px 16px 16px 16px;
+    text-align: center;
+}
+body.bnd-modal-open {
+    overflow: hidden; /* Prevents background scrolling */
+    height:   100vh;  /* Optional: ensures the body fits the viewport height */
+}
+.bnd-modal-close {
+    position: absolute;
+    right:    0;
+    top:      0;
+}
+#id_todo_date { 
+    margin-bottom:    8px;
+    padding:          2px 6px 2px 6px;
+    border-width:     1px;
+    border-radius:    4px;
+    background-color: white; 
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        16px;
+}
+#id_todo_details { 
+    min-width:        400px; 
+    line-height:      100%;
+    margin-bottom:    8px;
+    padding:          2px 6px 2px 6px;
+    border-width:     1px;
+    border-radius:    4px;
+    background-color: white;
+    font-family:      chalkboard, verdana, sans-serif;
+    font-size:        16px;
+}
+#bloomTable, #beeTable, #butterflyTable, #hummingbirdTable { width: 100%; }
+#plants_chart_modal th { top: 0px; }         /* place table right under modal tabs */
+#plants_chart_modal footer { padding: 0px; }
+/* ------------------------------------------------------------ */
+/* Slide show formatting                                        */
+/* ------------------------------------------------------------ */
+.bnd-slideshow-content {
+    margin-left:   auto;
+    margin-right:  auto;
+    position:      relative;
+    max-width:     100vw;
+    @media screen and (400px <= width <= 849px) { 
+        max-width:     90vw;
+        max-height:    auto;
+    }
+    @media screen and (850px <= width <= 999px) {  
+        max-width:     50vw;
+        max-height:    90vh;
+    }
+    @media screen and (850px <= width <= 999px) {
+        max-width:     70vw;
+        max-height:    90vh;
+    }
+    @media screen and (min-width: 1000px) {        /* Laptop + */
+        max-width:     60vw;
+        max-height:    80vh;
+    }
+}
+/* iPad Air (3rd gen) portrait */
+/* iPhone 16 landscape */
+/* iPad Air (3rd gen) landscape */
+.bnd-slideshow-controls {
+    position:      absolute;
+    left:          50%;
+    bottom:        0;
+    transform:     translate(-50%,0%);
+
+    font-size:     18px;
+    color:         white;
+    text-align:    center;
+    margin-top:    16px;
+    margin-bottom: 16px;
+    padding:       0.01em 16px;
+    width:         100%;
+}
+.bnd-slideshow-arrow-left {
+    float:         left;
+    cursor:        pointer;
+    font-size:     36px;
+}
+.bnd-slideshow-arrow-right {
+    float:         right;
+    cursor:        pointer;
+    font-size:     36px;
+}
+.bnd-slideshow-arrow-left:hover,
+.bnd-slideshow-arrow-right:hover {
+    color:       darkgray;
+}
+.bnd-slideshow-icon {
+    color:         white;
+    display:       inline-block;
+    padding-left:  8px;
+    padding-right: 8px;
+    text-align:    center;
+    border:        1px solid #ccc;
+    border-radius: 50%;
+    height:        13px;
+    width:         13px;
+    padding:       0;
+    cursor:        pointer;
+}
+.bnd-slideshow-icon:hover {
+    color:            black; 
+    background-color: darkgray;
+}
+/* ------------------------------------------------------------ */
+/* Monthyly calendar formatting                                 */
+/* ------------------------------------------------------------ */
+/* Calendar container */
+.bnd-calendar-container {
+    min-width:   800px;
+    margin-top:  32px;
+    border:      1px solid darkgray;
+    box-shadow:  var(--shadow-parameters);
+    font-family: chalkboard, verdana, sans-serif;
+}
+/* Header styling */
+.bnd-calendar-header {
+    display:          flex;
+    justify-content:  space-between;
+    align-items:      center;
+    padding:          0px;
+    background-color: gainsboro;
+    color:            black;
+}
+/* Weekdays and dates styling */
+.bnd-calendar-weekdays,
+.bnd-calendar-dates {
+    display:               grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align:            left;
+}
+.bnd-calendar-weekdays div {
+    padding:          8px;
+    font-weight:      bold;
+    background-color: whitesmoke;
+}
+.bnd-calendar-dates div {
+    padding: 10px;
+    border:  1px solid whitesmoke;
+}
+/* Highlight today's date */
+.bnd-calendar-today {
+    background-color: orange;
+    font-weight:      bold;
+}
+/* ------------------------------------------------------------ */
+/* Garden planner formatting                                    */
+/* ------------------------------------------------------------ */
+/* opacity and zoom sliders */
+.slidecontainer {
+    width: 200px; /* Width of the outside container */
+}
+.slider {
+    width:         100%;
+    height:        15px;
+    border-radius: 5px;  
+    outline:       none;
+    opacity:       0.7;
+    transition:    opacity .2s;
+}
+/* Mouse-over effects */
+.slider:hover {
+     opacity: 1; /* Fully shown on mouse-over */
+}
+/* context menu */
+.ctxMenu {
+    position:         fixed;
+    display:          none;                       /* Hidden by default */
+    background-color: #fff;
+    border: 1px solid lightgray;
+    box-shadow:       var(--shadow-parameters);
+    z-index:          1000;                       /* Ensure it's above other elements */
+}
+.ctxMenuItem {
+    padding: 8px 12px;
+    cursor:  pointer;
+}
+.ctxMenuItem:hover {
+    background-color: whitesmoke;
+}
+.bnd-background-visible {
+    background: none !important; 
+}
+/* ------------------------------------------------------------ */
+/* Page footer                                                  */
+/* ------------------------------------------------------------ */
+.bnd-page-footer {
+    width:            100%;
+    margin-top:       16px;
+    padding:          0.01em 0px;
+    text-align:       center;
+    color:            white;
+    background-color: green;
+    @media print { display: none; }
+}
+/* ------------------------------------------------------------ */
+/* */
+/* ------------------------------------------------------------ */
+@media (max-width:600px) {
+    .bnd-hide-small
+    {
+        display:none;
+    }
+}
+/* ------------------------------------------------------------ */
+/* Animation key frames                                         */
+/* ------------------------------------------------------------ */
+.bnd-animate-left {
+    position:relative;
+    animation:animateleft 0.4s
+}
+@keyframes opac {
+    from{opacity:0} 
+    to  {opacity:1}
+}
+@keyframes animatezoom {
+    from{transform: scale(0)} 
+    to  {transform: scale(1)}
+}
+@keyframes animateleft {
+    from{left:-300px; opacity:0} 
+    to  {left:     0; opacity:1}
+}
+/* ------------------------------------------------------------ */
+/* Text formatting                                              */
+/* ------------------------------------------------------------ */
+/* Font styles */
+.bnd-italic   {font-style: italic}
+/* Text Colors */
+.bnd-text-white     { color:white  }
+.bnd-text-red       { color:red    }
+.bnd-text-burgundy  { color:rgb(128, 0, 32) }
+.bnd-text-pink      { color:pink   }
+.bnd-text-lightpink { color:lightpink }
+.bnd-text-orange    { color:orange }
+.bnd-text-yellow    { color:yellow }
+.bnd-text-green     { color:green  }
+.bnd-text-cyan      { color:cyan   }
+.bnd-text-blue      { color:blue   }
+.bnd-text-violet    { color:violet }
+.bnd-text-lavendar  { color:rgba(128, 0, 128, 0.414) }
+.bnd-text-purple    { color:purple }
+.bnd-text-black     { color:black  }
+
+.bnd-text-outline {
+    color: #fff; /* Text fill color */
+    text-shadow:  1px  1px 0 black, 
+                 -1px -1px 0 black, 
+                  1px -1px 0 black, 
+                 -1px  1px 0 black;
+}
+
+/* Background Colors */
+.bnd-white       { color:black !important; background-color:#fff    !important }
+.bnd-yellow      { color:black !important; background-color:#ffeb3b !important }
+.bnd-light-green { color:black !important; background-color:#8bc34a !important }
+.bnd-grey        { color:black !important; background-color:gray !important }
+.bnd-light-grey  { color:black !important; background-color:#f1f1f1 !important }
+
+.bnd-text-khaki  {color:#b4aa50!important}
+/* ------------------------------------------------------------ */
+/* Text positioning                                             */
+/* ------------------------------------------------------------ */
+.bnd-center { text-align:center!important }
+/* ------------------------------------------------------------ */
+/* Margin formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-margin-none   { margin:         0px }
+.bnd-margin        { margin:        16px }
+.bnd-margin-top    { margin-top:    16px }
+.bnd-margin-left   { margin-left:   16px }
+.bnd-margin-bottom { margin-bottom: 16px }
+.bnd-margin-right  { margin-right:  16px }
+/* ------------------------------------------------------------ */
+/* Border formatting                                            */
+/* ------------------------------------------------------------ */
+.bnd-border        { border:        1px solid #ccc!important }
+
+.bnd-round-medium { border-radius:4px  }
+.bnd-round-large  { border-radius:8px  }
+/* ------------------------------------------------------------ */
+/* Padding                                                      */
+/* ------------------------------------------------------------ */
+.bnd-padding-small  {padding:4px 8px!important}
+/* ------------------------------------------------------------ */
+/* Print formatting                                             */
+/* ------------------------------------------------------------ */
+@page {
+    margin: 0.5in;
+}
+@media print {
+    #plant_comments { display: none; }
+}
+/* ------------------------------------------------------------ */
