@@ -220,30 +220,30 @@ class Plant(models.Model):
                                          null          = True)
     # Images
     image_1   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    processors = [Transpose(), ResizeToFill(800, 800)],
                     format     = 'WEBP',
-                    options    = {'quality': 80},
+                    options    = {'quality': 95},
                     blank      = True, 
                     null       = True)
     caption_1 = models.CharField(max_length=64, default="tbd", blank=True)
     image_2   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    processors = [Transpose(), ResizeToFill(800, 800)],
                     format     = 'WEBP',
-                    options    = {'quality': 80},
+                    options    = {'quality': 95},
                     blank      = True, 
                     null       = True)
     caption_2 = models.CharField(max_length=64, default="tbd", blank=True)
     image_3   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    processors = [Transpose(), ResizeToFill(800, 800)],
                     format     = 'WEBP',
-                    options    = {'quality': 80},
+                    options    = {'quality': 95},
                     blank      = True, 
                     null       = True)
     caption_3 = models.CharField(max_length=64, default="tbd", blank=True)
     image_4   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                    processors = [Transpose(), ResizeToFill(400, 400)],
+                    processors = [Transpose(), ResizeToFill(800, 800)],
                     format     = 'WEBP',
-                    options    = {'quality': 80},
+                    options    = {'quality': 95},
                     blank      = True, 
                     null       = True)
     caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
