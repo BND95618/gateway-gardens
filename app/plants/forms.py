@@ -479,7 +479,7 @@ class MyPlantAddUpdateForm(forms.Form):
 	date_planted = forms.DateField(
 		label="Date Planted",
 		required=False,
-		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
+		widget=forms.DateInput( attrs= {'type' : 'date'}, format='%Y-%m-%d'),
 		)
 	location = forms.CharField(
 		label='Location', 
