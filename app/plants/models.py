@@ -372,6 +372,36 @@ class Pest(models.Model):
     pest_name = models.CharField(max_length=32)
     pest_type = models.CharField(max_length=32,  default="tbd", blank=True)
     pest_url  = models.URLField(default="tbd", blank=True)
+
+    image_1   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(800, 800)],
+                    format     = 'WEBP',
+                    options    = {'quality': 95},
+                    blank      = True, 
+                    null       = True)
+    caption_1 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_2   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                processors = [Transpose(), ResizeToFill(800, 800)],
+                format     = 'WEBP',
+                options    = {'quality': 95},
+                blank      = True, 
+                null       = True)
+    caption_2 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_3   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                processors = [Transpose(), ResizeToFill(800, 800)],
+                format     = 'WEBP',
+                options    = {'quality': 95},
+                blank      = True, 
+                null       = True)
+    caption_3 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_4   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                processors = [Transpose(), ResizeToFill(800, 800)],
+                format     = 'WEBP',
+                options    = {'quality': 95},
+                blank      = True, 
+                null       = True)
+    caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
+    
     # Many-to-Many relationship - many different "pests" can be associated with many different "Plant" records
     plants    = models.ManyToManyField(Plant)
 

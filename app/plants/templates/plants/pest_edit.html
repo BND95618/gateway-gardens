@@ -1,0 +1,344 @@
+<!-- /plants/templates/plants/pest_edit.html -->
+{% extends "plants/master.html" %}
+{% load static %}
+
+{% block title %}
+  <title>IPM | Update</title>
+{% endblock title %}
+
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
+
+{% block header-completion %}
+  <!-- complete the header from master.html -->
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+
+  <div class="bnd-banner-title-container">
+    <h1>Update Pest</h1>
+  </div>
+{% endblock header-completion %}
+
+{% block content %}
+  <form name     = "pestForm"
+        id       = "id_pestForm"
+        action   = "" 
+        method   = "post" 
+        enctype  = "multipart/form-data" >
+    {% csrf_token %}
+    {{ form.pest_name.as_field_group  }} <br/>
+    {{ form.pest_type.as_field_group  }} <br/>
+    {{ form.pest_url.as_field_group   }} <br/>
+
+    <div class="images">
+      <div class="bnd-flex-container-wrap">
+        <!-- Image 1 -->
+        <figure>
+          <fieldset class="bnd-flex-image">
+            <legend>Image 1:</legend>
+            {% if pest.image_1 %}
+              <img id      = "id_image_1_preview" 
+                   class   = "bnd-image-thumbnail" 
+                   src     = "{{ pest.image_1.url }}" 
+                   onclick = "imageModalOpen(this)" 
+                   alt     = "No image found">
+              <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_1 }}</figcaption>
+              <hr>
+              <div id = "id_image_1_file_input">
+                {{ form.image_1 }}
+              </div>
+            {% else %}
+              <img id      = "id_image_1_preview" 
+                   class   = "bnd-image-thumbnail" 
+                   src     = "" 
+                   alt     = "--- Image displays here ---">
+              <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+              <hr>
+              {{ form.image_1 }}
+            {% endif %}
+            <label for="id_caption_1">Enter caption:</label>
+            {{ form.caption_1 }}
+          </fieldset>
+        </figure>
+        <!-- Image 2 -->
+        <figure>
+          <fieldset class="bnd-flex-image">
+            <legend>Image 2:</legend>
+            {% if pest.image_2 %}
+              <img id      = "id_image_2_preview" 
+                    class   = "bnd-image-thumbnail" 
+                    src     = "{{ pest.image_2.url }}" 
+                    onclick = "imageModalOpen(this)" 
+                    alt     = "No image found">
+              <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_2 }}</figcaption>
+              <hr>
+              <div id = "id_image_2_file_input">
+                {{ form.image_2 }}
+              </div>
+            {% else %}
+              <img id      = "id_image_2_preview" 
+                    class   = "bnd-image-thumbnail" 
+                    src     = "" 
+                    alt     = "--- Image displays here ---">
+              <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+              <hr>
+              {{ form.image_2 }}
+            {% endif %}
+            <label for="id_caption_2">Enter caption:</label>
+            {{ form.caption_2 }}
+          </fieldset>
+        </figure>
+`           <!-- Image 3 -->
+        <figure>
+          <fieldset class="bnd-flex-image">
+            <legend>Image 3:</legend>
+            {% if pest.image_3 %}
+              <img id     = "id_image_3_preview" 
+                  class   = "bnd-image-thumbnail" 
+                  src     = "{{ pest.image_3.url }}" 
+                  onclick = "imageModalOpen(this)" 
+                  alt     = "No image found">
+              <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_3 }}</figcaption>
+              <hr>
+              <div id = "id_image_3_file_input">
+                {{ form.image_3 }}
+              </div>
+            {% else %}
+              <img id     = "id_image_3_preview" 
+                  class   = "bnd-image-thumbnail" 
+                  src     = "" 
+                  alt     = "--- Image displays here ---">
+              <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+              <hr>
+              {{ form.image_3 }}
+            {% endif %}
+            <label for="id_caption_3">Enter caption:</label>
+            {{ form.caption_3 }}
+          </fieldset>
+        </figure>
+        <!-- Image 4 -->
+        <figure>
+          <fieldset class="bnd-flex-image">
+            <legend>Image 4:</legend>
+            {% if pest.image_4 %}
+              <img id     = "id_image_4_preview" 
+                  class   = "bnd-image-thumbnail" 
+                  src     = "{{ pest.image_4.url }}" 
+                  onclick = "imageModalOpen(this)" 
+                  alt     = "No image found">
+              <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_4 }}</figcaption>
+              <hr>
+              <div id = "id_image_4_file_input">
+                {{ form.image_4 }}
+              </div>
+            {% else %}
+              <img id     = "id_image_4_preview" 
+                  class   = "bnd-image-thumbnail" 
+                  src     = ""  
+                  alt     = "--- Image displays here ---">
+              <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+              <hr>
+              {{ form.image_4 }}
+            {% endif %}
+            <label for="id_caption_3">Enter caption:</label>
+            {{ form.caption_4 }}
+          </fieldset>
+        </figure>
+      </div>
+    </div>
+
+    <button type="submit" class="bnd-button-submit" id="id_submit"       >Submit</button>
+    <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium" >Reset </button>
+    <a href="{% url 'plants:pest_summary' %}">
+      <button type="button" class="bnd-button-cancel"                    >Cancel</button>
+    </a>
+    <div id="status"></div>
+
+  </form>
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <div id="image_modal" class="bnd-modal" onclick="imageModalClose(this)">
+    <div class="bnd-modal-image-container">
+      <img id="image" class="bnd-modal-image">
+    </div>
+  </div>
+{% endblock content %}
+
+{% block js %}
+<script>
+  //-----------------------------------------------------------------------------
+  // Function: Update preview image when new image is selected
+  //-----------------------------------------------------------------------------
+  // Select image file input field
+  const image_1_input   = document.getElementById('id_image_1');
+  const image_2_input   = document.getElementById('id_image_2');
+  const image_3_input   = document.getElementById('id_image_3');
+  const image_4_input   = document.getElementById('id_image_4');
+  // Select image preview
+  const image_1_preview = document.getElementById('id_image_1_preview');
+  const image_2_preview = document.getElementById('id_image_2_preview');
+  const image_3_preview = document.getElementById('id_image_3_preview');
+  const image_4_preview = document.getElementById('id_image_4_preview');
+  // Listen for any character changes in the input fields
+  image_1_input.addEventListener('change', async (event) => 
+  {
+    updatePreviewImage(image_1_input.files[0], image_1_preview);
+  });
+  image_2_input.addEventListener('change', async (event) => 
+  {
+    updatePreviewImage(image_2_input.files[0], image_2_preview);
+  });
+  image_3_input.addEventListener('change', async (event) => 
+  {
+    updatePreviewImage(image_3_input.files[0], image_3_preview);
+  });
+  image_4_input.addEventListener('change', async (event) => 
+  {
+    updatePreviewImage(image_4_input.files[0], image_4_preview);
+  });
+  //-----------------------------------------------------------------------------
+  // Function: Update the preview image
+  //-----------------------------------------------------------------------------
+  function updatePreviewImage(file, image_preview)
+  {
+    image_preview.src = URL.createObjectURL(file);
+  }
+  //----------------------------------------------------------------------------- 
+  // Upload form data and compressed images
+  //-----------------------------------------------------------------------------
+  const form         = document.getElementById('id_pestForm');
+  const imageInput_1 = document.getElementById('id_image_1');
+  const imageInput_2 = document.getElementById('id_image_2');
+  const imageInput_3 = document.getElementById('id_image_3');
+  const imageInput_4 = document.getElementById('id_image_4');
+  const submitBtn    = document.getElementById('id_submit');
+  const statusDiv    = document.getElementById('status');
+     
+  form.addEventListener('submit', async (event) => {
+    // Prevent standard browser form submission
+    event.preventDefault();
+    // Get images
+    const file_1 = imageInput_1.files[0];
+    const file_2 = imageInput_2.files[0];
+    const file_3 = imageInput_3.files[0];
+    const file_4 = imageInput_4.files[0];
+    // Declare compressed image blobs
+    let compressedBlob_1 = null;
+    let compressedBlob_2 = null;
+    let compressedBlob_3 = null;
+    let compressedBlob_4 = null;
+    // 
+    try 
+    {
+      // Update UI state
+      submitBtn.disabled = true;
+      //----------------------------------------------------------------------------
+      // Wait for the image compression promise to resolve
+      //----------------------------------------------------------------------------
+      if (file_1)
+      {
+        console.log("DEBUG: Starting image compression - Image 1");
+        statusDiv.innerText = "Compressing Image 1... Please wait.";
+        compressedBlob_1 = await compressImage(file_1, 800, 1.0);
+        console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 1");
+        
+      }
+      if (file_2)
+      {
+        console.log("DEBUG: Starting image compression - Image 2");
+        statusDiv.innerText = "Compressing Image 2... Please wait.";
+        compressedBlob_2 = await compressImage(file_2, 800, 1.0);
+        console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 2");
+      }
+      if (file_3)
+      {
+        console.log("DEBUG: Starting image compression - Image 3");
+        statusDiv.innerText = "Compressing Image 3... Please wait.";
+        compressedBlob_3 = await compressImage(file_3, 800, 1.0);
+        console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 3");
+      }
+      if (file_4)
+      {
+        console.log("DEBUG: Starting image compression - Image 4");
+        statusDiv.innerText = "Compressing Image 4... Please wait.";
+        compressedBlob_4 = await compressImage(file_4, 800, 1.0);
+        console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
+        console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
+        console.log("DEBUG: Finished image compression - Image 4");
+      }
+      //----------------------------------------------------------------------------
+      //
+      //----------------------------------------------------------------------------
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      // Get the form plus the audio recording data entered by the user
+      const formData  = new FormData(form);
+      //----------------------------------------------------------------------------
+      // Append the compressed images recording to the FormData object
+      //----------------------------------------------------------------------------
+      if (typeof compressedBlob_1 !== 'undefined' && compressedBlob_1 !== null)
+      {
+        console.log("DEBUG: Compressed image 1 exists");
+        formData.delete('image_1');
+        formData.append('image_1', compressedBlob_1, 'image_1.jpg');
+      }
+      if (typeof compressedBlob_2 !== 'undefined' && compressedBlob_2 !== null)
+      {
+        console.log("DEBUG: Compressed image 2 exists");
+        formData.delete('image_2');
+        formData.append('image_2', compressedBlob_2, 'image_2.jpg');
+      }
+      if (typeof compressedBlob_3 !== 'undefined' && compressedBlob_3 !== null)
+      {
+        console.log("DEBUG: Compressed image 3 exists");
+        formData.delete('image_3');
+        formData.append('image_3', compressedBlob_3, 'image_3.jpg');
+      }
+      if (typeof compressedBlob_4 !== 'undefined' && compressedBlob_4 !== null)
+      {
+        console.log("DEBUG: Compressed image 4 exists");
+        formData.delete('image_4');
+        formData.append('image_4', compressedBlob_4, 'image_4.jpg');
+      }
+      //----------------------------------------------------------------------------
+      // Send the form data entered by the user
+      //----------------------------------------------------------------------------
+      console.log("DEBUG: POST user inputs to server");
+      statusDiv.innerText = "Upload in process...";
+      const postURL = window.location.pathname;
+      const response = await fetch(postURL, 
+      {
+        method:  "POST",
+        headers: {'X-CSRFToken' : csrfToken},
+        body:    formData
+      });
+      if (response.ok) 
+      {
+        const data = await response.json();
+        statusDiv.innerText = "Upload successful!";
+        console.log('Success:', data);
+        // Handle your JSON response here (e.g., update DOM)
+        // let returnURL = "{x% url 'plants:plant_details' plant.id %x}";
+        let returnURL = "{% url 'plants:pest_summary' %}";
+        window.location.href = returnURL;
+      } 
+      else 
+      {
+        console.error('Server Error:', response.status);
+      }
+    } 
+    catch (error) 
+    {
+        console.error('Network error:', error);
+    }
+  });
+</script>
+{% endblock js %}

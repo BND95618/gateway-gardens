@@ -931,6 +931,47 @@ class PestAddUpdateForm(forms.Form):
 		validators=[URLValidator()],
 		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
 		)
+	# pest images
+	image_1   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+	caption_1 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+	image_2   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+	caption_2 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+	image_3 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+	caption_3 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+	image_4 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+	caption_4 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False,
+		)
 
 class ColumnChooserForm(forms.Form):
 	column_selection = forms.MultipleChoiceField(

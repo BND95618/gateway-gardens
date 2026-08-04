@@ -57,6 +57,8 @@
           <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
           <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
           <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
+          <!-- Pest Details header placeholder -->
+          <th class="bnd-center"></th>
           <!-- Pest Update header placeholder -->
           {% if perms.plants.change_plant %}
             <th class="bnd-center"></th>
@@ -75,11 +77,20 @@
           <td>
             <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
           </td>
+          <!-- Pest Details Icon/Link -->
+          <td class="bnd-table-icon-flex">
+            <div class="bnd-tooltip">
+              <a href="{% url 'plants:pest_details' pest.id %}">
+                <i    class="material-icons bnd-text-black">library_books</i>
+                <span class="bnd-tooltip-text">Details</span>
+              </a>
+            </div>
+          </td>
           <!-- Pest Update Icon/Link -->
           {% if perms.plants.change_plant %}
             <td class="bnd-table-icon">
               <div class="bnd-tooltip">
-                <a href="{% url 'plants:pest_update' pest.id %}">
+                <a href="{% url 'plants:pest_edit' pest.id %}">
                   <i class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>

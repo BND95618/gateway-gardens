@@ -1,0 +1,84 @@
+<!-- /plants/templates/plants/pest_details.html -->
+{% extends "plants/master.html" %}
+{% load static %}
+
+{% block title %}
+  <title>Pest | Details</title>
+{% endblock title %}
+
+{% block css %}
+<!-- Insert template css here -->
+{% endblock css %}
+
+{% block header-completion %}
+  <!-- complete the header from master.html -->
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+
+  <div class="bnd-banner-title-container">
+    <h1>{{ pest.pest_name }}</h1>
+  </div>
+
+  <div class="bnd-banner-scientific-name-container"></div>
+
+  <div class="bnd-banner-menu-container">
+    <button class="bnd-banner-menu-icon">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="bnd-banner-menu-content">
+      <a href="{% url 'plants:pest_edit' pest.id %}" class="bnd-dropdown-button">update</a>
+    </div>
+  </div>
+
+{% endblock header-completion %}
+
+{% block content %}
+  <p>Pest name: {{ pest.pest_name }}</p>
+  <p>Pest type: {{ pest.pest_type }}</p>
+  <p>Pest URL:  {{ pest.pest_url  }}</p>
+  <!-- Pest images -->
+  <div class="bnd-flex-container-wrap">
+    {% if pest.image_1 %}
+    <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ pest.image_1.url }}" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_1 }}</figcaption>
+    </figure>
+    {% endif %}
+
+    {% if pest.image_2 %}
+    <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ pest.image_2.url }}"  onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_2 }}</figcaption>
+    </figure>
+    {% endif %}
+
+    {% if pest.image_3 %}
+    <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ pest.image_3.url }}" onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_3 }}</figcaption>
+    </figure>
+    {% endif %}
+
+    {% if pest.image_4 %}
+    <figure class="bnd-flex-image">
+    <img class="bnd-image-thumbnail" src="{{ pest.image_4.url }}"  onclick="imageModalOpen(this)" alt="No image found">
+    <figcaption class="bnd-image-thumbnail-caption">{{ pest.caption_4 }}</figcaption>
+    </figure>
+    {% endif %}
+  </div>
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <div id="image_modal" class="bnd-modal" onclick="imageModalClose(this)">
+    <div class="bnd-modal-image-container">
+      <img id="image" class="bnd-modal-image">
+    </div>
+  </div>
+{% endblock content %}
+
+{% block js %}
+<script>
+
+</script>
+{% endblock js %}
