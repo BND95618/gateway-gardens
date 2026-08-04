@@ -57,6 +57,7 @@
           <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
           <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
           <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
+          <th>Image</th>
           <!-- Pest Details header placeholder -->
           <th class="bnd-center"></th>
           <!-- Pest Update header placeholder -->
@@ -77,6 +78,13 @@
           <td>
             <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
           </td>
+          
+          <td class="bnd-table-icon-flex">
+            {% if pest.pest_thumbnail %}
+              <img class="bnd-image-thumbnail" src="{{ pest.pest_thumbnail.url }}" alt="No image found">
+            {% endif %}
+          </td>
+          
           <!-- Pest Details Icon/Link -->
           <td class="bnd-table-icon-flex">
             <div class="bnd-tooltip">
@@ -88,7 +96,7 @@
           </td>
           <!-- Pest Update Icon/Link -->
           {% if perms.plants.change_plant %}
-            <td class="bnd-table-icon">
+            <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
                 <a href="{% url 'plants:pest_edit' pest.id %}">
                   <i class="material-icons bnd-text-black">edit</i>

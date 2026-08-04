@@ -692,6 +692,10 @@ img {
     width:      10px;
     text-align: center;
 }
+.bnd-table-thumbnail {
+    width:      100px;
+    text-align: center;
+}
 /* ------------------------------------------------------------ */
 /* Bloom chart navigation bar formatting                        */
 /* ------------------------------------------------------------ */
@@ -1172,7 +1176,7 @@ img {
         break-inside:     avoid;
     }   
 }
-.bnd-image-thumbnail {
+.bnd-image-small {
     width:         100%; 
     aspect-ratio:  1;
     height:        auto; 
@@ -1186,7 +1190,7 @@ img {
         break-inside:     avoid;
     }
 }
-.bnd-image-thumbnail-caption {
+.bnd-image-small-caption {
     width:            100%;
     margin-top:       6px; 
     background-color: lightgray;
@@ -1246,8 +1250,22 @@ img {
 }
 .bnd-image-left:hover,
 .bnd-image-right:hover,
-.bnd-image-thumbnail:hover { 
+.bnd-image-small:hover { 
     opacity: 0.60;
+}
+.bnd-image-thumbnail {
+    width:         50px; 
+    aspect-ratio:  1;
+    height:        auto; 
+    border:        2px solid green; 
+    border-radius: 4px;
+    cursor:        pointer;
+    @media screen and (min-width: 400px) { max-width: 50px; }
+    @media print { 
+        max-width:        140px;
+        margin:           10px 10px 0px 10px;
+        break-inside:     avoid;
+    }
 }
 /* ------------------------------------------------------------ */
 /* Play audio formatting                                        */

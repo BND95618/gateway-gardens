@@ -271,21 +271,21 @@
                 <legend>Image 1:</legend>
                 {% if plant.image_1 %}
                   <img id      = "id_image_1_preview" 
-                       class   = "bnd-image-thumbnail" 
+                       class   = "bnd-image-small" 
                        src     = "{{ plant.image_1.url }}" 
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
-                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_1 }}</figcaption>
+                  <figcaption class="bnd-image-small-caption">{{ plant.caption_1 }}</figcaption>
                   <hr>
                   <div id = "id_image_1_file_input">
                     {{ form.image_1 }}
                   </div>
                 {% else %}
                   <img id      = "id_image_1_preview" 
-                       class   = "bnd-image-thumbnail" 
+                       class   = "bnd-image-small" 
                        src     = "" 
                        alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
                   {{ form.image_1 }}
                 {% endif %}
@@ -299,21 +299,21 @@
                 <legend>Image 2:</legend>
                 {% if plant.image_2 %}
                   <img id      = "id_image_2_preview" 
-                       class   = "bnd-image-thumbnail" 
+                       class   = "bnd-image-small" 
                        src     = "{{ plant.image_2.url }}" 
                        onclick = "imageModalOpen(this)" 
                        alt     = "No image found">
-                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_2 }}</figcaption>
+                  <figcaption class="bnd-image-small-caption">{{ plant.caption_2 }}</figcaption>
                   <hr>
                   <div id = "id_image_2_file_input">
                     {{ form.image_2 }}
                   </div>
                 {% else %}
                   <img id      = "id_image_2_preview" 
-                       class   = "bnd-image-thumbnail" 
+                       class   = "bnd-image-small" 
                        src     = "" 
                        alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
                   {{ form.image_2 }}
                 {% endif %}
@@ -327,21 +327,21 @@
                 <legend>Image 3:</legend>
                 {% if plant.image_3 %}
                   <img id     = "id_image_3_preview" 
-                      class   = "bnd-image-thumbnail" 
+                      class   = "bnd-image-small" 
                       src     = "{{ plant.image_3.url }}" 
                       onclick = "imageModalOpen(this)" 
                       alt     = "No image found">
-                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_3 }}</figcaption>
+                  <figcaption class="bnd-image-small-caption">{{ plant.caption_3 }}</figcaption>
                   <hr>
                   <div id = "id_image_3_file_input">
                     {{ form.image_3 }}
                   </div>
                 {% else %}
                   <img id     = "id_image_3_preview" 
-                      class   = "bnd-image-thumbnail" 
+                      class   = "bnd-image-small" 
                       src     = "" 
                       alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
                   {{ form.image_3 }}
                 {% endif %}
@@ -355,21 +355,21 @@
                 <legend>Image 4:</legend>
                 {% if plant.image_4 %}
                   <img id     = "id_image_4_preview" 
-                      class   = "bnd-image-thumbnail" 
+                      class   = "bnd-image-small" 
                       src     = "{{ plant.image_4.url }}" 
                       onclick = "imageModalOpen(this)" 
                       alt     = "No image found">
-                  <figcaption class="bnd-image-thumbnail-caption">{{ plant.caption_4 }}</figcaption>
+                  <figcaption class="bnd-image-small-caption">{{ plant.caption_4 }}</figcaption>
                   <hr>
                   <div id = "id_image_4_file_input">
                     {{ form.image_4 }}
                   </div>
                 {% else %}
                   <img id     = "id_image_4_preview" 
-                      class   = "bnd-image-thumbnail" 
+                      class   = "bnd-image-small" 
                       src     = ""  
                       alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-thumbnail-caption">"--- Caption displays here ---"</figcaption>
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
                   <hr>
                   {{ form.image_4 }}
                 {% endif %}

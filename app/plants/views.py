@@ -1983,7 +1983,8 @@ def pest_edit(request, id):
             if 'image_1' in request.FILES:
                 if (pest.image_1):
                     pest.image_1.delete(save=False)
-                pest.image_1 = request.FILES['image_1']
+                pest.image_1   = request.FILES['image_1']
+                pest.pest_thumbnail = request.FILES['image_1']
             pest.caption_1 = form.cleaned_data.get('caption_1')
             
             if 'image_2' in request.FILES:
@@ -2002,7 +2003,7 @@ def pest_edit(request, id):
                 if (pest.image_4):
                     pest.image_4.delete(save=False)
                 pest.image_4 = request.FILES['image_4']
-            pest.caption_4 = form.cleaned_data.get('caption_4') 
+            pest.caption_4 = form.cleaned_data.get('caption_4')
 
             pest.save()
 

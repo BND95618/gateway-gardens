@@ -380,27 +380,37 @@ class Pest(models.Model):
                     blank      = True, 
                     null       = True)
     caption_1 = models.CharField(max_length=64, default="tbd", blank=True)
-    image_2   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+
+    image_2   = ProcessedImageField(upload_to = upload_to_uuid('images/'),
                 processors = [Transpose(), ResizeToFill(800, 800)],
                 format     = 'WEBP',
                 options    = {'quality': 95},
                 blank      = True, 
                 null       = True)
     caption_2 = models.CharField(max_length=64, default="tbd", blank=True)
-    image_3   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+
+    image_3   = ProcessedImageField(upload_to = upload_to_uuid('images/'),
                 processors = [Transpose(), ResizeToFill(800, 800)],
                 format     = 'WEBP',
                 options    = {'quality': 95},
                 blank      = True, 
                 null       = True)
     caption_3 = models.CharField(max_length=64, default="tbd", blank=True)
-    image_4   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+
+    image_4   = ProcessedImageField(upload_to = upload_to_uuid('images/'),
                 processors = [Transpose(), ResizeToFill(800, 800)],
                 format     = 'WEBP',
                 options    = {'quality': 95},
                 blank      = True, 
                 null       = True)
     caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
+
+    pest_thumbnail = ProcessedImageField(upload_to = upload_to_uuid('images/'),
+                     processors = [Transpose(), ResizeToFill(150, 150)],
+                     format     = 'WEBP',
+                     options    = {'quality': 95},
+                     blank      = True, 
+                     null       = True)
     
     # Many-to-Many relationship - many different "pests" can be associated with many different "Plant" records
     plants    = models.ManyToManyField(Plant)
