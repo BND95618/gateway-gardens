@@ -53,12 +53,6 @@ urlpatterns = [
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
     #
-    path('pest_summary',              views.pest_summary,        name="pest_summary"),
-    path('pest_details/<int:id>',     views.pest_details,        name="pest_details"),
-    path('pest_add',                  views.pest_add,            name="pest_add"),
-    path('pest_edit/<int:id>',        views.pest_edit,           name="pest_edit"),
-    path('pest_delete/<int:id>',      views.pest_delete,         name="pest_delete"),
-    #
     path('user_signup',               views.user_signup,         name='user_signup'),
     path('user_login',                views.user_login,          name='user_login'),
     path('user_update',               views.user_update,         name='user_update'),

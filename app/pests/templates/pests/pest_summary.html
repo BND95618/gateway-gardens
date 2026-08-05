@@ -34,7 +34,7 @@
     <i class="material-icons">menu</i>
   </button>
   <div class="bnd-banner-menu-content">
-    <a href="{% url 'plants:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
+    <a href="{% url 'pests:pest_add' %}" class="bnd-dropdown-button">Add Pest</a>
   </div>
 </div>
 
@@ -88,7 +88,7 @@
           <!-- Pest Details Icon/Link -->
           <td class="bnd-table-icon-flex">
             <div class="bnd-tooltip">
-              <a href="{% url 'plants:pest_details' pest.id %}">
+              <a href="{% url 'pests:pest_details' pest.id %}">
                 <i    class="material-icons bnd-text-black">library_books</i>
                 <span class="bnd-tooltip-text">Details</span>
               </a>
@@ -98,7 +98,7 @@
           {% if perms.plants.change_plant %}
             <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <a href="{% url 'plants:pest_edit' pest.id %}">
+                <a href="{% url 'pests:pest_edit' pest.id %}">
                   <i class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>

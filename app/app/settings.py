@@ -1,3 +1,4 @@
+# app/app/settings.py
 """
 Django settings for app project.
 
@@ -47,8 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Added for Dajango 5.2.8 S3 static/media file access
     'storages',
-    # Main app
+    # My apps
     'plants',
+    'pests',
     # Image processing
     'imagekit',
     # Rich text editor

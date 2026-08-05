@@ -1,4 +1,4 @@
-<!-- /plants/templates/plants/pest_details.html -->
+<!-- app/pests/templates/pests/pest_details.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -27,7 +27,7 @@
       <i class="material-icons">menu</i>
     </button>
     <div class="bnd-banner-menu-content">
-      <a href="{% url 'plants:pest_edit' pest.id %}" class="bnd-dropdown-button">update</a>
+      <a href="{% url 'pests:pest_edit' pest.id %}" class="bnd-dropdown-button">update</a>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-<!-- /plants/templates/plants/pest_edit.html -->
+<!-- app/pests/templates/pests/pest_edit.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -151,7 +151,7 @@
 
     <button type="submit" class="bnd-button-submit" id="id_submit"       >Submit</button>
     <button type="reset"  class="bnd-button bnd-grey   bnd-round-medium" >Reset </button>
-    <a href="{% url 'plants:pest_summary' %}">
+    <a href="{% url 'pests:pest_summary' %}">
       <button type="button" class="bnd-button-cancel"                    >Cancel</button>
     </a>
     <div id="status"></div>
@@ -327,7 +327,7 @@
         console.log('Success:', data);
         // Handle your JSON response here (e.g., update DOM)
         // let returnURL = "{x% url 'plants:plant_details' plant.id %x}";
-        let returnURL = "{% url 'plants:pest_summary' %}";
+        let returnURL = "{% url 'pests:pest_summary' %}";
         window.location.href = returnURL;
       } 
       else 

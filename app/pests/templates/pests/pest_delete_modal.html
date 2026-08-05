@@ -1,10 +1,10 @@
-<!-- /app/plants/templates/plants/pest_delete_modal.html -->
+<!-- /app/pests/templates/pests/pest_delete_modal.html -->
 
 <div class="bnd-modal-container">
     <div class="bnd-modal-header">
       <h4>Delete "{{ pest.pest_name }}"?</h4>
     </div>
-    <form class="bnd-modal-contents" action="{% url 'plants:pest_delete' pest.id %}" method="post">
+    <form class="bnd-modal-contents" action="{% url 'pests:pest_delete' pest.id %}" method="post">
       {% csrf_token %}
       <div class="bnd-modal-button-bar">
         <button type="submit" class="bnd-button-submit">Confirm</button>
