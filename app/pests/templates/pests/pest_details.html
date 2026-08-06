@@ -36,8 +36,7 @@
 {% block content %}
   <p>Pest name: {{ pest.pest_name }}</p>
   <p>Pest type: {{ pest.pest_type }}</p>
-  <p>Pest URL: <a href="{{ pest.pest_url|safe|escape }}" target="_blank">{{ pest.pest_url }}</a></p>
-
+ 
   <div>
     <section class="bnd-section">
       <header class="bnd-section-header">
@@ -86,6 +85,8 @@
     </figure>
     {% endif %}
   </div>
+
+  <p>Pest URL: <a href="{{ pest.pest_url|safe|escape }}" target="_blank">{{ pest.pest_url }}</a></p>
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->

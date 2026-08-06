@@ -24,12 +24,6 @@ class PestAddUpdateForm(forms.Form):
 		choices = PEST_TYPE_CHOICES,
 		required=False,
 		)
-	# UC IPM URL
-	pest_url = forms.URLField(
-		label="UC IPM URL",
-		validators=[URLValidator()],
-		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
-	)
 	#
 	description = QuillFormField(
 		label="Description",
@@ -82,4 +76,10 @@ class PestAddUpdateForm(forms.Form):
 		initial="tbd", 
 		max_length=64, 
 		required=False,
+	)
+	# UC IPM URL
+	pest_url = forms.URLField(
+		label="UC IPM URL",
+		validators=[URLValidator()],
+		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
 	)
