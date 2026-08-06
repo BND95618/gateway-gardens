@@ -743,6 +743,12 @@ class PlantAddUpdateForm(forms.Form):
 		initial="tbd",
 		required=False,
 	)
+	pruning_video = forms.URLField(
+		label="YouTube Prunng Video",
+		required=False,
+		validators=[URLValidator()],
+		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
+	)
 	fertilization = QuillFormField(
 		label="Fertilization Considerations",
 		initial="tbd",

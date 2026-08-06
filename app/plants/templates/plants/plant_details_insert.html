@@ -87,6 +87,26 @@
     <div class="bnd-section-contents">
       {{ plant.pruning.html|safe|escape }}
     </div>
+    {% if plant.pruning_video %}
+      <hr>
+      YouTube URL:<br/>
+      <iframe class         = "bnd-video-clip"
+              width         = "560" 
+              height        = "315" 
+              src           = {{ plant.pruning_video }} 
+              title         = "YouTube video player" 
+              frameborder   = "0" 
+              allow         = "accelerometer; 
+                              autoplay; 
+                              clipboard-write; 
+                              encrypted-media; 
+                              gyroscope; 
+                              picture-in-picture; 
+                              web-share" 
+              referrerpolicy = "strict-origin-when-cross-origin" 
+              allowfullscreen >
+      </iframe>
+    {% endif %}
   </section>
 
   <section class="bnd-section">

@@ -195,6 +195,7 @@ class Plant(models.Model):
     # Text boxes
     description       = QuillField(blank=True, null=True)
     pruning           = QuillField(blank=True, null=True)
+    pruning_video     = models.URLField(default="", blank=True)
     fertilization     = QuillField(blank=True, null=True)
     propagation       = QuillField(blank=True, null=True)
     pests_diseases    = QuillField(blank=True, null=True)
@@ -215,7 +216,6 @@ class Plant(models.Model):
     phonetic_spelling = models.CharField(max_length=64, default="tbd", blank=True)
     # Scientific name pronunciation audio
     audio_name        = models.FileField(upload_to     = upload_to_uuid('audio/'),
-    #$$ audio_name        = models.FileField(upload_to     = get_file_path, 
                                          blank         = True, 
                                          null          = True)
     # Images

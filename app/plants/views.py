@@ -1683,6 +1683,7 @@ def plant_edit(request, id):
                 
             plant.description    = form.cleaned_data.get('description')
             plant.pruning        = form.cleaned_data.get('pruning')
+            plant.pruning_video  = form.cleaned_data.get('pruning_video')
             plant.fertilization  = form.cleaned_data.get('fertilization')
             plant.propagation    = form.cleaned_data.get('propagation')
             plant.pests_diseases = form.cleaned_data.get('pests_diseases')
@@ -1785,6 +1786,7 @@ def plant_edit(request, id):
                                             'sunset_zones'      : plant.sunset_zones,
                                             'description'       : plant.description,
                                             'pruning'           : plant.pruning,
+                                            'pruning_video'     : plant.pruning_video,
                                             'fertilization'     : plant.fertilization,
                                             'propagation'       : plant.propagation,
                                             'pests_diseases'    : plant.pests_diseases,
