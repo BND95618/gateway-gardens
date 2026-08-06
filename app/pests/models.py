@@ -21,7 +21,7 @@ from django_uuid_upload  import upload_to_uuid
 class Pest(models.Model):
     pest_name   = models.CharField(max_length=32)
     pest_type   = models.CharField(max_length=32,  default="tbd", blank=True)
-    pest_url    = models.URLField(default="tbd", blank=True)
+    pest_url    = models.URLField(default="", blank=True)
     description = QuillField(blank=True, null=True)
     management  = QuillField(blank=True, null=True)
 

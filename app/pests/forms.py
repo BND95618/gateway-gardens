@@ -80,6 +80,7 @@ class PestAddUpdateForm(forms.Form):
 	# UC IPM URL
 	pest_url = forms.URLField(
 		label="UC IPM URL",
+		required=False,
 		validators=[URLValidator()],
 		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
 	)
