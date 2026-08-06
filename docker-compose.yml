@@ -8,7 +8,8 @@ services:
       - 8000:8000
     command: >
       sh -c "python manage.py makemigrations plants && \
-             python manage.py migrate && \
+             python manage.py makemigrations pests  && \
+             python manage.py migrate               && \
              python manage.py runserver 0.0.0.0:8000"
     environment:
       - DEBUG=1

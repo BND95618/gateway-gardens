@@ -1,5 +1,6 @@
 from django.contrib import admin
-from plants.models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
+from plants.models  import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
+from pests.models   import Pest
 
 # Register your models here.
 class GardenAdmin(admin.ModelAdmin):

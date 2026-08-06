@@ -1,10 +1,10 @@
 # app/pests/views.py
-# 
+
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render
 from django.template  import loader
 from django.urls      import reverse
-from plants.models    import Pest
+from pests.models     import Pest
 from pests.forms      import PestAddUpdateForm
 
 def pest_summary(request):

@@ -13,7 +13,8 @@ from django.contrib.auth            import authenticate, login, logout # User lo
 from django.contrib.auth.models     import User, Group                 # User signup
 from django.contrib.auth.decorators import login_required
 
-from .models import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment, Pest
+from .models      import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
+from pests.models import Pest
 
 from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
 from .forms  import GardenAddUpdateForm
