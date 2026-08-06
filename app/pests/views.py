@@ -12,7 +12,6 @@ def pest_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     pests = Pest.objects.all().order_by('pest_type', 'pest_name')
-    print("DEBUG: Here are the pests")
     template = loader.get_template("pests/pest_summary.html")
     context = { 'pests' : pests }
     return HttpResponse(template.render(context, request))
@@ -47,9 +46,11 @@ def pest_edit(request, id):
     if request.POST:
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
-            pest.pest_name = form.cleaned_data.get('pest_name')
-            pest.pest_type = form.cleaned_data.get('pest_type')
-            pest.pest_url  = form.cleaned_data.get('pest_url')
+            pest.pest_name   = form.cleaned_data.get('pest_name')
+            pest.pest_type   = form.cleaned_data.get('pest_type')
+            pest.pest_url    = form.cleaned_data.get('pest_url')
+            pest.description = form.cleaned_data.get('description')
+            pest.management  = form.cleaned_data.get('management')
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
                 if (pest.image_1):
@@ -84,17 +85,19 @@ def pest_edit(request, id):
         }
         return JsonResponse(response_data)
     else:
-        form = PestAddUpdateForm(initial = { 'pest_name' : pest.pest_name,
-                                             'pest_type' : pest.pest_type,
-                                             'pest_url'  : pest.pest_url,
-                                             'image_1'   : pest.image_1,
-                                             'caption_1' : pest.caption_1,
-                                             'image_2'   : pest.image_2,
-                                             'caption_2' : pest.caption_2,
-                                             'image_3'   : pest.image_3,
-                                             'caption_3' : pest.caption_3,
-                                             'image_4'   : pest.image_4,
-                                             'caption_4' : pest.caption_4,
+        form = PestAddUpdateForm(initial = { 'pest_name'   : pest.pest_name,
+                                             'pest_type'   : pest.pest_type,
+                                             'pest_url'    : pest.pest_url,
+                                             'description' : pest.description,
+                                             'management'  : pest.management,
+                                             'image_1'     : pest.image_1,
+                                             'caption_1'   : pest.caption_1,
+                                             'image_2'     : pest.image_2,
+                                             'caption_2'   : pest.caption_2,
+                                             'image_3'     : pest.image_3,
+                                             'caption_3'   : pest.caption_3,
+                                             'image_4'     : pest.image_4,
+                                             'caption_4'   : pest.caption_4,
                                            })
         context = { 'pest' : pest,
                     'form' : form }

@@ -1,6 +1,7 @@
 # app/plants/forms.py
 
-from django import forms
+from django                 import forms
+from django_quill.forms     import QuillFormField
 from django.core.validators import URLValidator
 
 PEST_TYPE_CHOICES = (
@@ -28,7 +29,19 @@ class PestAddUpdateForm(forms.Form):
 		label="UC IPM URL",
 		validators=[URLValidator()],
 		widget=forms.TextInput(attrs={'placeholder': 'https://example.com'})
-		)
+	)
+	#
+	description = QuillFormField(
+		label="Description",
+		initial="tbd",
+		required=False,
+	)
+	#
+	management = QuillFormField(
+		label="Management",
+		initial="tbd",
+		required=False,
+	)
 	# pest images
 	image_1   = forms.ImageField(
 		required=False,
@@ -39,7 +52,7 @@ class PestAddUpdateForm(forms.Form):
 		initial="tbd", 
 		max_length=64, 
 		required=False
-		)
+	)
 	image_2   = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
@@ -49,7 +62,7 @@ class PestAddUpdateForm(forms.Form):
 		initial="tbd", 
 		max_length=64, 
 		required=False
-		)
+	)
 	image_3 = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
@@ -59,7 +72,7 @@ class PestAddUpdateForm(forms.Form):
 		initial="tbd", 
 		max_length=64, 
 		required=False
-		)
+	)
 	image_4 = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
@@ -69,4 +82,4 @@ class PestAddUpdateForm(forms.Form):
 		initial="tbd", 
 		max_length=64, 
 		required=False,
-		)
+	)

@@ -36,7 +36,26 @@
 {% block content %}
   <p>Pest name: {{ pest.pest_name }}</p>
   <p>Pest type: {{ pest.pest_type }}</p>
-  <p>Pest URL:  {{ pest.pest_url  }}</p>
+  <p>Pest URL: <a href="{{ pest.pest_url|safe|escape }}" target="_blank">{{ pest.pest_url }}</a></p>
+
+  <div>
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>Description</h4>
+      </header>
+      <div class="bnd-section-contents">
+        {{ pest.description.html|safe|escape }}
+      </div>
+    </section>
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>Management</h4>
+      </header>
+      <div class="bnd-section-contents">
+        {{ pest.management.html|safe|escape }}
+      </div>
+    </section>
+  </div>
   <!-- Pest images -->
   <div class="bnd-flex-container-wrap">
     {% if pest.image_1 %}
