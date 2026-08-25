@@ -20,9 +20,11 @@ from django_uuid_upload  import upload_to_uuid
 
 class Pest(models.Model):
     pest_name   = models.CharField(max_length=32)
+    family      = models.CharField(max_length=64, default="tbd", blank=True)
     genus       = models.CharField(max_length=64, default="tbd", blank=True)
     species     = models.CharField(max_length=64, default="tbd", blank=True)
     pest_type   = models.CharField(max_length=32, default="tbd", blank=True)
+    life_cycle  = models.CharField(max_length=32, default="tbd", blank=True)
     pest_url    = models.URLField(default="", blank=True)
     description = QuillField(blank=True, null=True)
     management  = QuillField(blank=True, null=True)

@@ -55,10 +55,12 @@
         <tr>
           <!-- Pest Attributes -->
           <th onclick="sortTable(0, 'pestTable')" >Common Name </th>
-          <th onclick="sortTable(1, 'pestTable')" >Genus       </th>
-          <th onclick="sortTable(2, 'pestTable')" >Species     </th>
-          <th onclick="sortTable(3, 'pestTable')" >Pest Type   </th>
-          <th onclick="sortTable(4, 'pestTable')" >UC IPM URL  </th>
+          <th onclick="sortTable(1, 'pestTable')" >Family      </th>
+          <th onclick="sortTable(2, 'pestTable')" >Genus       </th>
+          <th onclick="sortTable(3, 'pestTable')" >Species     </th>
+          <th onclick="sortTable(4, 'pestTable')" >Pest Type   </th>
+          <th onclick="sortTable(5, 'pestTable')" >Life Cycle  </th>
+          <th onclick="sortTable(6, 'pestTable')" >UC IPM URL  </th>
           <th>Image</th>
           <!-- Pest Details header placeholder -->
           <th class="bnd-center"></th>
@@ -75,10 +77,12 @@
       {% for pest in pests %} 
         <tr>
           <!-- Pest Attributes -->
-          <td>{{ pest.pest_name }}</td>
-          <td>{{ pest.genus     }}</td>
-          <td>{{ pest.species   }}</td>
-          <td>{{ pest.pest_type }}</td>
+          <td>{{ pest.pest_name  }}</td>
+          <td>{{ pest.family     }}</td>
+          <td>{{ pest.genus      }}</td>
+          <td>{{ pest.species    }}</td>
+          <td>{{ pest.pest_type  }}</td>
+          <td>{{ pest.life_cycle }}</td>
           <td>
             <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
           </td>

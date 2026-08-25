@@ -47,9 +47,11 @@ def pest_edit(request, id):
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name   = form.cleaned_data.get('pest_name')
+            pest.family      = form.cleaned_data.get('family')
             pest.genus       = form.cleaned_data.get('genus')
             pest.species     = form.cleaned_data.get('species')
             pest.pest_type   = form.cleaned_data.get('pest_type')
+            pest.life_cycle  = form.cleaned_data.get('life_cycle')
             pest.pest_url    = form.cleaned_data.get('pest_url')
             pest.description = form.cleaned_data.get('description')
             pest.management  = form.cleaned_data.get('management')
@@ -88,9 +90,11 @@ def pest_edit(request, id):
         return JsonResponse(response_data)
     else:
         form = PestAddUpdateForm(initial = { 'pest_name'   : pest.pest_name,
+                                             'family'      : pest.family,
                                              'genus'       : pest.genus,
                                              'species'     : pest.species,
                                              'pest_type'   : pest.pest_type,
+                                             'life_cycle'  : pest.life_cycle,
                                              'pest_url'    : pest.pest_url,
                                              'description' : pest.description,
                                              'management'  : pest.management,

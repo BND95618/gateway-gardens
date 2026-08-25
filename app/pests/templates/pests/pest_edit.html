@@ -29,9 +29,11 @@
         enctype  = "multipart/form-data" >
     {% csrf_token %}
     {{ form.pest_name.as_field_group  }} <br/>
+    {{ form.family.as_field_group     }} <br/>
     {{ form.genus.as_field_group      }} <br/>
     {{ form.species.as_field_group    }} <br/>
     {{ form.pest_type.as_field_group  }} <br/>
+    {{ form.life_cycle.as_field_group }} <br/>
     {{ form.pest_url.as_field_group   }} <br/>
     <div class="description">
       {{ form.description.as_field_group }}

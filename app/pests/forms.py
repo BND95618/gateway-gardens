@@ -12,10 +12,21 @@ PEST_TYPE_CHOICES = (
 	("Weed",    "Weed"),
 )
 
+LIFE_CYCLE_CHOICES = (
+	("tbd",       "tbd"),
+	("annual",    "annual"),
+	("perennial", "perennial"),
+	("N/A",       "N/A"),
+)
+
 class PestAddUpdateForm(forms.Form):
 	pest_name = forms.CharField(
 		label="Pest Name", 
 		max_length=255,
+		)
+	family = forms.CharField(
+		label="Family", 
+		max_length=64,
 		)
 	genus = forms.CharField(
 		label="Genus", 
@@ -27,10 +38,17 @@ class PestAddUpdateForm(forms.Form):
 		)
 	# Attributes
 	pest_type = forms.ChoiceField(
-		label="Pest Type",
-		initial='tbd',
-		choices = PEST_TYPE_CHOICES,
-		required=False,
+		label    = "Pest Type",
+		initial  = 'tbd',
+		choices  = PEST_TYPE_CHOICES,
+		required = False,
+		)
+	#
+	life_cycle = forms.ChoiceField(
+		label    = "Life cycle",
+		initial  = 'tbd',
+		choices  = LIFE_CYCLE_CHOICES,
+		required = False,
 		)
 	#
 	description = QuillFormField(
