@@ -17,6 +17,14 @@ class PestAddUpdateForm(forms.Form):
 		label="Pest Name", 
 		max_length=255,
 		)
+	genus = forms.CharField(
+		label="Genus", 
+		max_length=64,
+		)
+	species = forms.CharField(
+		label="Species", 
+		max_length=64,
+		)
 	# Attributes
 	pest_type = forms.ChoiceField(
 		label="Pest Type",

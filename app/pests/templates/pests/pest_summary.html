@@ -54,9 +54,11 @@
       <thead>
         <tr>
           <!-- Pest Attributes -->
-          <th onclick="sortTable(0, 'pestTable')" >Pest Name </th>
-          <th onclick="sortTable(1, 'pestTable')" >Pest Type </th>
-          <th onclick="sortTable(2, 'pestTable')" >UC IPM URL</th>
+          <th onclick="sortTable(0, 'pestTable')" >Common Name </th>
+          <th onclick="sortTable(1, 'pestTable')" >Genus       </th>
+          <th onclick="sortTable(2, 'pestTable')" >Species     </th>
+          <th onclick="sortTable(3, 'pestTable')" >Pest Type   </th>
+          <th onclick="sortTable(4, 'pestTable')" >UC IPM URL  </th>
           <th>Image</th>
           <!-- Pest Details header placeholder -->
           <th class="bnd-center"></th>
@@ -74,6 +76,8 @@
         <tr>
           <!-- Pest Attributes -->
           <td>{{ pest.pest_name }}</td>
+          <td>{{ pest.genus     }}</td>
+          <td>{{ pest.species   }}</td>
           <td>{{ pest.pest_type }}</td>
           <td>
             <a href="{{ pest.pest_url|safe|escape }}" target="_blank">UC IPM Link</a>
