@@ -12,6 +12,7 @@ TYPE_CHOICES = (
 	("Fern",           "Fern"),
 	("Forb",           "Forb"),
 	("Grass",          "Grass"),
+	("Turf Grass",     "Turf Grass");
 	("Groundcover",    "Groundcover"),
 	("Perennial",      "Perennial"),
 	("Shrub",          "Shrub"),

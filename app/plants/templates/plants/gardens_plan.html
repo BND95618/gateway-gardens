@@ -100,6 +100,12 @@
                                 <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
                             {% endif %}
                         {% endfor %}
+                    </optgroup><optgroup label="Turf Grass">
+                        {% for plant in plants %}
+                            {% if plant.type_x == "Turf Grass" %}
+                                <option value="{{ plant.commonName }}"> {{ plant.commonName }} </option>
+                            {% endif %}
+                        {% endfor %}
                     </optgroup>
                     <optgroup label="Groundcover">
                         {% for plant in plants %}

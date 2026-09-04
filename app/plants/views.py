@@ -22,8 +22,9 @@ from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, M
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 
 # Define attribute select option arrays
-plant_types      = ["tbd", "Annual", "Bulb", "Fern", "Grass", "Groundcover", "Perennial", "Shrub", "Forb", 
-                    "Succulent", "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
+plant_types      = ["tbd", "Annual", "Bulb", "Fern", "Grass", "Turf Grass", 
+                    "Groundcover", "Perennial", "Shrub", "Forb", "Succulent", 
+                    "Tree-Deciduous", "Tree-Evergreen", "Vegetable", "Vine"]
 bloom_color_opt  = ["tbd", "white", "creamy white", "yellow", "red", "burgundy", "pink", "pale pink", 
                     "lavendar", "purple", "green", "blue", "orange", "none"]
 bloom_season_opt = ["tbd", "Spring", "Summer", "Fall", "Winter", "Infrequent", "None"]
