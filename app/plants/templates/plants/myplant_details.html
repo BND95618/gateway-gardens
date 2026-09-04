@@ -8,6 +8,21 @@
 
 {% block css %}
 <!-- Insert template css here -->
+<style>
+  /* Forces the Quill editor container to have a visible structure */
+  /* Required to make the editor visible in a pop-op modal         */
+  .django-quill-widget-container {
+      display:    block !important;
+      min-height: 200px;
+  }
+  
+  /* Forces Quill's internal editable area to render               */
+  /* Required to make the editor visible in a pop-op modal         */
+  .django-quill-widget-container .ql-editor {
+      min-height: 150px !important;
+      height:     auto  !important;
+  }
+</style>
 {% endblock css %}
 
 {% block header-completion %}
@@ -183,18 +198,20 @@
     <!------------------------------------->
     <!-- My Plant Comments               -->
     <!------------------------------------->
-    <section class="bnd-section">
+    <section id="myplant_comments" class="bnd-section">
       <header class="bnd-section-header">
         <h4>My Plant: Comments</h4>
       </header>
       <div class="bnd-section-contents">
         {% for comment in myplant_comments %}
           <p>Subject: {{ comment.subject }}</p>
+          <p>Date:    {{ comment.date    }}</p>
           <p>Author:  {{ comment.author  }}</p>
+          <hr/>
           {{ comment.comment.html|safe|escape }}
-          <hr>
+          <hr/>
         {% endfor %}
-        <p><a href="{% url 'plants:myplant_comment' myplant.id %}">Add comment</a></p>
+        <button type="button" id="openCommentModalBtn">Create comment</button>
       </div>
     </section>
     <hr>
@@ -209,10 +226,10 @@
     <br/>
     {% include "plants/plant_details_insert.html" %}
   </section>
-  <!------------------------------------->
-  <!-- Modals                          -->
-  <!------------------------------------->
-  <!-- To Do add modal - html to be inserted by Javascript -->
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <!-- To Do add modal - html to be inserted by Javascript                  -->
   <div id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
   </div>
@@ -227,217 +244,269 @@
     <p> To Do delete form HTML to be Inserted Here! </p>
   </div>
 
+  <!-- MyPlant Add Comment modal -->
+  <div id="myplant_comment_modal" class="bnd-modal">
+    <div id="myplant_comment_modal_body" class="bnd-modal-container">
+      <header class="bnd-modal-header">
+        <h4>Add comment for: {{ myplant.plant.commonName }}</h4>
+      </header>
+      <form id="commentQuillForm" 
+            action="{% url 'plants:myplant_comment' myplant.id %}"
+            method="POST" 
+            enctype = "multipart/form-data">
+        {% csrf_token %}
+        <div class="bnd-modal-contents">
+          {{ form.as_p }}
+        </div>
+        <div class="bnd-modal-button-bar">
+          <button type="submit" class="bnd-button-submit">Submit</button>
+          <button type    = "button"
+                  onclick = "myplant_comment_add_close()"
+                  class   = "bnd-button-cancel">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 {% endblock content %}
 
 {% block js %}
 <script>
-    // Get the current my plant ID when Django renders the page
-    const myPlantID = {{ myplant.id }};
-    // set initial sort column and direction from db
-    let lastToDoSortCol =  {{ myplant.lastToDoSortCol }};
-    let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
-          
-    function todo_add()
-    {
-        url = "{% url 'plants:myplant_todo_add' myplant.id %}"
-        fetch(url) 
-        .then(response => response.text())
-        .then(html => {todo_add_modal.innerHTML = html;})
-        .then(restoreToDoSort())
-        todo_add_modal.style.display='block';
-    }
-    function todo_edit(id)
-    {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_edit' %x}" + "/" + id;
+// Get the current my plant ID when Django renders the page
+const myPlantID = {{ myplant.id }};
+// set initial sort column and direction from db
+let lastToDoSortCol =  {{ myplant.lastToDoSortCol }};
+let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
+      
+function todo_add()
+{
+    url = "{% url 'plants:myplant_todo_add' myplant.id %}"
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {todo_add_modal.innerHTML = html;})
+    .then(restoreToDoSort())
+    todo_add_modal.style.display='block';
+}
+function todo_edit(id)
+{
+    // AR: fix url approach
+    // url = "{x% url 'plants:myplant_todo_edit' %x}" + "/" + id;
 
-        url = "/myplant_todo_edit/" + id;
-        fetch(url) 
-        .then(response => response.text())
-        .then(html => {todo_edit_modal.innerHTML = html;})
-        .then(restoreToDoSort())
-        todo_edit_modal.style.display='block';
-    }
-    function todo_delete(id)
+    url = "/myplant_todo_edit/" + id;
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {todo_edit_modal.innerHTML = html;})
+    .then(restoreToDoSort())
+    todo_edit_modal.style.display='block';
+}
+function todo_delete(id)
+{
+    // AR: fix url approach
+    // url = "{x% url 'plants:myplant_todo_del' %x}" + "/" + id;
+
+    url = "/myplant_todo_del/" + id;
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {todo_del_modal.innerHTML = html;})
+    .then(restoreToDoSort())
+    todo_del_modal.style.display='block';
+}
+function todo_done(id)
+{
+    // AR: fix url approach
+    // url = "{x% url 'plants:myplant_todo_done' %x}" + "/" + id;
+
+    // 
+    const url = "/myplant_todo_done/" + id;
+    const requestMethod = "POST";
+    const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const postData = { lastToDoSortCol : lastToDoSortCol,
+                        lastToDoSortDir : lastToDoSortDir };
+
+    fetch(url, 
     {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_del' %x}" + "/" + id;
-
-        url = "/myplant_todo_del/" + id;
-        fetch(url) 
-        .then(response => response.text())
-        .then(html => {todo_del_modal.innerHTML = html;})
-        .then(restoreToDoSort())
-        todo_del_modal.style.display='block';
-    }
-    function todo_done(id)
-    {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_done' %x}" + "/" + id;
-
-        // 
-        const url = "/myplant_todo_done/" + id;
-        const requestMethod = "POST";
-        const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const postData = { lastToDoSortCol : lastToDoSortCol,
-                           lastToDoSortDir : lastToDoSortDir };
-
-        fetch(url, 
+        method: requestMethod,
+        headers: 
         {
-            method: requestMethod,
-            headers: 
-            {
-                // Tells the server that the request body is in JSON format
-                'Content-Type': 'application/json',
-                //  Provides CSRF protection, necessary for Django
-                'X-CSRFToken' : csrfToken
-            },
-            body: JSON.stringify(postData)
-        })
-        .then(response => response.text())
-        .then(restoreToDoSort());
-        window.location.reload()
-    }
-    function todo_show_all()
-    {
-        const table = document.getElementById('todoTable');
-        const rows  = table.getElementsByTagName("tr");
+            // Tells the server that the request body is in JSON format
+            'Content-Type': 'application/json',
+            //  Provides CSRF protection, necessary for Django
+            'X-CSRFToken' : csrfToken
+        },
+        body: JSON.stringify(postData)
+    })
+    .then(response => response.text())
+    .then(restoreToDoSort());
+    window.location.reload()
+}
+function todo_show_all()
+{
+    const table = document.getElementById('todoTable');
+    const rows  = table.getElementsByTagName("tr");
 
-        for (let i = 1; i < rows.length; i++) 
+    for (let i = 1; i < rows.length; i++) 
+    {
+        rows[i].style.display = '';
+    }
+}
+function todo_hide_done()
+{
+    const table = document.getElementById('todoTable');
+    const rows  = table.getElementsByTagName("tr");
+    const columnIndex = 0;
+
+    for (let i = 1; i < rows.length; i++) 
+    {
+        const row = rows[i];
+        const cells = row.getElementsByTagName('td');
+        const cellValue = cells[columnIndex].textContent.trim();
+        const status = cellValue.split('\n')[0];
+
+        if (status == "check_box")
         {
-            rows[i].style.display = '';
+            row.style.display = 'none'; // Hide the row
+        } 
+        else 
+        {
+            row.style.display = ''; // Ensure other rows are visible
         }
     }
-    function todo_hide_done()
+}
+function todo_sort(column)
+{
+    // sort the table per the specified column
+    sortTable(column, 'todoTable');
+
+    // save the column sorted in the script
+    lastToDoSortCol = column;
+
+    sortDirection(column);
+
+    // Save sort column and direction to the server db
+    const url = "/myplant_todo_save/" + myPlantID;
+    const requestMethod = "POST";
+    const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const postData = { lastToDoSortCol : lastToDoSortCol,
+                        lastToDoSortDir : lastToDoSortDir };
+
+    fetch(url, 
     {
-        const table = document.getElementById('todoTable');
+        method: requestMethod,
+        headers: 
+        {
+            // Tells the server that the request body is in JSON format
+            'Content-Type': 'application/json',
+            //  Provides CSRF protection, necessary for Django
+            'X-CSRFToken' : csrfToken
+        },
+        body: JSON.stringify(postData)
+    })
+    .then(response => response.text())
+}
+function restoreToDoSort()  
+{
+    // Determine if the table has any rows
+    const table = document.getElementById('todoTable');
+    const rowCount = table.rows.length;
+    if (rowCount > 1)
+    {
+        // Since the table has rows it is safe to proceed
+        let tempSortDirection = "ascending";
+        console.log("Got to restoreToDoSort");
+
+        sortTable(lastToDoSortCol, 'todoTable');
+
+        // Determine sort direction
         const rows  = table.getElementsByTagName("tr");
-        const columnIndex = 0;
 
-        for (let i = 1; i < rows.length; i++) 
-        {
-            const row = rows[i];
-            const cells = row.getElementsByTagName('td');
-            const cellValue = cells[columnIndex].textContent.trim();
-            const status = cellValue.split('\n')[0];
-
-            if (status == "check_box")
-            {
-                row.style.display = 'none'; // Hide the row
-            } 
-            else 
-            {
-                row.style.display = ''; // Ensure other rows are visible
-            }
-        }
-    }
-    function todo_sort(column)
-    {
-        // sort the table per the specified column
-        sortTable(column, 'todoTable');
-
-        // save the column sorted in the script
-        lastToDoSortCol = column;
-
-        sortDirection(column);
-
-        // Save sort column and direction to the server db
-        const url = "/myplant_todo_save/" + myPlantID;
-        const requestMethod = "POST";
-        const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const postData = { lastToDoSortCol : lastToDoSortCol,
-                           lastToDoSortDir : lastToDoSortDir };
-
-        fetch(url, 
-        {
-            method: requestMethod,
-            headers: 
-            {
-                // Tells the server that the request body is in JSON format
-                'Content-Type': 'application/json',
-                //  Provides CSRF protection, necessary for Django
-                'X-CSRFToken' : csrfToken
-            },
-            body: JSON.stringify(postData)
-        })
-        .then(response => response.text())
-    }
-    function restoreToDoSort()  
-    {
-        // Determine if the table has any rows
-        const table = document.getElementById('todoTable');
-        const rowCount = table.rows.length;
-        if (rowCount > 1)
-        {
-            // Since the table has rows it is safe to proceed
-            let tempSortDirection = "ascending";
-            console.log("Got to restoreToDoSort");
-
-            sortTable(lastToDoSortCol, 'todoTable');
-
-            // Determine sort direction
-            const rows  = table.getElementsByTagName("tr");
-
-            const firstRow = rows[1];
-            const firstRowCells = firstRow.getElementsByTagName('td');
-            const firstRowCellContents = firstRowCells[lastToDoSortCol].textContent.trim();
-            const firstRowCellValue    = firstRowCellContents .split('\n')[0];
-
-            const lastRow = rows[rows.length - 1];
-            const lastRowCells = lastRow.getElementsByTagName('td');
-            const lastRowCellContents = lastRowCells[lastToDoSortCol].textContent.trim();
-            const lastRowCellValue    = lastRowCellContents .split('\n')[0];
-
-            if( firstRowCellValue < lastRowCellValue )
-            {
-              tempSortDirection = "up";
-            }
-            else
-            {
-              tempSortDirection = "down";
-            }
-
-            console.log("lastToDoSortDir  =", lastToDoSortDir);
-            console.log("tempSortDirection  =", tempSortDirection);
-
-            if (tempSortDirection != lastToDoSortDir)
-            {
-              sortTable(lastToDoSortCol, 'todoTable');
-            }
-        }
-    }
-    function sortDirection(column)
-    {
-        // Determine whether the sorted column is ascending or descending
-        const table = document.getElementById('todoTable');
-        const rows  = table.getElementsByTagName("tr");
-        // Get the value contained in the selected column - first data row
         const firstRow = rows[1];
         const firstRowCells = firstRow.getElementsByTagName('td');
-        const firstRowCellContents = firstRowCells[column].textContent.trim();
+        const firstRowCellContents = firstRowCells[lastToDoSortCol].textContent.trim();
         const firstRowCellValue    = firstRowCellContents .split('\n')[0];
-        // Get the value contained in the selected column - last data row
+
         const lastRow = rows[rows.length - 1];
         const lastRowCells = lastRow.getElementsByTagName('td');
-        const lastRowCellContents = lastRowCells[column].textContent.trim();
+        const lastRowCellContents = lastRowCells[lastToDoSortCol].textContent.trim();
         const lastRowCellValue    = lastRowCellContents .split('\n')[0];
-        // save the column sort direction in the script
+
         if( firstRowCellValue < lastRowCellValue )
         {
-            lastToDoSortDir = "up";
+          tempSortDirection = "up";
         }
         else
         {
-            lastToDoSortDir = "down";
+          tempSortDirection = "down";
+        }
+
+        console.log("lastToDoSortDir  =", lastToDoSortDir);
+        console.log("tempSortDirection  =", tempSortDirection);
+
+        if (tempSortDirection != lastToDoSortDir)
+        {
+          sortTable(lastToDoSortCol, 'todoTable');
         }
     }
-    
-    function onClick(element) {
+}
+function sortDirection(column)
+{
+    // Determine whether the sorted column is ascending or descending
+    const table = document.getElementById('todoTable');
+    const rows  = table.getElementsByTagName("tr");
+    // Get the value contained in the selected column - first data row
+    const firstRow = rows[1];
+    const firstRowCells = firstRow.getElementsByTagName('td');
+    const firstRowCellContents = firstRowCells[column].textContent.trim();
+    const firstRowCellValue    = firstRowCellContents .split('\n')[0];
+    // Get the value contained in the selected column - last data row
+    const lastRow = rows[rows.length - 1];
+    const lastRowCells = lastRow.getElementsByTagName('td');
+    const lastRowCellContents = lastRowCells[column].textContent.trim();
+    const lastRowCellValue    = lastRowCellContents .split('\n')[0];
+    // save the column sort direction in the script
+    if( firstRowCellValue < lastRowCellValue )
+    {
+        lastToDoSortDir = "up";
+    }
+    else
+    {
+        lastToDoSortDir = "down";
+    }
+}
+
+function onClick(element) {
       document.getElementById("image").src = element.src;
       document.getElementById("image_modal").style.display = "block";
     }
-    
-    // Sort My Plants table by Date
-    window.onload = restoreToDoSort();
+//-----------------------------------------------------------------------------
+// Plant Comment Modal
+//-----------------------------------------------------------------------------
+const modal   = document.getElementById("myplant_comment_modal");
+const openBtn = document.getElementById("openCommentModalBtn");
+// Open modal
+openBtn.addEventListener("click", () => 
+{
+  modal.style.display = "block";
+});
+// Close modal
+function myplant_comment_add_close()
+{
+  document.getElementById('myplant_comment_modal').style.display='none';
+  document.body.classList.remove('bnd-modal-open');
+}
+// Close modal if user clicks anywhere outside of the modal container
+window.addEventListener("click", (e) => 
+{
+  if (e.target === modal) 
+  {
+    myplant_comment_modal.style.display = "none";
+    document.body.classList.remove('bnd-modal-open');
+  }
+});
+//-----------------------------------------------------------------------------
+// Sort My Plants table by Date
+//-----------------------------------------------------------------------------
+window.onload = restoreToDoSort();
 </script>
 {% endblock js %}

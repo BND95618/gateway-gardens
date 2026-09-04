@@ -93,9 +93,11 @@
     <div class="bnd-section-contents">
       {% for comment in comments %}
         <p>Subject: {{ comment.subject }}</p>
+        <p>Date:    {{ comment.date    }}</p>
         <p>Author:  {{ comment.author  }}</p>
+        <hr/>
         {{ comment.comment.html|safe|escape }}
-        <hr>
+        <hr/>
       {% endfor %}
       <button type="button" id="openCommentModalBtn">Create comment</button>
     </div>
@@ -109,12 +111,12 @@
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
-  <!-- Plant Add Comment modal                                                   -->
+  <!-- Plant Add Comment modal                                              -->
   <!-------------------------------------------------------------------------->
   <div id="plant_comment_modal" class="bnd-modal">
     <div id="plant_comment_modal_body" class="bnd-modal-container">
       <header class="bnd-modal-header">
-        <h4>Add comment for: "{{ plant.commonName }}</h4>
+        <h4>Add comment for: {{ plant.commonName }}</h4>
       </header>
       <form id="commentQuillForm" 
             action="{% url 'plants:plant_comment' plant.id %}"
@@ -123,6 +125,7 @@
         {% csrf_token %}
         <div class="bnd-modal-contents">
           {{ form.as_p }}
+        </div>
         <div class="bnd-modal-button-bar">
           <button type="submit" class="bnd-button-submit">Submit</button>
           <button type    = "button"
@@ -141,25 +144,22 @@
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
 <script>
 //-----------------------------------------------------------------------------
-// Plant Comment Modal - open modal
+// Plant Comment Modal
 //-----------------------------------------------------------------------------
 const modal   = document.getElementById("plant_comment_modal");
 const openBtn = document.getElementById("openCommentModalBtn");
+// Open modal
 openBtn.addEventListener("click", () => 
 {
   modal.style.display = "block";
 });
-//-----------------------------------------------------------------------------
-// Plant Comment Modal - close modal
-//-----------------------------------------------------------------------------
+// Close modal
 function plant_comment_add_close()
 {
   document.getElementById('plant_comment_modal').style.display='none';
   document.body.classList.remove('bnd-modal-open');
 }
-//-----------------------------------------------------------------------------
-// Close the open modal if user clicks anywhere outside of the modal content
-//-----------------------------------------------------------------------------
+// Close modal if user clicks anywhere outside of the modal container
 window.addEventListener("click", (e) => 
 {
   if (e.target === modal) 
@@ -171,8 +171,10 @@ window.addEventListener("click", (e) =>
 //-----------------------------------------------------------------------------
 // Print the page
 //-----------------------------------------------------------------------------
-function print_page(){
+function print_page()
+{
   window.print();
-  }
+}
+//-----------------------------------------------------------------------------
 </script>
 {% endblock js %}

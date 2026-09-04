@@ -1059,10 +1059,12 @@ def myplant_details(request, id):
     myplant_comments      = MyPlantComment.objects.filter(myplant__pk=id) 
 
     template = loader.get_template("plants/myplant_details.html")
+    form = MyPlantCommentForm()
     context  = { "myplant"          : myplant, 
                  "plant"            : plant,
                  "myplant_todos"    : myplant_todos,
-                 "myplant_comments" : myplant_comments, 
+                 "myplant_comments" : myplant_comments,
+                 "form"             : form, 
                }
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
@@ -1175,28 +1177,22 @@ def myplant_todo_save(request, id):
     return JsonResponse({'test' : 'test' })
 
 def myplant_comment(request, id):
-    """ Associate a comment to a myplant """
+    """ Associate a comment to a plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     myplant = MyPlant.objects.get(id=id)
-    plant   = Plant.objects.get(id=myplant.plant.id)
-    myplant_comment = MyPlantComment()
+    mycomment = MyPlantComment()
     if request.POST:
         form = MyPlantCommentForm(request.POST, request.FILES)
         if form.is_valid():
-            myplant_comment.author  = request.user.username            #
-            myplant_comment.subject = form.cleaned_data.get("subject") #
-            myplant_comment.comment = form.cleaned_data.get("comment") #
-            myplant_comment.myplant = myplant                          # link the comment to the specific plant
-            myplant_comment.save()
+            mycomment.author  = request.user.username            #
+            mycomment.subject = form.cleaned_data.get("subject") #
+            mycomment.comment = form.cleaned_data.get("comment") #
+            mycomment.myplant = myplant                          # link the comment to the specific plant
+            mycomment.save()
         return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 
     else:
-        form = MyPlantCommentForm()
-        context = { 'myplant' : myplant,
-                    'plant'   : plant,
-                    'form'    : form,
-                  }
-        return render(request, 'plants/myplant_comment.html', context)
+        return HttpResponseRedirect(reverse('plants:index'))
 
 #
 
