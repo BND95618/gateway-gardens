@@ -49,7 +49,7 @@ urlpatterns = [
     path('plant_add',                 views.plant_add,           name='plant_add'),
     path('plant_edit/<int:id>',       views.plant_edit,          name='plant_edit'),
     path('plant_details/<int:id>',    views.plant_details,       name='plant_details'),
-    path('plants_comment/<int:id>',   views.plants_comment,      name='plants_comment'),
+    path('plant_comment/<int:id>',    views.plant_comment,       name='plant_comment'),
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
     #

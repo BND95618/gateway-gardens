@@ -1582,8 +1582,9 @@ def plant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    plant = Plant.objects.get(id=id)                     # Uses the id to locate the correct record in the Plant table
-    comments = Comment.objects.filter(plant__pk=id)      # get all comments related to the plant
+    plant = Plant.objects.get(id=id)             
+    # get all comments related to the selected plant        
+    comments = Comment.objects.filter(plant__pk=id)      
     # format multiselect attributes to remove [, ', and ]
     plant.sun_exposure = string_display(plant.sun_exposure)
     plant.water_rqmts  = string_display(plant.water_rqmts)
@@ -1604,11 +1605,13 @@ def plant_details(request, id):
     template = loader.get_template("plants/plant_details.html")  # loads the plant_details.html template
     # Get the pests associated with this plant & sort by pest name
     pests = Pest.objects.filter(plants__id=plant.id).order_by('pest_name')
+    form = PlantCommentForm()
     context = { "plant"    : plant, 
                 "pests"    : pests,    
                 "comments" : comments, 
+                "form"     : form,
             }
-    return HttpResponse(template.render(context, request)) # Send "context" to template and output the html from the template
+    return HttpResponse(template.render(context, request))
 
 def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
@@ -1825,7 +1828,7 @@ def plant_edit(request, id):
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plant_edit.html', context)
 
-def plants_comment(request, id):
+def plant_comment(request, id):
     """ Associate a comment to a plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1841,12 +1844,8 @@ def plants_comment(request, id):
             comment.save()
         return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,))) 
     else:
-        form = PlantCommentForm()
-        context = { 'plant' : plant,
-                    'form'  : form,
-                  }
-        return render(request, 'plants/plants_comment.html', context)
-
+        return HttpResponseRedirect(reverse('plants:index'))
+    
 def plant2garden(request, id):
     """ Add a plant to a garden """
     if not request.user.is_authenticated:
@@ -2346,11 +2345,12 @@ def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    plants = Plant.objects.all()
     if request.method == 'POST':
-        return render(request, 'plants/fiddle.html')
+        context = { 'plants'  : plants, }
+        return render(request, 'plants/fiddle.html', context)
     else:
-        plants = Plant.objects.all()
-        context = { 'plants' : plants }
+        context = { 'plants'  : plants, }
         return render(request, 'plants/fiddle.html', context)
 
 def debug(request):

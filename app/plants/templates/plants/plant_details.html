@@ -8,6 +8,21 @@
 
 {% block css %}
 <!-- Insert template css here -->
+<style>
+  /* Forces the Quill editor container to have a visible structure */
+  /* Required to make the editor visible in a pop-op modal         */
+  .django-quill-widget-container {
+      display:    block !important;
+      min-height: 200px;
+  }
+  
+  /* Forces Quill's internal editable area to render               */
+  /* Required to make the editor visible in a pop-op modal         */
+  .django-quill-widget-container .ql-editor {
+      min-height: 150px !important;
+      height:     auto  !important;
+  }
+</style>
 {% endblock css %}
 
 {% block header-completion %}
@@ -82,7 +97,7 @@
         {{ comment.comment.html|safe|escape }}
         <hr>
       {% endfor %}
-      <p><a href="{% url 'plants:plants_comment' plant.id %}">Add comment</a></p>
+      <button type="button" id="openCommentModalBtn">Create comment</button>
     </div>
   </section>
   <hr>
@@ -91,13 +106,73 @@
   <p>Creator: {{ plant.creator }}</p>
   <p>Creation Date: {{ plant.creation_date }}</p>
 
+  <!-------------------------------------------------------------------------->
+  <!-- Modals                                                               -->
+  <!-------------------------------------------------------------------------->
+  <!-- Plant Add Comment modal                                                   -->
+  <!-------------------------------------------------------------------------->
+  <div id="plant_comment_modal" class="bnd-modal">
+    <div id="plant_comment_modal_body" class="bnd-modal-container">
+      <header class="bnd-modal-header">
+        <h4>Add comment for: "{{ plant.commonName }}</h4>
+      </header>
+      <form id="commentQuillForm" 
+            action="{% url 'plants:plant_comment' plant.id %}"
+            method="POST" 
+            enctype = "multipart/form-data">
+        {% csrf_token %}
+        <div class="bnd-modal-contents">
+          {{ form.as_p }}
+        <div class="bnd-modal-button-bar">
+          <button type="submit" class="bnd-button-submit">Submit</button>
+          <button type    = "button"
+                  onclick = "plant_comment_add_close()"
+                  class   = "bnd-button-cancel">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 {% endblock content %}
 
 {% block js %}
-  <!-- Insert template Javascript here -->
-   <script>
-    function print_page(){
-        window.print();
-      }
-   </script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script>
+//-----------------------------------------------------------------------------
+// Plant Comment Modal - open modal
+//-----------------------------------------------------------------------------
+const modal   = document.getElementById("plant_comment_modal");
+const openBtn = document.getElementById("openCommentModalBtn");
+openBtn.addEventListener("click", () => 
+{
+  modal.style.display = "block";
+});
+//-----------------------------------------------------------------------------
+// Plant Comment Modal - close modal
+//-----------------------------------------------------------------------------
+function plant_comment_add_close()
+{
+  document.getElementById('plant_comment_modal').style.display='none';
+  document.body.classList.remove('bnd-modal-open');
+}
+//-----------------------------------------------------------------------------
+// Close the open modal if user clicks anywhere outside of the modal content
+//-----------------------------------------------------------------------------
+window.addEventListener("click", (e) => 
+{
+  if (e.target === modal) 
+  {
+    plant_comment_modal.style.display = "none";
+    document.body.classList.remove('bnd-modal-open');
+  }
+});
+//-----------------------------------------------------------------------------
+// Print the page
+//-----------------------------------------------------------------------------
+function print_page(){
+  window.print();
+  }
+</script>
 {% endblock js %}
