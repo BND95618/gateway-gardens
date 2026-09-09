@@ -290,7 +290,7 @@ class UserSignupForm(forms.Form):
 		max_length=64,
 		widget=forms.TextInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
-	signup_password = forms.CharField(
+	signup_password_1 = forms.CharField(
 		label="Password", 
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
@@ -300,24 +300,28 @@ class UserSignupForm(forms.Form):
 		max_length=64,
 		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
 		)
-	email = forms.CharField(
+	signup_email = forms.CharField(
 		label="e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'email'}),
 		)
-	first_name = forms.CharField(
+	signup_first_name = forms.CharField(
 		label="First Name", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'given-name'}),
 		)
-	last_name = forms.CharField(
+	signup_last_name = forms.CharField(
 		label="Last Name", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'family-name'}),
 		)
+	user_photo_input = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
 	
 class UserLoginForm(forms.Form):
 	username = forms.CharField(
@@ -332,38 +336,38 @@ class UserLoginForm(forms.Form):
 		)
 	
 class UserUpdateForm(forms.Form):
-	new_username = forms.CharField(
-		label="New Username", 
+	username = forms.CharField(
+		label="Username", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
-	new_password = forms.CharField(
-		label="New Password", 
+	password = forms.CharField(
+		label="Password", 
 		max_length=64,
 		required=False,
 		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
-	new_password_2 = forms.CharField(
-		label="New Password (reconfirm)", 
+	password_2 = forms.CharField(
+		label="Password (reconfirm)", 
 		max_length=64,
 		required=False,
 		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
-	new_email = forms.CharField(
-		label="New e-mail address", 
+	email = forms.CharField(
+		label="e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'email'}),
 		)
-	new_first_name = forms.CharField(
-		label="New First Name", 
+	first_name = forms.CharField(
+		label="First Name", 
 		max_length=64,
 		required=False,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'given-name'}),
 		)
-	new_last_name = forms.CharField(
-		label="New Last Name", 
+	last_name = forms.CharField(
+		label="Last Name", 
 		max_length=64,
 		required=False,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
@@ -371,15 +375,11 @@ class UserUpdateForm(forms.Form):
 		)
 	
 class UserRecoveryForm(forms.Form):
-	recovery_username = forms.CharField(
-		label="Username", 
+	email = forms.CharField(
+		label="Enter your e-mail address", 
 		max_length=64,
-		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
-		)
-	recovery_password = forms.CharField(
-		label="Password", 
-		max_length=64,
-		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
+								      'autocomplete' : 'email'}),
 		)
 
 class GardenAddUpdateForm(forms.Form):

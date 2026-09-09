@@ -2,7 +2,7 @@
 
 <div class="bnd-modal-container">
   <header class="bnd-modal-header">
-    <h3>User Recovery - Under Construction</h3>
+    <h3>Password Reset</h3>
   </header>
   <form class="bnd-modal-contents" action="{% url 'plants:user_recovery' %}" method="post">
     {% csrf_token %}
@@ -11,8 +11,6 @@
       <button type="submit" class="bnd-button-submit" >Login</button>
       <!-- Cancel login - the page reload clears the modal and keeps the page from hanging -->
       <button onclick="location.reload();" type="button" class="bnd-button-cancel">Cancel</button>
-      <!-- AR: Go to reset password page -->
-      <span class="bnd-right bnd-padding bnd-hide-small">Forgot <a href="#">password?</a></span>
     </div>
   </form>
 </div>

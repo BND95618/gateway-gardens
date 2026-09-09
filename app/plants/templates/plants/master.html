@@ -61,17 +61,31 @@
           {% endif %}
           <div class="bnd-nav-dropdown-content">
             {% if user.is_authenticated %}
-              <button id="update_button" class="bnd-dropdown-button">Update </button>
-              <!-- AR -->
+              <button id="update_button" 
+                      class="bnd-dropdown-button"
+                      onclick="openUserUpdateModal()">
+                Update
+              </button>
               <form action="{% url 'plants:user_logout' %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Logout" class="bnd-dropdown-button"/>
               </form>
             {% else %}
-              <!-- AR -->
-              <button id="login_button"    class="bnd-dropdown-button">Login    </button>
-              <button id="signup_button"   class="bnd-dropdown-button">Sign Up  </button>
-              <button id="recovery_button" class="bnd-dropdown-button">Recovery </button>
+              <button id      = "login_button"    
+                      class   = "bnd-dropdown-button"
+                      onclick = "openUserLoginModal()">
+                Login
+              </button>
+              <button id      = "signup_button"   
+                      class   = "bnd-dropdown-button"
+                      onclick = "openUserSignupModal()">
+                Sign Up
+              </button>
+              <button id      = "recovery_button" 
+                      class   = "bnd-dropdown-button"
+                      onclick = "openUserRecoveryModal()">
+                Reset Password
+              </button>
             {% endif %}
           </div>
         </div>
@@ -126,28 +140,28 @@
     {% endblock js %}
 
     <script>
-      // Toggle between adding and removing the "responsive" class from the small  
-      // screen verticle navigation menu when the user clicks on the menu icon
-      const id_nav = document.getElementById("id_nav");
-      function toggleVerticleNavMenu() 
+    // Toggle between adding and removing the "responsive" class from the small  
+    // screen verticle navigation menu when the user clicks on the menu icon
+    const id_nav = document.getElementById("id_nav");
+    function toggleVerticleNavMenu() 
+    {
+      if (id_nav.className === "bnd-page-nav") // open verticle nav bav
       {
-        if (id_nav.className === "bnd-page-nav") // open verticle nav bav
-        {
-          // Scroll to top of window
-          window.scrollTo({
-            top:      0,
-            left:     0,
-            behavior: 'smooth'
-          });
-          id_nav.className += " responsive";
-        } 
-        else // close verticle nav bav
-        {
-          id_nav.className = "bnd-page-nav";
-        }
+        // Scroll to top of window
+        window.scrollTo({
+          top:      0,
+          left:     0,
+          behavior: 'smooth'
+        });
+        id_nav.className += " responsive";
+      } 
+      else // close verticle nav bav
+      {
+        id_nav.className = "bnd-page-nav";
       }
-      // Close responsive verticle navigation menu when the user clicks outside of the menu
-      window.onclick = function(event) 
+    }
+    // Close responsive verticle navigation menu when the user clicks outside of the menu
+    window.onclick = function(event) 
       {
         console.log(event.target);
         if ((event.target.className != "bnd-page-nav responsive") && event.target.className != "bnd-nav-phone-icon")
@@ -155,73 +169,122 @@
           id_nav.className = "bnd-page-nav";
         }
       }
+    //
+    const signup_modal   = document.getElementById('signup_modal')
+    const login_modal    = document.getElementById('login_modal')
+    const recovery_modal = document.getElementById("recovery_modal")
+    const update_modal   = document.getElementById('update_modal')
+    //-----------------------------------------------------------------------------
+    // Account authentication and management
+    //-----------------------------------------------------------------------------
+    // User Sign-Up Modal Scripts
+    //-----------------------------------------------------------------------------
+    function openUserSignupModal()
+    { 
+      // fetch the modal html from the server
+      fetch("{% url 'plants:user_signup' %}") 
+      .then(response => response.text())
+      .then(html => {
+        signup_modal.innerHTML       = html;
+        signup_modal.style.display   = 'block';
+        login_modal.style.display    = 'none';
+        recovery_modal.style.display = 'none';
+        // convert selected user photo to a preview image shown in the modal
+        const user_photo_input   = document.getElementById('id_user_photo_input');
+        const user_photo_preview = document.getElementById('id_user_photo_preview');
+        user_photo_input.addEventListener('change', async (event) => 
+        {
+          id_user_photo_preview.src = URL.createObjectURL(user_photo_input.files[0]);
+        });
+        // Form submissiont process
+        const form = document.getElementById('id_signup_form');
+        form.addEventListener('submit', function(event) {
+          // Stop the form from executing its default action (refreshing the page)
+          event.preventDefault();
+          // Access form data
+          const signup_username   = document.getElementById('id_signup_username').value;
+          const signup_password_1 = document.getElementById('id_signup_password_1').value;
+          const signup_password_2 = document.getElementById('id_signup_password_2').value;
+          const signup_email      = document.getElementById('id_signup_email').value;
+          const signup_first_name = document.getElementById('id_signup_first_name').value;
+          const signup_last_name  = document.getElementById('id_signup_last_name').value;
+
+          // Input Validation: username must be at least 4 characters long
+          let inputError = false;
+          
+          if(inputError)
+          {
+            // notifu user of input validation errors
+            console.log("DEBUG: Input errors found!");
+          }
+          else
+          {
+            // send form data to server
+            console.log("DEBUG: No input errors found!");
+          }
+        });
+      });
+    }    
+  
+    //-----------------------------------------------------------------------------
+    // User Login Modal Scripts
+    //-----------------------------------------------------------------------------
+    function openUserLoginModal()
+    { 
+      fetch("{% url 'plants:user_login' %}") 
+      .then(response => response.text())
+      .then(html => {
+        login_modal.innerHTML        = html;
+        signup_modal.style.display   = 'none';
+        login_modal.style.display    = 'block';
+        recovery_modal.style.display = 'none';
+      });
+    }
+    //-----------------------------------------------------------------------------
+    // User Update Modal Scripts
+    //-----------------------------------------------------------------------------
+    function openUserUpdateModal()
+    { 
+      fetch("{% url 'plants:user_update' %}") 
+      .then(response => response.text())
+      .then(html => {
+        update_modal.innerHTML     = html;
+        update_modal.style.display = 'block';
+      });
+    }
+    function closeUserUpdateModal()
+    {
+      update_modal.style.display    = 'none';
+    }
+    //-----------------------------------------------------------------------------
+    // Password Recovery code
+    //-----------------------------------------------------------------------------
+    function openUserRecoveryModal()
+    {
+      fetch("{% url 'plants:user_recovery' %}") 
+      .then(response => response.text())
+      .then(html => {
+        recovery_modal.innerHTML = html;
+        signup_modal.style.display   = 'none';
+        login_modal.style.display    = 'none';
+        recovery_modal.style.display = 'block'; 
+      });
+    }
+    //-----------------------------------------------------------------------------
+    // On Page load functions - modern version of windows.onload
+    //-----------------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', (event) => 
+    {
+      signup_modal.style.display   = 'none';
+      login_modal.style.display    = 'none';
+      recovery_modal.style.display = 'none'; 
+      update_modal.style.display   = 'none';
+      // {x% if update_input_error == "yes" %x}
+      //   update_modal.style.display   = 'block';
+      // {x% elif signup_input_error == "yes" %x}
+      //   signup_modal.style.display   = 'block';
+      // {x% endif %x}
+    });
     </script>
-    {% if user.is_authenticated %}
-      <!-- User Update Modal Script -->
-      <script>
-        // There is a <dialog></dialog> at top of HTML body
-        const update_modal  = document.getElementById('update_modal')
-        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
-        fetch("{% url 'plants:user_update' %}") 
-          .then(response => response.text())
-          .then(html => {update_modal.innerHTML = html;})
-        // enable the model display upon clicking of the "signup" menu item
-        update_button.addEventListener("click", (event) => { update_modal.style.display='block' })
-
-        // Show update modal if there as an input error on the user update form
-        function showUpdateModal() {
-          update_modal.style.display='block';
-        }
-        {% if update_input_error == "yes" %}
-          window.onload = showUpdateModal();
-        {% endif %}
-      </script>
-    {% endif %}
-  
-    {% if not user.is_authenticated %}
-      <script>
-        // User Signup Modal Code
-        // There is a <div></div> for the modal at top of HTML body
-        const signup_modal  = document.getElementById('signup_modal')
-        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
-        fetch("{% url 'plants:user_signup' %}") 
-          .then(response => response.text())
-          .then(html => {signup_modal.innerHTML = html;})
-        // enable the model display upon clicking of the "signup" menu item
-        signup_button.addEventListener("click", (event) => { signup_modal.style.display='block' })
-
-        // User Login Modal Code
-        // There is a <div></div> for the modal at top of HTML body
-        const login_modal  = document.getElementById('login_modal')
-        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses.
-        fetch("{% url 'plants:user_login' %}") 
-          .then(response => response.text())
-          .then(html => {login_modal.innerHTML = html;})
-        // enable the model display upon clicking of the "login" menu item
-        login_button.addEventListener("click", (event) => { login_modal.style.display='block' })
-
-        // User Recovery Modal Code
-        // The recovery button is in the "account" drop-down menu
-        const recovery_button = document.getElementById("recovery_button")
-        // There is a <div></div> for the modal at top of HTML body
-        const recovery_modal  = document.getElementById('recovery_modal')
-        // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses. 
-        fetch("{% url 'plants:user_recovery' %}") 
-          .then(response => response.text())
-          .then(html => {recovery_modal.innerHTML = html;})
-        // enable the model display upon clicking of the "recovery" menu item
-        recovery_button.addEventListener("click", (event) => { recovery_modal.style.display='block' })
-
-        // Switch from login modal to sign-up modal
-        function login2SignUp() {
-          login_modal.style.display='none';
-          signup_modal.style.display='block';
-        }
-        {% if signup_input_error == "yes" %}
-          window.onload = login2SignUp();
-        {% endif %}
-      </script>
-    {% endif %}
-  
   </body>
 </html>

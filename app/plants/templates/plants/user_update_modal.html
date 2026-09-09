@@ -16,13 +16,17 @@
     </div>
     <div class="bnd-modal-button-bar">
       <button type="submit" class="bnd-button-submit">Update User</button>
-      <!-- Ret the form to initial value -->
+      <!-- Reset the form to initial value -->
       <button type="reset"  
               class="bnd-button bnd-round-large bnd-white">
         Reset
       </button>
       <!-- Cancel update - the page reload clears the modal and keeps the page from hanging -->
-      <button type="button" onclick="location.reload();" class="bnd-button-cancel">Cancel</button>
+      <button type    = "button"  
+              class   = "bnd-button-cancel"
+              onclick = "closeUserUpdateModal()">
+        Cancel
+      </button>
     </div>
   </form>
 </div>

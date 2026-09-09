@@ -213,8 +213,24 @@ else:
 # AR: Login redirection should be fixed
 LOGIN_REDIRECT_URL  = "/plants/index"
 LOGOUT_REDIRECT_URL = "/plants/index"
-
+#################################################################################
+# email settings for sending email from gmail account
+#################################################################################
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = 'smtp.gmail.com'
+EMAIL_PORT          = 587
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = 'geckowayproperties@gmail.com'
+DEFAULT_FROM_EMAIL  = EMAIL_HOST_USER
+if (os.environ.get('IS_ON_AWS', '0') == '1'):
+    # AWS environment setup
+    EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASSWORD')
+else:
+    # Local development environment setup
+    EMAIL_HOST_PASSWORD = os.environ.get('GOOGLE_APP_PASSWORD')
+#################################################################################
 # Quill Rich Text Editor configuration
+#################################################################################
 QUILL_CONFIGS = {
     'default':{
         'theme': 'snow',

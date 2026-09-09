@@ -17,6 +17,7 @@ services:
       - DB_NAME=django-dev-db
       - DB_USER=devuser
       - DB_PASS=devpassword123
+      - GOOGLE_APP_PASSWORD
     depends_on: 
       database:
         condition: service_healthy

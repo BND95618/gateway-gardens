@@ -39,6 +39,14 @@ from django_uuid_upload  import upload_to_uuid
 
 class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
+    # User details (extends information in user database)
+    profile_photo = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [Transpose(), ResizeToFill(800, 600)],
+                                        format     = 'WEBP',
+                                        options    = {'quality': 80},
+                                        blank      = True, 
+                                        null       = True)
+    # User garden details
     name          = models.CharField(max_length=64, default="tbd", blank=True, null=True)
     city          = models.CharField(max_length=32, default="tbd", blank=True, null=True)
     state         = models.CharField(max_length=16, default="tbd", blank=True, null=True)

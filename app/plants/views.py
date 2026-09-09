@@ -1,7 +1,8 @@
 # app/plants/views.py
 
 import copy, math, json
-from email_validator import validate_email
+from email_validator  import validate_email
+from django.core.mail import send_mail
  
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
@@ -2039,48 +2040,48 @@ def user_update(request):
     if request.POST:
         form = UserUpdateForm(request.POST)
         if form.is_valid():
-            new_username   = form.cleaned_data.get('new_username')
-            new_password   = form.cleaned_data.get('new_password')
-            new_password_2 = form.cleaned_data.get('new_password_2')
-            new_email      = form.cleaned_data.get('new_email')
-            new_first_name = form.cleaned_data.get('new_first_name')
-            new_last_name  = form.cleaned_data.get('new_last_name')
+            username   = form.cleaned_data.get('username')
+            password   = form.cleaned_data.get('password')
+            password_2 = form.cleaned_data.get('password_2')
+            email      = form.cleaned_data.get('email')
+            first_name = form.cleaned_data.get('first_name')
+            last_name  = form.cleaned_data.get('last_name')
             update_input_error = "no"
-            if (new_username != user.username):
+            if (username != user.username):
                 # Input Validation: username uniqueness
                 if User.objects.filter(username=new_username).exists():
                     update_input_error = "yes"
                     messages.error(request, "username has already been taken")
                 # Input Validation: username must be at least 4 characters long
-                elif (len(new_username) < 4):
+                elif (len(username) < 4):
                     update_input_error = "yes"
                     messages.error(request, "username must be at least 4 characters long")
-            elif ((new_password != "") and (new_password_2 != "")):
+            elif ((password != "") and (password_2 != "")):
                 # Input Validation: passwords do not match
-                if (new_password != new_password_2):
+                if (password != password_2):
                     update_input_error = "yes"
                     messages.error(request, "passwords do not match")
                 # Input Validation: password must be at least 8 characters long
-                elif (len(new_password) < 8):
+                elif (len(password) < 8):
                     update_input_error = "yes"
                     messages.error(request, "password must be at least 8 characters long")
                 # Input Validation: password must contain at least one uppercase letter
-                elif not any(char.isupper() for char in new_password):
+                elif not any(char.isupper() for char in password):
                     update_input_error = "yes"
                     messages.error(request, "password requires at least one uppercase letter")
                 # Input Validation: password must contain at least one lowecaser letter
-                elif not any(char.islower() for char in new_password):
+                elif not any(char.islower() for char in password):
                     update_input_error = "yes"
                     messages.error(request, "password requires at least one lowercase letter")
                 # Input Validation: password must contain at least one number
-                elif not any(char.isdigit() for char in new_password):
+                elif not any(char.isdigit() for char in password):
                     update_input_error = "yes"
                     messages.error(request, "password requires at least one number")
                 # Input Validation: password must contain at least one special character
-                elif not any(char in "!@#$%^&*()(_+)" for char in new_password):
+                elif not any(char in "!@#$%^&*()(_+)" for char in password):
                     update_input_error = "yes"
                     messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
-            elif (new_email != user.email):
+            elif (email != user.email):
                 # Input Validation: duplicate e-mail
                 if User.objects.filter(email=new_email).exists():
                     update_input_error = "yes"
@@ -2095,36 +2096,34 @@ def user_update(request):
                         messages.error(request, "invalid e-mail address")
             if (update_input_error == "yes"):
                 # Prepopulate fields - the initialization is not working correctly
-                form = UserUpdateForm(initial={'new_username'   : new_username,
-                                               'new_password'   : new_password,
-                                               'new_email'      : new_email,
-                                               'new_first_name' : new_first_name,
-                                               'new_last_name'  : new_last_name,
+                form = UserUpdateForm(initial={'username'   : username,
+                                               'email'      : email,
+                                               'first_name' : first_name,
+                                               'last_name'  : last_name,
                                        })
                 context = { 'form'               : form,
                             'update_input_error' : update_input_error }
                 return render(request, 'plants/index.html', context)
             else:
-                user.username   = new_username
+                user.username   = username
                 # Check to see if a new password has been entered
-                if new_password:
-                    user.set_password(new_password)
-                user.email      = new_email
-                user.first_name = new_first_name
-                user.last_name  = new_last_name
+                if password:
+                    user.set_password(password)
+                user.email      = email
+                user.first_name = first_name
+                user.last_name  = last_name
                 user.save()
-                # If the password has been updated, xplicitly logout the user so that login modal 
+                # If the password has been updated, explicitly logout the user so that login modal 
                 # will be displayed.  Django's default behavior is to require the user to log back 
                 # in after a password change
-                if new_password:
+                if password:
                     logout(request)
         return render(request, 'plants/index.html')
     else:
-        form = UserUpdateForm(initial={'new_username'   : user.username,
-                                       'new_password'   : user.password,
-                                       'new_email'      : user.email,
-                                       'new_first_name' : user.first_name,
-                                       'new_last_name'  : user.last_name,
+        form = UserUpdateForm(initial={'username'   : user.username,
+                                       'email'      : user.email,
+                                       'first_name' : user.first_name,
+                                       'last_name'  : user.last_name,
                                        })
         context = { 'form' : form }
         return render(request, 'plants/user_update_modal.html', context)
@@ -2135,15 +2134,15 @@ def user_recovery(request):
     if request.POST:
         form = UserRecoveryForm(request.POST)
         if form.is_valid():
-            recovery_username   = form.cleaned_data.get('reovery_username')
-            recoovery_password   = form.cleaned_data.get('recovery_password')
-            # Login the user if they have been authenticated else indicate login failure
-            user = request.user
-            if user is not None:
-                login(request, user)
-                return render(request, 'plants/index.html')
-            else:
-                return render(request, 'plants/index.html')
+            send_mail(
+                subject        = 'Gateway Gardens - Reset Password',
+                message        = 'Here is your reset password code',
+                from_email     = None,  # Defaults to DEFAULT_FROM_EMAIL
+                recipient_list = ['b_dichter@yahoo.com'],
+                fail_silently  = False,
+            )
+            recovery_username   = form.cleaned_data.get('recovery_username')
+            recovery_password   = form.cleaned_data.get('recovery_password')
     else:
         form = UserRecoveryForm()
         context = { 'form' : form }
@@ -2342,12 +2341,18 @@ def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    plants = Plant.objects.all()
     if request.method == 'POST':
-        context = { 'plants'  : plants, }
+        send_mail(
+            subject        = 'Gateway Gardens test email - 4',
+            message        = 'Gateway Gardens test email - 4',
+            from_email     = None,  # Defaults to DEFAULT_FROM_EMAIL
+            recipient_list = ['b_dichter@yahoo.com'],
+            fail_silently  = False,
+        )
+        context = { 'fiddle' : 'fiddle', }
         return render(request, 'plants/fiddle.html', context)
     else:
-        context = { 'plants'  : plants, }
+        context = { 'fiddle' : 'fiddle', }
         return render(request, 'plants/fiddle.html', context)
 
 def debug(request):
