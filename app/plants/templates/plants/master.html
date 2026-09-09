@@ -190,16 +190,16 @@
         login_modal.style.display    = 'none';
         recovery_modal.style.display = 'none';
         // convert selected user photo to a preview image shown in the modal
-        const user_photo_input   = document.getElementById('id_user_photo_input');
-        const user_photo_preview = document.getElementById('id_user_photo_preview');
-        user_photo_input.addEventListener('change', async (event) => 
+        const signup_user_photo         = document.getElementById('id_signup_user_photo');
+        const signup_user_photo_preview = document.getElementById('id_signup_user_photo_preview');
+        signup_user_photo.addEventListener('change', async (event) => 
         {
-          id_user_photo_preview.src = URL.createObjectURL(user_photo_input.files[0]);
+          id_signup_user_photo_preview.src = URL.createObjectURL(signup_user_photo.files[0]);
         });
-        // Form submissiont process
+        // Form submission process
         const form = document.getElementById('id_signup_form');
-        form.addEventListener('submit', function(event) {
-          // Stop the form from executing its default action (refreshing the page)
+        form.addEventListener('submit', async (event) => {
+          // Prevent standard browser form submission
           event.preventDefault();
           // Access form data
           const signup_username   = document.getElementById('id_signup_username').value;
@@ -214,13 +214,78 @@
           
           if(inputError)
           {
-            // notifu user of input validation errors
+            // notify user of input validation errors
             console.log("DEBUG: Input errors found!");
           }
           else
           {
             // send form data to server
             console.log("DEBUG: No input errors found!");
+          }
+
+          //----------------------------------------------------------------------------- 
+          // Upload form data and compressed image to the server
+          //-----------------------------------------------------------------------------
+          // Get image
+          const file = signup_user_photo.files[0];
+          // Declare compressed image blobs
+          let compressedBlob = null;
+          // 
+          try 
+          {
+            // Update UI state
+            // submitBtn.disabled = true;
+            //----------------------------------------------------------------------------
+            // Wait for the image compression promise to resolve
+            //----------------------------------------------------------------------------
+            if (file)
+            {
+              console.log("DEBUG: Starting image compression");
+              compressedBlob = await compressImage(file, 800, 1.0);
+              console.log("DEBUG: Finished image compression");
+            }
+            //----------------------------------------------------------------------------
+            // Create the form data to send to the user
+            //----------------------------------------------------------------------------
+            console.log("DEBUG: Signup information - create");
+            // Get the form data entered by the user
+            const formData  = new FormData(form);
+            // Append the compressed image to the FormData object
+            if (typeof compressedBlob !== 'undefined' && compressedBlob !== null)
+            {
+              console.log("DEBUG: Compressed image exists");
+              formData.delete('image');
+              formData.append('image', compressedBlob, 'signup_user_photo.jpg');
+            }
+            console.log("DEBUG: Signup information - created");
+            //----------------------------------------------------------------------------
+            // Send the form
+            //----------------------------------------------------------------------------
+            console.log("DEBUG: POST user inputs to server");
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const postURL   = "{% url 'plants:user_signup' %}";
+            const response = await fetch(postURL, 
+            {
+              method:  "POST",
+              headers: {'X-CSRFToken' : csrfToken},
+              body:    formData
+            });
+            if (response.ok) 
+            {
+              const data = await response.json();
+              console.log('Upload Successful:', data);
+              // Handle your JSON response here (e.g., update DOM)
+              signup_modal.style.display   = 'none';
+              openUserLoginModal();
+            } 
+            else 
+            {
+              console.error('Server Error:', response.status);
+            }
+          } 
+          catch (error) 
+          {
+            console.error('Network error:', error);
           }
         });
       });

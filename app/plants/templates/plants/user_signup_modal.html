@@ -10,6 +10,7 @@
       {% endif %}
     </header>
     <form id="id_signup_form">
+      {% csrf_token %}
       <div class="bnd-modal-contents">
         {{ form.signup_username.as_field_group }}
         {{ form.signup_password_1.as_field_group }}
@@ -19,25 +20,25 @@
         {{ form.signup_last_name.as_field_group }}
         <div class="images">
           <div class="bnd-flex-container-wrap">
-            <!-- Profile Photo -->
+            <!-- User Photo -->
             <figure>
               {% if garden.profile_photo %}
-                <img id      = "id_user_photo_preview" 
+                <img id      = "id_signup_user_photo_preview" 
                      class   = "bnd-image-small" 
                      src     = "{{ garden.profile_photo.url }}" 
                      onclick = "imageModalOpen(this)" 
                      alt     = "No image found">
                 <hr>
-                <div id = "id_profile_photo_file_input">
-                  {{ form.user_photo_input }}
+                <div id = "id_signup_user_photo">
+                  {{ form.signup_user_photo }}
                 </div>
               {% else %}
-                <img id      = "id_user_photo_preview" 
+                <img id      = "id_signup_user_photo_preview" 
                      class   = "bnd-image-small" 
                      src     = "" 
                      alt     = "--- Image displays here ---">
                 <hr>
-                {{ form.user_photo_input }}
+                {{ form.signup_user_photo }}
               {% endif %}
             </figure>
           </div>

@@ -318,7 +318,7 @@ class UserSignupForm(forms.Form):
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
 								      'autocomplete' : 'family-name'}),
 		)
-	user_photo_input = forms.ImageField(
+	signup_user_photo = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
 	)

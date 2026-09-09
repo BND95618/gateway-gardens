@@ -2757,10 +2757,10 @@
             fetchDetails()
             {
                 // Fetch the plant details and create new javascript plant object
-                const url = "{% url 'plants:plant_fetch' %}"
+                const url = "{% url 'plants:plant_fetch' %}";
                 const requestMethod = "POST";
                 const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                const postData      = { requestedPlant : this.plant }
+                const postData      = { requestedPlant : this.plant };
                 let downloadedPlant;
 
                 fetch(url,

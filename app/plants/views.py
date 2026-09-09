@@ -1729,8 +1729,6 @@ def plant_edit(request, id):
                 for pest in pests:
                     if (pest.pest_name == pest_item):
                         pest.plants.add(plant)
-
-        # return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,)))
         response_data = {
             'status': 'success',
             'message': f'Received audio successfully',
@@ -1940,93 +1938,112 @@ def user_signup(request):
     """ Render the User Signup Page for Gateway Gardens app """
     if request.POST:
         form = UserSignupForm(request.POST)
+        print("DEBUG: Got to User Signup server code")
         if form.is_valid():
+            # ----------------------------------------------------------------------
+            # Get signup information
+            # ----------------------------------------------------------------------
             signup_username   = form.cleaned_data.get('signup_username')
-            signup_password   = form.cleaned_data.get('signup_password')
+            signup_password_1 = form.cleaned_data.get('signup_password_1')
             signup_password_2 = form.cleaned_data.get('signup_password_2')
-            email             = form.cleaned_data.get('email')
-            first_name        = form.cleaned_data.get('first_name')
-            last_name         = form.cleaned_data.get('last_name')
+            signup_email      = form.cleaned_data.get('signup_email')
+            signup_first_name = form.cleaned_data.get('signup_first_name')
+            signup_last_name  = form.cleaned_data.get('signup_last_name')
+            signup_user_photo = request.FILES        ['signup_user_photo']
+            # ----------------------------------------------------------------------
+            # Input validation - Username
+            # ----------------------------------------------------------------------
             signup_input_error = "no"
-            # Input Validation: username uniqueness
+            # Input Validation: Username uniqueness
             if User.objects.filter(username=signup_username).exists():
                 signup_input_error = "yes"
                 messages.error(request, "username has already been taken")
-            # Input Validation: username must be at least 4 characters long
+            # Input Validation: Username must be at least 4 characters long
             elif (len(signup_username) < 4):
                 signup_input_error = "yes"
                 messages.error(request, "username must be at least 4 characters long")
-            # Input Validation: passwords do not match
-            elif (signup_password != signup_password_2):
-                signup_input_error = "yes"
-                messages.error(request, "passwords do not match")
-            # Input Validation: password must be at least 8 characters long
-            elif (len(signup_password) < 8):
-                signup_input_error = "yes"
-                messages.error(request, "password must be at least 8 characters long")
-            # Input Validation: password must contain at least one uppercase letter
-            elif not any(char.isupper() for char in signup_password):
-                signup_input_error = "yes"
-                messages.error(request, "password requires at least one uppercase letter")
-            # Input Validation: password must contain at least one lowecaser letter
-            elif not any(char.islower() for char in signup_password):
-                signup_input_error = "yes"
-                messages.error(request, "password requires at least one lowercase letter")
-            # Input Validation: password must contain at least one number
-            elif not any(char.isdigit() for char in signup_password):
-                signup_input_error = "yes"
-                messages.error(request, "password requires at least one number")
-            # Input Validation: password must contain at least one special character
-            elif not any(char in "!@#$%^&*()(_+)" for char in signup_password):
-                signup_input_error = "yes"
-                messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
+            # ----------------------------------------------------------------------
+            # Input validation - Password
+            # ----------------------------------------------------------------------
+            # # Input Validation: passwords do not match
+            # elif (signup_password_1 != signup_password_2):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "passwords do not match")
+            # # Input Validation: password must be at least 8 characters long
+            # elif (len(signup_password_1) < 8):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "password must be at least 8 characters long")
+            # # Input Validation: password must contain at least one uppercase letter
+            # elif not any(char.isupper() for char in signup_password_1):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "password requires at least one uppercase letter")
+            # # Input Validation: password must contain at least one lowecaser letter
+            # elif not any(char.islower() for char in signup_password_1):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "password requires at least one lowercase letter")
+            # # Input Validation: password must contain at least one number
+            # elif not any(char.isdigit() for char in signup_password_1):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "password requires at least one number")
+            # # Input Validation: password must contain at least one special character
+            # elif not any(char in "!@#$%^&*()(_+)" for char in signup_password_1):
+            #     signup_input_error = "yes"
+            #     messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
+            # ----------------------------------------------------------------------
+            # Input validation - email
+            # ----------------------------------------------------------------------
             # Input Validation: duplicate e-mail
-            elif User.objects.filter(email=email).exists():
-                signup_input_error = "yes"
-                messages.error(request, "email has already been taken")
-            # Input Validation: e-mail format
-            else:
-                try:
-                    emailinfo = validate_email(email, check_deliverability=False)
-                    email= emailinfo.normalized
-                except:
-                    signup_input_error = "yes"
-                    messages.error(request, "invalid e-mail address'")
+            # elif User.objects.filter(email=email).exists():
+            #     signup_input_error = "yes"
+            #     messages.error(request, "email has already been taken")
+            # # Input Validation: e-mail format
+            # else:
+            #     try:
+            #         emailinfo = validate_email(email, check_deliverability=False)
+            #         email= emailinfo.normalized
+            #     except:
+            #         signup_input_error = "yes"
+            #         messages.error(request, "invalid e-mail address'")
+            # ----------------------------------------------------------------------
+            # 
+            # ----------------------------------------------------------------------
             if (signup_input_error == "yes"):
+                print("DEBUG: Input validation error - return error message")
                 # AR: Prepopulate fields - the initialization is not working correctly
-                form = UserSignupForm(initial={'signup_username' : signup_username,
-                                               'signup_password' : signup_password,
-                                               'email'           : email,
-                                               'first_name'      : first_name,
-                                               'last_name'       : last_name,
+                form = UserSignupForm(initial={'signup_username'   : signup_username,
+                                               'signup_password_1' : signup_password_1,
+                                               'signup_email'      : signup_email,
+                                               'signup_first_name' : signup_first_name,
+                                               'signup_last_name'  : signup_last_name,
                                        })
                 context = { 'form'               : form,
                             'signup_input_error' : signup_input_error }
-                return render(request, 'plants/index.html', context)
-                # return render(request, 'plants/user_signup_modal.html', context)
+                return render(request, 'plants/user_signup_modal.html', context)
             else:
-                user = User.objects.create_user(signup_username, email, signup_password)
-                user.first_name = first_name
-                user.last_name  = last_name
+                print("DEBUG: Input clean - Creating user")
+                user = User.objects.create_user(signup_username, signup_email, signup_password_1)
+                user.first_name = signup_first_name
+                user.last_name  = signup_last_name
+                user.last_name  = signup_last_name
                 user.save()
+                print("DEBUG: Adding group pemissions")
                 # Add the user to the "Gardener" group - default
                 group = Group.objects.get(name='Gardener')
                 group.user_set.add(user)
+                print("DEBUG: Setup user garden")
                 # Create a Garden object for the user
                 garden = Garden()
                 garden.owner = signup_username
                 garden.name  = signup_username + "'s Garden"
+                garden.profile_photo = signup_user_photo
                 garden.save()
-                # Authenticate the user
-                user = authenticate(request, username=signup_username, password=signup_password)
-                # Login the user if they have been authenticated else indicate login failure
-                if user is not None:
-                    login(request, user)
-                    return render(request, 'plants/index.html')
-                else:
-                    # AR: Indicate on password input form that the username and/or password was invalid
-                    return render(request, 'plants/index.html')
-        return render(request, 'plants/index.html')
+                print("DEBUG: User successfully created")
+                # Return success status to client
+                response_data = {
+                    'status': 'success',
+                    'message': f'Received audio successfully',
+                }
+                return JsonResponse(response_data)
     else:
         form = UserSignupForm()
         context = { 'form' : form }
