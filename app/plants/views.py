@@ -1949,7 +1949,10 @@ def user_signup(request):
             signup_email      = form.cleaned_data.get('signup_email')
             signup_first_name = form.cleaned_data.get('signup_first_name')
             signup_last_name  = form.cleaned_data.get('signup_last_name')
-            signup_user_photo = request.FILES        ['signup_user_photo']
+            if 'signup_user_photo' in request.FILES:
+                signup_user_photo = request.FILES['signup_user_photo']
+            else:
+                signup_user_photo = None
             # ----------------------------------------------------------------------
             # Input validation - Username
             # ----------------------------------------------------------------------
@@ -1957,11 +1960,11 @@ def user_signup(request):
             # Input Validation: Username uniqueness
             if User.objects.filter(username=signup_username).exists():
                 signup_input_error = "yes"
-                messages.error(request, "username has already been taken")
+                messages.error(request, "Username has already been taken")
             # Input Validation: Username must be at least 4 characters long
             elif (len(signup_username) < 4):
                 signup_input_error = "yes"
-                messages.error(request, "username must be at least 4 characters long")
+                messages.error(request, "Username must be at least 4 characters long")
             # ----------------------------------------------------------------------
             # Input validation - Password
             # ----------------------------------------------------------------------
@@ -2009,16 +2012,12 @@ def user_signup(request):
             # ----------------------------------------------------------------------
             if (signup_input_error == "yes"):
                 print("DEBUG: Input validation error - return error message")
-                # AR: Prepopulate fields - the initialization is not working correctly
-                form = UserSignupForm(initial={'signup_username'   : signup_username,
-                                               'signup_password_1' : signup_password_1,
-                                               'signup_email'      : signup_email,
-                                               'signup_first_name' : signup_first_name,
-                                               'signup_last_name'  : signup_last_name,
-                                       })
-                context = { 'form'               : form,
-                            'signup_input_error' : signup_input_error }
-                return render(request, 'plants/user_signup_modal.html', context)
+                # Return failure status to client
+                response_data = {
+                    'status': 'failure',
+                    'message': f'Input Validation Error',
+                }
+                return JsonResponse(response_data)
             else:
                 print("DEBUG: Input clean - Creating user")
                 user = User.objects.create_user(signup_username, signup_email, signup_password_1)
@@ -2035,16 +2034,18 @@ def user_signup(request):
                 garden = Garden()
                 garden.owner = signup_username
                 garden.name  = signup_username + "'s Garden"
-                garden.profile_photo = signup_user_photo
+                if signup_user_photo is not None and signup_user_photo != "":
+                    garden.profile_photo = signup_user_photo
                 garden.save()
                 print("DEBUG: User successfully created")
                 # Return success status to client
                 response_data = {
                     'status': 'success',
-                    'message': f'Received audio successfully',
+                    'message': f'User input proessed successfully',
                 }
                 return JsonResponse(response_data)
     else:
+        messages.error(request, "")
         form = UserSignupForm()
         context = { 'form' : form }
         return render(request, 'plants/user_signup_modal.html', context)

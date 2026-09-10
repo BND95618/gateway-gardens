@@ -859,7 +859,6 @@ img {
         font-size:     14px; 
     }
 }
-}
 .bnd-button-small {
     display:          inline-block;
     margin:           0;
@@ -1272,6 +1271,12 @@ img {
 /* ------------------------------------------------------------ */
 .bnd-play-audio{ cursor:pointer; }
 /* ------------------------------------------------------------ */
+/* Video formatting                                             */
+/* ------------------------------------------------------------ */
+.bnd-video-clip {
+    margin-left: 40px;
+}
+/* ------------------------------------------------------------ */
 /* Modal formatting                                             */
 /* ------------------------------------------------------------ */
 .bnd-modal {
@@ -1393,6 +1398,27 @@ body.bnd-modal-open {
 #bloomTable, #beeTable, #butterflyTable, #hummingbirdTable { width: 100%; }
 #plants_chart_modal th { top: 0px; }         /* place table right under modal tabs */
 #plants_chart_modal footer { padding: 0px; }
+/* ------------------------------------------------------------ */
+/* Password input hide/show eye icon                            */
+/* ------------------------------------------------------------ */
+.bnd-password-container {
+    position: relative;
+    width: 300px;
+}
+.bnd-password-container input {
+    width: 100%;
+    padding: 10px 40px 10px 10px;
+    box-sizing: border-box;
+} 
+.bnd-password-container .material-icons {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    color: #777;
+}
 /* ------------------------------------------------------------ */
 /* Slide show formatting                                        */
 /* ------------------------------------------------------------ */

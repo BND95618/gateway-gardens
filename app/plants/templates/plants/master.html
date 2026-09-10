@@ -196,7 +196,37 @@
         {
           id_signup_user_photo_preview.src = URL.createObjectURL(signup_user_photo.files[0]);
         });
+
+        //-----------------------------------------------------------------------------
+        // Toggle password visibility
+        //-----------------------------------------------------------------------------
+        // password 1
+        const signup_password_1 = document.getElementById('id_signup_password_1');
+        const toggle_password_1 = document.getElementById('id_toggle_password_1');
+        toggle_password_1.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = signup_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
+          signup_password_1.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        // password 2
+        const signup_password_2 = document.getElementById('id_signup_password_2');
+        const toggle_password_2 = document.getElementById('id_toggle_password_2');
+        toggle_password_2.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = signup_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
+          signup_password_2.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        //-----------------------------------------------------------------------------
         // Form submission process
+        //-----------------------------------------------------------------------------
         const form = document.getElementById('id_signup_form');
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
@@ -222,7 +252,6 @@
             // send form data to server
             console.log("DEBUG: No input errors found!");
           }
-
           //----------------------------------------------------------------------------- 
           // Upload form data and compressed image to the server
           //-----------------------------------------------------------------------------
@@ -273,10 +302,16 @@
             if (response.ok) 
             {
               const data = await response.json();
-              console.log('Upload Successful:', data);
-              // Handle your JSON response here (e.g., update DOM)
-              signup_modal.style.display   = 'none';
-              openUserLoginModal();
+              if (data.status === "success")
+              {
+                console.log('Upload Successful:', data);
+                signup_modal.style.display   = 'none';
+                openUserLoginModal();
+              }
+              else
+              {
+                console.log('Upload Failed:', data);
+              }
             } 
             else 
             {
@@ -290,7 +325,6 @@
         });
       });
     }    
-  
     //-----------------------------------------------------------------------------
     // User Login Modal Scripts
     //-----------------------------------------------------------------------------

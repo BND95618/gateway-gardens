@@ -1399,6 +1399,25 @@ body.bnd-modal-open {
 #plants_chart_modal th { top: 0px; }         /* place table right under modal tabs */
 #plants_chart_modal footer { padding: 0px; }
 /* ------------------------------------------------------------ */
+/* Password input hide/show eye icon                            */
+/* ------------------------------------------------------------ */
+.bnd-password-container {
+    position:    relative;
+}
+.bnd-password-container input {
+    width:       100%;
+    box-sizing:  border-box;
+} 
+.bnd-password-container .material-icons {
+    position:    absolute;
+    right:       10px;
+    top:         55%;
+    cursor:      pointer;
+    user-select: none;
+    font-size:   16px;
+    color:       #777;
+}
+/* ------------------------------------------------------------ */
 /* Slide show formatting                                        */
 /* ------------------------------------------------------------ */
 .bnd-slideshow-content {
