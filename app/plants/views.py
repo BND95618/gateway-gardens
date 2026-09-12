@@ -1941,7 +1941,7 @@ def user_signup(request):
         print("DEBUG: Got to User Signup server code")
         if form.is_valid():
             # ----------------------------------------------------------------------
-            # Get signup information
+            # Get signup information from request
             # ----------------------------------------------------------------------
             signup_username   = form.cleaned_data.get('signup_username')
             signup_password_1 = form.cleaned_data.get('signup_password_1')
@@ -1954,7 +1954,7 @@ def user_signup(request):
             else:
                 signup_user_photo = None
             # ----------------------------------------------------------------------
-            # Input validation - Username
+            # Input validation setup
             # ----------------------------------------------------------------------
             signup_error = "no"
             signup_error_message = ""
@@ -1962,7 +1962,9 @@ def user_signup(request):
             PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
             FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
             LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
-            
+            # ----------------------------------------------------------------------
+            # Input validation - Username
+            # ----------------------------------------------------------------------
             if (signup_username == ""):
                 signup_error = "yes"
                 signup_error_message = "Username is required"
@@ -2031,7 +2033,10 @@ def user_signup(request):
                     signup_error = "yes"
                     signup_error_message = "invalid e-mail address"
             # ----------------------------------------------------------------------
-            # 
+            # Check if input validation error
+            # > If yes, return error message
+            # > If no, perform email validation -> add user to db
+            # AR: New user email validation
             # ----------------------------------------------------------------------
             if (signup_error == "yes"):
                 print("DEBUG: Input error:", signup_error_message)
