@@ -1,6 +1,6 @@
 # app/plants/views.py
 
-import copy, math, json
+import string, copy, math, json
 from email_validator  import validate_email
 from django.core.mail import send_mail
  
@@ -1956,66 +1956,89 @@ def user_signup(request):
             # ----------------------------------------------------------------------
             # Input validation - Username
             # ----------------------------------------------------------------------
-            signup_input_error = "no"
-            # Input Validation: Username uniqueness
-            if User.objects.filter(username=signup_username).exists():
-                signup_input_error = "yes"
-                messages.error(request, "Username has already been taken")
-            # Input Validation: Username must be at least 4 characters long
+            signup_error = "no"
+            signup_error_message = ""
+            USERNAME_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "-")
+            PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
+            FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
+            LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
+            
+            if (signup_username == ""):
+                signup_error = "yes"
+                signup_error_message = "Username is required"
+            elif User.objects.filter(username=signup_username).exists():
+                signup_error = "yes"
+                signup_error_message = "Username has already been taken"
             elif (len(signup_username) < 4):
-                signup_input_error = "yes"
-                messages.error(request, "Username must be at least 4 characters long")
+                signup_error = "yes"
+                signup_error_message = "Username must be at least 4 characters long"
+            elif (not all(char in USERNAME_ALLOWED_CHARS for char in signup_username)):
+                signup_error = "yes"
+                signup_error_message = "Username can only contain letters, numbers and -"
             # ----------------------------------------------------------------------
             # Input validation - Password
             # ----------------------------------------------------------------------
-            # # Input Validation: passwords do not match
-            # elif (signup_password_1 != signup_password_2):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "passwords do not match")
-            # # Input Validation: password must be at least 8 characters long
-            # elif (len(signup_password_1) < 8):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "password must be at least 8 characters long")
-            # # Input Validation: password must contain at least one uppercase letter
-            # elif not any(char.isupper() for char in signup_password_1):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "password requires at least one uppercase letter")
-            # # Input Validation: password must contain at least one lowecaser letter
-            # elif not any(char.islower() for char in signup_password_1):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "password requires at least one lowercase letter")
-            # # Input Validation: password must contain at least one number
-            # elif not any(char.isdigit() for char in signup_password_1):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "password requires at least one number")
-            # # Input Validation: password must contain at least one special character
-            # elif not any(char in "!@#$%^&*()(_+)" for char in signup_password_1):
-            #     signup_input_error = "yes"
-            #     messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
+            elif (not all(char in PASSWORD_ALLOWED_CHARS for char in signup_password_1)):
+                signup_error = "yes"
+                signup_error_message = "password can only contain letters, numbers and @#$&!"
+            elif (signup_password_1 != signup_password_2):
+                signup_error = "yes"
+                signup_error_message = "passwords do not match"
+            elif (len(signup_password_1) < 8):
+                signup_error = "yes"
+                signup_error_message = "password must be at least 8 characters long"
+            elif not any(char.isupper() for char in signup_password_1):
+                signup_error = "yes"
+                signup_error_message = "password requires at least one uppercase letter"
+            elif not any(char.islower() for char in signup_password_1):
+                signup_error = "yes"
+                signup_error_message = "password requires at least one lowercase letter"
+            elif not any(char.isdigit() for char in signup_password_1):
+                signup_error = "yes"
+                signup_error_message = "password requires at least one number"
+            elif not any(char in "!@#$%^&*()(_+)" for char in signup_password_1):
+                signup_error = "yes"
+                signup_error_message = "password requires at least one special character '@#$&!'"  
+            # ----------------------------------------------------------------------
+            # Input validation - first name
+            # ----------------------------------------------------------------------
+            elif (signup_first_name == ""):
+                signup_error = "yes"
+                signup_error_message = "First Name is required"
+            elif (not all(char in FIRSTNAME_ALLOWED_CHARS for char in signup_first_name)):
+                signup_error = "yes"
+                signup_error_message = "First name can only contain letters, numbers and -"
+            # ----------------------------------------------------------------------
+            # Input validation - last name
+            # ----------------------------------------------------------------------
+            elif (signup_last_name == ""):
+                signup_error = "yes"
+                signup_error_message = "Last Name is required"
+            elif (not all(char in LASTNAME_ALLOWED_CHARS for char in signup_last_name)):
+                signup_error = "yes"
+                signup_error_message = "Last name can only contain letters, numbers and -"
             # ----------------------------------------------------------------------
             # Input validation - email
             # ----------------------------------------------------------------------
-            # Input Validation: duplicate e-mail
-            # elif User.objects.filter(email=email).exists():
-            #     signup_input_error = "yes"
-            #     messages.error(request, "email has already been taken")
-            # # Input Validation: e-mail format
-            # else:
-            #     try:
-            #         emailinfo = validate_email(email, check_deliverability=False)
-            #         email= emailinfo.normalized
-            #     except:
-            #         signup_input_error = "yes"
-            #         messages.error(request, "invalid e-mail address'")
+            elif User.objects.filter(email=signup_email).exists():
+                signup_error = "yes"
+                signup_error_message = "Email address has already been taken"
+            else:
+                try:
+                    emailinfo = validate_email(signup_email, check_deliverability=False)
+                    signup_email= emailinfo.normalized
+                except:
+                    signup_error = "yes"
+                    signup_error_message = "invalid e-mail address"
             # ----------------------------------------------------------------------
             # 
             # ----------------------------------------------------------------------
-            if (signup_input_error == "yes"):
-                print("DEBUG: Input validation error - return error message")
+            if (signup_error == "yes"):
+                print("DEBUG: Input error:", signup_error_message)
                 # Return failure status to client
                 response_data = {
                     'status': 'failure',
-                    'message': f'Input Validation Error',
+                    'message': signup_error_message,
                 }
                 return JsonResponse(response_data)
             else:

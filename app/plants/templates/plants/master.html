@@ -189,19 +189,137 @@
         signup_modal.style.display   = 'block';
         login_modal.style.display    = 'none';
         recovery_modal.style.display = 'none';
+        //-----------------------------------------------------------------------------
+        // On-the-Fly input validation
+        //-----------------------------------------------------------------------------
+        const signup_error_msg  = document.getElementById('id_signup_error_msg');
+        // Username input validation
+        const signup_username = document.getElementById('id_signup_username');
+        const signup_password_1 = document.getElementById('id_signup_password_1');
+        const signup_password_2 = document.getElementById('id_signup_password_2');
+        const signup_email = document.getElementById('id_signup_email');
+
+        const USERNAME_ALLOWED_CHARS = /^[a-zA-Z0-9-]+$/;
+        const PASSWORD_ALLOWED_CHARS = /^[a-zA-Z0-9@#$&!]+$/;
+        const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        // Username input validation    
+        signup_username.addEventListener('change', (event) =>
+        {
+          if (signup_username.value.length < 4)
+          {
+            signup_error_msg.innerHTML = "<p>Error: Username must be at least 4 characters long</p>";
+          }
+          else if (!USERNAME_ALLOWED_CHARS.test(signup_username.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Username can only contain letters, numbers and -</p>";
+          }
+          else
+          {
+            signup_error_msg.innerHTML = "";
+          }
+        });
+        // Password 1 input validation
+        signup_password_1.addEventListener('change', (event) =>
+        {
+          if (signup_password_1.value.length < 8)
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
+          }
+          else if (!/[a-z]/.test(signup_password_1.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
+          }
+          else if (!/[A-Z]/.test(signup_password_1.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
+          }
+          else if (!/[0-9]/.test(signup_password_1.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
+          }
+          else if (!/[@#$&!]/.test(signup_password_1.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
+          }
+          else if (!PASSWORD_ALLOWED_CHARS.test(signup_password_1.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
+          }
+          else if (signup_password_2.value && signup_password_2.value.trim() && signup_password_1.value !== signup_password_2.value)
+          {
+            signup_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
+          }
+          else
+          {
+            signup_error_msg.innerHTML = "";
+          }
+        });
+        // Password 2 input validation
+        signup_password_2.addEventListener('change', (event) =>
+        {
+          if (signup_password_2.value.length < 8)
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
+          }
+          else if (!/[a-z]/.test(signup_password_2.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
+          }
+          else if (!/[A-Z]/.test(signup_password_2.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
+          }
+          else if (!/[0-9]/.test(signup_password_2.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
+          }
+          else if (!/[@#$&!]/.test(signup_password_2.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
+          }
+          else if (!PASSWORD_ALLOWED_CHARS.test(signup_password_2.value))
+          {
+            signup_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
+          }
+          else if (signup_password_1.value && signup_password_1.value.trim() && signup_password_1.value !== signup_password_2.value)
+          {
+            signup_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
+          }
+          else
+          {
+            signup_error_msg.innerHTML = "";
+          }
+        });
+        // Email input validation
+        signup_email.addEventListener('change', (event) =>
+        {
+          if (!EMAIL_REGEX.test(signup_email.value.trim()))
+          {
+            signup_error_msg.innerHTML = 'Please enter a valid email address.';
+          }
+          else
+          {
+            signup_error_msg.innerHTML = "";
+          }
+        });
+        // First name input validation
+
+        // Last name input validation
+
+        //-----------------------------------------------------------------------------
         // convert selected user photo to a preview image shown in the modal
+        //-----------------------------------------------------------------------------
         const signup_user_photo         = document.getElementById('id_signup_user_photo');
         const signup_user_photo_preview = document.getElementById('id_signup_user_photo_preview');
+        // convert selected user photo to a preview image shown in the modal
         signup_user_photo.addEventListener('change', async (event) => 
         {
           id_signup_user_photo_preview.src = URL.createObjectURL(signup_user_photo.files[0]);
         });
-
         //-----------------------------------------------------------------------------
         // Toggle password visibility
         //-----------------------------------------------------------------------------
         // password 1
-        const signup_password_1 = document.getElementById('id_signup_password_1');
         const toggle_password_1 = document.getElementById('id_toggle_password_1');
         toggle_password_1.addEventListener('click', function () 
         {
@@ -213,7 +331,6 @@
           this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
         });
         // password 2
-        const signup_password_2 = document.getElementById('id_signup_password_2');
         const toggle_password_2 = document.getElementById('id_toggle_password_2');
         toggle_password_2.addEventListener('click', function () 
         {
@@ -238,7 +355,9 @@
           const signup_email      = document.getElementById('id_signup_email').value;
           const signup_first_name = document.getElementById('id_signup_first_name').value;
           const signup_last_name  = document.getElementById('id_signup_last_name').value;
-
+          //----------------------------------------------------------------------------- 
+          // Input Validation
+          //-----------------------------------------------------------------------------
           // Input Validation: username must be at least 4 characters long
           let inputError = false;
           
@@ -291,6 +410,7 @@
             // Send the form
             //----------------------------------------------------------------------------
             console.log("DEBUG: POST user inputs to server");
+            //
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const postURL   = "{% url 'plants:user_signup' %}";
             const response = await fetch(postURL, 
@@ -311,6 +431,7 @@
               else
               {
                 console.log('Upload Failed:', data);
+                signup_error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
               }
             } 
             else 
@@ -380,7 +501,7 @@
       update_modal.style.display   = 'none';
       // {x% if update_input_error == "yes" %x}
       //   update_modal.style.display   = 'block';
-      // {x% elif signup_input_error == "yes" %x}
+      // {x% elif signup_error == "yes" %x}
       //   signup_modal.style.display   = 'block';
       // {x% endif %x}
     });
