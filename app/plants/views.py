@@ -2181,6 +2181,15 @@ def user_signup_new_code(request):
         request.session.set_expiry(600)
         print("DEBUG: pending_data =", pending_data)
         print("DEBUG: OTP code saved in session")
+        # Send the code via email
+        signup_email = pending_data['signup_email']
+        send_mail(
+            subject='Your Verification Code',
+            message=f'Your OTP code is {otp_code}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[signup_email],
+        )
+        print("DEBUG: OTP code sent to:", signup_email)
         response_data = {
             'status' : 'auth-code-resent',
             'message': 'Authentication code sent via email'
