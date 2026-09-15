@@ -921,3 +921,10 @@ class ColumnChooserForm(forms.Form):
 		widget=forms.CheckboxSelectMultiple,
 		required=True,
 		)	
+	
+class EmailVerificationForm(forms.Form):
+	entered_code = forms.CharField(
+		label="Code:",
+		max_length=16, 
+		required=True,
+		)

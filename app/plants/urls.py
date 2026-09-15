@@ -53,7 +53,9 @@ urlpatterns = [
     path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
     path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
     #
-    path('user_signup',               views.user_signup,         name='user_signup'),
+    path('user_signup_step1',         views.user_signup_step1,    name='user_signup_step1'),
+    path('user_signup_step2',         views.user_signup_step2,    name='user_signup_step2'),
+    path('user_signup_new_code',      views.user_signup_new_code, name='user_signup_new_code'),
     path('user_login',                views.user_login,          name='user_login'),
     path('user_update',               views.user_update,         name='user_update'),
     path('user_recovery',             views.user_recovery,       name='user_recovery'),

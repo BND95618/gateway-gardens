@@ -1,6 +1,6 @@
 # app/plants/views.py
 
-import string, copy, math, json
+import string, copy, math, json, random
 from email_validator  import validate_email
 from django.core.mail import send_mail
  
@@ -8,8 +8,9 @@ from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect # Added for images
 from django.template  import loader
 from django.urls      import reverse
-from django.db.models import Q                # used to create complex database queries that involve logical operators such as OR, AND, and NOT
-from django.contrib   import messages
+from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
+from django.conf      import settings
+from django.contrib                 import messages
 from django.contrib.auth            import authenticate, login, logout # User login/logout
 from django.contrib.auth.models     import User, Group                 # User signup
 from django.contrib.auth.decorators import login_required
@@ -17,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from .models      import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
 from pests.models import Pest
 
-from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm
+from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, EmailVerificationForm
 from .forms  import GardenAddUpdateForm
 from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
@@ -1934,7 +1935,7 @@ def plants_about(request):
 
 #
 
-def user_signup(request):
+def user_signup_step1(request):
     """ Render the User Signup Page for Gateway Gardens app """
     if request.POST:
         form = UserSignupForm(request.POST)
@@ -2046,12 +2047,81 @@ def user_signup(request):
                     'message': signup_error_message,
                 }
                 return JsonResponse(response_data)
+            # ----------------------------------------------------------------------
+            # Validate correct email address - send validation code
+            # ----------------------------------------------------------------------
             else:
+                # Generate a random 6-digit OTP code
+                otp_code = str(random.randint(100000, 999999))
+                print("DEBUG: OTP code =", otp_code)
+                # Store pending user data and OTP in the session (expire in 10 minutes)
+                request.session['pending_user'] = {
+                    'signup_username'   : signup_username,
+                    'signup_email'      : signup_email,
+                    'signup_password_1' : signup_password_1,
+                    'signup_first_name' : signup_first_name,
+                    'signup_last_name'  : signup_last_name,
+                    'signup_user_photo' : signup_user_photo,
+                    'otp_code'          : otp_code,
+                }
+                request.session.set_expiry(600)
+                print("DEBUG: OTP code saved in session")
+                # Send the code via email
+                send_mail(
+                    subject='Your Verification Code',
+                    message=f'Your OTP code is {otp_code}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[signup_email],
+                )
+                print("DEBUG: OTP code sent to:", signup_email)
+                # Return email validation code request to client
+                response_data = {
+                    'status' : 'email-validation',
+                    'message': 'email validation code sent'
+                }
+                print("DEBUG: OTP code notification sent to client via JSON")
+                return JsonResponse(response_data)
+    else:
+        messages.error(request, "")
+        form = UserSignupForm()
+        context = { 'form' : form }
+        return render(request, 'plants/user_signup_modal_step1.html', context)
+    
+def user_signup_step2(request):
+    """ Render the User Signup Page for Gateway Gardens app """
+    pending_data = request.session.get('pending_user')
+
+    if not pending_data:
+        messages.error(request, 'No registration session found. Please register again.')
+        # return redirect('register_view')
+        return render(request, 'plants/index.html')
+        
+    print("DEBUG: pending data:", pending_data)
+    
+    if request.POST:
+        print("DEBUG: Got to point 1")
+        form = EmailVerificationForm(request.POST)
+        if form.is_valid():
+            entered_code = form.cleaned_data.get('entered_code')
+            print("DEBUG: Received code from user:", entered_code)
+            print("DEBUG: Pending user data:", pending_data)
+            if entered_code == pending_data['otp_code']:
+                print("DEBUG: Codes match!")
+                # ----------------------------------------------------------------------
+                # Create user
+                # ----------------------------------------------------------------------
                 print("DEBUG: Input clean - Creating user")
+                #
+                signup_username   = pending_data['signup_username']
+                signup_password_1 = pending_data['signup_password_1']
+                signup_email      = pending_data['signup_email']
+                signup_first_name = pending_data['signup_first_name']
+                signup_last_name  = pending_data['signup_last_name']
+                signup_user_photo = pending_data['signup_user_photo']
+                #
                 user = User.objects.create_user(signup_username, signup_email, signup_password_1)
-                user.first_name = signup_first_name
-                user.last_name  = signup_last_name
-                user.last_name  = signup_last_name
+                user.first_name        = signup_first_name
+                user.last_name         = signup_last_name
                 user.save()
                 print("DEBUG: Adding group pemissions")
                 # Add the user to the "Gardener" group - default
@@ -2068,16 +2138,62 @@ def user_signup(request):
                 print("DEBUG: User successfully created")
                 # Return success status to client
                 response_data = {
-                    'status': 'success',
-                    'message': f'User input proessed successfully',
+                    'status'  : 'authentication-success',
+                    'message' : 'User authentication successful',
+                }
+                return JsonResponse(response_data)
+            else:
+                print("DEBUG: Codes do not match!")
+                response_data = {
+                    'status'  : 'authentication-failure',
+                    'message' : 'User authentication failed',
                 }
                 return JsonResponse(response_data)
     else:
-        messages.error(request, "")
-        form = UserSignupForm()
+        form = EmailVerificationForm()
+        print("DEBUG: Got to email verification view")
         context = { 'form' : form }
-        return render(request, 'plants/user_signup_modal.html', context)
+        return render(request, 'plants/user_signup_modal_step2.html', context)
+
+def user_signup_new_code(request):
+    """ Provide new authorization code """
+    print("DEBUG: Got to user_signup_new_code")
+    pending_data = request.session.get('pending_user')
+    print("DEBUG: pending_data =", pending_data)
+    if not pending_data:
+        messages.error(request, 'No registration session found. Please register again.')
+        # return redirect('register_view')
+        return render(request, 'plants/index.html')
     
+    print("DEBUG: Got up to GET request for new code")
+    if request.method == 'GET':
+        print("DEBUG: Got past GET request for new code")
+        # Generate a random 6-digit OTP code
+        otp_code = str(random.randint(100000, 999999))
+        print("DEBUG: OTP code =", otp_code)
+        # Store pending user data and OTP in the session (expire in 10 minutes)
+        print("DEBUG: pending_data before new code =", pending_data)
+        request.session['pending_user']['otp_code'] = otp_code
+        # Force Django to save the changes
+        request.session.modified = True 
+        pending_data = request.session.get('pending_user')
+        print("DEBUG: pending_data after new code =", pending_data)
+        request.session.set_expiry(600)
+        print("DEBUG: pending_data =", pending_data)
+        print("DEBUG: OTP code saved in session")
+        response_data = {
+            'status' : 'auth-code-resent',
+            'message': 'Authentication code sent via email'
+        }
+        return JsonResponse(response_data)
+    else:
+        print("DEBUG: GET request not recognized")
+        response_data = {
+            'status' : 'auth-code-failure',
+            'message': 'Authentication code failure'
+        }
+        return JsonResponse(response_data)
+
 def user_update(request):
     """ Render the User Update Page for Gateway Gardens app """
     if not request.user.is_authenticated:

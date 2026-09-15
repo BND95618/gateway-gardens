@@ -1,10 +1,10 @@
-<!-- /app/plants/templates/plants/user_signup_modal.html -->
+<!-- /app/plants/templates/plants/user_signup_modal_step1.html -->
 
   <div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h3>User Sign-Up</h3>
     </header>
-    <form id="id_signup_form">
+    <form id="id_signup_form_step1">
       {% csrf_token %}
       <div class="bnd-modal-contents">
         {{ form.signup_username.as_field_group }}
@@ -49,10 +49,7 @@
         </div>
       </div>
       <div class="bnd-modal-button-bar">
-        <button type="submit" 
-                class="bnd-button-submit">
-          Signup
-        </button>
+        <button type="submit" class="bnd-button-submit">Signup</button>
         <!-- Cancel signup - the page reload clears the modal and keeps the page from hanging -->
         <button type="button"
                 onclick="document.getElementById('signup_modal').style.display='none'"

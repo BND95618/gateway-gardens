@@ -118,6 +118,10 @@
     <dialog id="signup_modal" class="bnd-modal">
       <p> Sign Up form HTML to be Inserted Here! </p>
     </dialog>
+    <!-- Email Verification modal - html to be inserted by Javascript -->
+    <dialog id="user_signup_modal_step2" class="bnd-modal">
+      <p> Sign Up form HTML to be Inserted Here! </p>
+    </dialog>
     <!-- User Login modal - html to be inserted by Javascript -->
     <dialog id="login_modal" class="bnd-modal">
       <p> Login form HTML to be Inserted Here! </p>
@@ -174,6 +178,8 @@
     const login_modal    = document.getElementById('login_modal')
     const recovery_modal = document.getElementById("recovery_modal")
     const update_modal   = document.getElementById('update_modal')
+
+    const user_signup_modal_step2 = document.getElementById('user_signup_modal_step2')
     //-----------------------------------------------------------------------------
     // Account authentication and management
     //-----------------------------------------------------------------------------
@@ -182,7 +188,7 @@
     function openUserSignupModal()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_signup' %}") 
+      fetch("{% url 'plants:user_signup_step1' %}") 
       .then(response => response.text())
       .then(html => {
         signup_modal.innerHTML       = html;
@@ -368,7 +374,7 @@
         //-----------------------------------------------------------------------------
         // Form submission process
         //-----------------------------------------------------------------------------
-        const form = document.getElementById('id_signup_form');
+        const form = document.getElementById('id_signup_form_step1');
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
           event.preventDefault();
@@ -380,11 +386,11 @@
           const signup_first_name = document.getElementById('id_signup_first_name').value;
           const signup_last_name  = document.getElementById('id_signup_last_name').value;
           //----------------------------------------------------------------------------- 
-          // Input Validation
+          // Input Validation (at form submission)
+          // AR: Is this nessaery since on-the-fly inpu validation has been implemented
           //-----------------------------------------------------------------------------
           // Input Validation: username must be at least 4 characters long
           let inputError = false;
-          
           if(inputError)
           {
             // notify user of input validation errors
@@ -436,25 +442,26 @@
             console.log("DEBUG: POST user inputs to server");
             //
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_signup' %}";
+            const postURL   = "{% url 'plants:user_signup_step1' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
               headers: {'X-CSRFToken' : csrfToken},
               body:    formData
             });
+            console.log("DEBUG: Waiting for server response");
             if (response.ok) 
             {
               const data = await response.json();
-              if (data.status === "success")
+              if (data.status === "email-validation")
               {
-                console.log('Upload Successful:', data);
-                signup_modal.style.display   = 'none';
-                openUserLoginModal();
+                console.log('E-mail validation request to return code from email');
+                signup_modal.style.display = 'none';
+                openEmailVerificationModal();
               }
               else
               {
-                console.log('Upload Failed:', data);
+                console.log('User sign-up info upload failed:', data);
                 signup_error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
               }
             } 
@@ -469,7 +476,119 @@
           }
         });
       });
-    }    
+    }
+    //-----------------------------------------------------------------------------
+    // Email Verification Modal Scripts
+    //-----------------------------------------------------------------------------
+    function openEmailVerificationModal()
+    { 
+      // fetch the modal html from the server
+      fetch("{% url 'plants:user_signup_step2' %}") 
+      .then(response => response.text())
+      .then(html => {
+        user_signup_modal_step2.innerHTML     = html;
+        user_signup_modal_step2.style.display = 'block';
+        //-----------------------------------------------------------------------------
+        // Form submission process
+        //-----------------------------------------------------------------------------
+        const form = document.getElementById('id_signup_form_step2');
+        form.addEventListener('submit', async (event) => {
+          // Prevent standard browser form submission
+          event.preventDefault();
+          // Access form data
+          const entered_code = document.getElementById('id_entered_code').value;
+          console.log("DEBUG: entered code:", entered_code);
+          try
+          {
+            //----------------------------------------------------------------------------
+            // Create the form data to send to the user
+            //----------------------------------------------------------------------------
+            console.log("DEBUG: create payload to send to server");
+            const formData  = new FormData(form);
+            //----------------------------------------------------------------------------
+            // Send the form
+            //----------------------------------------------------------------------------
+            console.log("DEBUG: POST user input code to server");
+            //
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const postURL   = "{% url 'plants:user_signup_step2' %}";
+            const response = await fetch(postURL, 
+            {
+              method:  "POST",
+              headers: {'X-CSRFToken' : csrfToken},
+              body:    formData
+            });
+            console.log("DEBUG: Waiting for server response");
+            if (response.ok) 
+            {
+              const data = await response.json();
+              if (data.status === "authentication-success")
+              {
+                console.log('Authentication success!');
+                user_signup_modal_step2.style.display = 'none';
+                openUserLoginModal();
+              }
+              else
+              {
+                console.log('User authentication failed:');
+                const user_signup_error_msg_step2  = document.getElementById('id_user_signup_error_msg_step2');
+                user_signup_error_msg_step2.innerHTML = "<p>Error: " + data.message + "</p>";
+              }
+            } 
+            else 
+            {
+              console.error('Server Error:', response.status);
+            }
+          }
+          catch
+          {
+            console.error('Network error:', error);
+          }
+        });
+        //-----------------------------------------------------------------------------
+        // Request new code
+        //-----------------------------------------------------------------------------
+        const resend_code_btn = document.getElementById('id_resend_code_btn');
+        resend_code_btn.addEventListener("click", async (event) => {
+          console.log("DEBUG: Resend code button clicked");
+          //
+          try
+          {
+            const getURL   = "{% url 'plants:user_signup_new_code' %}";
+            const response = await fetch(getURL, 
+            {
+              method:  "GET",
+              headers: {
+                'Content-Type': 'application/json',
+                // Good practice for Django to recognize AJAX requests
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            });
+            console.log("DEBUG: Waiting for server response");
+            if (response.ok) 
+            {
+              const data = await response.json();
+              if (data.status === "auth-code-resent")
+              {
+                console.log('Auth code resent!');
+              }
+              else
+              {
+                console.log("DEBUG: Auth code resend failed");
+              }
+            }
+            else
+            {
+              console.log('Auth code resend failed');
+            }
+          }
+          catch
+          {
+            console.error('Network error:', error);
+          }
+        });
+      });
+    }
     //-----------------------------------------------------------------------------
     // User Login Modal Scripts
     //-----------------------------------------------------------------------------
