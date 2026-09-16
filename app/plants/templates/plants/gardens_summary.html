@@ -135,6 +135,12 @@
     </div>
   {% endif %}
 </section>
+<div>
+  {% if garden.profile_photo %}
+    <p>DEBUG: User profile photo</p>
+    <img src="{{ garden.profile_photo.url }}" alt="No user profile image found" class="bnd-image-small">
+  {% endif %}
+</div>
 {% endblock content%}
 
 {% block js %}

@@ -250,40 +250,36 @@
       //----------------------------------------------------------------------------
       if (file_1)
       {
-        console.log("DEBUG: Starting image compression - Image 1");
+        console.log("Starting image compression - Image 1");
         statusDiv.innerText = "Compressing Image 1... Please wait.";
         compressedBlob_1 = await compressImage(file_1, 800, 1.0);
         console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
         console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
-        console.log("DEBUG: Finished image compression - Image 1");
         
       }
       if (file_2)
       {
-        console.log("DEBUG: Starting image compression - Image 2");
+        console.log("Starting image compression - Image 2");
         statusDiv.innerText = "Compressing Image 2... Please wait.";
         compressedBlob_2 = await compressImage(file_2, 800, 1.0);
         console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
         console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
-        console.log("DEBUG: Finished image compression - Image 2");
       }
       if (file_3)
       {
-        console.log("DEBUG: Starting image compression - Image 3");
+        console.log("Starting image compression - Image 3");
         statusDiv.innerText = "Compressing Image 3... Please wait.";
         compressedBlob_3 = await compressImage(file_3, 800, 1.0);
         console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
         console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
-        console.log("DEBUG: Finished image compression - Image 3");
       }
       if (file_4)
       {
-        console.log("DEBUG: Starting image compression - Image 4");
+        console.log("Starting image compression - Image 4");
         statusDiv.innerText = "Compressing Image 4... Please wait.";
         compressedBlob_4 = await compressImage(file_4, 800, 1.0);
         console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
         console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
-        console.log("DEBUG: Finished image compression - Image 4");
       }
       //----------------------------------------------------------------------------
       //

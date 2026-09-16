@@ -1,8 +1,9 @@
 # app/plants/views.py
 
-import string, copy, math, json, random
+import string, copy, math, json, random, base64
 from email_validator  import validate_email
 from django.core.mail import send_mail
+from django.core.files.base import ContentFile
  
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
@@ -712,9 +713,7 @@ def myplant_status(request, id):
     plant = Plant.objects.get(id=id)
     myplants = MyPlant.objects.filter(owner = request.user.username)
     if request.POST:
-        print("DEBUG: Got to myplant status view - POST")
         my_plant_status = request.POST["my_plant_status"]
-        print("DEBUG: my_plant_status =", my_plant_status)
 
         # Cases where the user already has a my_plant associated with the plant
         for myplant in myplants:
@@ -744,7 +743,6 @@ def myplant_status(request, id):
             return HttpResponseRedirect(reverse('plants:plants_summary'))
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
-        print("DEBUG: Got to myplant status view - Not POST")
         # Find my current status (if one exists) for the plant
         status = "not_in_my_garden"
         for myplant in myplants:
@@ -1690,8 +1688,6 @@ def plant_edit(request, id):
             plant.propagation    = form.cleaned_data.get('propagation')
             plant.pests_diseases = form.cleaned_data.get('pests_diseases')
 
-            print("DEBUG: Got to image processing")
-
             # Process images - check for new image - if yes, delete any existing image
             if 'image_1' in request.FILES:
                 if (plant.image_1):
@@ -1746,7 +1742,6 @@ def plant_edit(request, id):
         # Get the full list of pests in the database
 
         pests = Pest.objects.filter( Q(pest_type = 'Insect' ) | Q(pest_type = 'Disease') | Q(pest_type = 'Mollusk') ).order_by('pest_type', 'pest_name')
-        print("DEBUG: pests =", pests)
         # pests = Pest.objects.all().order_by('pest_type', 'pest_name')
         
         # Get the pests currently associated with this particular plant
@@ -1939,7 +1934,6 @@ def user_signup_step1(request):
     """ Render the User Signup Page for Gateway Gardens app """
     if request.POST:
         form = UserSignupForm(request.POST)
-        print("DEBUG: Got to User Signup server code")
         if form.is_valid():
             # ----------------------------------------------------------------------
             # Get signup information from request
@@ -1952,6 +1946,8 @@ def user_signup_step1(request):
             signup_last_name  = form.cleaned_data.get('signup_last_name')
             if 'signup_user_photo' in request.FILES:
                 signup_user_photo = request.FILES['signup_user_photo']
+                # Read binary and encode to base64 string for session storage
+                signup_user_photo_encoded = base64.b64encode(signup_user_photo.read()).decode('utf-8')
             else:
                 signup_user_photo = None
             # ----------------------------------------------------------------------
@@ -2053,7 +2049,6 @@ def user_signup_step1(request):
             else:
                 # Generate a random 6-digit OTP code
                 otp_code = str(random.randint(100000, 999999))
-                print("DEBUG: OTP code =", otp_code)
                 # Store pending user data and OTP in the session (expire in 10 minutes)
                 request.session['pending_user'] = {
                     'signup_username'   : signup_username,
@@ -2061,11 +2056,11 @@ def user_signup_step1(request):
                     'signup_password_1' : signup_password_1,
                     'signup_first_name' : signup_first_name,
                     'signup_last_name'  : signup_last_name,
-                    'signup_user_photo' : signup_user_photo,
+                    'signup_user_photo_encoded' : signup_user_photo_encoded,
+                    'signup_user_photo_name'    : signup_user_photo.name,
                     'otp_code'          : otp_code,
                 }
                 request.session.set_expiry(600)
-                print("DEBUG: OTP code saved in session")
                 # Send the code via email
                 send_mail(
                     subject='Your Verification Code',
@@ -2073,13 +2068,11 @@ def user_signup_step1(request):
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[signup_email],
                 )
-                print("DEBUG: OTP code sent to:", signup_email)
                 # Return email validation code request to client
                 response_data = {
                     'status' : 'email-validation',
                     'message': 'email validation code sent'
                 }
-                print("DEBUG: OTP code notification sent to client via JSON")
                 return JsonResponse(response_data)
     else:
         messages.error(request, "")
@@ -2093,49 +2086,45 @@ def user_signup_step2(request):
 
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
-        # return redirect('register_view')
         return render(request, 'plants/index.html')
-        
-    print("DEBUG: pending data:", pending_data)
     
     if request.POST:
-        print("DEBUG: Got to point 1")
         form = EmailVerificationForm(request.POST)
         if form.is_valid():
             entered_code = form.cleaned_data.get('entered_code')
-            print("DEBUG: Received code from user:", entered_code)
-            print("DEBUG: Pending user data:", pending_data)
             if entered_code == pending_data['otp_code']:
-                print("DEBUG: Codes match!")
                 # ----------------------------------------------------------------------
                 # Create user
                 # ----------------------------------------------------------------------
-                print("DEBUG: Input clean - Creating user")
-                #
+                # Retrieve the user information from the session setup in step 1
                 signup_username   = pending_data['signup_username']
                 signup_password_1 = pending_data['signup_password_1']
                 signup_email      = pending_data['signup_email']
                 signup_first_name = pending_data['signup_first_name']
                 signup_last_name  = pending_data['signup_last_name']
-                signup_user_photo = pending_data['signup_user_photo']
+                signup_user_photo_name      = pending_data['signup_user_photo_name']
+                # Decode base64 back to binary
+                signup_user_photo_unencoded =  base64.b64decode(pending_data['signup_user_photo_encoded'])
+                #
+                # Create a Django ContentFile
+                signup_user_photo_obj = ContentFile(signup_user_photo_unencoded, name=signup_user_photo_name)
                 #
                 user = User.objects.create_user(signup_username, signup_email, signup_password_1)
                 user.first_name        = signup_first_name
                 user.last_name         = signup_last_name
                 user.save()
-                print("DEBUG: Adding group pemissions")
                 # Add the user to the "Gardener" group - default
                 group = Group.objects.get(name='Gardener')
                 group.user_set.add(user)
-                print("DEBUG: Setup user garden")
                 # Create a Garden object for the user
                 garden = Garden()
                 garden.owner = signup_username
                 garden.name  = signup_username + "'s Garden"
-                if signup_user_photo is not None and signup_user_photo != "":
-                    garden.profile_photo = signup_user_photo
-                garden.save()
-                print("DEBUG: User successfully created")
+                if signup_user_photo_obj is not None and signup_user_photo_obj != "":
+                    garden.profile_photo = signup_user_photo_obj
+                    garden.save()
+                # Clean up session
+                del request.session['pending_user']
                 # Return success status to client
                 response_data = {
                     'status'  : 'authentication-success',
@@ -2143,7 +2132,6 @@ def user_signup_step2(request):
                 }
                 return JsonResponse(response_data)
             else:
-                print("DEBUG: Codes do not match!")
                 response_data = {
                     'status'  : 'authentication-failure',
                     'message' : 'User authentication failed',
@@ -2151,36 +2139,29 @@ def user_signup_step2(request):
                 return JsonResponse(response_data)
     else:
         form = EmailVerificationForm()
-        print("DEBUG: Got to email verification view")
         context = { 'form' : form }
         return render(request, 'plants/user_signup_modal_step2.html', context)
 
 def user_signup_new_code(request):
     """ Provide new authorization code """
-    print("DEBUG: Got to user_signup_new_code")
     pending_data = request.session.get('pending_user')
-    print("DEBUG: pending_data =", pending_data)
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
         # return redirect('register_view')
         return render(request, 'plants/index.html')
     
-    print("DEBUG: Got up to GET request for new code")
     if request.method == 'GET':
-        print("DEBUG: Got past GET request for new code")
         # Generate a random 6-digit OTP code
         otp_code = str(random.randint(100000, 999999))
-        print("DEBUG: OTP code =", otp_code)
-        # Store pending user data and OTP in the session (expire in 10 minutes)
-        print("DEBUG: pending_data before new code =", pending_data)
+        # Store pending user OTP in the current session (expire in 10 minutes)
         request.session['pending_user']['otp_code'] = otp_code
         # Force Django to save the changes
         request.session.modified = True 
-        pending_data = request.session.get('pending_user')
-        print("DEBUG: pending_data after new code =", pending_data)
+        # Reset expiration for 10 minutes
         request.session.set_expiry(600)
-        print("DEBUG: pending_data =", pending_data)
-        print("DEBUG: OTP code saved in session")
+        # Retrieve all data for the current session
+        pending_data = request.session.get('pending_user')
+        
         # Send the code via email
         signup_email = pending_data['signup_email']
         send_mail(
@@ -2189,14 +2170,12 @@ def user_signup_new_code(request):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[signup_email],
         )
-        print("DEBUG: OTP code sent to:", signup_email)
         response_data = {
             'status' : 'auth-code-resent',
             'message': 'Authentication code sent via email'
         }
         return JsonResponse(response_data)
     else:
-        print("DEBUG: GET request not recognized")
         response_data = {
             'status' : 'auth-code-failure',
             'message': 'Authentication code failure'
