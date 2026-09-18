@@ -183,7 +183,7 @@
     //-----------------------------------------------------------------------------
     // Account authentication and management
     //-----------------------------------------------------------------------------
-    // User Sign-Up Modal Scripts
+    // User Sign-Up Modal Script - Step 1
     //-----------------------------------------------------------------------------
     function openUserSignupModal()
     { 
@@ -196,22 +196,48 @@
         login_modal.style.display    = 'none';
         recovery_modal.style.display = 'none';
         //-----------------------------------------------------------------------------
+        // Toggle password visibility function
+        //-----------------------------------------------------------------------------
+        // password 1
+        const toggle_password_1 = document.getElementById('id_toggle_password_1');
+        toggle_password_1.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = signup_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
+          signup_password_1.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        // password 2
+        const toggle_password_2 = document.getElementById('id_toggle_password_2');
+        toggle_password_2.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = signup_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
+          signup_password_2.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        //-----------------------------------------------------------------------------
         // On-the-Fly input validation
         //-----------------------------------------------------------------------------
-        const signup_error_msg  = document.getElementById('id_signup_error_msg');
-        // Username input validation
+        // User inputs
         const signup_username   = document.getElementById('id_signup_username');
         const signup_password_1 = document.getElementById('id_signup_password_1');
         const signup_password_2 = document.getElementById('id_signup_password_2');
         const signup_email      = document.getElementById('id_signup_email');
         const signup_first_name = document.getElementById('id_signup_first_name');
         const signup_last_name  = document.getElementById('id_signup_last_name');
-
+        // Acceptable characters for each user input
         const USERNAME_ALLOWED_CHARS  = /^[a-zA-Z0-9-]+$/;
         const PASSWORD_ALLOWED_CHARS  = /^[a-zA-Z0-9@#$&!]+$/;
         const EMAIL_REGEX             = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const FIRSTNAME_ALLOWED_CHARS = /^[a-zA-Z-]+$/;
         const LASTNAME_ALLOWED_CHARS  = /^[a-zA-Z-]+$/;
+        // Variable to hold error message
+        const signup_error_msg  = document.getElementById('id_signup_error_msg');
         // Username input validation    
         signup_username.addEventListener('change', (event) =>
         {
@@ -346,31 +372,17 @@
         {
           id_signup_user_photo_preview.src = URL.createObjectURL(signup_user_photo.files[0]);
         });
-        //-----------------------------------------------------------------------------
-        // Toggle password visibility
-        //-----------------------------------------------------------------------------
-        // password 1
-        const toggle_password_1 = document.getElementById('id_toggle_password_1');
-        toggle_password_1.addEventListener('click', function () 
+        //----------------------------------------------------------------------------
+        // Create compressed profile photo for upload
+        //----------------------------------------------------------------------------
+        const file = signup_user_photo.files[0];
+        let compressedBlob = null;
+        if (file)
         {
-          // Toggle input type
-          const type = signup_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
-          signup_password_1.setAttribute('type', type);
-
-          // Toggle icon text
-          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
-        });
-        // password 2
-        const toggle_password_2 = document.getElementById('id_toggle_password_2');
-        toggle_password_2.addEventListener('click', function () 
-        {
-          // Toggle input type
-          const type = signup_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
-          signup_password_2.setAttribute('type', type);
-
-          // Toggle icon text
-          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
-        });
+          console.log("DEBUG: Starting image compression");
+          compressedBlob = compressImage(file, 800, 1.0);
+          console.log("DEBUG: Finished image compression");
+        }
         //-----------------------------------------------------------------------------
         // Form submission process
         //-----------------------------------------------------------------------------
@@ -378,64 +390,22 @@
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
           event.preventDefault();
-          // Access form data
-          const signup_username   = document.getElementById('id_signup_username').value;
-          const signup_password_1 = document.getElementById('id_signup_password_1').value;
-          const signup_password_2 = document.getElementById('id_signup_password_2').value;
-          const signup_email      = document.getElementById('id_signup_email').value;
-          const signup_first_name = document.getElementById('id_signup_first_name').value;
-          const signup_last_name  = document.getElementById('id_signup_last_name').value;
           //----------------------------------------------------------------------------- 
-          // Input Validation (at form submission)
-          // AR: Is this nessaery since on-the-fly inpu validation has been implemented
-          //-----------------------------------------------------------------------------
-          // Input Validation: username must be at least 4 characters long
-          let inputError = false;
-          if(inputError)
-          {
-            // notify user of input validation errors
-            console.log("DEBUG: Input errors found!");
-          }
-          else
-          {
-            // send form data to server
-            console.log("DEBUG: No input errors found!");
-          }
-          //----------------------------------------------------------------------------- 
-          // Upload form data and compressed image to the server
-          //-----------------------------------------------------------------------------
-          // Get image
-          const file = signup_user_photo.files[0];
-          // Declare compressed image blobs
-          let compressedBlob = null;
           // 
+          //-----------------------------------------------------------------------------
           try 
           {
-            // Update UI state
-            // submitBtn.disabled = true;
-            //----------------------------------------------------------------------------
-            // Wait for the image compression promise to resolve
-            //----------------------------------------------------------------------------
-            if (file)
-            {
-              console.log("DEBUG: Starting image compression");
-              compressedBlob = await compressImage(file, 800, 1.0);
-              console.log("DEBUG: Finished image compression");
-            }
             //----------------------------------------------------------------------------
             // Create the form data to send to the user
             //----------------------------------------------------------------------------
-            console.log("DEBUG: Signup information - create");
             // Get the form data entered by the user
             const formData  = new FormData(form);
             // Append the compressed image to the FormData object
             if (typeof compressedBlob !== 'undefined' && compressedBlob !== null)
             {
-              console.log("DEBUG: Compressed image exists");
               formData.delete('image');
               formData.append('image', compressedBlob, 'signup_user_photo.jpg');
             }
-            console.log("DEBUG: Signup information - created");
             //----------------------------------------------------------------------------
             // Send the form
             //----------------------------------------------------------------------------
@@ -478,7 +448,7 @@
       });
     }
     //-----------------------------------------------------------------------------
-    // Email Verification Modal Scripts
+    // User Sign-Up Modal Script - Step 2
     //-----------------------------------------------------------------------------
     function openEmailVerificationModal()
     { 
@@ -492,24 +462,18 @@
         // Form submission process
         //-----------------------------------------------------------------------------
         const form = document.getElementById('id_signup_form_step2');
+        // watch for the user clicking on the submit button fot the MFA code
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
           event.preventDefault();
           // Access form data
           const entered_code = document.getElementById('id_entered_code').value;
-          console.log("DEBUG: entered code:", entered_code);
           try
           {
             //----------------------------------------------------------------------------
-            // Create the form data to send to the user
+            // Create/Send the form data to send to the user
             //----------------------------------------------------------------------------
-            console.log("DEBUG: create payload to send to server");
             const formData  = new FormData(form);
-            //----------------------------------------------------------------------------
-            // Send the form
-            //----------------------------------------------------------------------------
-            console.log("DEBUG: POST user input code to server");
-            //
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const postURL   = "{% url 'plants:user_signup_step2' %}";
             const response = await fetch(postURL, 
@@ -518,7 +482,6 @@
               headers: {'X-CSRFToken' : csrfToken},
               body:    formData
             });
-            console.log("DEBUG: Waiting for server response");
             if (response.ok) 
             {
               const data = await response.json();
@@ -550,11 +513,10 @@
         //-----------------------------------------------------------------------------
         const resend_code_btn = document.getElementById('id_resend_code_btn');
         resend_code_btn.addEventListener("click", async (event) => {
-          console.log("DEBUG: Resend code button clicked");
-          //
+          // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'plants:user_signup_new_code' %}";
+            const getURL   = "{% url 'plants:user_mfa' %}";
             const response = await fetch(getURL, 
             {
               method:  "GET",
@@ -564,7 +526,6 @@
                 'X-Requested-With': 'XMLHttpRequest'
               }
             });
-            console.log("DEBUG: Waiting for server response");
             if (response.ok) 
             {
               const data = await response.json();

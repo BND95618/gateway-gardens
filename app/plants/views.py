@@ -1948,118 +1948,73 @@ def user_signup_step1(request):
                 signup_user_photo = request.FILES['signup_user_photo']
                 # Read binary and encode to base64 string for session storage
                 signup_user_photo_encoded = base64.b64encode(signup_user_photo.read()).decode('utf-8')
-            else:
-                signup_user_photo = None
             # ----------------------------------------------------------------------
-            # Input validation setup
+            # Input validation
             # ----------------------------------------------------------------------
-            signup_error = "no"
             signup_error_message = ""
             USERNAME_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "-")
             PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
             FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
             LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
-            # ----------------------------------------------------------------------
             # Input validation - Username
-            # ----------------------------------------------------------------------
-            if (signup_username == ""):
-                signup_error = "yes"
-                signup_error_message = "Username is required"
-            elif User.objects.filter(username=signup_username).exists():
-                signup_error = "yes"
-                signup_error_message = "Username has already been taken"
-            elif (len(signup_username) < 4):
-                signup_error = "yes"
-                signup_error_message = "Username must be at least 4 characters long"
-            elif (not all(char in USERNAME_ALLOWED_CHARS for char in signup_username)):
-                signup_error = "yes"
-                signup_error_message = "Username can only contain letters, numbers and -"
-            # ----------------------------------------------------------------------
-            # Input validation - Password
-            # ----------------------------------------------------------------------
-            elif (not all(char in PASSWORD_ALLOWED_CHARS for char in signup_password_1)):
-                signup_error = "yes"
-                signup_error_message = "password can only contain letters, numbers and @#$&!"
-            elif (signup_password_1 != signup_password_2):
-                signup_error = "yes"
-                signup_error_message = "passwords do not match"
-            elif (len(signup_password_1) < 8):
-                signup_error = "yes"
-                signup_error_message = "password must be at least 8 characters long"
-            elif not any(char.isupper() for char in signup_password_1):
-                signup_error = "yes"
-                signup_error_message = "password requires at least one uppercase letter"
-            elif not any(char.islower() for char in signup_password_1):
-                signup_error = "yes"
-                signup_error_message = "password requires at least one lowercase letter"
-            elif not any(char.isdigit() for char in signup_password_1):
-                signup_error = "yes"
-                signup_error_message = "password requires at least one number"
-            elif not any(char in "!@#$%^&*()(_+)" for char in signup_password_1):
-                signup_error = "yes"
-                signup_error_message = "password requires at least one special character '@#$&!'"  
-            # ----------------------------------------------------------------------
-            # Input validation - first name
-            # ----------------------------------------------------------------------
-            elif (signup_first_name == ""):
-                signup_error = "yes"
-                signup_error_message = "First Name is required"
-            elif (not all(char in FIRSTNAME_ALLOWED_CHARS for char in signup_first_name)):
-                signup_error = "yes"
-                signup_error_message = "First name can only contain letters, numbers and -"
-            # ----------------------------------------------------------------------
-            # Input validation - last name
-            # ----------------------------------------------------------------------
-            elif (signup_last_name == ""):
-                signup_error = "yes"
-                signup_error_message = "Last Name is required"
-            elif (not all(char in LASTNAME_ALLOWED_CHARS for char in signup_last_name)):
-                signup_error = "yes"
-                signup_error_message = "Last name can only contain letters, numbers and -"
-            # ----------------------------------------------------------------------
+            if (signup_error_message == ""):
+                signup_error_message = username_validation(signup_username, USERNAME_ALLOWED_CHARS)
+            # Input validation - Passwords
+            if (signup_error_message == ""):
+                signup_error_message = password_validation(signup_password_1, PASSWORD_ALLOWED_CHARS)
+            if (signup_error_message == ""):
+                signup_error_message = password_validation(signup_password_2, PASSWORD_ALLOWED_CHARS)
+            if (signup_error_message == ""):
+                signup_error_message = password_match(signup_password_1, signup_password_2)
             # Input validation - email
+            if (signup_error_message == ""):
+                signup_error_message = email_validation(signup_email)
+            # Input validation - first name
+            if (signup_error_message == ""):
+                signup_error_message = firstname_validation(signup_first_name, FIRSTNAME_ALLOWED_CHARS)
+            # Input validation - last name
+            if (signup_error_message == ""):
+                signup_error_message = lastname_validation(signup_last_name, LASTNAME_ALLOWED_CHARS)
             # ----------------------------------------------------------------------
-            elif User.objects.filter(email=signup_email).exists():
-                signup_error = "yes"
-                signup_error_message = "Email address has already been taken"
-            else:
-                try:
-                    emailinfo = validate_email(signup_email, check_deliverability=False)
-                    signup_email= emailinfo.normalized
-                except:
-                    signup_error = "yes"
-                    signup_error_message = "invalid e-mail address"
+            # If there is a signup error send message back to client.
+            # Else if all signup inputs are valid:
+            # 1. Generate MFA code
+            # 2. Store user signup inputs in session
+            # 3. email MFA code to user 
+            # 4. Inform client to open MFA modal
             # ----------------------------------------------------------------------
-            # Check if input validation error
-            # > If yes, return error message
-            # > If no, perform email validation -> add user to db
-            # AR: New user email validation
-            # ----------------------------------------------------------------------
-            if (signup_error == "yes"):
-                print("DEBUG: Input error:", signup_error_message)
+            if (signup_error_message != ""):
                 # Return failure status to client
                 response_data = {
                     'status': 'failure',
                     'message': signup_error_message,
                 }
                 return JsonResponse(response_data)
-            # ----------------------------------------------------------------------
-            # Validate correct email address - send validation code
-            # ----------------------------------------------------------------------
             else:
                 # Generate a random 6-digit OTP code
                 otp_code = str(random.randint(100000, 999999))
+                print("DEBUG: MFA code =", otp_code)
                 # Store pending user data and OTP in the session (expire in 10 minutes)
-                request.session['pending_user'] = {
-                    'signup_username'   : signup_username,
-                    'signup_email'      : signup_email,
-                    'signup_password_1' : signup_password_1,
-                    'signup_first_name' : signup_first_name,
-                    'signup_last_name'  : signup_last_name,
-                    'signup_user_photo_encoded' : signup_user_photo_encoded,
-                    'signup_user_photo_name'    : signup_user_photo.name,
-                    'otp_code'          : otp_code,
-                }
+                if 'signup_user_photo' in request.FILES:
+                    request.session['pending_user'] = {
+                        'signup_username'           : signup_username,
+                        'signup_email'              : signup_email,
+                        'signup_password_1'         : signup_password_1,
+                        'signup_first_name'         : signup_first_name,
+                        'signup_last_name'          : signup_last_name,
+                        'signup_user_photo_encoded' : signup_user_photo_encoded,
+                        'signup_user_photo_name'    : signup_user_photo.name,
+                        'otp_code'                  : otp_code,
+                    }
+                else:
+                    request.session['pending_user'] = {
+                        'signup_username'   : signup_username,
+                        'signup_email'      : signup_email,
+                        'signup_password_1' : signup_password_1,
+                        'signup_first_name' : signup_first_name,
+                        'signup_last_name'  : signup_last_name,
+                        'otp_code'          : otp_code,
+                    }
                 request.session.set_expiry(600)
                 # Send the code via email
                 send_mail(
@@ -2092,26 +2047,28 @@ def user_signup_step2(request):
         form = EmailVerificationForm(request.POST)
         if form.is_valid():
             entered_code = form.cleaned_data.get('entered_code')
+            # ----------------------------------------------------------------------
+            # If the user entered the MFA code correctly, setup the user
+            # ----------------------------------------------------------------------
             if entered_code == pending_data['otp_code']:
-                # ----------------------------------------------------------------------
-                # Create user
-                # ----------------------------------------------------------------------
                 # Retrieve the user information from the session setup in step 1
-                signup_username   = pending_data['signup_username']
-                signup_password_1 = pending_data['signup_password_1']
-                signup_email      = pending_data['signup_email']
-                signup_first_name = pending_data['signup_first_name']
-                signup_last_name  = pending_data['signup_last_name']
-                signup_user_photo_name      = pending_data['signup_user_photo_name']
-                # Decode base64 back to binary
-                signup_user_photo_unencoded =  base64.b64decode(pending_data['signup_user_photo_encoded'])
-                #
-                # Create a Django ContentFile
-                signup_user_photo_obj = ContentFile(signup_user_photo_unencoded, name=signup_user_photo_name)
+                signup_username        = pending_data['signup_username']
+                signup_password_1      = pending_data['signup_password_1']
+                signup_email           = pending_data['signup_email']
+                signup_first_name      = pending_data['signup_first_name']
+                signup_last_name       = pending_data['signup_last_name']
+                if 'signup_user_photo_name' in  pending_data:
+                    signup_user_photo_name      = pending_data['signup_user_photo_name']
+                    # Decode base64 back to binary
+                    signup_user_photo_unencoded =  base64.b64decode(pending_data['signup_user_photo_encoded'])
+                    # Create a Django ContentFile
+                    signup_user_photo_obj = ContentFile(signup_user_photo_unencoded, name=signup_user_photo_name)
+                else:
+                    signup_user_photo_obj = None
                 #
                 user = User.objects.create_user(signup_username, signup_email, signup_password_1)
-                user.first_name        = signup_first_name
-                user.last_name         = signup_last_name
+                user.first_name = signup_first_name
+                user.last_name  = signup_last_name
                 user.save()
                 # Add the user to the "Gardener" group - default
                 group = Group.objects.get(name='Gardener')
@@ -2122,7 +2079,7 @@ def user_signup_step2(request):
                 garden.name  = signup_username + "'s Garden"
                 if signup_user_photo_obj is not None and signup_user_photo_obj != "":
                     garden.profile_photo = signup_user_photo_obj
-                    garden.save()
+                garden.save()
                 # Clean up session
                 del request.session['pending_user']
                 # Return success status to client
@@ -2142,7 +2099,7 @@ def user_signup_step2(request):
         context = { 'form' : form }
         return render(request, 'plants/user_signup_modal_step2.html', context)
 
-def user_signup_new_code(request):
+def user_mfa(request):
     """ Provide new authorization code """
     pending_data = request.session.get('pending_user')
     if not pending_data:
@@ -2322,6 +2279,68 @@ def user_logout(request):
     """ User Logout function for Gateway Gardens app """
     logout(request)
     return render(request, 'plants/index.html')
+
+def username_validation(username, USERNAME_ALLOWED_CHARS):
+    error_message = ""
+    if (username == ""):
+        error_message = "Username is required"
+    elif User.objects.filter(username = username).exists():
+        error_message = "Username has already been taken"
+    elif (len(username) < 4):
+        error_message = "Username must be at least 4 characters long"
+    elif (not all(char in USERNAME_ALLOWED_CHARS for char in username)):
+        error_message = "Username can only contain letters, numbers and -"
+    return (error_message)
+    
+def password_validation(password, PASSWORD_ALLOWED_CHARS):
+    error_message = ""
+    if (not all(char in PASSWORD_ALLOWED_CHARS for char in password)):
+        error_message = "password can only contain letters, numbers and @#$&!"
+    elif (len(password) < 8):
+        error_message = "password must be at least 8 characters long"
+    elif not any(char.isupper() for char in password):
+        error_message = "password requires at least one uppercase letter"
+    elif not any(char.islower() for char in password):
+        error_message = "password requires at least one lowercase letter"
+    elif not any(char.isdigit() for char in password):
+        error_message = "password requires at least one number"
+    elif not any(char in "!@#$%^&*()(_+)" for char in password):
+        error_message = "password requires at least one special character '@#$&!'"  
+    return (error_message)
+
+def password_match(password_1, password_2):
+    error_message = ""
+    if (password_1 != password_2):
+        error_message = "passwords do not match"
+    return (error_message)
+    
+def email_validation(email):
+    error_message = ""
+    if User.objects.filter(email = email).exists():
+        error_message = "Email address has already been taken"
+    else:
+        try:
+            emailinfo = validate_email(email, check_deliverability=False)
+            # signup_email= emailinfo.normalized
+        except:
+            error_message = "invalid e-mail address"
+    return (error_message)
+
+def firstname_validation(firstname, FIRSTNAME_ALLOWED_CHARS):
+    error_message = ""
+    if (firstname == ""):
+        error_message = "First name is required"
+    elif (not all(char in FIRSTNAME_ALLOWED_CHARS for char in firstname)):
+        error_message = "First name can only contain letters, numbers and -"
+    return (error_message)
+
+def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
+    error_message = ""
+    if (lastname == ""):
+        error_message = "Last name is required"
+    elif (not all(char in LASTNAME_ALLOWED_CHARS for char in lastname)):
+        error_message = "Last name can only contain letters, numbers and -"
+    return (error_message)
 
 #
 
