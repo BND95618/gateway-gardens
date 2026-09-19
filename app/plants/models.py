@@ -41,9 +41,9 @@ class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
     # User details (extends information in user database)
     profile_photo = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
+                                        processors = [Transpose(), ResizeToFill(800, 800)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     # User garden details
