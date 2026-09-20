@@ -2,6 +2,7 @@
 
 import string, copy, math, json, random, base64
 from email_validator  import validate_email
+
 from django.core.mail import send_mail
 from django.core.files.base import ContentFile
  
@@ -12,14 +13,14 @@ from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 from django.conf      import settings
 from django.contrib                 import messages
-from django.contrib.auth            import authenticate, login, logout # User login/logout
-from django.contrib.auth.models     import User, Group                 # User signup
+from django.contrib.auth            import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.models     import User, Group
 from django.contrib.auth.decorators import login_required
 
 from .models      import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
 from pests.models import Pest
 
-from .forms  import UserSignupForm, UserLoginForm, UserUpdateForm, UserRecoveryForm, EmailVerificationForm
+from .forms  import UserProfileForm, UserLoginForm, UserRecoveryForm, EmailVerificationForm
 from .forms  import GardenAddUpdateForm
 from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
@@ -1930,64 +1931,69 @@ def plants_about(request):
 
 #
 
-def user_signup_step1(request):
-    """ Render the User Signup Page for Gateway Gardens app """
+def user_profile_step1(request):
+    """ Render the User Profile Page for Gateway Gardens app """
+    if request.user.is_authenticated:
+        profile_creation = False
+    else:
+        profile_creation = True
+
     if request.POST:
-        form = UserSignupForm(request.POST)
+        form = UserProfileForm(request.POST)
         if form.is_valid():
             # ----------------------------------------------------------------------
-            # Get signup information from request
+            # Get profile information from request
             # ----------------------------------------------------------------------
-            signup_username   = form.cleaned_data.get('signup_username')
-            signup_password_1 = form.cleaned_data.get('signup_password_1')
-            signup_password_2 = form.cleaned_data.get('signup_password_2')
-            signup_email      = form.cleaned_data.get('signup_email')
-            signup_first_name = form.cleaned_data.get('signup_first_name')
-            signup_last_name  = form.cleaned_data.get('signup_last_name')
-            if 'signup_user_photo' in request.FILES:
-                signup_user_photo = request.FILES['signup_user_photo']
+            profile_username   = form.cleaned_data.get('profile_username')
+            profile_password_1 = form.cleaned_data.get('profile_password_1')
+            profile_password_2 = form.cleaned_data.get('profile_password_2')
+            profile_email      = form.cleaned_data.get('profile_email')
+            profile_first_name = form.cleaned_data.get('profile_first_name')
+            profile_last_name  = form.cleaned_data.get('profile_last_name')
+            if 'profile_photo' in request.FILES:
+                profile_photo = request.FILES['profile_photo']
                 # Read binary and encode to base64 string for session storage
-                signup_user_photo_encoded = base64.b64encode(signup_user_photo.read()).decode('utf-8')
+                profile_photo_encoded = base64.b64encode(profile_photo.read()).decode('utf-8')
             # ----------------------------------------------------------------------
             # Input validation
             # ----------------------------------------------------------------------
-            signup_error_message = ""
+            profile_error_message = ""
             USERNAME_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "-")
             PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
             FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
             LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
             # Input validation - Username
-            if (signup_error_message == ""):
-                signup_error_message = username_validation(signup_username, USERNAME_ALLOWED_CHARS)
+            if (profile_error_message == ""):
+                profile_error_message = username_validation(profile_creation, profile_username, USERNAME_ALLOWED_CHARS)
             # Input validation - Passwords
-            if (signup_error_message == ""):
-                signup_error_message = password_validation(signup_password_1, PASSWORD_ALLOWED_CHARS)
-            if (signup_error_message == ""):
-                signup_error_message = password_validation(signup_password_2, PASSWORD_ALLOWED_CHARS)
-            if (signup_error_message == ""):
-                signup_error_message = password_match(signup_password_1, signup_password_2)
+            if (profile_error_message == ""):
+                profile_error_message = password_validation(profile_password_1, PASSWORD_ALLOWED_CHARS)
+            if (profile_error_message == ""):
+                profile_error_message = password_validation(profile_password_2, PASSWORD_ALLOWED_CHARS)
+            if (profile_error_message == ""):
+                profile_error_message = password_match(profile_password_1, profile_password_2)
             # Input validation - email
-            if (signup_error_message == ""):
-                signup_error_message = email_validation(signup_email)
+            if (profile_error_message == ""):
+                profile_error_message = email_validation(profile_creation, profile_email)
             # Input validation - first name
-            if (signup_error_message == ""):
-                signup_error_message = firstname_validation(signup_first_name, FIRSTNAME_ALLOWED_CHARS)
+            if (profile_error_message == ""):
+                profile_error_message = firstname_validation(profile_first_name, FIRSTNAME_ALLOWED_CHARS)
             # Input validation - last name
-            if (signup_error_message == ""):
-                signup_error_message = lastname_validation(signup_last_name, LASTNAME_ALLOWED_CHARS)
+            if (profile_error_message == ""):
+                profile_error_message = lastname_validation(profile_last_name, LASTNAME_ALLOWED_CHARS)
             # ----------------------------------------------------------------------
-            # If there is a signup error send message back to client.
-            # Else if all signup inputs are valid:
+            # If there is a profile error send message back to client.
+            # Else if all profile inputs are valid:
             # 1. Generate MFA code
-            # 2. Store user signup inputs in session
+            # 2. Store user profile inputs in session
             # 3. email MFA code to user 
             # 4. Inform client to open MFA modal
             # ----------------------------------------------------------------------
-            if (signup_error_message != ""):
+            if (profile_error_message != ""):
                 # Return failure status to client
                 response_data = {
                     'status': 'failure',
-                    'message': signup_error_message,
+                    'message': profile_error_message,
                 }
                 return JsonResponse(response_data)
             else:
@@ -1995,24 +2001,24 @@ def user_signup_step1(request):
                 otp_code = str(random.randint(100000, 999999))
                 print("DEBUG: MFA code =", otp_code)
                 # Store pending user data and OTP in the session (expire in 10 minutes)
-                if 'signup_user_photo' in request.FILES:
+                if 'profile_photo' in request.FILES:
                     request.session['pending_user'] = {
-                        'signup_username'           : signup_username,
-                        'signup_email'              : signup_email,
-                        'signup_password_1'         : signup_password_1,
-                        'signup_first_name'         : signup_first_name,
-                        'signup_last_name'          : signup_last_name,
-                        'signup_user_photo_encoded' : signup_user_photo_encoded,
-                        'signup_user_photo_name'    : signup_user_photo.name,
+                        'profile_username'           : profile_username,
+                        'profile_email'              : profile_email,
+                        'profile_password_1'         : profile_password_1,
+                        'profile_first_name'         : profile_first_name,
+                        'profile_last_name'          : profile_last_name,
+                        'profile_photo_encoded' : profile_photo_encoded,
+                        'profile_photo_name'    : profile_photo.name,
                         'otp_code'                  : otp_code,
                     }
                 else:
                     request.session['pending_user'] = {
-                        'signup_username'   : signup_username,
-                        'signup_email'      : signup_email,
-                        'signup_password_1' : signup_password_1,
-                        'signup_first_name' : signup_first_name,
-                        'signup_last_name'  : signup_last_name,
+                        'profile_username'   : profile_username,
+                        'profile_email'      : profile_email,
+                        'profile_password_1' : profile_password_1,
+                        'profile_first_name' : profile_first_name,
+                        'profile_last_name'  : profile_last_name,
                         'otp_code'          : otp_code,
                     }
                 request.session.set_expiry(600)
@@ -2021,7 +2027,7 @@ def user_signup_step1(request):
                     subject='Your Verification Code',
                     message=f'Your OTP code is {otp_code}',
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[signup_email],
+                    recipient_list=[profile_email],
                 )
                 # Return email validation code request to client
                 response_data = {
@@ -2030,13 +2036,30 @@ def user_signup_step1(request):
                 }
                 return JsonResponse(response_data)
     else:
+        form = UserProfileForm()
+        # User profile update or creation
+        if request.user.is_authenticated:
+            garden = Garden.objects.get(owner = request.user.username)
+            form = UserProfileForm(initial = { 'profile_username' : request.user.username,
+                                            'profile_email'       : request.user.email,
+                                            'profile_first_name'  : request.user.first_name,
+                                            'profile_last_name'   : request.user.last_name
+                                            })
+            context = { 'form' : form, 'garden' : garden }
+        else:
+            form = UserProfileForm()
+            context = { 'form' : form }
         messages.error(request, "")
-        form = UserSignupForm()
-        context = { 'form' : form }
-        return render(request, 'plants/user_signup_modal_step1.html', context)
+        return render(request, 'plants/user_profile_modal_step1.html', context)
     
-def user_signup_step2(request):
-    """ Render the User Signup Page for Gateway Gardens app """
+def user_profile_step2(request):
+    """ Render the User Profile Page for Gateway Gardens app """
+
+    if request.user.is_authenticated:
+        profile_creation = False
+    else:
+        profile_creation = True
+
     pending_data = request.session.get('pending_user')
 
     if not pending_data:
@@ -2052,41 +2075,71 @@ def user_signup_step2(request):
             # ----------------------------------------------------------------------
             if entered_code == pending_data['otp_code']:
                 # Retrieve the user information from the session setup in step 1
-                signup_username        = pending_data['signup_username']
-                signup_password_1      = pending_data['signup_password_1']
-                signup_email           = pending_data['signup_email']
-                signup_first_name      = pending_data['signup_first_name']
-                signup_last_name       = pending_data['signup_last_name']
-                if 'signup_user_photo_name' in  pending_data:
-                    signup_user_photo_name      = pending_data['signup_user_photo_name']
+                profile_username        = pending_data['profile_username']
+                profile_password_1      = pending_data['profile_password_1']
+                profile_email           = pending_data['profile_email']
+                profile_first_name      = pending_data['profile_first_name']
+                profile_last_name       = pending_data['profile_last_name']
+                if 'profile_photo_name' in  pending_data:
+                    profile_photo_name      = pending_data['profile_photo_name']
                     # Decode base64 back to binary
-                    signup_user_photo_unencoded =  base64.b64decode(pending_data['signup_user_photo_encoded'])
+                    profile_photo_unencoded =  base64.b64decode(pending_data['profile_photo_encoded'])
                     # Create a Django ContentFile
-                    signup_user_photo_obj = ContentFile(signup_user_photo_unencoded, name=signup_user_photo_name)
+                    profile_photo_obj = ContentFile(profile_photo_unencoded, name=profile_photo_name)
                 else:
-                    signup_user_photo_obj = None
+                    profile_photo_obj = None
                 #
-                user = User.objects.create_user(signup_username, signup_email, signup_password_1)
-                user.first_name = signup_first_name
-                user.last_name  = signup_last_name
-                user.save()
-                # Add the user to the "Gardener" group - default
-                group = Group.objects.get(name='Gardener')
-                group.user_set.add(user)
-                # Create a Garden object for the user
-                garden = Garden()
-                garden.owner = signup_username
-                garden.name  = signup_username + "'s Garden"
-                if signup_user_photo_obj is not None and signup_user_photo_obj != "":
-                    garden.profile_photo = signup_user_photo_obj
+                if profile_creation:
+                    user = User.objects.create_user(profile_username, profile_email, profile_password_1)
+                    user.first_name = profile_first_name
+                    user.last_name  = profile_last_name
+                    user.save()
+                else:
+                    user = User.objects.get(username = request.user.username)
+                    user.username = profile_username
+                    user.set_password("profile_password_1")
+                    user.email    = profile_email
+                    user.first_name = profile_first_name
+                    user.last_name  = profile_last_name
+                    user.save()
+                    # Only update password if it was changed
+                    # Keep user logged if if password was changed
+                    new_password = "profile_password_1"
+                    # Only update if the password is actually different
+                    if not user.check_password(new_password):
+                        user.set_password(new_password)
+                    user.save()
+                    update_session_auth_hash(request, user)
+                #
+                if profile_creation:
+                    # Add the user to the "Gardener" group - default
+                    group = Group.objects.get(name='Gardener')
+                    group.user_set.add(user)
+                    # Create a Garden object for the user
+                    garden = Garden()
+                    garden.owner = profile_username
+                    garden.name  = profile_username + "'s Garden"
+                    if profile_photo_obj is not None and profile_photo_obj != "":
+                        garden.profile_photo = profile_photo_obj
+                else:
+                    garden = Garden.objects.get(owner = request.user.username)
+                    garden.owner = profile_username
+                    if profile_photo_obj is not None and profile_photo_obj != "":
+                        garden.profile_photo = profile_photo_obj
                 garden.save()
                 # Clean up session
                 del request.session['pending_user']
                 # Return success status to client
-                response_data = {
-                    'status'  : 'authentication-success',
-                    'message' : 'User authentication successful',
-                }
+                if profile_creation:
+                    response_data = {
+                        'status'  : 'user-creation-success',
+                        'message' : 'User creation successful',
+                    }
+                else:
+                    response_data = {
+                        'status'  : 'user-profile-update-success',
+                        'message' : 'User profile update successful',
+                    }
                 return JsonResponse(response_data)
             else:
                 response_data = {
@@ -2097,7 +2150,7 @@ def user_signup_step2(request):
     else:
         form = EmailVerificationForm()
         context = { 'form' : form }
-        return render(request, 'plants/user_signup_modal_step2.html', context)
+        return render(request, 'plants/user_profile_modal_step2.html', context)
 
 def user_mfa(request):
     """ Provide new authorization code """
@@ -2120,12 +2173,12 @@ def user_mfa(request):
         pending_data = request.session.get('pending_user')
         
         # Send the code via email
-        signup_email = pending_data['signup_email']
+        profile_email = pending_data['profile_email']
         send_mail(
             subject='Your Verification Code',
             message=f'Your OTP code is {otp_code}',
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[signup_email],
+            recipient_list=[profile_email],
         )
         response_data = {
             'status' : 'auth-code-resent',
@@ -2138,103 +2191,7 @@ def user_mfa(request):
             'message': 'Authentication code failure'
         }
         return JsonResponse(response_data)
-
-def user_update(request):
-    """ Render the User Update Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    user = request.user
-    if request.POST:
-        form = UserUpdateForm(request.POST)
-        if form.is_valid():
-            username   = form.cleaned_data.get('username')
-            password   = form.cleaned_data.get('password')
-            password_2 = form.cleaned_data.get('password_2')
-            email      = form.cleaned_data.get('email')
-            first_name = form.cleaned_data.get('first_name')
-            last_name  = form.cleaned_data.get('last_name')
-            update_input_error = "no"
-            if (username != user.username):
-                # Input Validation: username uniqueness
-                if User.objects.filter(username=new_username).exists():
-                    update_input_error = "yes"
-                    messages.error(request, "username has already been taken")
-                # Input Validation: username must be at least 4 characters long
-                elif (len(username) < 4):
-                    update_input_error = "yes"
-                    messages.error(request, "username must be at least 4 characters long")
-            elif ((password != "") and (password_2 != "")):
-                # Input Validation: passwords do not match
-                if (password != password_2):
-                    update_input_error = "yes"
-                    messages.error(request, "passwords do not match")
-                # Input Validation: password must be at least 8 characters long
-                elif (len(password) < 8):
-                    update_input_error = "yes"
-                    messages.error(request, "password must be at least 8 characters long")
-                # Input Validation: password must contain at least one uppercase letter
-                elif not any(char.isupper() for char in password):
-                    update_input_error = "yes"
-                    messages.error(request, "password requires at least one uppercase letter")
-                # Input Validation: password must contain at least one lowecaser letter
-                elif not any(char.islower() for char in password):
-                    update_input_error = "yes"
-                    messages.error(request, "password requires at least one lowercase letter")
-                # Input Validation: password must contain at least one number
-                elif not any(char.isdigit() for char in password):
-                    update_input_error = "yes"
-                    messages.error(request, "password requires at least one number")
-                # Input Validation: password must contain at least one special character
-                elif not any(char in "!@#$%^&*()(_+)" for char in password):
-                    update_input_error = "yes"
-                    messages.error(request, "password requires at least one special character '!@#$%^&*()(_+)'")
-            elif (email != user.email):
-                # Input Validation: duplicate e-mail
-                if User.objects.filter(email=new_email).exists():
-                    update_input_error = "yes"
-                    messages.error(request, "email has already been taken")
-                # Input Validation: e-mail format
-                else:
-                    try:
-                        emailinfo = validate_email(new_email, check_deliverability=False)
-                        new_email= emailinfo.normalized
-                    except:
-                        update_input_error = "yes"
-                        messages.error(request, "invalid e-mail address")
-            if (update_input_error == "yes"):
-                # Prepopulate fields - the initialization is not working correctly
-                form = UserUpdateForm(initial={'username'   : username,
-                                               'email'      : email,
-                                               'first_name' : first_name,
-                                               'last_name'  : last_name,
-                                       })
-                context = { 'form'               : form,
-                            'update_input_error' : update_input_error }
-                return render(request, 'plants/index.html', context)
-            else:
-                user.username   = username
-                # Check to see if a new password has been entered
-                if password:
-                    user.set_password(password)
-                user.email      = email
-                user.first_name = first_name
-                user.last_name  = last_name
-                user.save()
-                # If the password has been updated, explicitly logout the user so that login modal 
-                # will be displayed.  Django's default behavior is to require the user to log back 
-                # in after a password change
-                if password:
-                    logout(request)
-        return render(request, 'plants/index.html')
-    else:
-        form = UserUpdateForm(initial={'username'   : user.username,
-                                       'email'      : user.email,
-                                       'first_name' : user.first_name,
-                                       'last_name'  : user.last_name,
-                                       })
-        context = { 'form' : form }
-        return render(request, 'plants/user_update_modal.html', context)
-    
+   
 def user_recovery(request):
     """ Render the User Recovery Page for Gateway Gardens app """
     # AR: Implement Account Recovery view 
@@ -2280,11 +2237,11 @@ def user_logout(request):
     logout(request)
     return render(request, 'plants/index.html')
 
-def username_validation(username, USERNAME_ALLOWED_CHARS):
+def username_validation(profile_creation, username, USERNAME_ALLOWED_CHARS):
     error_message = ""
     if (username == ""):
         error_message = "Username is required"
-    elif User.objects.filter(username = username).exists():
+    elif profile_creation and User.objects.filter(username = username).exists():
         error_message = "Username has already been taken"
     elif (len(username) < 4):
         error_message = "Username must be at least 4 characters long"
@@ -2314,14 +2271,14 @@ def password_match(password_1, password_2):
         error_message = "passwords do not match"
     return (error_message)
     
-def email_validation(email):
+def email_validation(profile_creation, email):
     error_message = ""
-    if User.objects.filter(email = email).exists():
+    if profile_creation and User.objects.filter(email = email).exists():
         error_message = "Email address has already been taken"
     else:
         try:
             emailinfo = validate_email(email, check_deliverability=False)
-            # signup_email= emailinfo.normalized
+            # profile_email= emailinfo.normalized
         except:
             error_message = "invalid e-mail address"
     return (error_message)

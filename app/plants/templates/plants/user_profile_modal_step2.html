@@ -1,15 +1,15 @@
-<!-- /app/plants/templates/plants/user_signup_modal_step2.html -->
+<!-- /app/plants/templates/plants/user_profile_modal_step2.html -->
 
 <div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h3>User Email Verification</h3>
     </header>
-    <form id="id_signup_form_step2">
+    <form id="id_profile_form_step2">
       {% csrf_token %}
       <div class="bnd-modal-contents">
         {{ form.entered_code.as_field_group }}
       </div>
-      <div id="id_user_signup_error_msg_step2" class="bnd-text-red">
+      <div id="id_user_profile_error_msg_step2" class="bnd-text-red">
         <!-- Error message goes here -->
       </div>
       <div class="bnd-modal-button-bar">

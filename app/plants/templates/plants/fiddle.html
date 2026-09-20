@@ -25,7 +25,7 @@
 {% block content %}
 {% if request.session.uploaded_image_url %}
     <p>Your uploaded image:</p>
-    <img src="{{ request.session.signup_user_photo }}" alt="Session Image">
+    <img src="{{ request.session.profile_photo }}" alt="Session Image">
 {% endif %}
 {% endblock content %}
 

@@ -7,14 +7,18 @@
   <form action="{% url 'plants:user_login' %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-contents">
-      {{ form.as_p }}
+      {{ form.username.as_field_group }}
+      <div class="bnd-password-container">
+        {{ form.password.as_field_group }}
+        <span id="id_toggle_password" class="material-icons">visibility_off</span>
+      </div>
     </div>
     <div class="bnd-modal-button-bar">
       <button type="submit" class="bnd-button-submit">Login</button>
       <!-- Sign-up modal -->
       <button type    = "button"
               class   = "bnd-button bnd-round-large" 
-              onclick = "openUserSignupModal()">
+              onclick = "openUserprofileModal()">
         Sign-up
       </button>
       <!-- Password Recovery modal -->

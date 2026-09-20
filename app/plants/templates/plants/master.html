@@ -63,8 +63,8 @@
             {% if user.is_authenticated %}
               <button id="update_button" 
                       class="bnd-dropdown-button"
-                      onclick="openUserUpdateModal()">
-                Update
+                      onclick="openUserProfileModal()">
+                Update Profile
               </button>
               <form action="{% url 'plants:user_logout' %}" method="post">
                 {% csrf_token %}
@@ -76,9 +76,9 @@
                       onclick = "openUserLoginModal()">
                 Login
               </button>
-              <button id      = "signup_button"   
+              <button id      = "profile_button"   
                       class   = "bnd-dropdown-button"
-                      onclick = "openUserSignupModal()">
+                      onclick = "openUserProfileModal()">
                 Sign Up
               </button>
               <button id      = "recovery_button" 
@@ -114,21 +114,17 @@
     <!-------------------------------------------------------------------------->
     <!-- Modals                                                               -->
     <!-------------------------------------------------------------------------->
-    <!-- User Sign Up modal - html to be inserted by Javascript -->
-    <dialog id="signup_modal" class="bnd-modal">
+    <!-- User Profile modal - html to be inserted by Javascript -->
+    <dialog id="profile_modal" class="bnd-modal">
       <p> Sign Up form HTML to be Inserted Here! </p>
     </dialog>
     <!-- Email Verification modal - html to be inserted by Javascript -->
-    <dialog id="user_signup_modal_step2" class="bnd-modal">
+    <dialog id="user_profile_modal_step2" class="bnd-modal">
       <p> Sign Up form HTML to be Inserted Here! </p>
     </dialog>
     <!-- User Login modal - html to be inserted by Javascript -->
     <dialog id="login_modal" class="bnd-modal">
       <p> Login form HTML to be Inserted Here! </p>
-    </dialog>
-    <!-- User Update modal - html to be inserted by Javascript -->
-    <dialog id="update_modal" class="bnd-modal">
-      <p> Update form HTML to be Inserted Here! </p>
     </dialog>
     <!-- User Recovery modal - html to be inserted by Javascript -->
     <dialog id="recovery_modal" class="bnd-modal">
@@ -174,25 +170,24 @@
         }
       }
     //
-    const signup_modal   = document.getElementById('signup_modal')
+    const profile_modal   = document.getElementById('profile_modal')
     const login_modal    = document.getElementById('login_modal')
-    const recovery_modal = document.getElementById("recovery_modal")
-    const update_modal   = document.getElementById('update_modal')
+    const recovery_modal = document.getElementById('recovery_modal')
 
-    const user_signup_modal_step2 = document.getElementById('user_signup_modal_step2')
+    const user_profile_modal_step2 = document.getElementById('user_profile_modal_step2')
     //-----------------------------------------------------------------------------
     // Account authentication and management
     //-----------------------------------------------------------------------------
     // User Sign-Up Modal Script - Step 1
     //-----------------------------------------------------------------------------
-    function openUserSignupModal()
+    function openUserProfileModal()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_signup_step1' %}") 
+      fetch("{% url 'plants:user_profile_step1' %}") 
       .then(response => response.text())
       .then(html => {
-        signup_modal.innerHTML       = html;
-        signup_modal.style.display   = 'block';
+        profile_modal.innerHTML      = html;
+        profile_modal.style.display  = 'block';
         login_modal.style.display    = 'none';
         recovery_modal.style.display = 'none';
         //-----------------------------------------------------------------------------
@@ -203,8 +198,8 @@
         toggle_password_1.addEventListener('click', function () 
         {
           // Toggle input type
-          const type = signup_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
-          signup_password_1.setAttribute('type', type);
+          const type = profile_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
+          profile_password_1.setAttribute('type', type);
 
           // Toggle icon text
           this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
@@ -214,8 +209,8 @@
         toggle_password_2.addEventListener('click', function () 
         {
           // Toggle input type
-          const type = signup_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
-          signup_password_2.setAttribute('type', type);
+          const type = profile_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
+          profile_password_2.setAttribute('type', type);
 
           // Toggle icon text
           this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
@@ -224,12 +219,12 @@
         // On-the-Fly input validation
         //-----------------------------------------------------------------------------
         // User inputs
-        const signup_username   = document.getElementById('id_signup_username');
-        const signup_password_1 = document.getElementById('id_signup_password_1');
-        const signup_password_2 = document.getElementById('id_signup_password_2');
-        const signup_email      = document.getElementById('id_signup_email');
-        const signup_first_name = document.getElementById('id_signup_first_name');
-        const signup_last_name  = document.getElementById('id_signup_last_name');
+        const profile_username   = document.getElementById('id_profile_username');
+        const profile_password_1 = document.getElementById('id_profile_password_1');
+        const profile_password_2 = document.getElementById('id_profile_password_2');
+        const profile_email      = document.getElementById('id_profile_email');
+        const profile_first_name = document.getElementById('id_profile_first_name');
+        const profile_last_name  = document.getElementById('id_profile_last_name');
         // Acceptable characters for each user input
         const USERNAME_ALLOWED_CHARS  = /^[a-zA-Z0-9-]+$/;
         const PASSWORD_ALLOWED_CHARS  = /^[a-zA-Z0-9@#$&!]+$/;
@@ -237,145 +232,145 @@
         const FIRSTNAME_ALLOWED_CHARS = /^[a-zA-Z-]+$/;
         const LASTNAME_ALLOWED_CHARS  = /^[a-zA-Z-]+$/;
         // Variable to hold error message
-        const signup_error_msg  = document.getElementById('id_signup_error_msg');
+        const profile_error_msg  = document.getElementById('id_profile_error_msg');
         // Username input validation    
-        signup_username.addEventListener('change', (event) =>
+        profile_username.addEventListener('change', (event) =>
         {
-          if (signup_username.value.length < 4)
+          if (profile_username.value.length < 4)
           {
-            signup_error_msg.innerHTML = "<p>Error: Username must be at least 4 characters long</p>";
+            profile_error_msg.innerHTML = "<p>Error: Username must be at least 4 characters long</p>";
           }
-          else if (!USERNAME_ALLOWED_CHARS.test(signup_username.value))
+          else if (!USERNAME_ALLOWED_CHARS.test(profile_username.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Username can only contain letters, numbers and -</p>";
+            profile_error_msg.innerHTML = "<p>Error: Username can only contain letters, numbers and -</p>";
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         // Password 1 input validation
-        signup_password_1.addEventListener('change', (event) =>
+        profile_password_1.addEventListener('change', (event) =>
         {
-          if (signup_password_1.value.length < 8)
+          if (profile_password_1.value.length < 8)
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
           }
-          else if (!/[a-z]/.test(signup_password_1.value))
+          else if (!/[a-z]/.test(profile_password_1.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
           }
-          else if (!/[A-Z]/.test(signup_password_1.value))
+          else if (!/[A-Z]/.test(profile_password_1.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
           }
-          else if (!/[0-9]/.test(signup_password_1.value))
+          else if (!/[0-9]/.test(profile_password_1.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
           }
-          else if (!/[@#$&!]/.test(signup_password_1.value))
+          else if (!/[@#$&!]/.test(profile_password_1.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
           }
-          else if (!PASSWORD_ALLOWED_CHARS.test(signup_password_1.value))
+          else if (!PASSWORD_ALLOWED_CHARS.test(profile_password_1.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
           }
-          else if (signup_password_2.value && signup_password_2.value.trim() && signup_password_1.value !== signup_password_2.value)
+          else if (profile_password_2.value && profile_password_2.value.trim() && profile_password_1.value !== profile_password_2.value)
           {
-            signup_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
+            profile_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         // Password 2 input validation
-        signup_password_2.addEventListener('change', (event) =>
+        profile_password_2.addEventListener('change', (event) =>
         {
-          if (signup_password_2.value.length < 8)
+          if (profile_password_2.value.length < 8)
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
           }
-          else if (!/[a-z]/.test(signup_password_2.value))
+          else if (!/[a-z]/.test(profile_password_2.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
           }
-          else if (!/[A-Z]/.test(signup_password_2.value))
+          else if (!/[A-Z]/.test(profile_password_2.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
           }
-          else if (!/[0-9]/.test(signup_password_2.value))
+          else if (!/[0-9]/.test(profile_password_2.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
           }
-          else if (!/[@#$&!]/.test(signup_password_2.value))
+          else if (!/[@#$&!]/.test(profile_password_2.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
           }
-          else if (!PASSWORD_ALLOWED_CHARS.test(signup_password_2.value))
+          else if (!PASSWORD_ALLOWED_CHARS.test(profile_password_2.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
+            profile_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
           }
-          else if (signup_password_1.value && signup_password_1.value.trim() && signup_password_1.value !== signup_password_2.value)
+          else if (profile_password_1.value && profile_password_1.value.trim() && profile_password_1.value !== profile_password_2.value)
           {
-            signup_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
+            profile_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         // Email input validation
-        signup_email.addEventListener('change', (event) =>
+        profile_email.addEventListener('change', (event) =>
         {
-          if (!EMAIL_REGEX.test(signup_email.value.trim()))
+          if (!EMAIL_REGEX.test(profile_email.value.trim()))
           {
-            signup_error_msg.innerHTML = 'Please enter a valid email address.';
+            profile_error_msg.innerHTML = 'Please enter a valid email address.';
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         // First name input validation
-        signup_first_name.addEventListener('change', (event) =>
+        profile_first_name.addEventListener('change', (event) =>
         {
-          if (!FIRSTNAME_ALLOWED_CHARS.test(signup_first_name.value))
+          if (!FIRSTNAME_ALLOWED_CHARS.test(profile_first_name.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: First name can only contain letters and -</p>";
+            profile_error_msg.innerHTML = "<p>Error: First name can only contain letters and -</p>";
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         // Last name input validation
-        signup_last_name.addEventListener('change', (event) =>
+        profile_last_name.addEventListener('change', (event) =>
         {
-          if (!LASTNAME_ALLOWED_CHARS.test(signup_last_name.value))
+          if (!LASTNAME_ALLOWED_CHARS.test(profile_last_name.value))
           {
-            signup_error_msg.innerHTML = "<p>Error: Last name can only contain letters and -</p>";
+            profile_error_msg.innerHTML = "<p>Error: Last name can only contain letters and -</p>";
           }
           else
           {
-            signup_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = "";
           }
         });
         //-----------------------------------------------------------------------------
         // convert selected user photo to a preview image shown in the modal
         //-----------------------------------------------------------------------------
-        const signup_user_photo         = document.getElementById('id_signup_user_photo');
-        const signup_user_photo_preview = document.getElementById('id_signup_user_photo_preview');
+        const profile_photo         = document.getElementById('id_profile_photo');
+        const profile_photo_preview = document.getElementById('id_profile_photo_preview');
         // convert selected user photo to a preview image shown in the modal
-        signup_user_photo.addEventListener('change', async (event) => 
+        profile_photo.addEventListener('change', async (event) => 
         {
-          id_signup_user_photo_preview.src = URL.createObjectURL(signup_user_photo.files[0]);
+          id_profile_photo_preview.src = URL.createObjectURL(profile_photo.files[0]);
         });
         //----------------------------------------------------------------------------
         // Create compressed profile photo for upload
         //----------------------------------------------------------------------------
-        const file = signup_user_photo.files[0];
+        const file = profile_photo.files[0];
         let compressedBlob = null;
         if (file)
         {
@@ -386,7 +381,7 @@
         //-----------------------------------------------------------------------------
         // Form submission process
         //-----------------------------------------------------------------------------
-        const form = document.getElementById('id_signup_form_step1');
+        const form = document.getElementById('id_profile_form_step1');
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
           event.preventDefault();
@@ -404,7 +399,7 @@
             if (typeof compressedBlob !== 'undefined' && compressedBlob !== null)
             {
               formData.delete('image');
-              formData.append('image', compressedBlob, 'signup_user_photo.jpg');
+              formData.append('image', compressedBlob, 'profile_photo.jpg');
             }
             //----------------------------------------------------------------------------
             // Send the form
@@ -412,7 +407,7 @@
             console.log("DEBUG: POST user inputs to server");
             //
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_signup_step1' %}";
+            const postURL   = "{% url 'plants:user_profile_step1' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -426,13 +421,13 @@
               if (data.status === "email-validation")
               {
                 console.log('E-mail validation request to return code from email');
-                signup_modal.style.display = 'none';
+                profile_modal.style.display = 'none';
                 openEmailVerificationModal();
               }
               else
               {
                 console.log('User sign-up info upload failed:', data);
-                signup_error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
+                profile_error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
               }
             } 
             else 
@@ -453,15 +448,15 @@
     function openEmailVerificationModal()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_signup_step2' %}") 
+      fetch("{% url 'plants:user_profile_step2' %}") 
       .then(response => response.text())
       .then(html => {
-        user_signup_modal_step2.innerHTML     = html;
-        user_signup_modal_step2.style.display = 'block';
+        user_profile_modal_step2.innerHTML     = html;
+        user_profile_modal_step2.style.display = 'block';
         //-----------------------------------------------------------------------------
         // Form submission process
         //-----------------------------------------------------------------------------
-        const form = document.getElementById('id_signup_form_step2');
+        const form = document.getElementById('id_profile_form_step2');
         // watch for the user clicking on the submit button fot the MFA code
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
@@ -475,7 +470,7 @@
             //----------------------------------------------------------------------------
             const formData  = new FormData(form);
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_signup_step2' %}";
+            const postURL   = "{% url 'plants:user_profile_step2' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -485,17 +480,23 @@
             if (response.ok) 
             {
               const data = await response.json();
-              if (data.status === "authentication-success")
+              if (data.status === "user-creation-success")
               {
-                console.log('Authentication success!');
-                user_signup_modal_step2.style.display = 'none';
+                console.log('User creation success!');
+                user_profile_modal_step2.style.display = 'none';
+                openUserLoginModal();
+              }
+              else if (data.status === "user-profile-update-success")
+              {
+                console.log('User profile update successful!');
+                user_profile_modal_step2.style.display = 'none';
                 openUserLoginModal();
               }
               else
               {
                 console.log('User authentication failed:');
-                const user_signup_error_msg_step2  = document.getElementById('id_user_signup_error_msg_step2');
-                user_signup_error_msg_step2.innerHTML = "<p>Error: " + data.message + "</p>";
+                const user_profile_error_msg_step2  = document.getElementById('id_user_profile_error_msg_step2');
+                user_profile_error_msg_step2.innerHTML = "<p>Error: " + data.message + "</p>";
               }
             } 
             else 
@@ -559,26 +560,24 @@
       .then(response => response.text())
       .then(html => {
         login_modal.innerHTML        = html;
-        signup_modal.style.display   = 'none';
+        profile_modal.style.display  = 'none';
         login_modal.style.display    = 'block';
         recovery_modal.style.display = 'none';
+        //-----------------------------------------------------------------------------
+        // Toggle password visibility function
+        //-----------------------------------------------------------------------------
+        const password        = document.getElementById('id_password');
+        const toggle_password = document.getElementById('id_toggle_password');
+        toggle_password.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+          password.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
       });
-    }
-    //-----------------------------------------------------------------------------
-    // User Update Modal Scripts
-    //-----------------------------------------------------------------------------
-    function openUserUpdateModal()
-    { 
-      fetch("{% url 'plants:user_update' %}") 
-      .then(response => response.text())
-      .then(html => {
-        update_modal.innerHTML     = html;
-        update_modal.style.display = 'block';
-      });
-    }
-    function closeUserUpdateModal()
-    {
-      update_modal.style.display    = 'none';
     }
     //-----------------------------------------------------------------------------
     // Password Recovery code
@@ -589,7 +588,7 @@
       .then(response => response.text())
       .then(html => {
         recovery_modal.innerHTML = html;
-        signup_modal.style.display   = 'none';
+        profile_modal.style.display   = 'none';
         login_modal.style.display    = 'none';
         recovery_modal.style.display = 'block'; 
       });
@@ -599,15 +598,9 @@
     //-----------------------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', (event) => 
     {
-      signup_modal.style.display   = 'none';
+      profile_modal.style.display  = 'none';
       login_modal.style.display    = 'none';
       recovery_modal.style.display = 'none'; 
-      update_modal.style.display   = 'none';
-      // {x% if update_input_error == "yes" %x}
-      //   update_modal.style.display   = 'block';
-      // {x% elif signup_error == "yes" %x}
-      //   signup_modal.style.display   = 'block';
-      // {x% endif %x}
     });
     </script>
   </body>

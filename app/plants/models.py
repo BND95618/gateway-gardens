@@ -6,6 +6,7 @@ import uuid  # Used to generate unique filenames for images
 from django.db           import models
 from django.conf         import settings
 from django.urls         import reverse
+from django.contrib.auth import get_user_model
 
 # Process uploaded images to ensure reasonable sizes for storaging and rendering performance
 from imagekit.models     import ProcessedImageField
@@ -17,6 +18,14 @@ from django_quill.fields import QuillField
 
 # Store Django uploaded files as UUID files or inside UUID directories
 from django_uuid_upload  import upload_to_uuid
+
+#
+def get_default_user():
+    # Dynamically gets the active User model and returns a default ID
+    User = get_user_model()
+    # Returns the first user, or creates a system user if none exists
+    user, created = User.objects.get_or_create(username='system_default')
+    return user.pk
 
 # def get_file_path(instance, filename):
 #     """
@@ -162,6 +171,9 @@ class Garden(models.Model):
     lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
     # JSON array of shapes for garden design
     shapes_JSON = models.JSONField(default=list, blank=True)
+    # Connection to a specific user in the User db table
+    # If the user is deleted, delete their assiciated garden
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, default=get_default_user)
     # AR: Implement slug field
     slug                = models.SlugField(default="tbd", null=False, blank=True)
         
