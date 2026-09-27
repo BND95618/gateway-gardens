@@ -10,7 +10,7 @@
       {{ form.username.as_field_group }}
       <div class="bnd-password-container">
         {{ form.password.as_field_group }}
-        <span id="id_toggle_password" class="material-icons">visibility_off</span>
+        <span id="id_login_toggle" class="material-icons">visibility_off</span>
       </div>
     </div>
     <div class="bnd-modal-button-bar">
@@ -21,10 +21,9 @@
               onclick = "openUserprofileModal()">
         Sign-up
       </button>
-      <!-- Password Recovery modal -->
       <button type    = "button"
               class   = "bnd-button bnd-round-large" 
-              onclick = "openUserRecoveryModal()">
+              onclick = "openPwdResetModal()">
         Forgot Password?
       </button>
     </div>

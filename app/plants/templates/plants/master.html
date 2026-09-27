@@ -81,9 +81,9 @@
                       onclick = "openUserProfileModal()">
                 Sign Up
               </button>
-              <button id      = "recovery_button" 
+              <button id      = "pwd_rst_button" 
                       class   = "bnd-dropdown-button"
-                      onclick = "openUserRecoveryModal()">
+                      onclick = "openPwdResetModal()">
                 Reset Password
               </button>
             {% endif %}
@@ -126,9 +126,13 @@
     <dialog id="login_modal" class="bnd-modal">
       <p> Login form HTML to be Inserted Here! </p>
     </dialog>
-    <!-- User Recovery modal - html to be inserted by Javascript -->
-    <dialog id="recovery_modal" class="bnd-modal">
-      <p> Recovery form HTML to be Inserted Here! </p>
+    <!-- User Password Reset modal - step 1 - html to be inserted by Javascript -->
+    <dialog id="pwd_rst_modal_step1" class="bnd-modal">
+      <p> HTML to be Inserted Here! </p>
+    </dialog>
+    <!-- User Password Reset modal - step 2- html to be inserted by Javascript -->
+    <dialog id="pwd_rst_modal_step2" class="bnd-modal">
+      <p> HTML to be Inserted Here! </p>
     </dialog>
     <!-------------------------------------------------------------------------->
     <!-- Javascript                                                           -->
@@ -170,11 +174,10 @@
         }
       }
     //
-    const profile_modal   = document.getElementById('profile_modal')
-    const login_modal    = document.getElementById('login_modal')
-    const recovery_modal = document.getElementById('recovery_modal')
-
+    const profile_modal            = document.getElementById('profile_modal')
+    const login_modal              = document.getElementById('login_modal')
     const user_profile_modal_step2 = document.getElementById('user_profile_modal_step2')
+    const pwd_rst_modal_step2      = document.getElementById('pwd_rst_modal_step2')
     //-----------------------------------------------------------------------------
     // Account authentication and management
     //-----------------------------------------------------------------------------
@@ -189,12 +192,20 @@
         profile_modal.innerHTML      = html;
         profile_modal.style.display  = 'block';
         login_modal.style.display    = 'none';
-        recovery_modal.style.display = 'none';
+        //-----------------------------------------------------------------------------
+        // User inputs
+        //-----------------------------------------------------------------------------
+        const profile_username   = document.getElementById('id_profile_username');
+        const profile_password_1 = document.getElementById('id_profile_password_1');
+        const profile_password_2 = document.getElementById('id_profile_password_2');
+        const profile_email      = document.getElementById('id_profile_email');
+        const profile_first_name = document.getElementById('id_profile_first_name');
+        const profile_last_name  = document.getElementById('id_profile_last_name');
         //-----------------------------------------------------------------------------
         // Toggle password visibility function
         //-----------------------------------------------------------------------------
         // password 1
-        const toggle_password_1 = document.getElementById('id_toggle_password_1');
+        const toggle_password_1 = document.getElementById('id_profile_toggle_1');
         toggle_password_1.addEventListener('click', function () 
         {
           // Toggle input type
@@ -205,7 +216,7 @@
           this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
         });
         // password 2
-        const toggle_password_2 = document.getElementById('id_toggle_password_2');
+        const toggle_password_2 = document.getElementById('id_profile_toggle_2');
         toggle_password_2.addEventListener('click', function () 
         {
           // Toggle input type
@@ -218,144 +229,45 @@
         //-----------------------------------------------------------------------------
         // On-the-Fly input validation
         //-----------------------------------------------------------------------------
-        // User inputs
-        const profile_username   = document.getElementById('id_profile_username');
-        const profile_password_1 = document.getElementById('id_profile_password_1');
-        const profile_password_2 = document.getElementById('id_profile_password_2');
-        const profile_email      = document.getElementById('id_profile_email');
-        const profile_first_name = document.getElementById('id_profile_first_name');
-        const profile_last_name  = document.getElementById('id_profile_last_name');
-        // Acceptable characters for each user input
-        const USERNAME_ALLOWED_CHARS  = /^[a-zA-Z0-9-]+$/;
-        const PASSWORD_ALLOWED_CHARS  = /^[a-zA-Z0-9@#$&!]+$/;
-        const EMAIL_REGEX             = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        const FIRSTNAME_ALLOWED_CHARS = /^[a-zA-Z-]+$/;
-        const LASTNAME_ALLOWED_CHARS  = /^[a-zA-Z-]+$/;
         // Variable to hold error message
         const profile_error_msg  = document.getElementById('id_profile_error_msg');
         // Username input validation    
         profile_username.addEventListener('change', (event) =>
         {
-          if (profile_username.value.length < 4)
-          {
-            profile_error_msg.innerHTML = "<p>Error: Username must be at least 4 characters long</p>";
-          }
-          else if (!USERNAME_ALLOWED_CHARS.test(profile_username.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Username can only contain letters, numbers and -</p>";
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
-          }
+          profile_error_msg.innerHTML = userNameValidation(profile_username);
         });
         // Password 1 input validation
         profile_password_1.addEventListener('change', (event) =>
         {
-          if (profile_password_1.value.length < 8)
+          profile_error_msg.innerHTML = userPasswordValidation(profile_password_1);
+          if(profile_password_2.value != "" && profile_error_msg.innerHTML == "")
           {
-            profile_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
-          }
-          else if (!/[a-z]/.test(profile_password_1.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
-          }
-          else if (!/[A-Z]/.test(profile_password_1.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
-          }
-          else if (!/[0-9]/.test(profile_password_1.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
-          }
-          else if (!/[@#$&!]/.test(profile_password_1.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
-          }
-          else if (!PASSWORD_ALLOWED_CHARS.test(profile_password_1.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
-          }
-          else if (profile_password_2.value && profile_password_2.value.trim() && profile_password_1.value !== profile_password_2.value)
-          {
-            profile_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = userPasswordMatch(profile_password_1, profile_password_2);
           }
         });
         // Password 2 input validation
         profile_password_2.addEventListener('change', (event) =>
         {
-          if (profile_password_2.value.length < 8)
+          profile_error_msg.innerHTML = userPasswordValidation(profile_password_2);
+          if (profile_password_1.value != "" && profile_error_msg.innerHTML == "")
           {
-            profile_error_msg.innerHTML = "<p>Error: Password must be at least 8 characters long</p>";
-          }
-          else if (!/[a-z]/.test(profile_password_2.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 lowercase letter</p>";
-          }
-          else if (!/[A-Z]/.test(profile_password_2.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 uppercase letter</p>";
-          }
-          else if (!/[0-9]/.test(profile_password_2.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 number</p>";
-          }
-          else if (!/[@#$&!]/.test(profile_password_2.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
-          }
-          else if (!PASSWORD_ALLOWED_CHARS.test(profile_password_2.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
-          }
-          else if (profile_password_1.value && profile_password_1.value.trim() && profile_password_1.value !== profile_password_2.value)
-          {
-            profile_error_msg.innerHTML = "<p>Error: Passwords do not match</p>";
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
+            profile_error_msg.innerHTML = userPasswordMatch(profile_password_2, profile_password_1);
           }
         });
         // Email input validation
         profile_email.addEventListener('change', (event) =>
         {
-          if (!EMAIL_REGEX.test(profile_email.value.trim()))
-          {
-            profile_error_msg.innerHTML = 'Please enter a valid email address.';
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
-          }
+          profile_error_msg.innerHTML = userEmailValidation(profile_email);
         });
         // First name input validation
         profile_first_name.addEventListener('change', (event) =>
         {
-          if (!FIRSTNAME_ALLOWED_CHARS.test(profile_first_name.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: First name can only contain letters and -</p>";
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
-          }
+          profile_error_msg.innerHTML = userFirstNameValidation(profile_first_name);
         });
         // Last name input validation
         profile_last_name.addEventListener('change', (event) =>
         {
-          if (!LASTNAME_ALLOWED_CHARS.test(profile_last_name.value))
-          {
-            profile_error_msg.innerHTML = "<p>Error: Last name can only contain letters and -</p>";
-          }
-          else
-          {
-            profile_error_msg.innerHTML = "";
-          }
+          profile_error_msg.innerHTML = userLastNameValidation(profile_last_name);
         });
         //-----------------------------------------------------------------------------
         // convert selected user photo to a preview image shown in the modal
@@ -457,7 +369,7 @@
         // Form submission process
         //-----------------------------------------------------------------------------
         const form = document.getElementById('id_profile_form_step2');
-        // watch for the user clicking on the submit button fot the MFA code
+        // watch for the user clicking on the submit button for the MFA code
         form.addEventListener('submit', async (event) => {
           // Prevent standard browser form submission
           event.preventDefault();
@@ -512,12 +424,12 @@
         //-----------------------------------------------------------------------------
         // Request new code
         //-----------------------------------------------------------------------------
-        const resend_code_btn = document.getElementById('id_resend_code_btn');
-        resend_code_btn.addEventListener("click", async (event) => {
+        const profile_resend_code_btn = document.getElementById('id_profile_resend_code_btn');
+        profile_resend_code_btn.addEventListener("click", async (event) => {
           // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'plants:user_mfa' %}";
+            const getURL   = "{% url 'plants:user_profile_mfa' %}";
             const response = await fetch(getURL, 
             {
               method:  "GET",
@@ -562,12 +474,11 @@
         login_modal.innerHTML        = html;
         profile_modal.style.display  = 'none';
         login_modal.style.display    = 'block';
-        recovery_modal.style.display = 'none';
         //-----------------------------------------------------------------------------
         // Toggle password visibility function
         //-----------------------------------------------------------------------------
         const password        = document.getElementById('id_password');
-        const toggle_password = document.getElementById('id_toggle_password');
+        const toggle_password = document.getElementById('id_login_toggle');
         toggle_password.addEventListener('click', function () 
         {
           // Toggle input type
@@ -580,18 +491,336 @@
       });
     }
     //-----------------------------------------------------------------------------
-    // Password Recovery code
+    // Password Reset code - Step 1
     //-----------------------------------------------------------------------------
-    function openUserRecoveryModal()
+    function openPwdResetModal()
     {
-      fetch("{% url 'plants:user_recovery' %}") 
+      console.log("DEBUG: Got to openPwdResetModal");
+      fetch("{% url 'plants:user_pwd_rst_step1' %}") 
       .then(response => response.text())
       .then(html => {
-        recovery_modal.innerHTML = html;
-        profile_modal.style.display   = 'none';
-        login_modal.style.display    = 'none';
-        recovery_modal.style.display = 'block'; 
+        pwd_rst_modal_step1.innerHTML = html; 
+        pwd_rst_modal_step1.style.display = 'block';
+        console.log("DEBUG: Completed openPwdResetModal fetch");
+        //-----------------------------------------------------------------------------
+        // User inputs
+        //-----------------------------------------------------------------------------
+        const pwd_rst_password_1 = document.getElementById('id_pwd_rst_password_1');
+        const pwd_rst_password_2 = document.getElementById('id_pwd_rst_password_2');
+        const pwd_rst_email      = document.getElementById('id_pwd_rst_email');
+        //-----------------------------------------------------------------------------
+        // Toggle password visibility function
+        //-----------------------------------------------------------------------------
+        // password 1
+        const toggle_password_1 = document.getElementById('id_pwd_rst_toggle_1');
+        toggle_password_1.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = pwd_rst_password_1.getAttribute('type') === 'password' ? 'text' : 'password';
+          pwd_rst_password_1.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        // password 2
+        const toggle_password_2 = document.getElementById('id_pwd_rst_toggle_2');
+        toggle_password_2.addEventListener('click', function () 
+        {
+          // Toggle input type
+          const type = pwd_rst_password_2.getAttribute('type') === 'password' ? 'text' : 'password';
+          pwd_rst_password_2.setAttribute('type', type);
+
+          // Toggle icon text
+          this.textContent = type === 'password' ? 'visibility_off' : 'visibility';
+        });
+        //-----------------------------------------------------------------------------
+        // On-the-Fly input validation
+        //-----------------------------------------------------------------------------
+        // Variable to hold error message
+        const pwd_rst_error_msg  = document.getElementById('id_pwd_rst_error_msg');
+        // Password 1 input validation
+        pwd_rst_password_1.addEventListener('change', (event) =>
+        {
+          pwd_rst_error_msg.innerHTML = userPasswordValidation(pwd_rst_password_1);
+          if(pwd_rst_password_2.value != "" && pwd_rst_error_msg.innerHTML == "")
+          {
+            pwd_rst_error_msg.innerHTML = userPasswordMatch(pwd_rst_password_1, pwd_rst_password_2);
+          }
+        });
+        // Password 2 input validation
+        pwd_rst_password_2.addEventListener('change', (event) =>
+        {
+          pwd_rst_error_msg.innerHTML = userPasswordValidation(pwd_rst_password_2);
+          if (pwd_rst_password_1.value != "" && pwd_rst_error_msg.innerHTML == "")
+          {
+            pwd_rst_error_msg.innerHTML = userPasswordMatch(pwd_rst_password_2, pwd_rst_password_1);
+          }
+        });
+        // Email input validation
+        pwd_rst_email.addEventListener('change', (event) =>
+        {
+          pwd_rst_error_msg.innerHTML = userEmailValidation(pwd_rst_email);
+        });
+        //-----------------------------------------------------------------------------
+        // Form submission process - submit email address for MFA code receipt
+        //-----------------------------------------------------------------------------
+        const form = document.getElementById('id_pwd_rst_form_step1');
+        form.addEventListener('submit', async (event) => {
+
+          console.log("DEBUG: Start form submission process, email =", pwd_rst_email.value);   
+          
+          // Prevent standard browser form submission
+          event.preventDefault();
+          try 
+          {
+            //----------------------------------------------------------------------------
+            // Create the form data to send to the user
+            //----------------------------------------------------------------------------
+            const formData  = new FormData(form);
+            //----------------------------------------------------------------------------
+            // Send the form
+            //----------------------------------------------------------------------------
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const postURL   = "{% url 'plants:user_pwd_rst_step1' %}";
+            const response = await fetch(postURL, 
+            {
+              method:  "POST",
+              headers: {'X-CSRFToken' : csrfToken},
+              body:    formData
+            });
+            console.log("DEBUG: Waiting for server response");
+            if (response.ok) 
+            {
+              const data = await response.json();
+              if (data.status === "email-validation")
+              {
+                console.log('E-mail validation request to return code from email');
+                pwd_rst_modal_step1.style.display = 'none';
+                openPwdRstModal_step2();
+              }
+              else
+              {
+                console.log('User sign-up info upload failed:', data);
+                pwd_rst_error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
+              }
+            } 
+            else 
+            {
+              console.error('Server Error:', response.status);
+            }
+          } 
+          catch (error) 
+          {
+            console.error('Network error:', error);
+          }
+        });
       });
+    }
+    //-----------------------------------------------------------------------------
+    // Password Reset code - Step 2
+    //-----------------------------------------------------------------------------
+    function openPwdRstModal_step2()
+    { 
+      console.log("DEBUG: Got to Password Reset code - Step 2");
+      // fetch the modal html from the server
+      fetch("{% url 'plants:user_pwd_rst_step2' %}") 
+      .then(response => response.text())
+      .then(html => {
+        console.log("DEBUG: Got to pt 1");
+        pwd_rst_modal_step2.innerHTML     = html;
+        pwd_rst_modal_step2.style.display = 'block';
+        //-----------------------------------------------------------------------------
+        // Form submission process - submit user entered MFA code
+        //-----------------------------------------------------------------------------
+        const form = document.getElementById('id_pwd_rst_form_step2');
+        // watch for the user clicking on the submit button for the MFA code
+        form.addEventListener('submit', async (event) => {
+          // Prevent standard browser form submission
+          event.preventDefault();
+          // Access form data
+          const entered_code = document.getElementById('id_entered_code').value;
+          try
+          {
+            //----------------------------------------------------------------------------
+            // Create/Send the form data to send to the user
+            //----------------------------------------------------------------------------
+            const formData  = new FormData(form);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const postURL   = "{% url 'plants:user_pwd_rst_step2' %}";
+            const response = await fetch(postURL, 
+            {
+              method:  "POST",
+              headers: {'X-CSRFToken' : csrfToken},
+              body:    formData
+            });
+            console.log("DEBUG: sent entered code to server");
+            if (response.ok) 
+            {
+              const data = await response.json();
+              if (data.status === "pwd_rst-success")
+              {
+                console.log('Password reset success!');
+                pwd_rst_modal_step2.style.display = 'none';
+                openUserLoginModal();
+              }
+              else
+              {
+                console.log('Passwod reset  failed:');
+                const pwd_rst_error_msg_step2 = document.getElementById('id_pwd_rst_error_msg_step2');
+                pwd_rst_error_msg_step2.innerHTML = "<p>Error: " + data.message + "</p>";
+              }
+            } 
+            else 
+            {
+              console.error('Server Error:', response.status);
+            }
+          }
+          catch
+          {
+            console.error('Network error:', error);
+          }
+        });
+        //-----------------------------------------------------------------------------
+        // Request new code
+        //-----------------------------------------------------------------------------
+        const pwd_rst_resend_code_btn = document.getElementById('id_pwd_rst_resend_code_btn');
+        pwd_rst_resend_code_btn.addEventListener("click", async (event) => {
+          // Get new MFA code from server
+          try
+          {
+            const getURL   = "{% url 'plants:user_pwd_rst_mfa' %}";
+            const response = await fetch(getURL, 
+            {
+              method:  "GET",
+              headers: {
+                'Content-Type': 'application/json',
+                // Good practice for Django to recognize AJAX requests
+                'X-Requested-With': 'XMLHttpRequest'
+              }
+            });
+            if (response.ok) 
+            {
+              const data = await response.json();
+              if (data.status === "auth-code-resent")
+              {
+                console.log('Auth code resent!');
+              }
+              else
+              {
+                console.log("Auth code resend failed");
+              }
+            }
+            else
+            {
+              console.log('Auth code resend failed');
+            }
+          }
+          catch
+          {
+            console.error('Network error:', error);
+          }
+        });
+      });
+    }
+    //-----------------------------------------------------------------------------
+    // User profile input validation functions
+    //-----------------------------------------------------------------------------
+    function userNameValidation(username)
+    {
+      const USERNAME_ALLOWED_CHARS  = /^[a-zA-Z0-9-]+$/;
+      if (username.value.length < 4)
+      {
+        error_msg = "<p>Error: Username must be at least 4 characters long</p>";
+      }
+      else if (!USERNAME_ALLOWED_CHARS.test(username.value))
+      {
+        error_msg = "<p>Error: Username can only contain letters, numbers and -</p>";
+      }
+      else
+      {
+        error_msg = "";
+      }
+      return(error_msg)
+    }
+    function userPasswordValidation(password)
+    {
+      const PASSWORD_ALLOWED_CHARS  = /^[a-zA-Z0-9@#$&!]+$/;
+      if (password.value.length < 8)
+      {
+        error_msg = "<p>Error: Password must be at least 8 characters long</p>";
+      }
+      else if (!/[a-z]/.test(password.value))
+      {
+        error_msg = "<p>Error: Password must contain at least 1 lowercase letter</p>";
+      }
+      else if (!/[A-Z]/.test(password.value))
+      {
+        error_msg = "<p>Error: Password must contain at least 1 uppercase letter</p>";
+      }
+      else if (!/[0-9]/.test(password.value))
+      {
+        error_msg = "<p>Error: Password must contain at least 1 number</p>";
+      }
+      else if (!/[@#$&!]/.test(password.value))
+      {
+        error_msg = "<p>Error: Password must contain at least 1 special character @#$&!</p>";
+      }
+      else if (!PASSWORD_ALLOWED_CHARS.test(password.value))
+      {
+        error_msg = "<p>Error: Password can only contain letters, numbers and @#$&!</p>";
+      }
+      else
+      {
+        error_msg = "";
+      }
+      return(error_msg)
+    }
+    function userPasswordMatch(password_1, password_2)
+    {
+      if (password_1.value !== password_2.value)
+      {
+        error_msg = "<p>Error: Passwords do not match</p>";
+      }
+      return(error_msg)
+    }    
+    function userEmailValidation(email)
+    {
+      const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!EMAIL_REGEX.test(email.value.trim()))
+      {
+        error_msg = "<p>Please enter a valid email address.</p>";
+      }
+      else
+      {
+        error_msg = "";
+      }
+      return(error_msg)
+    }   
+    function userFirstNameValidation(first_name)
+    {
+      const FIRSTNAME_ALLOWED_CHARS = /^[a-zA-Z-]+$/;
+      if (!FIRSTNAME_ALLOWED_CHARS.test(first_name.value))
+      {
+        error_msg = "<p>Error: First name can only contain letters and -</p>";
+      }
+      else
+      {
+        error_msg = "";
+      }
+      return(error_msg)
+    }
+    function userLastNameValidation(last_name)
+    {
+      const LASTNAME_ALLOWED_CHARS = /^[a-zA-Z-]+$/;
+      if (!LASTNAME_ALLOWED_CHARS.test(last_name.value))
+      {
+        error_msg = "<p>Error: Last name can only contain letters and -</p>";
+      }
+      else
+      {
+        error_msg = "";
+      }
+      return(error_msg)
     }
     //-----------------------------------------------------------------------------
     // On Page load functions - modern version of windows.onload
@@ -600,7 +829,7 @@
     {
       profile_modal.style.display  = 'none';
       login_modal.style.display    = 'none';
-      recovery_modal.style.display = 'none'; 
+      pwd_rst_modal_step1.style.display = 'none'; 
     });
     </script>
   </body>

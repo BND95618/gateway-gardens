@@ -20,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 from .models      import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
 from pests.models import Pest
 
-from .forms  import UserProfileForm, UserLoginForm, UserRecoveryForm, EmailVerificationForm
+from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
 from .forms  import GardenAddUpdateForm
 from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
@@ -2152,10 +2152,10 @@ def user_profile_step2(request):
         context = { 'form' : form }
         return render(request, 'plants/user_profile_modal_step2.html', context)
 
-def user_mfa(request):
+def user_profile_mfa(request):
     """ Provide new authorization code """
-    pending_data = request.session.get('pending_user')
-    if not pending_data:
+    session_data = request.session.get('pending_user')
+    if not session_data:
         messages.error(request, 'No registration session found. Please register again.')
         # return redirect('register_view')
         return render(request, 'plants/index.html')
@@ -2163,6 +2163,7 @@ def user_mfa(request):
     if request.method == 'GET':
         # Generate a random 6-digit OTP code
         otp_code = str(random.randint(100000, 999999))
+        print("DEBUG: otp_code = ", otp_code)
         # Store pending user OTP in the current session (expire in 10 minutes)
         request.session['pending_user']['otp_code'] = otp_code
         # Force Django to save the changes
@@ -2170,10 +2171,10 @@ def user_mfa(request):
         # Reset expiration for 10 minutes
         request.session.set_expiry(600)
         # Retrieve all data for the current session
-        pending_data = request.session.get('pending_user')
+        session_data = request.session.get('pending_user')
         
         # Send the code via email
-        profile_email = pending_data['profile_email']
+        profile_email = session_data['profile_email']
         send_mail(
             subject='Your Verification Code',
             message=f'Your OTP code is {otp_code}',
@@ -2192,25 +2193,181 @@ def user_mfa(request):
         }
         return JsonResponse(response_data)
    
-def user_recovery(request):
-    """ Render the User Recovery Page for Gateway Gardens app """
-    # AR: Implement Account Recovery view 
+def user_pwd_rst_step1(request):
+    """ Render the User Password Reset Page for Gateway Gardens app """
     if request.POST:
-        form = UserRecoveryForm(request.POST)
+        print("DEBUG: Got to user_pwd_rst_step1 POST")
+        form = UserPwdResetForm(request.POST)
         if form.is_valid():
-            send_mail(
-                subject        = 'Gateway Gardens - Reset Password',
-                message        = 'Here is your reset password code',
-                from_email     = None,  # Defaults to DEFAULT_FROM_EMAIL
-                recipient_list = ['b_dichter@yahoo.com'],
-                fail_silently  = False,
-            )
-            recovery_username   = form.cleaned_data.get('recovery_username')
-            recovery_password   = form.cleaned_data.get('recovery_password')
+            # ----------------------------------------------------------------------
+            # Get password reset information from request
+            # ----------------------------------------------------------------------
+            pwd_rst_password_1 = form.cleaned_data.get('pwd_rst_password_1')
+            pwd_rst_password_2 = form.cleaned_data.get('pwd_rst_password_2')
+            pwd_rst_email      = form.cleaned_data.get('pwd_rst_email')
+            
+            print("DEBUG: pwd_rst_email:", pwd_rst_email)
+            # ----------------------------------------------------------------------
+            # Input validation
+            # ----------------------------------------------------------------------
+            print("DEBUG: starting input validation")
+            pwd_rst_error_message = ""
+            PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
+            # Input validation - Passwords
+            if (pwd_rst_error_message == ""):
+                pwd_rst_error_message = password_validation(pwd_rst_password_1, PASSWORD_ALLOWED_CHARS)
+            if (pwd_rst_error_message == ""):
+                pwd_rst_error_message = password_validation(pwd_rst_password_2, PASSWORD_ALLOWED_CHARS)
+            if (pwd_rst_error_message == ""):
+                pwd_rst_error_message = password_match(pwd_rst_password_1, pwd_rst_password_2)
+            # Input validation - email
+            try:
+                emailinfo = validate_email(pwd_rst_email, check_deliverability=False)
+                pwd_rst_email= emailinfo.normalized
+            except:
+                pwd_rst_error_message = "invalid e-mail address"
+            # ----------------------------------------------------------------------
+            # If all password reset inputs are valid:
+            # 1. Generate MFA code
+            # 2. Store user password input and MFA code in session
+            # 3. email MFA code to user 
+            # 4. Inform client to open MFA modal
+            # ----------------------------------------------------------------------
+            print("DEBUG: completed input validation")
+            if (pwd_rst_error_message != ""):
+                print("DEBUG: input validation failure")
+                # Return failure status to client
+                response_data = {
+                    'status': 'failure',
+                    'message': pwd_rst_error_message,
+                }
+                return JsonResponse(response_data)
+            else:
+                print("DEBUG: input validation success")
+                # Generate a random 6-digit OTP code
+                otp_code = str(random.randint(100000, 999999))
+                print("DEBUG: MFA code =", otp_code)
+                request.session['pending_user'] = { 'pwd_rst_password_1' : pwd_rst_password_1 }
+                request.session['pending_user'] = { 'pwd_rst_email'      : pwd_rst_email }
+                request.session['pending_user'] = { 'otp_code'           : otp_code }
+
+                request.session['pending_user'] = {
+                    'pwd_rst_email'      : pwd_rst_email,
+                    'pwd_rst_password_1' : pwd_rst_password_1,
+                    'otp_code'           : otp_code
+                }
+
+                request.session.set_expiry(600)
+                # Send the code via email
+                send_mail(
+                    subject='Your Verification Code',
+                    message=f'Your OTP code is {otp_code}',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[pwd_rst_email],
+                )
+                # Return email validation code request to client
+                response_data = {
+                    'status' : 'email-validation',
+                    'message': 'email validation code sent'
+                }
+                return JsonResponse(response_data)
     else:
-        form = UserRecoveryForm()
+        print("DEBUG: Got to user_pwd_rst_step1")
+        form = UserPwdResetForm()
         context = { 'form' : form }
-        return render(request, 'plants/user_recovery_modal.html', context)
+        return render(request, 'plants/pwd_rst_modal_step1.html', context)
+
+def user_pwd_rst_step2(request):
+    """ Render the User Profile Page for Gateway Gardens app """
+
+    pending_data = request.session.get('pending_user')
+
+    if not pending_data:
+        messages.error(request, 'No registration session found. Please register again.')
+        return render(request, 'plants/index.html')
+    
+    print("DEBUG: got to user_pwd_rst_step2")
+
+    if request.POST:
+        form = EmailVerificationForm(request.POST)
+        if form.is_valid():
+            print("DEBUG: user_pwd_rst_step2 - processing form")
+            entered_code = form.cleaned_data.get('entered_code')
+            # ----------------------------------------------------------------------
+            # If the user entered the MFA code correctly, setup the user
+            # ----------------------------------------------------------------------
+            if entered_code == pending_data['otp_code']:
+                print("DEBUG: user_pwd_rst_step2 - codes match")
+                # Retrieve the user information from the session setup in step 1
+                pwd_rst_password_1 = pending_data['pwd_rst_password_1']
+                pwd_rst_email      = pending_data['pwd_rst_email']
+                #
+                user = User.objects.get(email = pwd_rst_email)
+                user.set_password(pwd_rst_password_1)
+                user.save()
+                #
+                update_session_auth_hash(request, user)
+                # Clean up session
+                del request.session['pending_user']
+                # Return success status to client
+                response_data = {
+                    'status'  : 'pwd_rst-success',
+                    'message' : 'User password reset successful',
+                }
+                return JsonResponse(response_data)
+            else:
+                print("DEBUG: user_pwd_rst_step2 - codes do not match")
+                response_data = {
+                    'status'  : 'pwd_rst-failure',
+                    'message' : 'User password reset failed',
+                }
+                return JsonResponse(response_data)
+    else:
+        form = EmailVerificationForm()
+        context = { 'form' : form }
+        return render(request, 'plants/pwd_rst_modal_step2.html', context)
+    
+def user_pwd_rst_mfa(request):
+    """ Provide new authorization code """
+    print("DEBUG: Got to user_pwd_rst_mfa view")
+    pending_data = request.session.get('pending_user')
+    if not pending_data:
+        messages.error(request, 'No registration session found. Please register again.')
+        # return redirect('register_view')
+        return render(request, 'plants/index.html')
+    
+    if request.method == 'GET':
+        # Generate a random 6-digit OTP code
+        otp_code = str(random.randint(100000, 999999))
+        print("DEBUG: otp_code = ", otp_code)
+        # Store pending user OTP in the current session (expire in 10 minutes)
+        request.session['pending_user']['otp_code'] = otp_code
+        # Force Django to save the changes
+        request.session.modified = True 
+        # Reset expiration for 10 minutes
+        request.session.set_expiry(600)
+        # Retrieve all data for the current session
+        pending_data = request.session.get('pending_user')
+        
+        # Send the code via email
+        pwd_rst_email = pending_data['pwd_rst_email']
+        send_mail(
+            subject='Your Verification Code',
+            message=f'Your OTP code is {otp_code}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[pwd_rst_email],
+        )
+        response_data = {
+            'status' : 'auth-code-resent',
+            'message': 'Authentication code sent via email'
+        }
+        return JsonResponse(response_data)
+    else:
+        response_data = {
+            'status' : 'auth-code-failure',
+            'message': 'Authentication code failure'
+        }
+        return JsonResponse(response_data)
 
 def user_login(request):
     """ Render the User Login Page for Gateway Gardens app """
@@ -2280,7 +2437,7 @@ def email_validation(profile_creation, email):
             emailinfo = validate_email(email, check_deliverability=False)
             # profile_email= emailinfo.normalized
         except:
-            error_message = "invalid e-mail address"
+            error_message = "Invalid e-mail address"
     return (error_message)
 
 def firstname_validation(firstname, FIRSTNAME_ALLOWED_CHARS):

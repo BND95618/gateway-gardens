@@ -21,12 +21,12 @@ urlpatterns = [
     path('myplants_todo_save/<int:id>', views.myplants_todo_save,  name='myplants_todo_save'),
     path('myplants_todo_fetch',         views.myplants_todo_fetch, name='myplants_todo_fetch'),
     #
-    path('gardens_plan',              views.gardens_plan,        name='gardens_plan'),
-    path('plant_details_modal',       views.plant_details_modal, name='plant_details_modal'),
-    path('planner_edit_modal',        views.planner_edit_modal,  name='planner_edit_modal'),
+    path('gardens_plan',              views.gardens_plan,          name='gardens_plan'),
+    path('plant_details_modal',       views.plant_details_modal,   name='plant_details_modal'),
+    path('planner_edit_modal',        views.planner_edit_modal,    name='planner_edit_modal'),
     #
-    path('myplants_summary',          views.myplants_summary,    name='myplants_summary'),
-    path('my_column_chooser',         views.my_column_chooser,   name='my_column_chooser'),
+    path('myplants_summary',          views.myplants_summary,      name='myplants_summary'),
+    path('my_column_chooser',         views.my_column_chooser,     name='my_column_chooser'),
     #
     path('myplant_status/<int:id>',    views.myplant_status,      name='myplant_status'),
     path('myplant_details/<int:id>',   views.myplant_details,     name='myplant_details'),
@@ -55,10 +55,12 @@ urlpatterns = [
     #
     path('user_profile_step1',        views.user_profile_step1,  name='user_profile_step1'),
     path('user_profile_step2',        views.user_profile_step2,  name='user_profile_step2'),
+    path('user_profile_mfa',          views.user_profile_mfa,    name='user_profile_mfa'),
     path('user_login',                views.user_login,          name='user_login'),
-    path('user_recovery',             views.user_recovery,       name='user_recovery'),
+    path('user_pwd_rst_step1',        views.user_pwd_rst_step1,  name='user_pwd_rst_step1'),
+    path('user_pwd_rst_step2',        views.user_pwd_rst_step2,  name='user_pwd_rst_step2'),
+    path('user_pwd_rst_mfa',          views.user_pwd_rst_mfa,    name='user_pwd_rst_mfa'),
     path('user_logout',               views.user_logout,         name='user_logout'),
-    path('user_mfa',                  views.user_mfa,            name='user_mfa'),
     #
     path('column_chooser',            views.column_chooser,      name='column_chooser'),
     # views for debug and testing purposes

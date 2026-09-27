@@ -335,8 +335,19 @@ class UserLoginForm(forms.Form):
 		widget=forms.PasswordInput(attrs={'class': 'bnd-input bnd-border'}),
 		)
 	
-class UserRecoveryForm(forms.Form):
-	email = forms.CharField(
+class UserPwdResetForm(forms.Form):
+	
+	pwd_rst_password_1 = forms.CharField(
+		label="New Password", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
+		)
+	pwd_rst_password_2 = forms.CharField(
+		label="New Password (confirm)", 
+		max_length=64,
+		widget=forms.PasswordInput(attrs={'class' : 'bnd-input bnd-border'}),
+		)
+	pwd_rst_email = forms.CharField(
 		label="Enter your e-mail address", 
 		max_length=64,
 		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
