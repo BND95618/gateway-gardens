@@ -1176,8 +1176,9 @@ img {
     }   
 }
 .bnd-image-small {
+    aspect-ratio:  1 / 1;
+    object-fit:    cover; /* Ensures that the image scales and crops itself to fill the 1:1 box without stretching or squishing */
     width:         100%; 
-    aspect-ratio:  1;
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
