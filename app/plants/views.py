@@ -17,12 +17,12 @@ from django.contrib.auth            import authenticate, login, logout, update_s
 from django.contrib.auth.models     import User, Group
 from django.contrib.auth.decorators import login_required
 
-from .models      import Garden, MyPlant, MyPlantToDo, MyPlantComment, Plant, Comment
+from .models      import Garden, MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment, Plant, Comment
 from pests.models import Pest
 
 from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
 from .forms  import GardenAddUpdateForm
-from .forms  import MyPlantAddUpdateForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
+from .forms  import MyPlantAddUpdateForm, MyPlantLogForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 
 # Define attribute select option arrays
@@ -1055,21 +1055,79 @@ def myplant_details(request, id):
     plant.soil_type       = string_display(plant.soil_type)
     plant.heat_tolerance  = string_display(plant.heat_tolerance)
     plant.deer_resistance = string_display(plant.deer_resistance)
+    # get all log entries related to the plant                
+    myplant_logs          = MyPlantLog.objects.filter(myplant__pk=id) 
     # get all To Do items related to the plant
     myplant_todos         = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
     myplant_comments      = MyPlantComment.objects.filter(myplant__pk=id) 
 
     template = loader.get_template("plants/myplant_details.html")
-    form = MyPlantCommentForm()
+    # Specify the two input forms that exist on the page modals
+    # Prefixes are necessare for the Quill forms to work correctly
+    log_form     = MyPlantLogForm(prefix='log_form')
+    comment_form = MyPlantCommentForm(prefix='comment_form')
     context  = { "myplant"          : myplant, 
                  "plant"            : plant,
+                 "myplant_logs"     : myplant_logs,
                  "myplant_todos"    : myplant_todos,
                  "myplant_comments" : myplant_comments,
-                 "form"             : form, 
+                 "log_form"         : log_form,
+                 "comment_form"     : comment_form, 
                }
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
+
+def myplant_log_add(request, id):
+    """ Add My Plant Log Entry """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    
+    myplant    = MyPlant.objects.get(id=id)
+    myLog      = MyPlantLog()
+    print("DEBUG: pt 1")
+    if request.POST:
+        print("DEBUG: pt 2")
+        log_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_form')
+        if log_form.is_valid():
+            print("DEBUG: pt 3")
+            myLog.author  = request.user.username
+            myLog.subject = log_form.cleaned_data.get("log_subject")
+            print("DEBUG: subject:", myLog.subject)
+            myLog.entry   = log_form.cleaned_data.get("log_entry")
+            # Process images - check for new image - if yes, delete any existing image
+            if 'image_1' in request.FILES:
+                if (myLog.image_1):
+                    myLog.image_1.delete(save=False)
+                myLog.image_1 = request.FILES['image_1']
+            myLog.caption_1 = log_form.cleaned_data.get('caption_1')
+            if 'image_2' in request.FILES:
+                if (myLog.image_2):
+                    myLog.image_2.delete(save=False)
+                myLog.image_2 = request.FILES['image_2']
+            myLog.caption_2 = log_form.cleaned_data.get('caption_2')
+            if 'image_3' in request.FILES:
+                if (myLog.image_3):
+                    myLog.image_3.delete(save=False)
+                myLog.image_3 = request.FILES['image_3']
+            myLog.caption_3 = log_form.cleaned_data.get('caption_3')
+            if 'image_4' in request.FILES:
+                if (myLog.image_4):
+                    myLog.image_4.delete(save=False)
+                myLog.image_4 = request.FILES['image_4']
+            myLog.caption_4 = log_form.cleaned_data.get('caption_4')
+            
+            # link the log entry to the specific plant
+            myLog.myplant = myplant                          
+            myLog.save()
+
+            response_data = {
+                'status': 'success',
+                'message': '<p>Processed log entry successfully</p>',
+            }
+        return JsonResponse(response_data)
+    else:
+        return HttpResponseRedirect(reverse('plants:index'))
 
 def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
@@ -1185,11 +1243,12 @@ def myplant_comment(request, id):
     myplant = MyPlant.objects.get(id=id)
     mycomment = MyPlantComment()
     if request.POST:
-        form = MyPlantCommentForm(request.POST, request.FILES)
-        if form.is_valid():
+        comment_form = MyPlantCommentForm(request.POST, request.FILES, prefix='comment_form')
+        if comment_form.is_valid():
             mycomment.author  = request.user.username            #
-            mycomment.subject = form.cleaned_data.get("subject") #
-            mycomment.comment = form.cleaned_data.get("comment") #
+            mycomment.subject = comment_form.cleaned_data.get("subject") #
+            print("DEBUG: comment subject:", mycomment.subject)
+            mycomment.comment = comment_form.cleaned_data.get("comment") #
             mycomment.myplant = myplant                          # link the comment to the specific plant
             mycomment.save()
         return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 

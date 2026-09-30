@@ -344,6 +344,54 @@ class MyPlant(models.Model):
     def get_absolute_url(self):
         return reverse("plants_summary")
 
+class MyPlantLog(models.Model):
+    """ My Plant Log Entries """
+    # Many-to-one relationship 
+    # - many "log entries" can be associated with each "My Plant" record
+    author  = models.CharField(max_length=64, default="tbd", blank=True)
+    subject = models.CharField(max_length=64, default="tbd", blank=True)
+    entry   = QuillField(blank=True, null=True)
+    # Images
+    image_1   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(800, 800)],
+                    format     = 'WEBP',
+                    options    = {'quality': 95},
+                    blank      = True, 
+                    null       = True)
+    caption_1 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_2   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(800, 800)],
+                    format     = 'WEBP',
+                    options    = {'quality': 95},
+                    blank      = True, 
+                    null       = True)
+    caption_2 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_3   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(800, 800)],
+                    format     = 'WEBP',
+                    options    = {'quality': 95},
+                    blank      = True, 
+                    null       = True)
+    caption_3 = models.CharField(max_length=64, default="tbd", blank=True)
+    image_4   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                    processors = [Transpose(), ResizeToFill(800, 800)],
+                    format     = 'WEBP',
+                    options    = {'quality': 95},
+                    blank      = True, 
+                    null       = True)
+    caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
+    # connection to a specific plant in the MyPlant db table
+    myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+    # Administrative stuff
+    slug    = models.SlugField(default="", null=False, blank=True)
+
+    def __str__(self):
+        return self.author
+    
+    def get_absolute_url(self):
+        return reverse("myplant_details")
+
+
 class MyPlantToDo(models.Model):
     """ My Plant To Do """
     owner      = models.CharField(max_length=64, default="tbd", blank=True)

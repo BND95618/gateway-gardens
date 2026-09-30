@@ -509,6 +509,58 @@ class MyPlantAddUpdateForm(forms.Form):
 		required=False,
 		)
 
+class MyPlantLogForm(forms.Form):
+    log_subject = forms.CharField(
+        label='Subject', 
+        max_length=64, 
+        required=False,
+        )
+    log_entry = QuillFormField(
+        label="Log Entry",
+        required=False,
+        )
+	# images
+    image_1   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    caption_1 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    image_2   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    caption_2 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    image_3 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    caption_3 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    image_4 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    caption_4 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False,
+	)
+
 class MyPlantToDoForm(forms.Form):
 	todo_date = forms.DateField(
 		label="Due Date",
