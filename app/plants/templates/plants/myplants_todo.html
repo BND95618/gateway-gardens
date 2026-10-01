@@ -168,22 +168,23 @@
     // Get the current my garden ID when Django renders the page
     const myGardenID = {{ myGarden.id }};
     // set initial sort column and direction from db
-    let lastToDoSortCol =  {{ myGarden.lastToDoSortCol }};
+    let lastToDoSortCol = "{{ myGarden.lastToDoSortCol }}";
     let lastToDoSortDir = "{{ myGarden.lastToDoSortDir }}";
         
     function todo_details(id)
     {
-        // AR: fix url approach
-        url = "/myplants_todo_details/" + id;
-        fetch(url) 
-        .then(response => response.text())
-        .then(html => {todo_details_modal.innerHTML = html;})
-        todo_details_modal.style.display='block';
-        return;
+      // use '1234' placeholder id in Django template for servier-side rendering
+      // javascript will replace placeholder id with actual todo record id
+      const url = "{% url 'plants:myplants_todo_details' id=1234 %}".replace('1234', id);
+      fetch(url) 
+      .then(response => response.text())
+      .then(html => {todo_details_modal.innerHTML = html;})
+      todo_details_modal.style.display='block';
+      return;
     }
     function todo_add()  
     {
-        url = "{% url 'plants:myplants_todo_add' myGarden.id %}"
+        const url = "{% url 'plants:myplants_todo_add' myGarden.id %}"
         fetch(url) 
         .then(response => response.text())
         .then(html => {todo_add_modal.innerHTML = html;})
@@ -192,11 +193,10 @@
     }
     function todo_edit(id)
     {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_edit' %x}" + "/" + id;
-
-        url = "/myplants_todo_edit/" + id;
-        fetch(url) 
+      // use '1234' placeholder id in Django template for servier-side rendering
+      // javascript will replace placeholder id with actual todo record id
+      const url = "{% url 'plants:myplants_todo_edit' id=1234 %}".replace('1234', id);
+      fetch(url) 
         .then(response => response.text())
         .then(html => {todo_edit_modal.innerHTML = html;})
         .then(restoreToDoSort())
@@ -204,11 +204,10 @@
     }
     function todo_delete(id)
     {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_del' %x}" + "/" + id;
-
-        url = "/myplants_todo_del/" + id;
-        fetch(url) 
+      // use '1234' placeholder id in Django template for servier-side rendering
+      // javascript will replace placeholder id with actual todo record id
+      const url = "{% url 'plants:myplants_todo_del' id=1234 %}".replace('1234', id);
+      fetch(url) 
         .then(response => response.text())
         .then(html => {myplants_todo_del_modal.innerHTML = html;})
         .then(restoreToDoSort())
@@ -216,15 +215,13 @@
     }
     function todo_done(id)
     {
-        // AR: fix url approach
-        // url = "{x% url 'plants:myplant_todo_done' %x}" + "/" + id;
-
-        // 
-        const url = "/myplants_todo_done/" + id;
-        const requestMethod = "POST";
-        const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const postData = { lastToDoSortCol : lastToDoSortCol,
-                           lastToDoSortDir : lastToDoSortDir };
+      // use '1234' placeholder id in Django template for servier-side rendering
+      // javascript will replace placeholder id with actual todo record id
+      url = "{% url 'plants:myplants_todo_done' id=1234 %}".replace('1234', id);
+      const requestMethod = "POST";
+      const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const postData = { lastToDoSortCol : lastToDoSortCol,
+                         lastToDoSortDir : lastToDoSortDir };
 
         fetch(url, 
         {

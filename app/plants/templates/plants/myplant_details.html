@@ -104,11 +104,32 @@
     <!------------------------------------->
     <section id="myplant_logs" class="bnd-section">
       <header class="bnd-section-header">
-        <h4>My Plant: Log Entries</h4>
+        <h4>
+          <span>My Plant: Log Entries</span>
+          <span class="bnd-dropdown-container">
+            <button class="bnd-button-small">
+              <i class="material-icons">
+                menu
+              </i>
+            </button>
+            <div class="bnd-dropdown-content">
+              <button type="button" id="openLogModalBtn" class="bnd-dropdown-button">Create log entry</button>
+            </div>
+          </span>
+        </h4>
       </header>
       <div class="bnd-section-contents">
         {% for log in myplant_logs %}
-          <p>Subject: {{ log.subject }}</p>
+          <span>Subject: {{ log.subject }}</span>
+          <span class="bnd-dropdown-container">
+            <button class="bnd-button-small">
+              <i class="material-icons">menu</i>
+            </button>
+            <div class="bnd-dropdown-content">
+              <button type="button" class="bnd-dropdown-button" onclick="log_update({{ log.id }})">Update</button>
+              <button type="button" class="bnd-dropdown-button" onclick="log_delete({{ log.id }})">Delete</button>
+            </div>
+          </span>
           {{ log.entry.html|safe|escape }}
           <hr>
           <!-- images -->
@@ -144,7 +165,6 @@
 
           <hr/>
         {% endfor %}
-        <button type="button" id="openLogModalBtn">Create log entry</button>
       </div>
     </section>
     <!------------------------------------->
@@ -678,10 +698,9 @@ function todo_add()
 }
 function todo_edit(id)
 {
-    // AR: fix url approach
-    // url = "{x% url 'plants:myplant_todo_edit' %x}" + "/" + id;
-
-    url = "/myplant_todo_edit/" + id;
+    // use '1234' placeholder id in Django template for servier-side rendering
+    // javascript will replace placeholder id with actual todo record id
+    const url = "{% url 'plants:myplant_todo_edit' id=1234 %}".replace('1234', id);
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_edit_modal.innerHTML = html;})
@@ -690,10 +709,9 @@ function todo_edit(id)
 }
 function todo_delete(id)
 {
-    // AR: fix url approach
-    // url = "{x% url 'plants:myplant_todo_del' %x}" + "/" + id;
-
-    url = "/myplant_todo_del/" + id;
+    // use '1234' placeholder id in Django template for servier-side rendering
+    // javascript will replace placeholder id with actual todo record id
+    const url = "{% url 'plants:myplant_todo_del' id=1234 %}".replace('1234', id);
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_del_modal.innerHTML = html;})
@@ -702,16 +720,13 @@ function todo_delete(id)
 }
 function todo_done(id)
 {
-    // AR: fix url approach
-    // url = "{x% url 'plants:myplant_todo_done' %x}" + "/" + id;
-
-    // 
-    const url = "/myplant_todo_done/" + id;
+    // use '1234' placeholder id in Django template for servier-side rendering
+    // javascript will replace placeholder id with actual todo record id
+    const url = "{% url 'plants:myplant_todo_done' id=1234 %}".replace('1234', id);;
     const requestMethod = "POST";
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,
                         lastToDoSortDir : lastToDoSortDir };
-
     fetch(url, 
     {
         method: requestMethod,
