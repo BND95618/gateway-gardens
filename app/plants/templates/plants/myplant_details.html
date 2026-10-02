@@ -446,6 +446,11 @@
     </div>
   </div>
 
+  <!-- MyPlant Log delete modal -->
+  <div id="log_del_modal" class="bnd-modal">
+    <p> To Do delete form HTML to be Inserted Here! </p>
+  </div>
+
   <!-- MyPlant To Do add modal -->
   <div id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
@@ -494,7 +499,8 @@
 // Get the current my plant ID when Django renders the page
 const myPlantID = {{ myplant.id }};
 // set initial sort column and direction from db
-let lastToDoSortCol =  {{ myplant.lastToDoSortCol }};
+// AR: are quotes needed?
+let lastToDoSortCol = "{{ myplant.lastToDoSortCol }}";
 let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
 //-----------------------------------------------------------------------------
 // My Plant Log functions
@@ -506,6 +512,18 @@ log_openBtn.addEventListener("click", () =>
 {
   log_modal.style.display = "block";
 });
+// Delete log entry
+function log_delete(id)
+{
+    // use '1234' placeholder id in Django template for servier-side rendering
+    // javascript will replace placeholder id with actual todo record id
+    const url = "{% url 'plants:myplant_log_del' id=1234 %}".replace('1234', id);
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {log_del_modal.innerHTML = html;})
+    .then(restoreToDoSort())
+    log_del_modal.style.display='block';
+}
 // Close modal
 function myplant_log_add_close()
 {
@@ -653,7 +671,7 @@ form.addEventListener('submit', async (event) => {
       formData.append('image_4', compressedBlob_4, 'image_4.jpg');
     }
     //----------------------------------------------------------------------------
-    // Send the form plus the audio recording data entered by the user
+    // Send the form entered by the user
     //----------------------------------------------------------------------------
     console.log("DEBUG: POST user inputs to server");
     statusDiv.innerText = "Upload in process...";

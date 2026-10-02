@@ -1,0 +1,23 @@
+<!-- /plants/templates/plants/myplant_log_del_modal.html -->
+<div class="bnd-modal-container">
+    <header class="bnd-modal-header">
+      <h4>Delete Log Entry: {{ myplant_log.subject }}</h4>
+    </header>
+    <!-- To Do delete - create form -->
+    <form action="{% url 'plants:myplant_log_del' myplant_log.id %}" method="post">
+      {% csrf_token %}
+      <div class="bnd-modal-contents">
+        <p>Are you sure?</p>
+      </div>
+      <div class="bnd-modal-button-bar">
+        <!-- To Do delete - submit -->
+        <button type="submit" class="bnd-button-submit">Submit</button>
+        <!-- To Do delete - cancel -->
+        <button type="button"
+                onclick="document.getElementById('log_del_modal').style.display='none'"
+                class="bnd-button-cancel">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>

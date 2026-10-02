@@ -1129,6 +1129,21 @@ def myplant_log_add(request, id):
     else:
         return HttpResponseRedirect(reverse('plants:index'))
 
+def myplant_log_del(request, id):
+    """ Delete My Plant Log Entry item"""
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get to Log item to be deleted
+    myplant_log = MyPlantLog.objects.get(id=id)
+    # Delete the To Do item
+    if request.POST:
+        myplant_log.delete()
+        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_log.myplant.id,)))
+    # Populate the delete modal fields and render the modal
+    else:
+        context = { 'myplant_log' : myplant_log }
+        return render(request, 'plants/myplant_log_del_modal.html', context)
+
 def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
     if not request.user.is_authenticated:
