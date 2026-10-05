@@ -1,0 +1,159 @@
+<!-- /plants/templates/plants/myplant_log_edit_modal.html -->
+<div id="log_edit_modal_body" class="bnd-modal-container">
+  <header class="bnd-modal-header">
+    <h4>Edit log entry for: {{ myplant.plant.commonName }}</h4>
+  </header>
+  {{ form.media }}
+  <form id      = "id_logEditQuillForm" 
+        enctype = "multipart/form-data">
+    {% csrf_token %}
+    <div class="bnd-modal-contents">
+      {{ log_edit_form.log_subject.as_field_group }}
+      </br>
+      {{ log_edit_form.log_date.as_field_group }}
+      </br>
+      {{ log_edit_form.log_entry.as_field_group }}
+      <!--  -->
+      <div id = "id_log_entry_delta" style="display: none">{{ myplant_log.entry.delta|safe }}</div>
+      <div id = "id_log_entry_html"  style="display: none">{{ myplant_log.entry.html|safe  }}</div>
+      <!-- Plant images -->
+      <div class="images">
+        <fieldset>
+          <legend>Images:</legend>
+          <div class="bnd-flex-container-wrap">
+            <!-- Image 1 -->
+            <figure>
+              <fieldset class="bnd-flex-image">
+                <legend>Image 1:</legend>
+                {% if myplant_log.image_1 %}
+                  <img id      = "id_log_edit_image_1_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "{{ myplant_log.image_1.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
+                  <figcaption class="bnd-image-small-caption">{{ myplant_log.caption_1 }}</figcaption>
+                  <hr>
+                  <div id = "id_image_1_file_input">
+                    {{ log_edit_form.log_image_1 }}
+                  </div>
+                {% else %}
+                  <img id      = "id_log_edit_image_1_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "" 
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  <div id = "id_image_1_file_input">
+                    {{ log_edit_form.log_image_1.as_field_group }}
+                  </div>
+                {% endif %}
+                <label for="id_caption_1">Enter caption:</label>
+                {{ log_edit_form.log_caption_1.as_field_group }}
+              </fieldset>
+            </figure>
+            <!-- Image 2 -->
+            <figure>
+              <fieldset class="bnd-flex-image">
+                <legend>Image 2:</legend>
+                {% if myplant_log.image_2 %}
+                  <img id      = "id_log_edit_image_2_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "{{ myplant_log.image_2.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
+                  <figcaption class="bnd-image-small-caption">{{ myplant_log.caption_2 }}</figcaption>
+                  <hr>
+                  <div id = "id_image_2_file_input">
+                    {{ log_edit_form.log_image_2 }}
+                  </div>
+                {% else %}
+                  <img id      = "id_log_edit_image_2_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "" 
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  <div id = "id_image_2_file_input">
+                    {{ log_edit_form.log_image_2.as_field_group }}
+                  </div>
+                {% endif %}
+                <label for="id_caption_2">Enter caption:</label>
+                {{ log_edit_form.log_caption_2.as_field_group }}
+              </fieldset>
+            </figure>
+`           <!-- Image 3 -->
+            <figure>
+              <fieldset class="bnd-flex-image">
+                <legend>Image 3:</legend>
+                {% if myplant_log.image_3 %}
+                  <img id      = "id_log_edit_image_3_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "{{ myplant_log.image_3.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
+                  <figcaption class="bnd-image-small-caption">{{ myplant_log.caption_1 }}</figcaption>
+                  <hr>
+                  <div id = "id_log_edit_image_3_file_input">
+                    {{ log_edit_form.log_image_3 }}
+                  </div>
+                {% else %}
+                  <img id      = "id_image_3_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "" 
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  <div id = "id_image_3_file_input">
+                    {{ log_edit_form.log_image_3.as_field_group }}
+                  </div>
+                {% endif %}
+                <label for="id_caption_3">Enter caption:</label>
+                {{ log_edit_form.log_caption_3.as_field_group }}
+              </fieldset>
+            </figure>
+            <!-- Image 4 -->
+            <figure>
+              <fieldset class="bnd-flex-image">
+                <legend>Image 4:</legend>
+                {% if myplant_log.image_4 %}
+                  <img id      = "id_log_edit_image_4_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "{{ myplant_log.image_4.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found">
+                  <figcaption class="bnd-image-small-caption">{{ myplant_log.caption_4 }}</figcaption>
+                  <hr>
+                  <div id = "id_image_4_file_input">
+                    {{ log_edit_form.log_image_4 }}
+                  </div>
+                {% else %}
+                  <img id      = "id_log_edit_image_4_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "" 
+                       alt     = "--- Image displays here ---">
+                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                  <hr>
+                  <div id = "id_image_4_file_input">
+                    {{ log_edit_form.log_image_4.as_field_group }}
+                  </div>
+                {% endif %}
+                <label for="id_caption_4">Enter caption:</label>
+                {{ log_edit_form.log_caption_4.as_field_group }}
+              </fieldset>
+            </figure>
+            <!-- End of Images -->
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="bnd-modal-button-bar">
+      <button type="submit" class="bnd-button-submit" id="id_log_edit_submit">Submit</button>
+      <button type  = "button"
+              id    = "id_myplant_log_edit_close"
+              class = "bnd-button-cancel">
+        Cancel
+      </button>
+      <div id="id_log_edit_status"></div>
+    </div>
+  </form>
+</div>

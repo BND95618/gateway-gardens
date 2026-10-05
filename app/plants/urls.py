@@ -36,6 +36,7 @@ urlpatterns = [
     path('myplant_delete/<int:id>',        views.myplant_delete,        name='myplant_delete'),
     #
     path('myplant_log_add/<int:id>',       views.myplant_log_add,       name='myplant_log_add'),
+    path('myplant_log_edit/<int:id>',      views.myplant_log_edit,      name='myplant_log_edit'),
     path('myplant_log_del/<int:id>',       views.myplant_log_del,       name='myplant_log_del'),
     #
     path('myplant_todo_add/<int:id>',      views.myplant_todo_add,      name='myplant_todo_add'),

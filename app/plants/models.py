@@ -350,6 +350,7 @@ class MyPlantLog(models.Model):
     # - many "log entries" can be associated with each "My Plant" record
     author  = models.CharField(max_length=64, default="tbd", blank=True)
     subject = models.CharField(max_length=64, default="tbd", blank=True)
+    date    = models.DateField(auto_now_add=True)
     entry   = QuillField(blank=True, null=True)
     # Images
     image_1   = ProcessedImageField(upload_to  = upload_to_uuid('images/'),

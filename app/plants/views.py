@@ -1064,15 +1064,15 @@ def myplant_details(request, id):
 
     template = loader.get_template("plants/myplant_details.html")
     # Specify the two input forms that exist on the page modals
-    # Prefixes are necessare for the Quill forms to work correctly
-    log_form     = MyPlantLogForm(prefix='log_form')
+    # Prefixes are necessary for the Quill forms to work correctly
+    log_add_form = MyPlantLogForm(prefix='log_add_form')
     comment_form = MyPlantCommentForm(prefix='comment_form')
     context  = { "myplant"          : myplant, 
                  "plant"            : plant,
                  "myplant_logs"     : myplant_logs,
                  "myplant_todos"    : myplant_todos,
                  "myplant_comments" : myplant_comments,
-                 "log_form"         : log_form,
+                 "log_add_form"     : log_add_form,
                  "comment_form"     : comment_form, 
                }
     # Send "context" to template and output the html from the template
@@ -1083,39 +1083,34 @@ def myplant_log_add(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
-    myplant    = MyPlant.objects.get(id=id)
-    myLog      = MyPlantLog()
+    myplant = MyPlant.objects.get(id=id)
+    myLog   = MyPlantLog()
     print("DEBUG: pt 1")
     if request.POST:
         print("DEBUG: pt 2")
-        log_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_form')
-        if log_form.is_valid():
+        log_add_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_add_form')
+        if log_add_form.is_valid():
             print("DEBUG: pt 3")
             myLog.author  = request.user.username
-            myLog.subject = log_form.cleaned_data.get("log_subject")
-            print("DEBUG: subject:", myLog.subject)
-            myLog.entry   = log_form.cleaned_data.get("log_entry")
-            # Process images - check for new image - if yes, delete any existing image
-            if 'image_1' in request.FILES:
-                if (myLog.image_1):
-                    myLog.image_1.delete(save=False)
-                myLog.image_1 = request.FILES['image_1']
-            myLog.caption_1 = log_form.cleaned_data.get('caption_1')
-            if 'image_2' in request.FILES:
-                if (myLog.image_2):
-                    myLog.image_2.delete(save=False)
-                myLog.image_2 = request.FILES['image_2']
-            myLog.caption_2 = log_form.cleaned_data.get('caption_2')
-            if 'image_3' in request.FILES:
-                if (myLog.image_3):
-                    myLog.image_3.delete(save=False)
-                myLog.image_3 = request.FILES['image_3']
-            myLog.caption_3 = log_form.cleaned_data.get('caption_3')
-            if 'image_4' in request.FILES:
-                if (myLog.image_4):
-                    myLog.image_4.delete(save=False)
-                myLog.image_4 = request.FILES['image_4']
-            myLog.caption_4 = log_form.cleaned_data.get('caption_4')
+            myLog.subject = log_add_form.cleaned_data.get("log_subject")
+            myLog.date    = log_add_form.cleaned_data.get("log_date")
+            myLog.entry   = log_add_form.cleaned_data.get("log_entry")
+            # Process images
+            if 'log_image_1' in request.FILES:
+                myLog.image_1 = request.FILES['log_image_1']
+                print("DEBUG: image 1 exists")
+            else:
+                print("DEBUG: image 1 does not exist")
+            myLog.caption_1 = log_add_form.cleaned_data.get('log_caption_1')
+            if 'log_image_2' in request.FILES:
+                myLog.image_2 = request.FILES['log_image_2']
+            myLog.caption_2 = log_add_form.cleaned_data.get('log_caption_2')
+            if 'log_image_3' in request.FILES:
+                myLog.image_3 = request.FILES['log_image_3']
+            myLog.caption_3 = log_add_form.cleaned_data.get('log_caption_3')
+            if 'log_image_4' in request.FILES:
+                myLog.image_4 = request.FILES['log_image_4']
+            myLog.caption_4 = log_add_form.cleaned_data.get('log_caption_4')
             
             # link the log entry to the specific plant
             myLog.myplant = myplant                          
@@ -1128,6 +1123,72 @@ def myplant_log_add(request, id):
         return JsonResponse(response_data)
     else:
         return HttpResponseRedirect(reverse('plants:index'))
+
+def myplant_log_edit(request, id):
+    """ Edit My Plant Log Entry item"""
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    # Get the Log item to be edited
+    print("DEBUG: Got to Log item to be edited")
+    myplant_log = MyPlantLog.objects.get(id=id)
+    # Edit the To Do item
+    print("DEBUG: Got to line before POST")
+    if request.POST:
+        print("DEBUG: Got to POST")
+        log_edit_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_edit_form')
+        if log_edit_form.is_valid():
+            myplant_log.subject = log_edit_form.cleaned_data.get("log_subject")
+            myplant_log.date    = log_edit_form.cleaned_data.get("log_date")
+            myplant_log.entry   = log_edit_form.cleaned_data.get("log_entry")
+            # Process images
+            if 'log_image_1' in request.FILES:
+                if (myplant_log.image_1):
+                    myplant_log.image_1.delete(save=False)
+                myplant_log.image_1 = request.FILES['log_image_1']
+            myplant_log.caption_1 = log_edit_form.cleaned_data.get('log_caption_1')
+            if 'log_image_2' in request.FILES:
+                if (myplant_log.image_2):
+                    myplant_log.image_2.delete(save=False)
+                myplant_log.image_2 = request.FILES['log_image_2']
+            myplant_log.caption_2 = log_edit_form.cleaned_data.get('log_caption_2')
+            if 'log_image_3' in request.FILES:
+                if (myplant_log.image_3):
+                    myplant_log.image_3.delete(save=False)
+                myplant_log.image_3 = request.FILES['log_image_3']
+            myplant_log.caption_3 = log_edit_form.cleaned_data.get('log_caption_3')
+            if 'log_image_4' in request.FILES:
+                if (myplant_log.image_4):
+                    myplant_log.image_1.delete(save=False)
+                myplant_log.image_4 = request.FILES['log_image_4']
+            myplant_log.caption_4 = log_edit_form.cleaned_data.get('log_caption_4')
+            myplant_log.save()
+            response_data = {
+                'status': 'success',
+                'message': '<p>Processed log entry successfully</p>',
+            }
+        return JsonResponse(response_data)
+    # Populate the edit modal fields and render the modal
+    else:
+        print("DEBUG: myplant_log.entry.delta:", myplant_log.entry.delta)
+        print("DEBUG: myplant_log.entry.html:",  myplant_log.entry.html)
+        log_edit_form = MyPlantLogForm(prefix='log_edit_form',
+                                       initial = { 'log_subject'   : myplant_log.subject,
+                                                   'log_entry'     : myplant_log.entry,
+                                                   'log_date'      : myplant_log.date,
+                                                   'log_image_1'   : myplant_log.image_1,
+                                                   'log_caption_1' : myplant_log.caption_1,
+                                                   'log_image_2'   : myplant_log.image_2,
+                                                   'log_caption_2' : myplant_log.caption_2,
+                                                   'log_image_3'   : myplant_log.image_3,
+                                                   'log_caption_3' : myplant_log.caption_3,
+                                                   'log_image_4'   : myplant_log.image_4, 
+                                                   'log_caption_4' : myplant_log.caption_4,
+                                                   'quill_delta'   : myplant_log.entry.delta,
+                                                   'quill_html'    : myplant_log.entry.html
+                                                   })
+        context = { 'myplant_log'   : myplant_log,
+                    'log_edit_form' : log_edit_form }
+        return render(request, 'plants/myplant_log_edit_modal.html', context)
 
 def myplant_log_del(request, id):
     """ Delete My Plant Log Entry item"""

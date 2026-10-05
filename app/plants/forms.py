@@ -515,46 +515,51 @@ class MyPlantLogForm(forms.Form):
         max_length=64, 
         required=False,
         )
+    log_date = forms.DateField(
+		label="Date",
+		required=False,
+		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
+		)
     log_entry = QuillFormField(
         label="Log Entry",
         required=False,
         )
 	# images
-    image_1   = forms.ImageField(
+    log_image_1   = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
 	)
-    caption_1 = forms.CharField(
+    log_caption_1 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-    image_2   = forms.ImageField(
+    log_image_2   = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
 	)
-    caption_2 = forms.CharField(
+    log_caption_2 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-    image_3 = forms.ImageField(
+    log_image_3 = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
 	)
-    caption_3 = forms.CharField(
+    log_caption_3 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-    image_4 = forms.ImageField(
+    log_image_4 = forms.ImageField(
 		required=False,
 		widget=forms.FileInput()
 	)
-    caption_4 = forms.CharField(
+    log_caption_4 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 

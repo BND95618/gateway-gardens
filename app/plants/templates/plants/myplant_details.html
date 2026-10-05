@@ -100,6 +100,17 @@
   
   <div>
     <!------------------------------------->
+    <!-- Gardener Notes                  -->
+    <!------------------------------------->
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>My Plant: Notes</h4>
+      </header>
+      <div class="bnd-section-contents">
+        {{ myplant.notes.html|safe|escape }}
+      </div>
+    </section>
+    <!------------------------------------->
     <!-- My Plant Log                    -->
     <!------------------------------------->
     <section id="myplant_logs" class="bnd-section">
@@ -120,13 +131,14 @@
       </header>
       <div class="bnd-section-contents">
         {% for log in myplant_logs %}
-          <span>Subject: {{ log.subject }}</span>
+          <p>Subject: {{ log.subject }}</p>
+          <p>Date: {{ log.date }}</p>
           <span class="bnd-dropdown-container">
             <button class="bnd-button-small">
               <i class="material-icons">menu</i>
             </button>
             <div class="bnd-dropdown-content">
-              <button type="button" class="bnd-dropdown-button" onclick="log_update({{ log.id }})">Update</button>
+              <button type="button" class="bnd-dropdown-button" onclick="log_edit({{ log.id }})">Update</button>
               <button type="button" class="bnd-dropdown-button" onclick="log_delete({{ log.id }})">Delete</button>
             </div>
           </span>
@@ -253,17 +265,6 @@
       </div>
     </section>
     <!------------------------------------->
-    <!-- Gardener Notes                  -->
-    <!------------------------------------->
-    <section class="bnd-section">
-      <header class="bnd-section-header">
-        <h4>My Plant: Notes</h4>
-      </header>
-      <div class="bnd-section-contents">
-        {{ myplant.notes.html|safe|escape }}
-      </div>
-    </section>
-    <!------------------------------------->
     <!-- My Plant Comments               -->
     <!------------------------------------->
     <section id="myplant_comments" class="bnd-section">
@@ -296,22 +297,24 @@
   <!-------------------------------------------------------------------------->
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
-  <!-- MyPlant add log modal -->
-  <div id="myplant_log_modal" class="bnd-modal">
-    <div id="myplant_log_modal_body" class="bnd-modal-container">
+  <!-- MyPlant Log add modal -->
+  <div id="myplant_log_add_modal" class="bnd-modal">
+    <div id="myplant_log_add_modal_body" class="bnd-modal-container">
       <header class="bnd-modal-header">
         <h4>Add log entry for: {{ myplant.plant.commonName }}</h4>
       </header>
-      {{ log_form.media }}
+      {{ log_add_form.media }}
       <form id="id_logQuillForm" 
             action="{% url 'plants:myplant_log_add' myplant.id %}"
             method="POST" 
             enctype = "multipart/form-data">
         {% csrf_token %}
         <div class="bnd-modal-contents">
-          {{ log_form.log_subject.as_field_group }}
+          {{ log_add_form.log_subject.as_field_group }}
           </br>
-          {{ log_form.log_entry.as_field_group }}
+          {{ log_add_form.log_date.as_field_group }}
+          </br>
+          {{ log_add_form.log_entry.as_field_group }}
           <!-- Plant images -->
           <div class="images">
             <fieldset>
@@ -321,114 +324,71 @@
                 <figure>
                   <fieldset class="bnd-flex-image">
                     <legend>Image 1:</legend>
-                    {% if myplant_comments.image_1 %}
-                      <img id      = "id_image_1_preview" 
-                           class   = "bnd-image-small" 
-                           src     = "{{ myplant_comments.image_1.url }}" 
-                           onclick = "imageModalOpen(this)" 
-                           alt     = "No image found">
-                      <figcaption class="bnd-image-small-caption">{{ plant.caption_1 }}</figcaption>
-                      <hr>
-                      <div id = "id_image_1_file_input">
-                        {{ log_form.image_1 }}
-                      </div>
-                    {% else %}
-                      <img id      = "id_image_1_preview" 
-                           class   = "bnd-image-small" 
-                           src     = "" 
-                           alt     = "--- Image displays here ---">
-                      <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                      <hr>
-                      {{ log_form.image_1 }}
-                    {% endif %}
+                    <img id      = "id_log_add_image_1_preview" 
+                          class   = "bnd-image-small" 
+                          src     = "" 
+                          alt     = "--- Image displays here ---">
+                    <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                    <hr>
+                    <div id = "id_image_1_file_input">
+                      {{ log_add_form.log_image_1.as_field_group }}
+                    </div>
                     <label for="id_caption_1">Enter caption:</label>
-                    {{ log_form.caption_1 }}
+                    {{ log_add_form.log_caption_1.as_field_group }}
                   </fieldset>
                 </figure>
                 <!-- Image 2 -->
                 <figure>
                   <fieldset class="bnd-flex-image">
                     <legend>Image 2:</legend>
-                    {% if myplant_comments.image_2 %}
-                      <img id      = "id_image_2_preview" 
-                          class   = "bnd-image-small" 
-                          src     = "{{ myplant_comments.image_2.url }}" 
-                          onclick = "imageModalOpen(this)" 
-                          alt     = "No image found">
-                      <figcaption class="bnd-image-small-caption">{{ plant.caption_2 }}</figcaption>
-                      <hr>
-                      <div id = "id_image_2_file_input">
-                        {{ log_form.image_2 }}
-                      </div>
-                    {% else %}
-                      <img id      = "id_image_2_preview" 
+                    <img id      = "id_log_add_image_2_preview" 
                           class   = "bnd-image-small" 
                           src     = "" 
                           alt     = "--- Image displays here ---">
-                      <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                      <hr>
-                      {{ log_form.image_2 }}
-                    {% endif %}
+                    <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                    <hr>
+                    <div id = "id_image_2_file_input">
+                      {{ log_add_form.log_image_2.as_field_group }}
+                    </div>
                     <label for="id_caption_2">Enter caption:</label>
-                    {{ log_form.caption_2 }}
+                    {{ log_add_form.log_caption_2.as_field_group }}
                   </fieldset>
                 </figure>
     `           <!-- Image 3 -->
                 <figure>
                   <fieldset class="bnd-flex-image">
                     <legend>Image 3:</legend>
-                    {% if myplant_comments.image_3 %}
-                      <img id     = "id_image_3_preview" 
-                          class   = "bnd-image-small" 
-                          src     = "{{ myplant_comments.image_3.url }}" 
-                          onclick = "imageModalOpen(this)" 
-                          alt     = "No image found">
-                      <figcaption class="bnd-image-small-caption">{{ plant.caption_3 }}</figcaption>
-                      <hr>
-                      <div id = "id_image_3_file_input">
-                        {{ log_form.image_3 }}
-                      </div>
-                    {% else %}
-                      <img id     = "id_image_3_preview" 
+                    <img id      = "id_log_add_image_3_preview" 
                           class   = "bnd-image-small" 
                           src     = "" 
                           alt     = "--- Image displays here ---">
-                      <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                      <hr>
-                      {{ log_form.image_3 }}
-                    {% endif %}
+                    <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                    <hr>
+                    <div id = "id_image_3_file_input">
+                      {{ log_add_form.log_image_3.as_field_group }}
+                    </div>
                     <label for="id_caption_3">Enter caption:</label>
-                    {{ log_form.caption_3 }}
+                    {{ log_add_form.log_caption_3.as_field_group }}
                   </fieldset>
                 </figure>
                 <!-- Image 4 -->
                 <figure>
                   <fieldset class="bnd-flex-image">
                     <legend>Image 4:</legend>
-                    {% if myplant_comments.image_4 %}
-                      <img id     = "id_image_4_preview" 
+                    <img id      = "id_log_add_image_4_preview" 
                           class   = "bnd-image-small" 
-                          src     = "{{ myplant_comments.image_4.url }}" 
-                          onclick = "imageModalOpen(this)" 
-                          alt     = "No image found">
-                      <figcaption class="bnd-image-small-caption">{{ plant.caption_4 }}</figcaption>
-                      <hr>
-                      <div id = "id_image_4_file_input">
-                        {{ log_form.image_4 }}
-                      </div>
-                    {% else %}
-                      <img id     = "id_image_4_preview" 
-                          class   = "bnd-image-small" 
-                          src     = ""  
+                          src     = "" 
                           alt     = "--- Image displays here ---">
-                      <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                      <hr>
-                      {{ log_form.image_4 }}
-                    {% endif %}
-                    <label for="id_caption_3">Enter caption:</label>
-                    {{ log_form.caption_4 }}
+                    <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
+                    <hr>
+                    <div id = "id_image_4_file_input">
+                      {{ log_add_form.log_image_4.as_field_group }}
+                    </div>
+                    <label for="id_caption_4">Enter caption:</label>
+                    {{ log_add_form.log_caption_4.as_field_group }}
                   </fieldset>
                 </figure>
+                <!-- End of Images -->
               </div>
             </fieldset>
           </div>
@@ -444,6 +404,11 @@
         </div>
       </form>
     </div>
+  </div>
+
+  <!-- MyPlant Log edit modal -->
+  <div id="log_edit_modal" class="bnd-modal">
+    <p> Log edit form HTML to be Inserted Here! </p>
   </div>
 
   <!-- MyPlant Log delete modal -->
@@ -503,39 +468,27 @@ const myPlantID = {{ myplant.id }};
 let lastToDoSortCol = "{{ myplant.lastToDoSortCol }}";
 let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
 //-----------------------------------------------------------------------------
-// My Plant Log functions
+// My Plant Log functions - add
 //-----------------------------------------------------------------------------
-const log_modal   = document.getElementById("myplant_log_modal");
-const log_openBtn = document.getElementById("openLogModalBtn");
-// Open modal
-log_openBtn.addEventListener("click", () => 
+const log_add_modal   = document.getElementById("myplant_log_add_modal");
+const log_add_openBtn = document.getElementById("openLogModalBtn");
+// Open log add modal
+log_add_openBtn.addEventListener("click", () => 
 {
-  log_modal.style.display = "block";
+  log_add_modal.style.display = "block";
 });
-// Delete log entry
-function log_delete(id)
-{
-    // use '1234' placeholder id in Django template for servier-side rendering
-    // javascript will replace placeholder id with actual todo record id
-    const url = "{% url 'plants:myplant_log_del' id=1234 %}".replace('1234', id);
-    fetch(url) 
-    .then(response => response.text())
-    .then(html => {log_del_modal.innerHTML = html;})
-    .then(restoreToDoSort())
-    log_del_modal.style.display='block';
-}
 // Close modal
 function myplant_log_add_close()
 {
-  log_modal.style.display='none';
+  log_add_modal.style.display='none';
   document.body.classList.remove('bnd-modal-open');
 }
 // Close modal if user clicks anywhere outside of the modal container
 window.addEventListener("click", (e) => 
 {
-  if (e.target === log_modal) 
+  if (e.target === log_add_modal) 
   {
-    log_modal.style.display = "none";
+    log_add_modal.style.display = "none";
     document.body.classList.remove('bnd-modal-open');
   }
 });
@@ -546,29 +499,29 @@ window.addEventListener("click", (e) =>
 // Select image preview
 // Listen for any character changes in the input field
 //-----------------------------------------------------------------------------
-const image_1_input   = document.getElementById('id_log_form-image_1');
-const image_1_preview = document.getElementById('id_image_1_preview');
+const image_1_input   = document.getElementById('id_log_add_form-log_image_1');
+const image_1_preview = document.getElementById('id_log_add_image_1_preview');
 image_1_input.addEventListener('change', async (event) => 
 {
   image_1_preview.src = URL.createObjectURL(image_1_input.files[0]);
 });
 //-----------------------------------------------------------------------------
-const image_2_input   = document.getElementById('id_log_form-image_2');
-const image_2_preview = document.getElementById('id_image_2_preview');
+const image_2_input   = document.getElementById('id_log_add_form-log_image_2');
+const image_2_preview = document.getElementById('id_log_add_image_2_preview');
 image_2_input.addEventListener('change', async (event) => 
 {
   image_2_preview.src = URL.createObjectURL(image_2_input.files[0]);
 });
 //-----------------------------------------------------------------------------
-const image_3_input   = document.getElementById('id_log_form-image_3');
-const image_3_preview = document.getElementById('id_image_3_preview');
+const image_3_input   = document.getElementById('id_log_add_form-log_image_3');
+const image_3_preview = document.getElementById('id_log_add_image_3_preview');
 image_3_input.addEventListener('change', async (event) => 
 {
   image_3_preview.src = URL.createObjectURL(image_3_input.files[0]);
 });
 //-----------------------------------------------------------------------------
-const image_4_input   = document.getElementById('id_log_form-image_4');
-const image_4_preview = document.getElementById('id_image_4_preview');
+const image_4_input   = document.getElementById('id_log_add_form-log_image_4');
+const image_4_preview = document.getElementById('id_log_add_image_4_preview');
 image_4_input.addEventListener('change', async (event) => 
 {
   image_4_preview.src = URL.createObjectURL(image_4_input.files[0]);
@@ -577,10 +530,10 @@ image_4_input.addEventListener('change', async (event) =>
 // Upload log form data and compressed images to the server
 //-----------------------------------------------------------------------------
 const form         = document.getElementById('id_logQuillForm');
-const imageInput_1 = document.getElementById('id_log_form-image_1');
-const imageInput_2 = document.getElementById('id_log_form-image_2');
-const imageInput_3 = document.getElementById('id_log_form-image_3');
-const imageInput_4 = document.getElementById('id_log_form-image_4');
+const imageInput_1 = document.getElementById('id_log_add_form-log_image_1');
+const imageInput_2 = document.getElementById('id_log_add_form-log_image_2');
+const imageInput_3 = document.getElementById('id_log_add_form-log_image_3');
+const imageInput_4 = document.getElementById('id_log_add_form-log_image_4');
 const submitBtn    = document.getElementById('id_log_submit');
 const statusDiv    = document.getElementById('id_log_status');
 
@@ -652,23 +605,23 @@ form.addEventListener('submit', async (event) => {
     //----------------------------------------------------------------------------
     if (typeof compressedBlob_1 !== 'undefined' && compressedBlob_1 !== null)
     {
-      formData.delete('image_1');
-      formData.append('image_1', compressedBlob_1, 'image_1.jpg');
+      formData.delete('log_image_1');
+      formData.append('log_image_1', compressedBlob_1, 'log_image_1.jpg');
     }
     if (typeof compressedBlob_2 !== 'undefined' && compressedBlob_2 !== null)
     {
-      formData.delete('image_2');
-      formData.append('image_2', compressedBlob_2, 'image_2.jpg');
+      formData.delete('log_image_2');
+      formData.append('log_image_2', compressedBlob_2, 'log_image_2.jpg');
     }
     if (typeof compressedBlob_3 !== 'undefined' && compressedBlob_3 !== null)
     {
-      formData.delete('image_3');
-      formData.append('image_3', compressedBlob_3, 'image_3.jpg');
+      formData.delete('log_image_3');
+      formData.append('log_image_3', compressedBlob_3, 'log_image_3.jpg');
     }
     if (typeof compressedBlob_4 !== 'undefined' && compressedBlob_4 !== null)
     {
-      formData.delete('image_4');
-      formData.append('image_4', compressedBlob_4, 'image_4.jpg');
+      formData.delete('log_image_4');
+      formData.append('log_image_4', compressedBlob_4, 'log_image_4.jpg');
     }
     //----------------------------------------------------------------------------
     // Send the form entered by the user
@@ -701,7 +654,255 @@ form.addEventListener('submit', async (event) => {
       console.error('Network error:', error);
   }
 });
+//-----------------------------------------------------------------------------
+// My Plant Log functions - edit
+//-----------------------------------------------------------------------------
+// Open log edit modal
+function log_edit(id)
+{
+  //----------------------------------------------------------------------------
+  // Retrieve the modal html for the selected log entry
+  //----------------------------------------------------------------------------
+  // use '1234' placeholder id in Django template for servier-side rendering
+  // javascript will replace placeholder id with actual todo record id
+  const url = "{% url 'plants:myplant_log_edit' id=1234 %}".replace('1234', id);
+  fetch(url) 
+  .then(response => response.text())
+  .then(html => 
+  {
+    log_edit_modal.innerHTML = html;
+    reinitDjangoQuill();
+    log_edit_modal.style.display='block';
 
+    // **************************************************************************
+
+    function reinitDjangoQuill()
+    {
+      console.log("DEBUG: Starting Quill initialization");
+      // 1. Find all uninitialized django-quill widgets inside the modal
+      const widgets = document.querySelectorAll('.django-quill-widget[data-type="django-quill"]');
+      console.log("DEBUG: widgets:", widgets);
+      console.log("DEBUG: --------------------------------------------------");
+      widgets.forEach(widget => {
+        const id = widget.id.replace('quill-', '');
+        console.log("DEBUG: id:", id);
+        const inputId = `quill-input-${id}`;
+        console.log("DEBUG: inputId:", inputId);
+        const inputElement = document.getElementById(inputId);
+        console.log("DEBUG: inputElement:", inputElement);
+        // Prevent duplicate initializations if the modal opens multiple times
+        if (widget.classList.contains('ql-container')) 
+        {
+          console.log("DEBUG: reinitialization not required!")
+          console.log("DEBUG: --------------------------------------------------");
+        }
+        else
+        {
+
+            // 2. Parse the configuration built into the widget data attribute
+            const config = JSON.parse(widget.getAttribute('data-config'));
+            console.log("DEBUG: config:", config);
+            // Initialize the standard QuillWrapper exposed by django-quill-editor
+            // At this point the Quill editor will have been reinitialized!
+            const wrapper = new QuillWrapper(widget.id, inputId, config);
+            // Repopulate initial data
+            const entry_html = document.getElementById("id_log_entry_html");
+            console.log("DEBUG: entry_html:", entry_html.innerHTML);
+            wrapper.quill.clipboard.dangerouslyPasteHTML(entry_html.innerHTML);
+            console.log("DEBUG: --------------------------------------------------");
+        }
+      });
+    }
+
+    // **************************************************************************
+
+    //-----------------------------------------------------------------------------
+    // Function: Update preview image when new image is selected
+    //-----------------------------------------------------------------------------
+    // Select image file input field using form prefix
+    // Select image preview
+    // Listen for any character changes in the input field
+    //-----------------------------------------------------------------------------
+    const image_1_input   = document.getElementById('id_log_edit_form-log_image_1');
+    const image_1_preview = document.getElementById('id_log_edit_image_1_preview');
+    image_1_input.addEventListener('change', async (event) => 
+    {
+      image_1_preview.src = URL.createObjectURL(image_1_input.files[0]);
+    });
+    //-----------------------------------------------------------------------------
+    const image_2_input   = document.getElementById('id_log_edit_form-log_image_2');
+    const image_2_preview = document.getElementById('id_log_edit_image_2_preview');
+    image_2_input.addEventListener('change', async (event) => 
+    {
+      image_2_preview.src = URL.createObjectURL(image_2_input.files[0]);
+    });
+    //-----------------------------------------------------------------------------
+    const image_3_input   = document.getElementById('id_log_edit_form-log_image_3');
+    const image_3_preview = document.getElementById('id_log_edit_image_3_preview');
+    image_3_input.addEventListener('change', async (event) => 
+    {
+      image_3_preview.src = URL.createObjectURL(image_3_input.files[0]);
+    });
+    //-----------------------------------------------------------------------------
+    const image_4_input   = document.getElementById('id_log_edit_form-log_image_4');
+    const image_4_preview = document.getElementById('id_log_edit_image_4_preview');
+    image_4_input.addEventListener('change', async (event) => 
+    {
+      image_4_preview.src = URL.createObjectURL(image_4_input.files[0]);
+    });
+    //----------------------------------------------------------------------------- 
+    // Upload log form data and compressed images to the server
+    //-----------------------------------------------------------------------------
+    const form         = document.getElementById('id_logEditQuillForm');
+    const imageInput_1 = document.getElementById('id_log_edit_form-log_image_1');
+    const imageInput_2 = document.getElementById('id_log_edit_form-log_image_2');
+    const imageInput_3 = document.getElementById('id_log_edit_form-log_image_3');
+    const imageInput_4 = document.getElementById('id_log_edit_form-log_image_4');
+    const submitBtn    = document.getElementById('id_log_edit_submit');
+    const statusDiv    = document.getElementById('id_log_edit_status');
+
+    form.addEventListener('submit', async (event) => {
+      // Prevent standard browser form submission
+      event.preventDefault();
+      console.log("DEBUG: Got to log edit submit!");
+      // Get images
+      const file_1 = imageInput_1.files[0];
+      const file_2 = imageInput_2.files[0];
+      const file_3 = imageInput_3.files[0];
+      const file_4 = imageInput_4.files[0];
+      // Declare compressed image blobs
+      let compressedBlob_1 = null;
+      let compressedBlob_2 = null;
+      let compressedBlob_3 = null;
+      let compressedBlob_4 = null;
+      // 
+      // 
+      try 
+      {
+        // Update UI state
+        submitBtn.disabled = true;
+        //----------------------------------------------------------------------------
+        // Wait for the image compression promise to resolve
+        //----------------------------------------------------------------------------
+        if (file_1)
+        {
+          console.log("DEBUG: Starting image compression - Image 1");
+          statusDiv.innerText = "Compressing Image 1... Please wait.";
+          compressedBlob_1 = await compressImage(file_1, 800, 1.0);
+          console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
+          console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
+          console.log("DEBUG: Finished image compression - Image 1");
+        }
+        if (file_2)
+        {
+          console.log("DEBUG: Starting image compression - Image 2");
+          statusDiv.innerText = "Compressing Image 2... Please wait.";
+          compressedBlob_2 = await compressImage(file_2, 800, 1.0);
+          console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
+          console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
+          console.log("DEBUG: Finished image compression - Image 2");
+        }
+        if (file_3)
+        {
+          console.log("DEBUG: Starting image compression - Image 3");
+          statusDiv.innerText = "Compressing Image 3... Please wait.";
+          compressedBlob_3 = await compressImage(file_3, 800, 1.0);
+          console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
+          console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
+          console.log("DEBUG: Finished image compression - Image 3");
+        }
+        if (file_4)
+        {
+          console.log("DEBUG: Starting image compression - Image 4");
+          statusDiv.innerText = "Compressing Image 4... Please wait.";
+          compressedBlob_4 = await compressImage(file_4, 800, 1.0);
+          console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
+          console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
+          console.log("DEBUG: Finished image compression - Image 4");
+        }
+        //----------------------------------------------------------------------------
+        //
+        //----------------------------------------------------------------------------
+        // Get the form entered by the user
+        const formData  = new FormData(form);
+        //----------------------------------------------------------------------------
+        // Append the compressed images recording to the FormData object
+        //----------------------------------------------------------------------------
+        if (typeof compressedBlob_1 !== 'undefined' && compressedBlob_1 !== null)
+        {
+          formData.delete('log_image_1');
+          formData.append('log_image_1', compressedBlob_1, 'log_image_1.jpg');
+        }
+        if (typeof compressedBlob_2 !== 'undefined' && compressedBlob_2 !== null)
+        {
+          formData.delete('log_image_2');
+          formData.append('log_image_2', compressedBlob_2, 'log_image_2.jpg');
+        }
+        if (typeof compressedBlob_3 !== 'undefined' && compressedBlob_3 !== null)
+        {
+          formData.delete('log_image_3');
+          formData.append('log_image_3', compressedBlob_3, 'log_image_3.jpg');
+        }
+        if (typeof compressedBlob_4 !== 'undefined' && compressedBlob_4 !== null)
+        {
+          formData.delete('log_image_4');
+          formData.append('log_image_4', compressedBlob_4, 'log_image_4.jpg');
+        }
+        //----------------------------------------------------------------------------
+        // Send the form entered by the user
+        //----------------------------------------------------------------------------
+        console.log("DEBUG: POST user log update inputs to server");
+        statusDiv.innerText = "Upload in process...";
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const postURL   = "{% url 'plants:myplant_log_edit' id=1234 %}".replace('1234', id);
+        const response  = await fetch(postURL, 
+        {
+          method:  "POST",
+          headers: {'X-CSRFToken' : csrfToken},
+          body:    formData
+        });
+        if (response.ok) 
+        {
+          const data = await response.json();
+          statusDiv.innerText = "Upload successful!";
+          console.log('Success:', data);
+          // Handle your JSON response here (e.g., update DOM)
+          let returnURL = "{% url 'plants:myplant_details' myplant.id %}";
+          window.location.href = returnURL;
+        } 
+        else 
+        {
+          console.error('Server Error:', response.status);
+        }
+      } 
+      catch (error) 
+      {
+          console.error('Network error:', error);
+      }
+    });
+    // 
+    const closeModalButton = document.getElementById("id_myplant_log_edit_close");
+    closeModalButton.addEventListener("click", function() {
+      console.log("The button was clicked!");
+      log_edit_modal.style.display='none';
+      document.body.classList.remove('bnd-modal-open');
+    });
+  });
+}
+//-----------------------------------------------------------------------------
+// My Plant Log functions - delete
+//-----------------------------------------------------------------------------
+// Delete log entry
+function log_delete(id)
+{
+  // use '1234' placeholder id in Django template for servier-side rendering
+  // javascript will replace placeholder id with actual todo record id
+  const url = "{% url 'plants:myplant_log_del' id=1234 %}".replace('1234', id);
+  fetch(url) 
+  .then(response => response.text())
+  .then(html => {log_del_modal.innerHTML = html;})
+  log_del_modal.style.display='block';
+}
 //-----------------------------------------------------------------------------
 // My Plant To Do functions
 //-----------------------------------------------------------------------------
