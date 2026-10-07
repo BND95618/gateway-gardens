@@ -1,4 +1,78 @@
 // app/plants/static/plants/js/common_functions.js
+
+//----------------------------------------------------------------------------- 
+// Binds a file input to an image preview element.
+// @param {string} inputId - The ID of the file input element.
+// @param {string} previewId - The ID of the image preview element.
+//----------------------------------------------------------------------------- 
+function setupImagePreview(inputId, previewId) 
+{
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+
+    // Ensure both elements exist before adding the listener
+    if (input && preview) 
+    {
+        input.addEventListener('change', () => 
+        {
+            if (input.files && input.files[0]) 
+            {
+                preview.src = URL.createObjectURL(input.files[0]);
+            }
+        });
+    }
+}
+
+//----------------------------------------------------------------------------- 
+// Asynchronous Image Compression Function
+//----------------------------------------------------------------------------- 
+function compressImage(file, maxWidth, quality) 
+{
+    return new Promise((resolve, reject) => 
+    {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+                
+        reader.onload = (event) => 
+        {
+        const img = new Image();
+        img.src = event.target.result;
+            
+        img.onload = () => 
+        {
+            // Calculate new constrained dimensions maintaining aspect ratio
+            let width = img.width;
+            let height = img.height;
+                
+            if (width > maxWidth) 
+            {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+            }
+            // Setup Canvas element
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;      
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            // Export to standard JPEG blob with custom lossy quality settings
+            canvas.toBlob((blob) => 
+            {
+            if (blob) 
+            {
+                resolve(blob);
+            } 
+            else 
+            {
+                reject(new Error('Canvas compression failed'));
+            }
+            }, 'image/jpeg', quality);
+        };
+        img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+    });
+}
 // -------------------------------------------------------------------------- //
 // Expand image via modal
 // -------------------------------------------------------------------------- //

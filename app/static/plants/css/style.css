@@ -1176,8 +1176,9 @@ img {
     }   
 }
 .bnd-image-small {
+    aspect-ratio:  1 / 1;
+    object-fit:    cover; /* Ensures that the image scales and crops itself to fill the 1:1 box without stretching or squishing */
     width:         100%; 
-    aspect-ratio:  1;
     height:        auto; 
     border:        4px solid green; 
     border-radius: 16px;
@@ -1402,22 +1403,20 @@ body.bnd-modal-open {
 /* Password input hide/show eye icon                            */
 /* ------------------------------------------------------------ */
 .bnd-password-container {
-    position: relative;
-    width: 300px;
+    position:    relative;
 }
 .bnd-password-container input {
-    width: 100%;
-    padding: 10px 40px 10px 10px;
-    box-sizing: border-box;
+    width:       100%;
+    box-sizing:  border-box;
 } 
 .bnd-password-container .material-icons {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
+    position:    absolute;
+    right:       10px;
+    top:         55%;
+    cursor:      pointer;
     user-select: none;
-    color: #777;
+    font-size:   16px;
+    color:       #777;
 }
 /* ------------------------------------------------------------ */
 /* Slide show formatting                                        */

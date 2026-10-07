@@ -493,39 +493,12 @@ window.addEventListener("click", (e) =>
   }
 });
 //-----------------------------------------------------------------------------
-// Function: Update preview image when new image is selected
+// Update preview image (via setupImagePreview) when new image is selected
 //-----------------------------------------------------------------------------
-// Select image file input field using form prefix
-// Select image preview
-// Listen for any character changes in the input field
-//-----------------------------------------------------------------------------
-const image_1_input   = document.getElementById('id_log_add_form-log_image_1');
-const image_1_preview = document.getElementById('id_log_add_image_1_preview');
-image_1_input.addEventListener('change', async (event) => 
+for (let num = 1; num <= 4; num++) 
 {
-  image_1_preview.src = URL.createObjectURL(image_1_input.files[0]);
-});
-//-----------------------------------------------------------------------------
-const image_2_input   = document.getElementById('id_log_add_form-log_image_2');
-const image_2_preview = document.getElementById('id_log_add_image_2_preview');
-image_2_input.addEventListener('change', async (event) => 
-{
-  image_2_preview.src = URL.createObjectURL(image_2_input.files[0]);
-});
-//-----------------------------------------------------------------------------
-const image_3_input   = document.getElementById('id_log_add_form-log_image_3');
-const image_3_preview = document.getElementById('id_log_add_image_3_preview');
-image_3_input.addEventListener('change', async (event) => 
-{
-  image_3_preview.src = URL.createObjectURL(image_3_input.files[0]);
-});
-//-----------------------------------------------------------------------------
-const image_4_input   = document.getElementById('id_log_add_form-log_image_4');
-const image_4_preview = document.getElementById('id_log_add_image_4_preview');
-image_4_input.addEventListener('change', async (event) => 
-{
-  image_4_preview.src = URL.createObjectURL(image_4_input.files[0]);
-});
+  setupImagePreview(`id_log_add_form-log_image_${num}`, `id_log_add_image_${num}_preview`);
+}
 //----------------------------------------------------------------------------- 
 // Upload log form data and compressed images to the server
 //-----------------------------------------------------------------------------
@@ -560,39 +533,31 @@ form.addEventListener('submit', async (event) => {
     //----------------------------------------------------------------------------
     if (file_1)
     {
-      console.log("DEBUG: Starting image compression - Image 1");
       statusDiv.innerText = "Compressing Image 1... Please wait.";
       compressedBlob_1 = await compressImage(file_1, 800, 1.0);
       console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
       console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
-      console.log("DEBUG: Finished image compression - Image 1");
     }
     if (file_2)
     {
-      console.log("DEBUG: Starting image compression - Image 2");
       statusDiv.innerText = "Compressing Image 2... Please wait.";
       compressedBlob_2 = await compressImage(file_2, 800, 1.0);
       console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
       console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
-      console.log("DEBUG: Finished image compression - Image 2");
     }
     if (file_3)
     {
-      console.log("DEBUG: Starting image compression - Image 3");
       statusDiv.innerText = "Compressing Image 3... Please wait.";
       compressedBlob_3 = await compressImage(file_3, 800, 1.0);
       console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
       console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
-      console.log("DEBUG: Finished image compression - Image 3");
     }
     if (file_4)
     {
-      console.log("DEBUG: Starting image compression - Image 4");
       statusDiv.innerText = "Compressing Image 4... Please wait.";
       compressedBlob_4 = await compressImage(file_4, 800, 1.0);
       console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
       console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
-      console.log("DEBUG: Finished image compression - Image 4");
     }
     //----------------------------------------------------------------------------
     //
@@ -626,7 +591,6 @@ form.addEventListener('submit', async (event) => {
     //----------------------------------------------------------------------------
     // Send the form entered by the user
     //----------------------------------------------------------------------------
-    console.log("DEBUG: POST user inputs to server");
     statusDiv.innerText = "Upload in process...";
     const postURL = "{% url 'plants:myplant_log_add' myplant.id %}"
     const response = await fetch(postURL, 
@@ -678,81 +642,32 @@ function log_edit(id)
 
     function reinitDjangoQuill()
     {
-      console.log("DEBUG: Starting Quill initialization");
-      // 1. Find all uninitialized django-quill widgets inside the modal
+      // Find all uninitialized django-quill widgets inside the modal
       const widgets = document.querySelectorAll('.django-quill-widget[data-type="django-quill"]');
-      console.log("DEBUG: widgets:", widgets);
-      console.log("DEBUG: --------------------------------------------------");
       widgets.forEach(widget => {
         const id = widget.id.replace('quill-', '');
-        console.log("DEBUG: id:", id);
         const inputId = `quill-input-${id}`;
-        console.log("DEBUG: inputId:", inputId);
         const inputElement = document.getElementById(inputId);
-        console.log("DEBUG: inputElement:", inputElement);
         // Prevent duplicate initializations if the modal opens multiple times
         if (widget.classList.contains('ql-container')) 
         {
-          console.log("DEBUG: reinitialization not required!")
-          console.log("DEBUG: --------------------------------------------------");
+          console.log("INFO: Quill Editor reinitialization not required!")
         }
         else
         {
-
-            // 2. Parse the configuration built into the widget data attribute
+            // Parse the configuration built into the widget data attribute
             const config = JSON.parse(widget.getAttribute('data-config'));
-            console.log("DEBUG: config:", config);
             // Initialize the standard QuillWrapper exposed by django-quill-editor
             // At this point the Quill editor will have been reinitialized!
             const wrapper = new QuillWrapper(widget.id, inputId, config);
             // Repopulate initial data
             const entry_html = document.getElementById("id_log_entry_html");
-            console.log("DEBUG: entry_html:", entry_html.innerHTML);
             wrapper.quill.clipboard.dangerouslyPasteHTML(entry_html.innerHTML);
-            console.log("DEBUG: --------------------------------------------------");
         }
       });
     }
-
     // **************************************************************************
 
-    //-----------------------------------------------------------------------------
-    // Function: Update preview image when new image is selected
-    //-----------------------------------------------------------------------------
-    // Select image file input field using form prefix
-    // Select image preview
-    // Listen for any character changes in the input field
-    //-----------------------------------------------------------------------------
-    const image_1_input   = document.getElementById('id_log_edit_form-log_image_1');
-    const image_1_preview = document.getElementById('id_log_edit_image_1_preview');
-    image_1_input.addEventListener('change', async (event) => 
-    {
-      image_1_preview.src = URL.createObjectURL(image_1_input.files[0]);
-    });
-    //-----------------------------------------------------------------------------
-    const image_2_input   = document.getElementById('id_log_edit_form-log_image_2');
-    const image_2_preview = document.getElementById('id_log_edit_image_2_preview');
-    image_2_input.addEventListener('change', async (event) => 
-    {
-      image_2_preview.src = URL.createObjectURL(image_2_input.files[0]);
-    });
-    //-----------------------------------------------------------------------------
-    const image_3_input   = document.getElementById('id_log_edit_form-log_image_3');
-    const image_3_preview = document.getElementById('id_log_edit_image_3_preview');
-    image_3_input.addEventListener('change', async (event) => 
-    {
-      image_3_preview.src = URL.createObjectURL(image_3_input.files[0]);
-    });
-    //-----------------------------------------------------------------------------
-    const image_4_input   = document.getElementById('id_log_edit_form-log_image_4');
-    const image_4_preview = document.getElementById('id_log_edit_image_4_preview');
-    image_4_input.addEventListener('change', async (event) => 
-    {
-      image_4_preview.src = URL.createObjectURL(image_4_input.files[0]);
-    });
-    //----------------------------------------------------------------------------- 
-    // Upload log form data and compressed images to the server
-    //-----------------------------------------------------------------------------
     const form         = document.getElementById('id_logEditQuillForm');
     const imageInput_1 = document.getElementById('id_log_edit_form-log_image_1');
     const imageInput_2 = document.getElementById('id_log_edit_form-log_image_2');
@@ -760,11 +675,19 @@ function log_edit(id)
     const imageInput_4 = document.getElementById('id_log_edit_form-log_image_4');
     const submitBtn    = document.getElementById('id_log_edit_submit');
     const statusDiv    = document.getElementById('id_log_edit_status');
-
+    //-----------------------------------------------------------------------------
+    // Update preview image (via setupImagePreview) when new image is selected
+    //-----------------------------------------------------------------------------
+    for (let num = 1; num <= 4; num++) 
+    {
+      setupImagePreview(`id_log_edit_form-log_image_${num}`, `id_log_edit_image_${num}_preview`);
+    }
+    //----------------------------------------------------------------------------- 
+    // Upload log form data and compressed images to the server
+    //-----------------------------------------------------------------------------
     form.addEventListener('submit', async (event) => {
       // Prevent standard browser form submission
-      event.preventDefault();
-      console.log("DEBUG: Got to log edit submit!");
+      event.preventDefault()
       // Get images
       const file_1 = imageInput_1.files[0];
       const file_2 = imageInput_2.files[0];
@@ -786,39 +709,31 @@ function log_edit(id)
         //----------------------------------------------------------------------------
         if (file_1)
         {
-          console.log("DEBUG: Starting image compression - Image 1");
           statusDiv.innerText = "Compressing Image 1... Please wait.";
           compressedBlob_1 = await compressImage(file_1, 800, 1.0);
           console.log(`Original size:   ${(file_1.size / 1024).toFixed(2)} KB`);
           console.log(`Compressed size: ${(compressedBlob_1.size / 1024).toFixed(2)} KB`);
-          console.log("DEBUG: Finished image compression - Image 1");
         }
         if (file_2)
         {
-          console.log("DEBUG: Starting image compression - Image 2");
           statusDiv.innerText = "Compressing Image 2... Please wait.";
           compressedBlob_2 = await compressImage(file_2, 800, 1.0);
           console.log(`Original size:   ${(file_2.size / 1024).toFixed(2)} KB`);
           console.log(`Compressed size: ${(compressedBlob_2.size / 1024).toFixed(2)} KB`);
-          console.log("DEBUG: Finished image compression - Image 2");
         }
         if (file_3)
         {
-          console.log("DEBUG: Starting image compression - Image 3");
           statusDiv.innerText = "Compressing Image 3... Please wait.";
           compressedBlob_3 = await compressImage(file_3, 800, 1.0);
           console.log(`Original size:   ${(file_3.size / 1024).toFixed(2)} KB`);
           console.log(`Compressed size: ${(compressedBlob_3.size / 1024).toFixed(2)} KB`);
-          console.log("DEBUG: Finished image compression - Image 3");
         }
         if (file_4)
         {
-          console.log("DEBUG: Starting image compression - Image 4");
           statusDiv.innerText = "Compressing Image 4... Please wait.";
           compressedBlob_4 = await compressImage(file_4, 800, 1.0);
           console.log(`Original size:   ${(file_4.size / 1024).toFixed(2)} KB`);
           console.log(`Compressed size: ${(compressedBlob_4.size / 1024).toFixed(2)} KB`);
-          console.log("DEBUG: Finished image compression - Image 4");
         }
         //----------------------------------------------------------------------------
         //
@@ -851,7 +766,6 @@ function log_edit(id)
         //----------------------------------------------------------------------------
         // Send the form entered by the user
         //----------------------------------------------------------------------------
-        console.log("DEBUG: POST user log update inputs to server");
         statusDiv.innerText = "Upload in process...";
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const postURL   = "{% url 'plants:myplant_log_edit' id=1234 %}".replace('1234', id);

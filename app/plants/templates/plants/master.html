@@ -43,10 +43,10 @@
       <!-------------------------------------------------------------------------->
       <nav id="id_nav" class="bnd-page-nav">
         <a id="home"             href="{% url 'plants:index' %}"           >Home          </a>
-        <a id="gardens_summary"  href="{% url 'plants:gardens_summary' %}" >My Garden     </a>
+        <a id="mygarden_summary" href="{% url 'plants:mygarden_summary' %}" >My Garden     </a>
         <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}">My Plants     </a>
         <a id="myplants_todo"    href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
-        <a id="gardens_plan"     href="{% url 'plants:gardens_plan' %}"    >My Garden Plan</a>
+        <a id="mygarden_plan"    href="{% url 'plants:mygarden_plan' %}"    >My Garden Plan</a>
         <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
         <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"    >Pests         </a>
         <a id="plants_glossary"  href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
@@ -270,25 +270,18 @@
           profile_error_msg.innerHTML = userLastNameValidation(profile_last_name);
         });
         //-----------------------------------------------------------------------------
-        // convert selected user photo to a preview image shown in the modal
+        // Update preview profile photo when new profile photo is selected
         //-----------------------------------------------------------------------------
-        const profile_photo         = document.getElementById('id_profile_photo');
-        const profile_photo_preview = document.getElementById('id_profile_photo_preview');
-        // convert selected user photo to a preview image shown in the modal
-        profile_photo.addEventListener('change', async (event) => 
-        {
-          id_profile_photo_preview.src = URL.createObjectURL(profile_photo.files[0]);
-        });
+        setupImagePreview(`id_profile_photo`, `id_profile_photo_preview`);
         //----------------------------------------------------------------------------
         // Create compressed profile photo for upload
         //----------------------------------------------------------------------------
-        const file = profile_photo.files[0];
+        const profile_photo = document.getElementById('id_profile_photo');
+        const file          = profile_photo.files[0];
         let compressedBlob = null;
         if (file)
         {
-          console.log("DEBUG: Starting image compression");
           compressedBlob = compressImage(file, 800, 1.0);
-          console.log("DEBUG: Finished image compression");
         }
         //-----------------------------------------------------------------------------
         // Form submission process
@@ -316,8 +309,7 @@
             //----------------------------------------------------------------------------
             // Send the form
             //----------------------------------------------------------------------------
-            console.log("DEBUG: POST user inputs to server");
-            //
+            // POST user inputs to server
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             const postURL   = "{% url 'plants:user_profile_step1' %}";
             const response = await fetch(postURL, 
@@ -326,7 +318,6 @@
               headers: {'X-CSRFToken' : csrfToken},
               body:    formData
             });
-            console.log("DEBUG: Waiting for server response");
             if (response.ok) 
             {
               const data = await response.json();
@@ -453,7 +444,7 @@
             }
             else
             {
-              console.log('Auth code resend failed');
+              console.log('DEBUG: Auth code resend failed');
             }
           }
           catch
@@ -495,13 +486,11 @@
     //-----------------------------------------------------------------------------
     function openPwdResetModal()
     {
-      console.log("DEBUG: Got to openPwdResetModal");
       fetch("{% url 'plants:user_pwd_rst_step1' %}") 
       .then(response => response.text())
       .then(html => {
         pwd_rst_modal_step1.innerHTML = html; 
         pwd_rst_modal_step1.style.display = 'block';
-        console.log("DEBUG: Completed openPwdResetModal fetch");
         //-----------------------------------------------------------------------------
         // User inputs
         //-----------------------------------------------------------------------------
@@ -566,9 +555,6 @@
         //-----------------------------------------------------------------------------
         const form = document.getElementById('id_pwd_rst_form_step1');
         form.addEventListener('submit', async (event) => {
-
-          console.log("DEBUG: Start form submission process, email =", pwd_rst_email.value);   
-          
           // Prevent standard browser form submission
           event.preventDefault();
           try 
@@ -588,7 +574,6 @@
               headers: {'X-CSRFToken' : csrfToken},
               body:    formData
             });
-            console.log("DEBUG: Waiting for server response");
             if (response.ok) 
             {
               const data = await response.json();
@@ -621,12 +606,10 @@
     //-----------------------------------------------------------------------------
     function openPwdRstModal_step2()
     { 
-      console.log("DEBUG: Got to Password Reset code - Step 2");
       // fetch the modal html from the server
       fetch("{% url 'plants:user_pwd_rst_step2' %}") 
       .then(response => response.text())
       .then(html => {
-        console.log("DEBUG: Got to pt 1");
         pwd_rst_modal_step2.innerHTML     = html;
         pwd_rst_modal_step2.style.display = 'block';
         //-----------------------------------------------------------------------------
@@ -653,7 +636,6 @@
               headers: {'X-CSRFToken' : csrfToken},
               body:    formData
             });
-            console.log("DEBUG: sent entered code to server");
             if (response.ok) 
             {
               const data = await response.json();

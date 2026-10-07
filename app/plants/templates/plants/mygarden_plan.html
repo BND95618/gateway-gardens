@@ -1,4 +1,4 @@
-<!-- app/plants/templates/gardens_plan.html -->
+<!-- app/plants/templates/mygarden_plan.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -9,7 +9,7 @@
 {% block css %}
 <!-- Insert template css here -->
 <style>
-  #gardens_plan
+  #mygarden_plan
   {
       background-color: slategray;
       color:            white;
@@ -346,12 +346,12 @@
     </div>
 
     <!-- Shape Edit Modal -->
-    <div id="planner_edit_modal" class="bnd-modal bnd-background-visible">
+    <div id="mygarden_plan_edit_modal" class="bnd-modal bnd-background-visible">
         <div class="bnd-modal-container">
 
             <header class="bnd-modal-header"> 
                 <!-- Close the shape edit modal -->
-                <span onclick="document.getElementById('planner_edit_modal').style.display='none'" 
+                <span onclick="document.getElementById('mygarden_plan_edit_modal').style.display='none'" 
                     class="bnd-button bnd-modal-close">&times;
                 </span>
                 <h3>Edit Shape</h3>
@@ -559,7 +559,7 @@
                     <input type="submit" value="Apply" class="bnd-button-submit"/>
                     <input type="reset"  value="Reset" class="bnd-button bnd-round-large bnd-grey"/>
                     <button type="button"              class="bnd-button-cancel"
-                            onclick="document.getElementById('planner_edit_modal').style.display='none'">
+                            onclick="document.getElementById('mygarden_plan_edit_modal').style.display='none'">
                             Exit
                     </button>
                 </form>
@@ -4141,7 +4141,7 @@
                 if (e.target.textContent == "Shape: Edit")
                 {
                     // display the shape edit model
-                    planner_edit_modal.style.display = 'block';
+                    mygarden_plan_edit_modal.style.display = 'block';
                     // set up the edit menu for the selected shape
                     shapes[shapeIndex].editMenu();
                 }
@@ -4180,7 +4180,7 @@
             // update the shape per the edit menu inputs
             shapes[shapeIndex].editSave();
             // hide the modal
-            planner_edit_modal.style.display = 'none';
+            mygarden_plan_edit_modal.style.display = 'none';
             // Draw the entire screen
             drawScreen();
         });
@@ -4357,7 +4357,7 @@
         //************************************************************//
         //Make the modal (<div> element) draggable:
         dragElement(document.getElementById("plant_details_modal"));
-        // dragElement(document.getElementById("planner_edit_modal"));
+        // dragElement(document.getElementById("mygarden_plan_edit_modal"));
         function dragElement(elmnt) 
         {
             var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

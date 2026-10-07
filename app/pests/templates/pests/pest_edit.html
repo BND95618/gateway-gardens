@@ -180,41 +180,11 @@
 {% block js %}
 <script>
   //-----------------------------------------------------------------------------
-  // Function: Update preview image when new image is selected
+  // Update preview image (via setupImagePreview) when new image is selected
   //-----------------------------------------------------------------------------
-  // Select image file input field
-  const image_1_input   = document.getElementById('id_image_1');
-  const image_2_input   = document.getElementById('id_image_2');
-  const image_3_input   = document.getElementById('id_image_3');
-  const image_4_input   = document.getElementById('id_image_4');
-  // Select image preview
-  const image_1_preview = document.getElementById('id_image_1_preview');
-  const image_2_preview = document.getElementById('id_image_2_preview');
-  const image_3_preview = document.getElementById('id_image_3_preview');
-  const image_4_preview = document.getElementById('id_image_4_preview');
-  // Listen for any character changes in the input fields
-  image_1_input.addEventListener('change', async (event) => 
+  for (let num = 1; num <= 4; num++) 
   {
-    updatePreviewImage(image_1_input.files[0], image_1_preview);
-  });
-  image_2_input.addEventListener('change', async (event) => 
-  {
-    updatePreviewImage(image_2_input.files[0], image_2_preview);
-  });
-  image_3_input.addEventListener('change', async (event) => 
-  {
-    updatePreviewImage(image_3_input.files[0], image_3_preview);
-  });
-  image_4_input.addEventListener('change', async (event) => 
-  {
-    updatePreviewImage(image_4_input.files[0], image_4_preview);
-  });
-  //-----------------------------------------------------------------------------
-  // Function: Update the preview image
-  //-----------------------------------------------------------------------------
-  function updatePreviewImage(file, image_preview)
-  {
-    image_preview.src = URL.createObjectURL(file);
+    setupImagePreview(`id_image_${num}`, `id_image_${num}_preview`);
   }
   //----------------------------------------------------------------------------- 
   // Upload form data and compressed images
@@ -292,32 +262,27 @@
       //----------------------------------------------------------------------------
       if (typeof compressedBlob_1 !== 'undefined' && compressedBlob_1 !== null)
       {
-        console.log("DEBUG: Compressed image 1 exists");
         formData.delete('image_1');
         formData.append('image_1', compressedBlob_1, 'image_1.jpg');
       }
       if (typeof compressedBlob_2 !== 'undefined' && compressedBlob_2 !== null)
       {
-        console.log("DEBUG: Compressed image 2 exists");
         formData.delete('image_2');
         formData.append('image_2', compressedBlob_2, 'image_2.jpg');
       }
       if (typeof compressedBlob_3 !== 'undefined' && compressedBlob_3 !== null)
       {
-        console.log("DEBUG: Compressed image 3 exists");
         formData.delete('image_3');
         formData.append('image_3', compressedBlob_3, 'image_3.jpg');
       }
       if (typeof compressedBlob_4 !== 'undefined' && compressedBlob_4 !== null)
       {
-        console.log("DEBUG: Compressed image 4 exists");
         formData.delete('image_4');
         formData.append('image_4', compressedBlob_4, 'image_4.jpg');
       }
       //----------------------------------------------------------------------------
       // Send the form data entered by the user
       //----------------------------------------------------------------------------
-      console.log("DEBUG: POST user inputs to server");
       statusDiv.innerText = "Upload in process...";
       const postURL = window.location.pathname;
       const response = await fetch(postURL, 

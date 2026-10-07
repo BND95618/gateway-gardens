@@ -1,4 +1,4 @@
- <!-- /app/plants/templates/plants/gardens_summary.html -->
+ <!-- /app/plants/templates/plants/mygarden_summary.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -9,7 +9,7 @@
 {% block css %}
   <!-- Insert template css here -->
   <style>
-    #gardens_summary
+    #mygarden_summary
     {
       background-color: slategray;
       color:            white;
@@ -34,7 +34,7 @@
       <i class="material-icons">menu</i>
     </button>
     <div class="bnd-banner-menu-content">
-      <a href="{% url 'plants:gardens_update' garden.id %}" class="bnd-dropdown-button">Update</a>
+      <a href="{% url 'plants:mygarden_update' garden.id %}" class="bnd-dropdown-button">Update</a>
     </div>
   </div>
 

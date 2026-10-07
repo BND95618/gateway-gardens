@@ -473,7 +473,7 @@
             {% if perms.plants.delete_plant %}
             <td class="bnd-table-icon-flex">
               <div class="bnd-tooltip">
-                <button onclick="plants_delete({{ plant.id }})" class="bnd-button-table">
+                <button onclick="plant_delete({{ plant.id }})" class="bnd-button-table">
                   <i    class="material-icons bnd-text-black">delete</i>
                   <span class="bnd-tooltip-text">Delete</span>
                 </button>
@@ -508,7 +508,7 @@
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
   <!-- Plant Delete modal - html to be inserted by Javascript -->
-  <div id="plants_delete_modal" class="bnd-modal">
+  <div id="plant_delete_modal" class="bnd-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
   </div>
 
@@ -740,16 +740,16 @@
     //-----------------------------------------------------------------------------
     // Delete Plant Modal Script
     //-----------------------------------------------------------------------------
-    const plants_delete_modal = document.getElementById('plants_delete_modal');
-    function plants_delete(id) 
+    const plant_delete_modal = document.getElementById('plant_delete_modal');
+    function plant_delete(id) 
     {
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/plants_delete/" + id
+      url = "/plant_delete/" + id
       fetch(url)
         .then(response => response.text())
-        .then(html => {plants_delete_modal.innerHTML = html;})
+        .then(html => {plant_delete_modal.innerHTML = html;})
       // Display the plant delete modal
-      plants_delete_modal.style.display='block';
+      plant_delete_modal.style.display='block';
       // Freeze the main body while the modal is open
       document.body.classList.add("bnd-modal-open");
     }
@@ -758,7 +758,6 @@
     //-----------------------------------------------------------------------------
     function myplant_status(id)
     {
-      console.log("DEBUG: Got to Plnt Status Modal Script");
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
       url = "/myplant_status/" + id
       fetch(url)
@@ -910,9 +909,9 @@
         plants_chart_modal.style.display = "none";
         document.body.classList.remove('bnd-modal-open');
       }
-      else if (event.target == plants_delete_modal) 
+      else if (event.target == plant_delete_modal) 
       {
-        plants_delete_modal.style.display = "none";
+        plant_delete_modal.style.display = "none";
         document.body.classList.remove('bnd-modal-open');
       }
       else if (event.target == myplant_remove_modal) 

@@ -6,12 +6,18 @@ from plants import views
 
 app_name = "plants"
 urlpatterns = [
-    path('',                               views.index,                 name='index'),
+    path('',                               views.index,                    name='index'),
     #
-    path('gardens_summary',                views.gardens_summary,       name='gardens_summary'),
-    path('gardens_add',                    views.gardens_add,           name="gardens_add"),
-    path('gardens_update/<int:id>',        views.gardens_update,        name="gardens_update"),
+    path('mygarden_summary',               views.mygarden_summary,         name='mygarden_summary'),
+    path('mygarden_add',                   views.mygarden_add,             name="mygarden_add"),
+    path('mygarden_update/<int:id>',       views.mygarden_update,          name="mygarden_update"),
+    path('mygarden_plan',                  views.mygarden_plan,            name='mygarden_plan'),
+    path('mygarden_plan_edit_modal',       views.mygarden_plan_edit_modal, name='mygarden_plan_edit_modal'),
+    path('plant_details_modal',            views.plant_details_modal,      name='plant_details_modal'),
     #
+    path('my_column_chooser',              views.my_column_chooser,     name='my_column_chooser'),
+    #
+    path('myplants_summary',               views.myplants_summary,      name='myplants_summary'),
     path('myplants_todo',                  views.myplants_todo,         name='myplants_todo'),
     path('myplants_todo_details/<int:id>', views.myplants_todo_details, name='myplants_todo_details'),
     path('myplants_todo_add/<int:id>',     views.myplants_todo_add,     name='myplants_todo_add'),
@@ -21,18 +27,10 @@ urlpatterns = [
     path('myplants_todo_save/<int:id>',    views.myplants_todo_save,    name='myplants_todo_save'),
     path('myplants_todo_fetch',            views.myplants_todo_fetch,   name='myplants_todo_fetch'),
     #
-    path('gardens_plan',                   views.gardens_plan,          name='gardens_plan'),
-    path('plant_details_modal',            views.plant_details_modal,   name='plant_details_modal'),
-    path('planner_edit_modal',             views.planner_edit_modal,    name='planner_edit_modal'),
-    #
-    path('myplants_summary',               views.myplants_summary,      name='myplants_summary'),
-    path('my_column_chooser',              views.my_column_chooser,     name='my_column_chooser'),
-    #
     path('myplant_status/<int:id>',        views.myplant_status,        name='myplant_status'),
     path('myplant_details/<int:id>',       views.myplant_details,       name='myplant_details'),
     path('myplant_add/<int:id>',           views.myplant_add,           name='myplant_add'),
     path('myplant_edit/<int:id>',          views.myplant_update,        name='myplant_update'),
-    path('myplant_comment/<int:id>',       views.myplant_comment,       name='myplant_comment'),
     path('myplant_delete/<int:id>',        views.myplant_delete,        name='myplant_delete'),
     #
     path('myplant_log_add/<int:id>',       views.myplant_log_add,       name='myplant_log_add'),
@@ -45,30 +43,32 @@ urlpatterns = [
     path('myplant_todo_done/<int:id>',     views.myplant_todo_done,     name='myplant_todo_done'),
     path('myplant_todo_save/<int:id>',     views.myplant_todo_save,     name='myplant_todo_save'),
     #
+    path('myplant_comment/<int:id>',       views.myplant_comment,       name='myplant_comment'),
+    #
     path('plants_summary',                 views.plants_summary,        name='plants_summary'),
     path('plant2garden/<int:id>',          views.plant2garden,          name='plant2garden'),
-    path('plants_glossary',           views.plants_glossary,     name='plants_glossary'),
-    path('plants_reference',          views.plants_reference,    name='plants_reference'),
-    path('plants_about',              views.plants_about,        name='plants_about'),
+    path('plants_glossary',                views.plants_glossary,       name='plants_glossary'),
+    path('plants_reference',               views.plants_reference,      name='plants_reference'),
+    path('plants_about',                   views.plants_about,          name='plants_about'),
     #
-    path('plant_add',                 views.plant_add,           name='plant_add'),
-    path('plant_edit/<int:id>',       views.plant_edit,          name='plant_edit'),
-    path('plant_details/<int:id>',    views.plant_details,       name='plant_details'),
-    path('plant_comment/<int:id>',    views.plant_comment,       name='plant_comment'),
-    path('plants_delete/<int:id>',    views.plants_delete,       name='plants_delete'),
-    path('plant_fetch',               views.plant_fetch,         name='plant_fetch'),
+    path('plant_add',                      views.plant_add,             name='plant_add'),
+    path('plant_edit/<int:id>',            views.plant_edit,            name='plant_edit'),
+    path('plant_details/<int:id>',         views.plant_details,         name='plant_details'),
+    path('plant_comment/<int:id>',         views.plant_comment,         name='plant_comment'),
+    path('plant_delete/<int:id>',          views.plant_delete,          name='plant_delete'),
+    path('plant_fetch',                    views.plant_fetch,           name='plant_fetch'),
     #
-    path('user_profile_step1',        views.user_profile_step1,  name='user_profile_step1'),
-    path('user_profile_step2',        views.user_profile_step2,  name='user_profile_step2'),
-    path('user_profile_mfa',          views.user_profile_mfa,    name='user_profile_mfa'),
-    path('user_login',                views.user_login,          name='user_login'),
-    path('user_pwd_rst_step1',        views.user_pwd_rst_step1,  name='user_pwd_rst_step1'),
-    path('user_pwd_rst_step2',        views.user_pwd_rst_step2,  name='user_pwd_rst_step2'),
-    path('user_pwd_rst_mfa',          views.user_pwd_rst_mfa,    name='user_pwd_rst_mfa'),
-    path('user_logout',               views.user_logout,         name='user_logout'),
+    path('user_profile_step1',             views.user_profile_step1,    name='user_profile_step1'),
+    path('user_profile_step2',             views.user_profile_step2,    name='user_profile_step2'),
+    path('user_profile_mfa',               views.user_profile_mfa,      name='user_profile_mfa'),
+    path('user_login',                     views.user_login,            name='user_login'),
+    path('user_pwd_rst_step1',             views.user_pwd_rst_step1,    name='user_pwd_rst_step1'),
+    path('user_pwd_rst_step2',             views.user_pwd_rst_step2,    name='user_pwd_rst_step2'),
+    path('user_pwd_rst_mfa',               views.user_pwd_rst_mfa,      name='user_pwd_rst_mfa'),
+    path('user_logout',                    views.user_logout,           name='user_logout'),
     #
-    path('column_chooser',            views.column_chooser,      name='column_chooser'),
+    path('column_chooser',                 views.column_chooser,        name='column_chooser'),
     # views for debug and testing purposes
-    path('debug',                     views.debug,               name='debug'),
-    path('fiddle',                    views.fiddle,              name='fiddle'),
+    path('debug',                          views.debug,                 name='debug'),
+    path('fiddle',                         views.fiddle,                name='fiddle'),
 ]

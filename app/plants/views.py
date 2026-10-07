@@ -67,12 +67,12 @@ def index(request):
 
 #
 
-def gardens_summary(request):
+def mygarden_summary(request):
     """ Render the individual user's garden summary for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     gardens = Garden.objects.all()
-    template = loader.get_template("plants/gardens_summary.html")
+    template = loader.get_template("plants/mygarden_summary.html")
     context = {}
     # AR: Only allow a user to have one garden defined
     my_gardens = 0
@@ -85,13 +85,13 @@ def gardens_summary(request):
                 my_gardens = my_gardens + 1
         else:
             # no user has a garden in db
-            return HttpResponseRedirect(reverse('plants:gardens_add')) 
+            return HttpResponseRedirect(reverse('plants:mygarden_add')) 
     # current user has no gardens in db
     if my_gardens == 0:
-        return HttpResponseRedirect(reverse('plants:gardens_add'))
+        return HttpResponseRedirect(reverse('plants:mygarden_add'))
     return HttpResponse(template.render(context, request))
 
-def gardens_add(request):
+def mygarden_add(request):
     """ Add garden to the database """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -132,13 +132,13 @@ def gardens_add(request):
                 garden.caption_8 = form.cleaned_data.get('caption_8')
 
             garden.save()
-        return HttpResponseRedirect(reverse('plants:gardens_summary'))
+        return HttpResponseRedirect(reverse('plants:mygarden_summary'))
     else:
         form = GardenAddUpdateForm()
         context = { 'form' : form }
-        return render(request, 'plants/gardens_add.html', context)
+        return render(request, 'plants/mygarden_add.html', context)
 
-def gardens_update(request, id):
+def mygarden_update(request, id):
     """ Update garden details """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -195,7 +195,7 @@ def gardens_update(request, id):
             garden.caption_8 = form.cleaned_data.get('caption_8')
 
             garden.save()
-        return HttpResponseRedirect(reverse('plants:gardens_summary'))
+        return HttpResponseRedirect(reverse('plants:mygarden_summary'))
     else:
         # set the update form with the current db values
         form = GardenAddUpdateForm(initial={ 'name'        : garden.name,
@@ -223,9 +223,9 @@ def gardens_update(request, id):
         context = { 'garden' : garden, 
                     'form' : form,
                   }
-        return render(request, 'plants/gardens_update.html', context)
+        return render(request, 'plants/mygarden_update.html', context)
  
-def gardens_plan(request):
+def mygarden_plan(request):
     """ Render the Garden Plan page """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -249,9 +249,9 @@ def gardens_plan(request):
                 shapes_JSON = json.dumps(garden.shapes_JSON)
         context = { 'plants'      : plants,
                     'shapes_JSON' : shapes_JSON }
-        return render(request, 'plants/gardens_plan.html', context)
+        return render(request, 'plants/mygarden_plan.html', context)
 
-def planner_edit_modal(request):
+def mygarden_plan_edit_modal(request):
     """ Display shape edit menu in a pop-up modal """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -267,7 +267,7 @@ def planner_edit_modal(request):
                     "width"  : shape_dict["width"],
                     "height" : shape_dict["height"],
                   }
-        return render(request, 'plants/planner_edit_modal.html', context)
+        return render(request, 'plants/mygarden_plan_edit_modal.html', context)
     
     else:
         print("DEBUG: Error!")
@@ -277,8 +277,6 @@ def plant_details_modal(request):
     """ Display plant detail in a pop-up modal """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    
-    print("Got to plant_details_modal view")
     
     if request.method == 'POST':
         # Get the JSON sring with the common name of the requested plant
@@ -301,7 +299,6 @@ def plant_details_modal(request):
 
         context = { "plant" : plant }
         return render(request, 'plants/plant_details_modal.html', context)
-    
     else:
         print("DEBUG: Error!")
         return HttpResponseRedirect(reverse('plants:index'))
@@ -493,7 +490,7 @@ def myplants_summary(request):
 
             # the current user needs to have a registered garden
             if (user_garden_found == False):
-                return HttpResponseRedirect(reverse('plants:gardens_add'))
+                return HttpResponseRedirect(reverse('plants:mygarden_add'))
 
             context = { "myplants"            : myplants,
                         # search field options - plant attributes
@@ -591,7 +588,7 @@ def myplants_summary(request):
 
         # the current user needs to have a registered garden
         if (user_garden_found == False):
-            return HttpResponseRedirect(reverse('plants:gardens_add'))
+            return HttpResponseRedirect(reverse('plants:mygarden_add'))
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
@@ -915,7 +912,7 @@ def myplants_todo_edit(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
-    myplants = MyPlant.objects.filter(owner = request.user.username)
+    myplants     = MyPlant.objects.filter(owner = request.user.username)
     myplant_todo = MyPlantToDo.objects.get(id=id)
 
     if request.POST:
@@ -1083,38 +1080,33 @@ def myplant_log_add(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
-    myplant = MyPlant.objects.get(id=id)
-    myLog   = MyPlantLog()
-    print("DEBUG: pt 1")
+    myplant     = MyPlant.objects.get(id=id)
+    myplant_log = MyPlantLog()
     if request.POST:
-        print("DEBUG: pt 2")
         log_add_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_add_form')
         if log_add_form.is_valid():
-            print("DEBUG: pt 3")
-            myLog.author  = request.user.username
-            myLog.subject = log_add_form.cleaned_data.get("log_subject")
-            myLog.date    = log_add_form.cleaned_data.get("log_date")
-            myLog.entry   = log_add_form.cleaned_data.get("log_entry")
+            myplant_log.author  = request.user.username
+            myplant_log.subject = log_add_form.cleaned_data.get("log_subject")
+            myplant_log.date    = log_add_form.cleaned_data.get("log_date")
+            myplant_log.entry   = log_add_form.cleaned_data.get("log_entry")
             # Process images
             if 'log_image_1' in request.FILES:
-                myLog.image_1 = request.FILES['log_image_1']
-                print("DEBUG: image 1 exists")
+                myplant_log.image_1 = request.FILES['log_image_1']
             else:
-                print("DEBUG: image 1 does not exist")
-            myLog.caption_1 = log_add_form.cleaned_data.get('log_caption_1')
+                myplant_log.caption_1 = log_add_form.cleaned_data.get('log_caption_1')
             if 'log_image_2' in request.FILES:
-                myLog.image_2 = request.FILES['log_image_2']
-            myLog.caption_2 = log_add_form.cleaned_data.get('log_caption_2')
+                myplant_log.image_2 = request.FILES['log_image_2']
+            myplant_log.caption_2 = log_add_form.cleaned_data.get('log_caption_2')
             if 'log_image_3' in request.FILES:
-                myLog.image_3 = request.FILES['log_image_3']
-            myLog.caption_3 = log_add_form.cleaned_data.get('log_caption_3')
+                myplant_log.image_3 = request.FILES['log_image_3']
+            myplant_log.caption_3 = log_add_form.cleaned_data.get('log_caption_3')
             if 'log_image_4' in request.FILES:
-                myLog.image_4 = request.FILES['log_image_4']
-            myLog.caption_4 = log_add_form.cleaned_data.get('log_caption_4')
+                myplant_log.image_4 = request.FILES['log_image_4']
+            myplant_log.caption_4 = log_add_form.cleaned_data.get('log_caption_4')
             
             # link the log entry to the specific plant
-            myLog.myplant = myplant                          
-            myLog.save()
+            myplant_log.myplant = myplant                          
+            myplant_log.save()
 
             response_data = {
                 'status': 'success',
@@ -1129,12 +1121,9 @@ def myplant_log_edit(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     # Get the Log item to be edited
-    print("DEBUG: Got to Log item to be edited")
     myplant_log = MyPlantLog.objects.get(id=id)
     # Edit the To Do item
-    print("DEBUG: Got to line before POST")
     if request.POST:
-        print("DEBUG: Got to POST")
         log_edit_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_edit_form')
         if log_edit_form.is_valid():
             myplant_log.subject = log_edit_form.cleaned_data.get("log_subject")
@@ -1169,8 +1158,6 @@ def myplant_log_edit(request, id):
         return JsonResponse(response_data)
     # Populate the edit modal fields and render the modal
     else:
-        print("DEBUG: myplant_log.entry.delta:", myplant_log.entry.delta)
-        print("DEBUG: myplant_log.entry.html:",  myplant_log.entry.html)
         log_edit_form = MyPlantLogForm(prefix='log_edit_form',
                                        initial = { 'log_subject'   : myplant_log.subject,
                                                    'log_entry'     : myplant_log.entry,
@@ -1209,7 +1196,7 @@ def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    myplant = MyPlant.objects.get(id=id)
+    myplant      = MyPlant.objects.get(id=id)
     myplant_todo = MyPlantToDo()
     if request.POST:
         form = MyPlantToDoForm(request.POST, request.FILES)
@@ -1316,17 +1303,16 @@ def myplant_comment(request, id):
     """ Associate a comment to a plant """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    myplant = MyPlant.objects.get(id=id)
-    mycomment = MyPlantComment()
+    myplant         = MyPlant.objects.get(id=id)
+    myplant_comment = MyPlantComment()
     if request.POST:
         comment_form = MyPlantCommentForm(request.POST, request.FILES, prefix='comment_form')
         if comment_form.is_valid():
-            mycomment.author  = request.user.username            #
-            mycomment.subject = comment_form.cleaned_data.get("subject") #
-            print("DEBUG: comment subject:", mycomment.subject)
-            mycomment.comment = comment_form.cleaned_data.get("comment") #
-            mycomment.myplant = myplant                          # link the comment to the specific plant
-            mycomment.save()
+            myplant_comment.author  = request.user.username            #
+            myplant_comment.subject = comment_form.cleaned_data.get("subject") #
+            myplant_comment.comment = comment_form.cleaned_data.get("comment") #
+            myplant_comment.myplant = myplant                          # link the comment to the specific plant
+            myplant_comment.save()
         return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant.id,))) 
     else:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -1571,7 +1557,7 @@ def plants_summary(request):
 
         # the current user needs to have a registered garden
         if (user_garden_found == False):
-            return HttpResponseRedirect(reverse('plants:gardens_add'))
+            return HttpResponseRedirect(reverse('plants:mygarden_add'))
         
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username) 
@@ -1986,7 +1972,7 @@ def plant2garden(request, id):
             plant.gardens.add(garden)                    # Associate the plant to the selected garden
     return HttpResponseRedirect(reverse('plants:plants_summary'))
 
-def plants_delete(request, id):
+def plant_delete(request, id):
     """ Delete selected plant from the Plant database table """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -2011,7 +1997,7 @@ def plants_delete(request, id):
         return HttpResponseRedirect(reverse('plants:plants_summary')) 
     else:
         context = {'plant': plant}
-        return render(request, 'plants/plants_delete_modal.html', context)
+        return render(request, 'plants/plant_delete_modal.html', context)
 
 def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
@@ -2134,7 +2120,7 @@ def user_profile_step1(request):
             else:
                 # Generate a random 6-digit OTP code
                 otp_code = str(random.randint(100000, 999999))
-                print("DEBUG: MFA code =", otp_code)
+                print("INFO: MFA code =", otp_code)
                 # Store pending user data and OTP in the session (expire in 10 minutes)
                 if 'profile_photo' in request.FILES:
                     request.session['pending_user'] = {
@@ -2298,7 +2284,7 @@ def user_profile_mfa(request):
     if request.method == 'GET':
         # Generate a random 6-digit OTP code
         otp_code = str(random.randint(100000, 999999))
-        print("DEBUG: otp_code = ", otp_code)
+        print("INFO: otp_code = ", otp_code)
         # Store pending user OTP in the current session (expire in 10 minutes)
         request.session['pending_user']['otp_code'] = otp_code
         # Force Django to save the changes
@@ -2331,7 +2317,6 @@ def user_profile_mfa(request):
 def user_pwd_rst_step1(request):
     """ Render the User Password Reset Page for Gateway Gardens app """
     if request.POST:
-        print("DEBUG: Got to user_pwd_rst_step1 POST")
         form = UserPwdResetForm(request.POST)
         if form.is_valid():
             # ----------------------------------------------------------------------
@@ -2340,12 +2325,9 @@ def user_pwd_rst_step1(request):
             pwd_rst_password_1 = form.cleaned_data.get('pwd_rst_password_1')
             pwd_rst_password_2 = form.cleaned_data.get('pwd_rst_password_2')
             pwd_rst_email      = form.cleaned_data.get('pwd_rst_email')
-            
-            print("DEBUG: pwd_rst_email:", pwd_rst_email)
             # ----------------------------------------------------------------------
             # Input validation
             # ----------------------------------------------------------------------
-            print("DEBUG: starting input validation")
             pwd_rst_error_message = ""
             PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
             # Input validation - Passwords
@@ -2368,9 +2350,8 @@ def user_pwd_rst_step1(request):
             # 3. email MFA code to user 
             # 4. Inform client to open MFA modal
             # ----------------------------------------------------------------------
-            print("DEBUG: completed input validation")
             if (pwd_rst_error_message != ""):
-                print("DEBUG: input validation failure")
+                print("INFO: input validation failure")
                 # Return failure status to client
                 response_data = {
                     'status': 'failure',
@@ -2378,10 +2359,10 @@ def user_pwd_rst_step1(request):
                 }
                 return JsonResponse(response_data)
             else:
-                print("DEBUG: input validation success")
+                print("INFO: input validation success")
                 # Generate a random 6-digit OTP code
                 otp_code = str(random.randint(100000, 999999))
-                print("DEBUG: MFA code =", otp_code)
+                print("INFO: MFA code =", otp_code)
                 request.session['pending_user'] = { 'pwd_rst_password_1' : pwd_rst_password_1 }
                 request.session['pending_user'] = { 'pwd_rst_email'      : pwd_rst_email }
                 request.session['pending_user'] = { 'otp_code'           : otp_code }
@@ -2407,7 +2388,6 @@ def user_pwd_rst_step1(request):
                 }
                 return JsonResponse(response_data)
     else:
-        print("DEBUG: Got to user_pwd_rst_step1")
         form = UserPwdResetForm()
         context = { 'form' : form }
         return render(request, 'plants/pwd_rst_modal_step1.html', context)
@@ -2420,19 +2400,15 @@ def user_pwd_rst_step2(request):
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
         return render(request, 'plants/index.html')
-    
-    print("DEBUG: got to user_pwd_rst_step2")
 
     if request.POST:
         form = EmailVerificationForm(request.POST)
         if form.is_valid():
-            print("DEBUG: user_pwd_rst_step2 - processing form")
             entered_code = form.cleaned_data.get('entered_code')
             # ----------------------------------------------------------------------
             # If the user entered the MFA code correctly, setup the user
             # ----------------------------------------------------------------------
             if entered_code == pending_data['otp_code']:
-                print("DEBUG: user_pwd_rst_step2 - codes match")
                 # Retrieve the user information from the session setup in step 1
                 pwd_rst_password_1 = pending_data['pwd_rst_password_1']
                 pwd_rst_email      = pending_data['pwd_rst_email']
@@ -2451,7 +2427,7 @@ def user_pwd_rst_step2(request):
                 }
                 return JsonResponse(response_data)
             else:
-                print("DEBUG: user_pwd_rst_step2 - codes do not match")
+                print("INFO: user_pwd_rst_step2 - codes do not match")
                 response_data = {
                     'status'  : 'pwd_rst-failure',
                     'message' : 'User password reset failed',
@@ -2464,7 +2440,6 @@ def user_pwd_rst_step2(request):
     
 def user_pwd_rst_mfa(request):
     """ Provide new authorization code """
-    print("DEBUG: Got to user_pwd_rst_mfa view")
     pending_data = request.session.get('pending_user')
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
@@ -2474,7 +2449,7 @@ def user_pwd_rst_mfa(request):
     if request.method == 'GET':
         # Generate a random 6-digit OTP code
         otp_code = str(random.randint(100000, 999999))
-        print("DEBUG: otp_code = ", otp_code)
+        print("INFO: otp_code = ", otp_code)
         # Store pending user OTP in the current session (expire in 10 minutes)
         request.session['pending_user']['otp_code'] = otp_code
         # Force Django to save the changes

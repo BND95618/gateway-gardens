@@ -1,8 +1,30 @@
 // app/plants/static/plants/js/common_functions.js
 
 //----------------------------------------------------------------------------- 
-  // Asynchronous Image Compression Function
-  //----------------------------------------------------------------------------- 
+// Binds a file input to an image preview element.
+// @param {string} inputId - The ID of the file input element.
+// @param {string} previewId - The ID of the image preview element.
+//----------------------------------------------------------------------------- 
+function setupImagePreview(inputId, previewId) 
+{
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+
+    // Ensure both elements exist before adding the listener
+    if (input && preview) 
+    {
+        input.addEventListener('change', () => 
+        {
+            if (input.files && input.files[0]) 
+            {
+                preview.src = URL.createObjectURL(input.files[0]);
+            }
+        });
+    }
+}
+//----------------------------------------------------------------------------- 
+// Asynchronous Image Compression Function
+//----------------------------------------------------------------------------- 
 function compressImage(file, maxWidth, quality) 
 {
     return new Promise((resolve, reject) => 

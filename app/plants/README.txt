@@ -92,7 +92,7 @@ Every view function is responsible for returning an HttpResponse object. This
 object contains the content and metadata that will be sent back to the client's 
 web browser.
 
-  template = loader.get_template("plants/gardens_summary.html")
+  template = loader.get_template("plants/mygarden_summary.html")
   return HttpResponse(template.render(context, request))
 
 'return render' is a common shortcut function used in views to combine a given 
