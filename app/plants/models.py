@@ -296,7 +296,10 @@ class Comment(models.Model):
     date    = models.DateField(auto_now_add=True)
     subject = models.CharField(max_length=64, default="tbd", blank=True)
     comment = QuillField(blank=True, null=True)
-    # connection to a specific plant in the Plant db table
+    # Many-to-one relationship 
+    # - connection to a specific plant in the Plant db table
+    # - many "Comments" can be associated with each "Plant" record
+    # - if the associated plant is deleted then the comment is automatically deleted
     plant   = models.ForeignKey(Plant, on_delete=models.CASCADE)
     # Administrative stuff
     slug    = models.SlugField(default="", null=False, blank=True)
@@ -309,9 +312,10 @@ class Comment(models.Model):
      
 class MyPlant(models.Model):
     """ Plants that are in My Garden """
-    # Many-to-one relationship - many "myplants" can be associated with each "plant"
-    # connection to a specific plant in the Plant db table
-    # related_name allows reverse look-up - find all 'myplants' that are associated with a particular 'plant'
+    # Many-to-one relationship 
+    # - connection to a specific plant in the Plant db table
+    # - many "My Plant" items can be associated with each "Plant" record
+    # - if the associated plant is deleted then the "My Plant" item is automatically deleted
     plant        = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='myplants')
     #
     owner        = models.CharField(max_length=64, default="tbd", blank=True)
@@ -381,7 +385,10 @@ class MyPlantLog(models.Model):
                     blank      = True, 
                     null       = True)
     caption_4 = models.CharField(max_length=64, default="tbd", blank=True)
-    # connection to a specific plant in the MyPlant db table
+    # Many-to-one relationship 
+    # - connection to a specific plant in the MyPlant db table
+    # - many "Log Entries" items can be associated with each "My Plant" record
+    # - if the associated myplant is deleted then the "Log Entries" item is automatically deleted
     myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
     # Administrative stuff
     slug    = models.SlugField(default="", null=False, blank=True)
@@ -391,7 +398,6 @@ class MyPlantLog(models.Model):
     
     def get_absolute_url(self):
         return reverse("myplant_details")
-
 
 class MyPlantToDo(models.Model):
     """ My Plant To Do """
@@ -406,8 +412,9 @@ class MyPlantToDo(models.Model):
     details    = models.CharField(max_length=256, default="", blank=True)
     repeat     = models.CharField(max_length= 16, default="", blank=True)
     # Many-to-one relationship 
-    # - many "To Do items" can be associated with each "My Plant" record
     # - connection to a specific plant in the MyPlant db table
+    # - many "To Do" items can be associated with each "My Plant" record
+    # - if the associated myplant is deleted then the "To Do" item is automatically deleted
     myplant    = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
     # Administrative stuff
     slug       = models.SlugField(default="", null=False, blank=True)
@@ -426,7 +433,10 @@ class MyPlantComment(models.Model):
     date    = models.DateField(auto_now_add=True)
     subject = models.CharField(max_length=64, default="tbd", blank=True)
     comment = QuillField(blank=True, null=True)
-    # connection to a specific plant in the MyPlant db table
+    # Many-to-one relationship 
+    # - connection to a specific plant in the MyPlant db table
+    # - many "Comments" can be associated with each "My Plant" record
+    # - if the associated myplant is deleted then the comment is automatically deleted
     myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
     # Administrative stuff
     slug    = models.SlugField(default="", null=False, blank=True)

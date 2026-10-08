@@ -43,15 +43,18 @@
       <!-------------------------------------------------------------------------->
       <nav id="id_nav" class="bnd-page-nav">
         <a id="home"             href="{% url 'plants:index' %}"           >Home          </a>
-        <a id="mygarden_summary" href="{% url 'plants:mygarden_summary' %}" >My Garden     </a>
+        <a id="mygarden_summary" href="{% url 'plants:mygarden_summary' %}">My Garden     </a>
         <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}">My Plants     </a>
         <a id="myplants_todo"    href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
-        <a id="mygarden_plan"    href="{% url 'plants:mygarden_plan' %}"    >My Garden Plan</a>
+        <a id="mygarden_plan"    href="{% url 'plants:mygarden_plan' %}"   >My Garden Plan</a>
         <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
-        <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"    >Pests         </a>
+        <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"     >Pests         </a>
         <a id="plants_glossary"  href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
         <a id="plants_reference" href="{% url 'plants:plants_reference' %}">Reference     </a>
         <a id="plants_about"     href="{% url 'plants:plants_about' %}"    >About         </a>
+        {% if request.user.username == "Brent" %}
+          <a id="plants_admin" href="{% url 'plants:user_admin' %}">Admin</a>
+        {% endif %}
         <!-- drop down account menu item -->
         <div class="bnd-nav-dropdown-container">
           {% if user.is_authenticated %}
@@ -61,9 +64,9 @@
           {% endif %}
           <div class="bnd-nav-dropdown-content">
             {% if user.is_authenticated %}
-              <button id="update_button" 
-                      class="bnd-dropdown-button"
-                      onclick="openUserProfileModal()">
+              <button id      = "update_button" 
+                      class   = "bnd-dropdown-button"
+                      onclick = "openUserProfileModal()">
                 Update Profile
               </button>
               <form action="{% url 'plants:user_logout' %}" method="post">

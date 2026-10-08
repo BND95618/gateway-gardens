@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # This app automatically finds all FileField and ImageField attributes on your models 
+    # and deletes their corresponding storage files when a model instance is deleted, 
+    # including via cascading relations.
+    'django_cleanup.apps.CleanupConfig',
     # Added for Dajango 5.2.8 S3 static/media file access
     'storages',
     # My apps

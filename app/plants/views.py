@@ -2504,6 +2504,35 @@ def user_logout(request):
     logout(request)
     return render(request, 'plants/index.html')
 
+def user_admin(request):
+    """ Render the User Admin page for Gateway Gardens app """
+    if request.user.username == "Brent":
+        users = User.objects.all()
+        context = { 'users' : users, }
+        return render(request, 'plants/user_admin.html', context)
+    else:
+        return HttpResponseRedirect(reverse('plants:index'))
+
+def user_delete(request, id):
+    """ Delete selected user from the User database table """
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('plants:index'))
+    user = User.objects.get(id=id)
+    if request.POST:
+        print("DEBUG: Deleting the selected user:", user.username)
+        user_garden = Garden.objects.get(owner = user.username)
+        # Delete the user's profile photo
+        if (user_garden.profile_photo):
+            user_garden.profile_photo.delete(save=False)
+        # Delete the user's garden
+        user_garden.delete()
+        # Delete the user
+        user.delete()
+        return HttpResponseRedirect(reverse('plants:index')) 
+    else:
+        context = {'user': user}
+        return render(request, 'plants/user_delete_modal.html', context)
+
 def username_validation(profile_creation, username, USERNAME_ALLOWED_CHARS):
     error_message = ""
     if (username == ""):

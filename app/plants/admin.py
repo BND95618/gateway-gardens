@@ -4,14 +4,14 @@ from pests.models   import Pest
 
 # Register your models here.
 class GardenAdmin(admin.ModelAdmin):
-    list_display = ("name",
-                    "owner",
+    list_display = ("owner",
+                    "name",
                     "question",)
     prepopulated_fields = {"slug": ("name",) }
     
 class MyPlantAdmin(admin.ModelAdmin):
-    list_display = ("plant",
-                    "owner",
+    list_display = ("owner",
+                    "plant",
                     "sun_exposure",)
     prepopulated_fields = {"slug": ("plant",) }
 
@@ -21,7 +21,8 @@ class MyPlantLogAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("myplant",) }
 
 class MyPlantToDoAdmin(admin.ModelAdmin):
-    list_display = ("complete",
+    list_display = ("owner",
+                    "complete",
                     "date",
                     "action",
                     "details",)
@@ -35,7 +36,8 @@ class MyPlantCommentAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("myplant",) }
     
 class PlantAdmin(admin.ModelAdmin):
-    list_display = ("commonName", 
+    list_display = ("creator",
+                    "commonName", 
                     "genus", 
                     "species",)
     prepopulated_fields = {"slug": ("commonName",) }

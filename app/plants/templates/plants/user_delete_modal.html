@@ -1,0 +1,16 @@
+<!-- /app/plants/templates/plants/user_delete_modal.html -->
+<div class="bnd-modal-container">
+    <header class="bnd-modal-header">
+      <h4>Delete User?</h4>
+    </header>
+    <form class="bnd-modal-contents" action="{% url 'plants:user_delete' user.id %}" method="post">
+      {% csrf_token %}
+      <p>Username = {{ user.username }}</p>
+      <footer class="bnd-modal-button-bar">
+        <button type="submit" class="bnd-button-submit">Confirm</button>
+        <a href="{% url 'plants:index' %}">
+          <button type="button" class="bnd-button-cancel">Cancel</button>
+        </a>
+      </footer>
+    </form>
+  </div>

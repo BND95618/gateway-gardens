@@ -1,0 +1,122 @@
+<!-- /app/plants/templates/plants/user_admin.html -->
+{% extends "plants/master.html" %}
+{% load static %}
+
+{% block title %}
+  <title>Gateway Gardens | About</title>
+{% endblock title %}
+
+{% block css %}
+<style>
+  /* Highlight the navigation bar menu item */
+  #plants_admin
+  {
+    background-color: slategray;
+    color:            white;
+  }
+</style>
+{% endblock css %}
+
+{% block header-completion %}
+  <!-- complete the header from master.html -->
+  <div class="bnd-banner-logo-container">
+    <img src="{% static 'plants/img/logo.png' %}"  alt="No logo found" class="bnd-banner-logo">
+  </div>
+  <div class="bnd-banner-title-container">
+    <h1>User Account Administration</h1>
+  </div>
+{% endblock header-completion %}
+
+{% block content %}
+<div class="bnd-search-table-container-flex">
+  <!-------------------------------------------------------------------------->
+  <!-- User Table                                                          -->
+  <!-------------------------------------------------------------------------->
+  <div id="tableContainer" class="bnd-table-container-flex">
+    <table id="userTable" class="bnd-table-flex">
+      <thead>
+        <tr>
+          <!-- User Attributes -->
+          <th onclick="sortTable( 0, 'userTable')" >User ID     </th>
+          <th onclick="sortTable( 1, 'userTable')" >User Name   </th>
+          <th onclick="sortTable( 2, 'userTable')" >First Name  </th>
+          <th onclick="sortTable( 3, 'userTable')" >Last Name   </th>
+          <!-- User Detail header placeholder -->
+          <th class="bnd-center"></th>
+          <!-- User Update header placeholder -->
+          <th class="bnd-center"></th>
+          <!-- User Delete header placeholder -->
+          <th class="bnd-center"></th>
+        </tr>
+      </thead>
+      {% for user in users %}
+        {% if user.username != "Master-Gardener" and user.username != "system_default"%}
+        <tr>
+        <!-- User Attributes -->
+        <td>{{ user.id           }}</td>
+        <td>{{ user.username     }}</td>
+        <td>{{ user.first_name   }}</td>
+        <td>{{ user.last_name    }}</td>
+        <!-- User Details Icon/Link -->
+        <td class="bnd-table-icon-flex">
+            <div class="bnd-tooltip">
+            <a href="">
+                <i    class="material-icons bnd-text-black">library_books</i>
+                <span class="bnd-tooltip-text">Details</span>
+            </a>
+            </div>
+        </td>
+        <!-- User Update Icon/Link -->
+        {% if perms.plants.change_plant %}
+        <td class="bnd-table-icon-flex">
+            <div class="bnd-tooltip">
+            <a href="">
+                <i    class="material-icons bnd-text-black">edit</i>
+                <span class="bnd-tooltip-text">Edit</span>
+            </a>
+            </div>
+        </td>
+        {% endif %}
+        <!-- User Delete Icon/Link -->
+        <td class="bnd-table-icon-flex">
+            <div class="bnd-tooltip">
+            <button onclick="user_delete( {{ user.id }} )" class="bnd-button-table">
+                <i    class="material-icons bnd-text-black">delete</i>
+                <span class="bnd-tooltip-text">Delete</span>
+            </button>
+            </div>
+        </td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<!-------------------------------------------------------------------------->
+<!-- Modals                                                               -->
+<!-------------------------------------------------------------------------->
+<!-- User Delete modal - html to be inserted by Javascript -->
+<div id="id_user_delete_modal" class="bnd-modal">
+    <p>User delete form HTML to be Inserted Here!</p>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+function user_delete(id) 
+{
+    console.log("DEBUG: user ID:", id);
+    const user_delete_modal = document.getElementById('id_user_delete_modal');
+    // fetch the modal html from the server
+    const url = "{% url 'plants:user_delete' id=1234 %}".replace('1234', id);
+    console.log("DEBUG: url:", url);
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {
+        user_delete_modal.innerHTML      = html;
+        user_delete_modal.style.display  = 'block';
+    });
+}
+        
+</script>
+{% endblock js %}

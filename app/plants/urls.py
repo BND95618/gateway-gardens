@@ -66,6 +66,8 @@ urlpatterns = [
     path('user_pwd_rst_step2',             views.user_pwd_rst_step2,    name='user_pwd_rst_step2'),
     path('user_pwd_rst_mfa',               views.user_pwd_rst_mfa,      name='user_pwd_rst_mfa'),
     path('user_logout',                    views.user_logout,           name='user_logout'),
+    path('user_admin',                     views.user_admin,            name='user_admin'),
+    path('user_delete/<int:id>',           views.user_delete,           name='user_delete'),
     #
     path('column_chooser',                 views.column_chooser,        name='column_chooser'),
     # views for debug and testing purposes
