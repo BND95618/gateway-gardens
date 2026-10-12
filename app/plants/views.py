@@ -152,6 +152,7 @@ def mygarden_update(request, id):
             garden.owner       = request.user.username
             garden.usda_zone   = form.cleaned_data.get('usda_zone')
             garden.sunset_zone = form.cleaned_data.get('sunset_zone')
+            garden.description = form.cleaned_data.get('description')
 
             if 'image_1' in request.FILES:
                 if (garden.image_1):
@@ -195,7 +196,12 @@ def mygarden_update(request, id):
             garden.caption_8 = form.cleaned_data.get('caption_8')
 
             garden.save()
-        return HttpResponseRedirect(reverse('plants:mygarden_summary'))
+
+        response_data = {
+            'status': 'success',
+            'message': f'Received audio successfully',
+        }
+        return JsonResponse(response_data)
     else:
         # set the update form with the current db values
         form = GardenAddUpdateForm(initial={ 'name'        : garden.name,
@@ -2519,7 +2525,6 @@ def user_delete(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     user = User.objects.get(id=id)
     if request.POST:
-        print("DEBUG: Deleting the selected user:", user.username)
         user_garden = Garden.objects.get(owner = user.username)
         # Delete the user's profile photo
         if (user_garden.profile_photo):

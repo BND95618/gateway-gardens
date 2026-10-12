@@ -23,13 +23,14 @@
 
 {% block content %}
   <section class="bnd-page-main-top-margin-adjust">
-    <form action="" method="post" enctype="multipart/form-data">
+    <form id = "id_garden_form" action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.name.as_field_group }}
       {{ form.city.as_field_group }}
       {{ form.state.as_field_group }}
       {{ form.usda_zone.as_field_group }}
       {{ form.sunset_zone.as_field_group }}
+      {{ form.description.as_field_group }}
       <!-- Garden images -->
       <div class="images">
         <fieldset>
@@ -265,8 +266,9 @@
       <button type="submit" class="bnd-button-submit">Submit</button>
       <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
       <a href="{% url 'plants:mygarden_summary' %}">
-        <button type="button" class="bnd-button-cancel">Cancel</button>
+        <button type="button" id="id_submit" class="bnd-button-cancel">Cancel</button>
       </a>
+      <div id="status"></div>
     </form>
     <hr>
   </section>
@@ -282,13 +284,86 @@
 
 {% block js %}
 <script>
-  //-----------------------------------------------------------------------------
-  // Update preview image (via setupImagePreview) when new image is selected
-  //-----------------------------------------------------------------------------
-  for (let num = 1; num <= 8; num++) 
+//-----------------------------------------------------------------------------
+// Update preview image (via setupImagePreview) when new image is selected
+//-----------------------------------------------------------------------------
+for (let num = 1; num <= 8; num++) 
+{
+  setupImagePreview(`id_image_${num}`, `id_image_${num}_preview`);
+}
+//----------------------------------------------------------------------------- 
+// Upload form data and compressed images to the server
+//-----------------------------------------------------------------------------
+const form             = document.getElementById('id_garden_form');
+const submitBtn        = document.getElementById('id_submit');
+const statusDiv        = document.getElementById('status');
+const imageWidth       = 800; // pixels
+const imageCompression = 1.0; // range 0.0 to 1.0
+form.addEventListener('submit', async (event) => {
+  // Prevent standard browser form submission
+  event.preventDefault()
+  // Update UI state
+  submitBtn.disabled = true;
+  try 
   {
-    setupImagePreview(`id_image_${num}`, `id_image_${num}_preview`);
+    //----------------------------------------------------------------------------
+    // Get the user inputs
+    //----------------------------------------------------------------------------
+    const formData  = new FormData(form);
+    //----------------------------------------------------------------------------
+    // Compress new images to be uploaded
+    //----------------------------------------------------------------------------
+    for (let i = 1; i <= 8; i++) 
+    {
+      const imageInput = document.getElementById(`id_image_${i}`);
+      // Ensure the element exists before attempting to read files
+      if (!imageInput) continue; 
+      const file = imageInput.files[0];
+      let compressedBlob = null;
+      if (file) 
+      {
+        statusDiv.innerText = `Compressing Image ${i}... Please wait.`;
+        // Await the compression process
+        compressedBlob = await compressImage(file, imageWidth, imageCompression);
+        console.log(`Image ${i} - Original size:   ${(file.size / 1024).toFixed(2)} KB`);
+        console.log(`Image ${i} - Compressed size: ${(compressedBlob.size / 1024).toFixed(2)} KB`);
+      }
+      if (typeof compressedBlob !== 'undefined' && compressedBlob !== null) {
+        formData.delete(`image_${i}`);
+        formData.append(`image_${i}`, compressedBlob, `image_${i}.jpg`);
+      }
+    }
+    //----------------------------------------------------------------------------
+    // Send the form plus compressed images to the server
+    //----------------------------------------------------------------------------
+    statusDiv.innerText = "Upload in process...";
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const postURL   = window.location.pathname;
+    const response  = await fetch(postURL, 
+    {
+      method:  "POST",
+      headers: {'X-CSRFToken' : csrfToken},
+      body:    formData
+    });
+    if (response.ok) 
+    {
+      const data = await response.json();
+      statusDiv.innerText = "Upload successful!";
+      console.log('Success:', data);
+      // Handle your JSON response here (e.g., update DOM)
+      let returnURL = "{% url 'plants:mygarden_summary' %}";
+      window.location.href = returnURL;
+    } 
+    else 
+    {
+      console.error('Server Error:', response.status);
+    }
+  } 
+  catch (error) 
+  {
+      console.error('Network error:', error);
   }
-  //-----------------------------------------------------------------------------
+});
+//-----------------------------------------------------------------------------
 </script>
 {% endblock js %}

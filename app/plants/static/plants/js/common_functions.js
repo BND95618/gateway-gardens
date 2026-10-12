@@ -27,6 +27,7 @@ function setupImagePreview(inputId, previewId)
 //----------------------------------------------------------------------------- 
 function compressImage(file, maxWidth, quality) 
 {
+    console.log("Compressing Image via compressImage");
     return new Promise((resolve, reject) => 
     {
         const reader = new FileReader();

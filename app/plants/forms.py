@@ -383,57 +383,85 @@ class GardenAddUpdateForm(forms.Form):
 		max_length=32, 
 		required=False
 		)
+	description = QuillFormField(
+        label="Description",
+        required=False,
+        )
 	# garden images
-	image_1   = forms.ImageField(required=False)
+	image_1   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_1 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_2   = forms.ImageField(required=False)
+	image_2   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_2 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_3   = forms.ImageField(required=False)
+	image_3   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_3 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_4   = forms.ImageField(required=False)
+	image_4   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_4 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_5   = forms.ImageField(required=False)
+	image_5   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_5 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_6   = forms.ImageField(required=False)
+	image_6   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_6 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_7   = forms.ImageField(required=False)
+	image_7   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_7 = forms.CharField(
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
 		required=False
 		)
-	image_8   = forms.ImageField(required=False)
+	image_8   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
 	caption_8 = forms.CharField(
 		label="Caption",
 		initial="tbd", 

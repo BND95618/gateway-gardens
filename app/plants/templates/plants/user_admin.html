@@ -105,11 +105,9 @@
 <script>
 function user_delete(id) 
 {
-    console.log("DEBUG: user ID:", id);
     const user_delete_modal = document.getElementById('id_user_delete_modal');
     // fetch the modal html from the server
     const url = "{% url 'plants:user_delete' id=1234 %}".replace('1234', id);
-    console.log("DEBUG: url:", url);
     fetch(url) 
     .then(response => response.text())
     .then(html => {

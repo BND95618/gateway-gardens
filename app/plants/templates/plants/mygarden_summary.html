@@ -42,7 +42,6 @@
 
 {% block content %}
 <section>
-  <h2 class="bnd-page-main-top-margin-adjust">My Garden Photos:</h3>
   <!-- Check to see it there are any images to display -->
   {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
     <h3>
@@ -52,7 +51,17 @@
       <br/>
     </h3>
   {% else %}
+    <section class="bnd-section">
+      <header class="bnd-section-header">
+        <h4>Description</h4>
+      </header>
+      <div class="bnd-section-contents">
+        {{ garden.description.html|safe|escape }}
+      </div>
+    </section>
+    </br>
     <!-- Load images for display -->
+    <h2 class="bnd-page-main-top-margin-adjust">Photos:</h3>
     <div class="bnd-slideshow-content">
       <!-- Load the images -->
       {% if garden.image_1 %}

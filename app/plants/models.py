@@ -48,13 +48,6 @@ def get_default_user():
 
 class Garden(models.Model):
     """ My Garden description table - linked to one particular user """
-    # User details (extends information in user database)
-    profile_photo = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 800)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
     # User garden details
     name          = models.CharField(max_length=64, default="tbd", blank=True, null=True)
     city          = models.CharField(max_length=32, default="tbd", blank=True, null=True)
@@ -62,12 +55,13 @@ class Garden(models.Model):
     owner         = models.CharField(max_length=64, default="tbd", blank=True, null=True)
     usda_zone     = models.CharField(max_length=16, default="tbd", blank=True, null=True)
     sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
+    description   = QuillField(blank=True, null=True)
     question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
     # Images
     image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -75,7 +69,7 @@ class Garden(models.Model):
     image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -83,7 +77,7 @@ class Garden(models.Model):
     image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -91,7 +85,7 @@ class Garden(models.Model):
     image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -99,7 +93,7 @@ class Garden(models.Model):
     image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -107,7 +101,7 @@ class Garden(models.Model):
     image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -115,7 +109,7 @@ class Garden(models.Model):
     image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
@@ -123,11 +117,18 @@ class Garden(models.Model):
     image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
                                         processors = [Transpose(), ResizeToFill(800, 600)],
                                         format     = 'WEBP',
-                                        options    = {'quality': 80},
+                                        options    = {'quality': 95},
                                         blank      = True, 
                                         null       = True)
     caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
-    # Administrative stuff
+    # Administrative stuff AR: Move to user info database table
+    # User details (extends information in user database)
+    profile_photo = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
+                                        processors = [Transpose(), ResizeToFill(800, 800)],
+                                        format     = 'WEBP',
+                                        options    = {'quality': 95},
+                                        blank      = True, 
+                                        null       = True)
     # Save the user's selection for plant search criteria
     common_name_search     = models.CharField(max_length=32, default="",    blank=True)
     genus_search           = models.CharField(max_length=32, default="",    blank=True)
@@ -309,7 +310,7 @@ class Comment(models.Model):
     
     def get_absolute_url(self):
         return reverse("plants_summary")
-     
+  
 class MyPlant(models.Model):
     """ Plants that are in My Garden """
     # Many-to-one relationship 
@@ -446,5 +447,5 @@ class MyPlantComment(models.Model):
     
     def get_absolute_url(self):
         return reverse("myplant_details")
-
+   
 # class Fiddle(models.Model):
