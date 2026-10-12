@@ -143,6 +143,7 @@ def mygarden_update(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden.objects.get(id=id)
+    image_quantity = 8
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -153,48 +154,19 @@ def mygarden_update(request, id):
             garden.usda_zone   = form.cleaned_data.get('usda_zone')
             garden.sunset_zone = form.cleaned_data.get('sunset_zone')
             garden.description = form.cleaned_data.get('description')
-
-            if 'image_1' in request.FILES:
-                if (garden.image_1):
-                    garden.image_1.delete(save=False)
-                garden.image_1   = request.FILES['image_1']
-            garden.caption_1 = form.cleaned_data.get('caption_1')
-            if 'image_2' in request.FILES:
-                if (garden.image_2):
-                    garden.image_2.delete(save=False)
-                garden.image_2   = request.FILES['image_2']
-            garden.caption_2 = form.cleaned_data.get('caption_2')
-            if 'image_3' in request.FILES:
-                if (garden.image_3):
-                    garden.image_3.delete(save=False)
-                garden.image_3   = request.FILES['image_3']
-            garden.caption_3 = form.cleaned_data.get('caption_3')
-            if 'image_4' in request.FILES:
-                if (garden.image_4):
-                    garden.image_4.delete(save=False)
-                garden.image_4   = request.FILES['image_4']
-            garden.caption_4 = form.cleaned_data.get('caption_4')
-            if 'image_5' in request.FILES:
-                if (garden.image_5):
-                    garden.image_5.delete(save=False)
-                garden.image_5   = request.FILES['image_5']
-            garden.caption_5 = form.cleaned_data.get('caption_5')
-            if 'image_6' in request.FILES:
-                if (garden.image_6):
-                    garden.image_6.delete(save=False)
-                garden.image_6   = request.FILES['image_6']
-            garden.caption_6 = form.cleaned_data.get('caption_6')
-            if 'image_7' in request.FILES:
-                if (garden.image_7):
-                    garden.image_7.delete(save=False)
-                garden.image_7   = request.FILES['image_7']
-            garden.caption_7 = form.cleaned_data.get('caption_7')
-            if 'image_8' in request.FILES:
-                if (garden.image_8):
-                    garden.image_8.delete(save=False)
-                garden.image_8   = request.FILES['image_8']
-            garden.caption_8 = form.cleaned_data.get('caption_8')
-
+            # Loop through the images
+            for i in range(1, image_quantity+1):
+                image_attr   = f'image_{i}'
+                caption_attr = f'caption_{i}'
+                # Handle the image replacement and old file deletion
+                if image_attr in request.FILES:
+                    existing_image = getattr(garden, image_attr)
+                    if existing_image:
+                        existing_image.delete(save=False)
+                    setattr(garden, image_attr, request.FILES[image_attr])
+                # Update the caption
+                setattr(garden, caption_attr, form.cleaned_data.get(caption_attr))
+            # Save the updated garden information
             garden.save()
 
         response_data = {
@@ -209,25 +181,21 @@ def mygarden_update(request, id):
                                              'state'       : garden.state,
                                              'usda_zone'   : garden.usda_zone,
                                              'sunset_zone' : garden.sunset_zone,
-                                             'image_1'     : garden.image_1,
-                                             'caption_1'   : garden.caption_1,
-                                             'image_2'     : garden.image_2,
-                                             'caption_2'   : garden.caption_2,
-                                             'image_3'     : garden.image_3,
-                                             'caption_3'   : garden.caption_3,
-                                             'image_4'     : garden.image_4,
-                                             'caption_4'   : garden.caption_4,
-                                             'image_5'     : garden.image_5,
-                                             'caption_5'   : garden.caption_5,
-                                             'image_6'     : garden.image_6,
-                                             'caption_6'   : garden.caption_6,
-                                             'image_7'     : garden.image_7,
-                                             'caption_7'   : garden.caption_7,
-                                             'image_8'     : garden.image_8,
-                                             'caption_8'   : garden.caption_8,
                                            })
-        context = { 'garden' : garden, 
-                    'form' : form,
+        # Dynamically package image and caption attributes
+        image_fields = []
+        for i in range(1, image_quantity + 1):
+            image_fields.append(
+            {
+                'index'        : i,
+                'image_file'   : getattr(garden, f'image_{i}', None),
+                'caption_value': getattr(garden, f'caption_{i}', ''),
+                'form_image'   : form[f'image_{i}'],
+                'form_caption' : form[f'caption_{i}'],
+            })
+        context = { 'garden'       : garden, 
+                    'form'         : form,
+                    'image_fields' : image_fields,
                   }
         return render(request, 'plants/mygarden_update.html', context)
  

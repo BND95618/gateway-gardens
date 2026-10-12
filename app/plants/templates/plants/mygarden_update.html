@@ -36,230 +36,29 @@
         <fieldset>
           <legend>Images:</legend>
           <div class="bnd-flex-container-wrap">
-            <!-- Image 1 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 1:</legend>
-                {% if garden.image_1 %}
-                  <img id       = "id_image_1_preview" 
-                        class   = "bnd-image-small" 
-                        src     = "{{ garden.image_1.url }}" 
-                        onclick = "imageModalOpen(this)" 
-                        alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_1 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_1_file_input">
-                    {{ form.image_1 }}
-                  </div>
-                {% else %}
-                  <img id      = "id_image_1_preview" 
-                        class   = "bnd-image-small" 
-                        src     = "" 
-                        alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_1 }}
-                {% endif %}
-                <label for="id_caption_1">Enter caption:</label>
-                {{ form.caption_1 }}
-              </fieldset>
+            <!-- Loop through all of the images -->
+            {% for item in image_fields %}
+            <figure> 
+              <fieldset class="bnd-flex-image"> 
+                <legend>Image {{ item.index }}:</legend> 
+                {% if item.image_file %} 
+                  <img id="id_image_{{ item.index }}_preview" class="bnd-image-small" src="{{ item.image_file.url }}" onclick="imageModalOpen(this)" alt="No image found"> 
+                  <figcaption class="bnd-image-small-caption">{{ item.caption_value }}</figcaption> 
+                  <hr> 
+                  <div id="id_image_{{ item.index }}_file_input"> 
+                    {{ item.form_image }} 
+                  </div> 
+                {% else %} 
+                  <img id="id_image_{{ item.index }}_preview" class="bnd-image-small" src="" alt="--- Image displays here ---"> 
+                  <figcaption class="bnd-image-small-caption">--- Caption displays here ---</figcaption> 
+                  <hr> 
+                  {{ item.form_image }} 
+                {% endif %} 
+                <label for="id_caption_{{ item.index }}">Enter caption:</label> 
+                {{ item.form_caption }} 
+              </fieldset> 
             </figure>
-            <!-- Image 2 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 2:</legend>
-                {% if garden.image_2 %}
-                  <img id       = "id_image_2_preview" 
-                        class   = "bnd-image-small" 
-                        src     = "{{ garden.image_2.url }}" 
-                        onclick = "imageModalOpen(this)" 
-                        alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_2 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_2_file_input">
-                    {{ form.image_2 }}
-                  </div>
-                {% else %}
-                  <img id       = "id_image_2_preview" 
-                        class   = "bnd-image-small" 
-                        src     = "" 
-                        alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_2 }}
-                {% endif %}
-                <label for="id_caption_2">Enter caption:</label>
-                {{ form.caption_2 }}
-              </fieldset>
-            </figure>
-    `       <!-- Image 3 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 3:</legend>
-                {% if garden.image_3 %}
-                  <img id     = "id_image_3_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_3.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_3 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_3_file_input">
-                    {{ form.image_3 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_3_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "" 
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_3 }}
-                {% endif %}
-                <label for="id_caption_3">Enter caption:</label>
-                {{ form.caption_3 }}
-              </fieldset>
-            </figure>
-            <!-- Image 4 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 4:</legend>
-                {% if garden.image_4 %}
-                  <img id     = "id_image_4_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_4.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_4 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_4_file_input">
-                    {{ form.image_4 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_4_preview" 
-                      class   = "bnd-image-small" 
-                      src     = ""  
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_4 }}
-                {% endif %}
-                <label for="id_caption_3">Enter caption:</label>
-                {{ form.caption_4 }}
-              </fieldset>
-            </figure>
-            <!-- Image 5 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 5:</legend>
-                {% if garden.image_5 %}
-                  <img id     = "id_image_5_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_5.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_5 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_5_file_input">
-                    {{ form.image_5 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_5_preview" 
-                      class   = "bnd-image-small" 
-                      src     = ""  
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_5 }}
-                {% endif %}
-                <label for="id_caption_5">Enter caption:</label>
-                {{ form.caption_5 }}
-              </fieldset>
-            </figure>
-            <!-- Image 6 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 6:</legend>
-                {% if garden.image_6 %}
-                  <img id     = "id_image_6_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_6.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_6 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_6_file_input">
-                    {{ form.image_6 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_6_preview" 
-                      class   = "bnd-image-small" 
-                      src     = ""  
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_6 }}
-                {% endif %}
-                <label for="id_caption_6">Enter caption:</label>
-                {{ form.caption_6 }}
-              </fieldset>
-            </figure>
-            <!-- Image 7 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 7:</legend>
-                {% if garden.image_7 %}
-                  <img id     = "id_image_7_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_7.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_7 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_7_file_input">
-                    {{ form.image_7 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_7_preview" 
-                      class   = "bnd-image-small" 
-                      src     = ""  
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_7 }}
-                {% endif %}
-                <label for="id_caption_7">Enter caption:</label>
-                {{ form.caption_7 }}
-              </fieldset>
-            </figure>
-            <!-- Image 8 -->
-            <figure>
-              <fieldset class="bnd-flex-image">
-                <legend>Image 8:</legend>
-                {% if garden.image_8 %}
-                  <img id     = "id_image_8_preview" 
-                      class   = "bnd-image-small" 
-                      src     = "{{ garden.image_8.url }}" 
-                      onclick = "imageModalOpen(this)" 
-                      alt     = "No image found">
-                  <figcaption class="bnd-image-small-caption">{{ garden.caption_8 }}</figcaption>
-                  <hr>
-                  <div id = "id_image_8_file_input">
-                    {{ form.image_8 }}
-                  </div>
-                {% else %}
-                  <img id     = "id_image_8_preview" 
-                      class   = "bnd-image-small" 
-                      src     = ""  
-                      alt     = "--- Image displays here ---">
-                  <figcaption class="bnd-image-small-caption">"--- Caption displays here ---"</figcaption>
-                  <hr>
-                  {{ form.image_8 }}
-                {% endif %}
-                <label for="id_caption_8">Enter caption:</label>
-                {{ form.caption_8 }}
-              </fieldset>
-            </figure>
+            {% endfor %}
           </div>
         </fieldset>
       </div>
@@ -284,10 +83,13 @@
 
 {% block js %}
 <script>
+const imageQuantity    = 8;
+const imageWidth       = 800; // pixels
+const imageCompression = 1.0; // range 0.0 to 1.0
 //-----------------------------------------------------------------------------
 // Update preview image (via setupImagePreview) when new image is selected
 //-----------------------------------------------------------------------------
-for (let num = 1; num <= 8; num++) 
+for (let num = 1; num <= imageQuantity; num++) 
 {
   setupImagePreview(`id_image_${num}`, `id_image_${num}_preview`);
 }
@@ -297,8 +99,6 @@ for (let num = 1; num <= 8; num++)
 const form             = document.getElementById('id_garden_form');
 const submitBtn        = document.getElementById('id_submit');
 const statusDiv        = document.getElementById('status');
-const imageWidth       = 800; // pixels
-const imageCompression = 1.0; // range 0.0 to 1.0
 form.addEventListener('submit', async (event) => {
   // Prevent standard browser form submission
   event.preventDefault()
@@ -313,7 +113,7 @@ form.addEventListener('submit', async (event) => {
     //----------------------------------------------------------------------------
     // Compress new images to be uploaded
     //----------------------------------------------------------------------------
-    for (let i = 1; i <= 8; i++) 
+    for (let i = 1; i <= imageQuantity; i++) 
     {
       const imageInput = document.getElementById(`id_image_${i}`);
       // Ensure the element exists before attempting to read files
