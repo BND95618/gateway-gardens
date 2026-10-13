@@ -34,7 +34,7 @@
       <i class="material-icons">menu</i>
     </button>
     <div class="bnd-banner-menu-content">
-      <a href="{% url 'plants:mygarden_update' garden.id %}" class="bnd-dropdown-button">Update</a>
+      <a href="{% url 'plants:mygarden_edit' garden.id %}" class="bnd-dropdown-button">Update</a>
     </div>
   </div>
 
@@ -64,70 +64,16 @@
     <h2 class="bnd-page-main-top-margin-adjust">Photos:</h3>
     <div class="bnd-slideshow-content">
       <!-- Load the images -->
-      {% if garden.image_1 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_1.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_1 }}</h2>
+      {% for item in image_fields %} 
+        {% if item.image_file %} 
+          <div class="bnd-slideshow-slides">
+            <img src="{{ item.image_file.url }}" alt="No garden image found" class="bnd-image">
+            <div class="bnd-image-caption">
+              <h2>{{ item.caption_value }}</h2>
+            </div>
           </div>
-        </div>
-      {% endif %}
-      {% if garden.image_2 %}
-      <div class="bnd-slideshow-slides">
-        <img src="{{ garden.image_2.url }}" alt="No garden image found" class="bnd-image">
-        <div class="bnd-image-caption">
-          <h2>{{ garden.caption_3 }}</h2>
-        </div>
-      </div>
-      {% endif %}
-      {% if garden.image_3 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_3.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_3 }}</h2>
-          </div>
-        </div>
-      {% endif %}
-      {% if garden.image_4 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_4.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_4 }}</h2>
-          </div>
-        </div>
-      {% endif %}
-      {% if garden.image_5 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_5.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_5 }}</h2>
-          </div>
-        </div>
-      {% endif %}
-      {% if garden.image_6 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_6.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_6 }}</h2>
-          </div>
-        </div>
-      {% endif %}
-      {% if garden.image_7 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_7.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_7 }}</h2>
-          </div>
-        </div>
-      {% endif %}
-      {% if garden.image_8 %}
-        <div class="bnd-slideshow-slides">
-          <img src="{{ garden.image_8.url }}" alt="No garden image found" class="bnd-image">
-          <div class="bnd-image-caption">
-            <h2>{{ garden.caption_8 }}</h2>
-          </div>
-        </div>
-      {% endif %}
+        {% endif %} 
+      {% endfor %}
       <!-- Slide show -->
       <div class="bnd-slideshow-controls">
         <div  class="bnd-slideshow-arrow-left"  onclick="plusSlide(-1)">&#10094;</div>
@@ -149,7 +95,9 @@
 {% block js %}
 <!-- Insert template Javascript here -->
 <script>
+  //-----------------------------------------------------------------------------
   // Slideshow Javascript code
+  //-----------------------------------------------------------------------------
   let slideIndex = 1;
   showSlide(slideIndex);
     
@@ -176,5 +124,6 @@
     x[slideIndex-1].style.display = "block";  
     icons[slideIndex-1].className += " bnd-white";
   }
+  //-----------------------------------------------------------------------------
 </script>
 {% endblock js %}

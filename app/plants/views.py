@@ -75,13 +75,26 @@ def mygarden_summary(request):
     template = loader.get_template("plants/mygarden_summary.html")
     context = {}
     # AR: Only allow a user to have one garden defined
-    my_gardens = 0
-    all_gardens = 0
+    my_gardens     = 0
+    all_gardens    = 0
+    image_quantity = 8
     for garden in gardens:
         if garden:
              all_gardens = all_gardens + 1
              if (request.user.username == garden.owner):
-                context = { "garden" : garden }
+
+                # Dynamically package image and caption attributes
+                image_fields = []
+                for i in range(1, image_quantity + 1):
+                    image_fields.append(
+                    {
+                        'index'        : i,
+                        'image_file'   : getattr(garden, f'image_{i}', None),
+                        'caption_value': getattr(garden, f'caption_{i}', ''),
+                    })
+
+                context = { "garden"       : garden,
+                            "image_fields" : image_fields, }
                 my_gardens = my_gardens + 1
         else:
             # no user has a garden in db
@@ -96,49 +109,12 @@ def mygarden_add(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden()
-    if request.POST:
-        form = GardenAddUpdateForm(request.POST, request.FILES)
-        if form.is_valid():
-            garden.name        = form.cleaned_data.get('name')
-            garden.city        = form.cleaned_data.get('city')
-            garden.state       = form.cleaned_data.get('state')
-            garden.owner       = request.user.username
-            garden.usda_zone   = form.cleaned_data.get('usda_zone')
-            garden.sunset_zone = form.cleaned_data.get('sunset_zone')
+    garden.name = request.user.name + "'s Garden"
+    garden.save()
+    # Edit the newly created garden
+    return HttpResponseRedirect(reverse('plants:mygarden_edit', args=(garden.id,))) 
 
-            if 'image_1' in request.FILES:
-                garden.image_1   = request.FILES['image_1']
-                garden.caption_1 = form.cleaned_data.get('caption_1')
-            if 'image_2' in request.FILES:
-                garden.image_2   = request.FILES['image_2']
-                garden.caption_2 = form.cleaned_data.get('caption_2')
-            if 'image_3' in request.FILES:
-                garden.image_3   = request.FILES['image_3']
-                garden.caption_3 = form.cleaned_data.get('caption_3')
-            if 'image_4' in request.FILES:
-                garden.image_4   = request.FILES['image_4']
-                garden.caption_4 = form.cleaned_data.get('caption_4')
-            if 'image_5' in request.FILES:
-                garden.image_5   = request.FILES['image_5']
-                garden.caption_5 = form.cleaned_data.get('caption_5')
-            if 'image_6' in request.FILES:
-                garden.image_6   = request.FILES['image_6']
-                garden.caption_6 = form.cleaned_data.get('caption_6')
-            if 'image_7' in request.FILES:
-                garden.image_7   = request.FILES['image_7']
-                garden.caption_7 = form.cleaned_data.get('caption_7')
-            if 'image_8' in request.FILES:
-                garden.image_8   = request.FILES['image_8']
-                garden.caption_8 = form.cleaned_data.get('caption_8')
-
-            garden.save()
-        return HttpResponseRedirect(reverse('plants:mygarden_summary'))
-    else:
-        form = GardenAddUpdateForm()
-        context = { 'form' : form }
-        return render(request, 'plants/mygarden_add.html', context)
-
-def mygarden_update(request, id):
+def mygarden_edit(request, id):
     """ Update garden details """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -197,7 +173,7 @@ def mygarden_update(request, id):
                     'form'         : form,
                     'image_fields' : image_fields,
                   }
-        return render(request, 'plants/mygarden_update.html', context)
+        return render(request, 'plants/mygarden_edit.html', context)
  
 def mygarden_plan(request):
     """ Render the Garden Plan page """

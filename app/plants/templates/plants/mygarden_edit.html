@@ -1,4 +1,4 @@
-<!-- app/plants/templates/mygarden_update.html -->
+<!-- app/plants/templates/mygarden_edit.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -29,7 +29,7 @@
       {{ form.city.as_field_group }}
       {{ form.state.as_field_group }}
       {{ form.usda_zone.as_field_group }}
-      {{ form.sunset_zone.as_field_group }}
+      {{ form.sunset_zone.as_field_group }} <br/>
       {{ form.description.as_field_group }}
       <!-- Garden images -->
       <div class="images">
