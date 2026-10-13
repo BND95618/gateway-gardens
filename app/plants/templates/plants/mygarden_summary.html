@@ -43,19 +43,15 @@
 {% block content %}
 <section>
   <!-- Check to see it there are any images to display -->
-  {% if not garden.image_1 and not garden.image_2 and not garden.image_3 and not garden.image_4 and not garden.image_5 and not garden.image_6 and not garden.image_7 and not garden.image_8 %}
-    <h3>
-      No garden photos to display
-      <br/>
-      Please select 'Menu -> Update' to add photos of your garden
-      <br/>
-    </h3>
-  {% else %}
-    <section class="bnd-section">
-      <header class="bnd-section-header">
-        <h4>Description</h4>
-      </header>
-      <div class="bnd-section-contents">
+  {% if image_fields %}
+    <section>
+      <div>
+        <h2>Description</h2>
+      </div>
+      <div>
+        Location: {{ garden.city }}, {{ garden.state }} <br/>
+        USDA Zone: {{ garden.usda_zone }} <br/>
+        Sunset Zone : {{ garden.sunset_zone }} <br/>
         {{ garden.description.html|safe|escape }}
       </div>
     </section>
@@ -88,6 +84,13 @@
         <span class="bnd-slideshow-icon" onclick="currentSlide(8)"></span>
       </div>
     </div>
+  {% else %}
+    <h3>
+      No garden photos to display
+      <br/>
+      Please select 'Menu -> Update' to add photos of your garden
+      <br/>
+    </h3>
   {% endif %}
 </section>
 {% endblock content%}

@@ -77,6 +77,7 @@ def mygarden_summary(request):
     # AR: Only allow a user to have one garden defined
     my_gardens     = 0
     all_gardens    = 0
+    image_fields   = []
     image_quantity = 8
     for garden in gardens:
         if garden:
@@ -84,7 +85,6 @@ def mygarden_summary(request):
              if (request.user.username == garden.owner):
 
                 # Dynamically package image and caption attributes
-                image_fields = []
                 for i in range(1, image_quantity + 1):
                     image_fields.append(
                     {
@@ -109,7 +109,7 @@ def mygarden_add(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden()
-    garden.name = request.user.name + "'s Garden"
+    garden.name = request.user.username + "'s Garden"
     garden.save()
     # Edit the newly created garden
     return HttpResponseRedirect(reverse('plants:mygarden_edit', args=(garden.id,))) 
@@ -123,10 +123,10 @@ def mygarden_edit(request, id):
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
+            garden.owner       = request.user.username
             garden.name        = form.cleaned_data.get('name')
             garden.city        = form.cleaned_data.get('city')
             garden.state       = form.cleaned_data.get('state')
-            garden.owner       = request.user.username
             garden.usda_zone   = form.cleaned_data.get('usda_zone')
             garden.sunset_zone = form.cleaned_data.get('sunset_zone')
             garden.description = form.cleaned_data.get('description')

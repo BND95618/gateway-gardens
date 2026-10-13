@@ -22,7 +22,8 @@
 {% endblock header-completion %}
 
 {% block content %}
-  <section class="bnd-page-main-top-margin-adjust">
+  <section>
+    <h2 class="bnd-page-main-top-margin-adjust">Garden Details:</h2>
     <form id = "id_garden_form" action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.name.as_field_group }}
