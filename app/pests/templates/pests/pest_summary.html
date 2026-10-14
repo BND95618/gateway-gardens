@@ -47,7 +47,7 @@
   <!-------------------------------------------------------------------------->
   <div id="bnd-search-sidebar" class="bnd-search-container-flex"></div>
   <!------------------------------------->
-  <!-- To Do Table                     -->
+  <!-- Pest Table                     -->
   <!------------------------------------->
   <div id="tableContainer" class="bnd-table-container-flex">
     <table id="pestTable" class="bnd-table-flex">
@@ -145,7 +145,7 @@
       // Get the pest delete modal
       const pest_delete_modal  = document.getElementById('pest_delete_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/pest_delete/" + id
+      const url = "{% url 'pests:pest_delete' id=1234 %}".replace('1234', id);
       fetch(url)
         .then(response => response.text())
         .then(html => {pest_delete_modal.innerHTML = html;})

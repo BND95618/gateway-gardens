@@ -120,6 +120,7 @@ def mygarden_edit(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     garden = Garden.objects.get(id=id)
     image_quantity = 8
+
     if request.POST:
         form = GardenAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
@@ -130,7 +131,7 @@ def mygarden_edit(request, id):
             garden.usda_zone   = form.cleaned_data.get('usda_zone')
             garden.sunset_zone = form.cleaned_data.get('sunset_zone')
             garden.description = form.cleaned_data.get('description')
-            # Loop through the images
+            # Loop through the images - check for new image - if yes, delete any existing image
             for i in range(1, image_quantity+1):
                 image_attr   = f'image_{i}'
                 caption_attr = f'caption_{i}'
@@ -151,7 +152,7 @@ def mygarden_edit(request, id):
         }
         return JsonResponse(response_data)
     else:
-        # set the update form with the current db values
+        # set the edit form with the current db values
         form = GardenAddUpdateForm(initial={ 'name'        : garden.name,
                                              'city'        : garden.city,
                                              'state'       : garden.state,

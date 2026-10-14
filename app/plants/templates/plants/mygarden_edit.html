@@ -26,6 +26,7 @@
     <h2 class="bnd-page-main-top-margin-adjust">Garden Details:</h2>
     <form id = "id_garden_form" action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <!-- Garden attributes -->
       {{ form.name.as_field_group }}
       {{ form.city.as_field_group }}
       {{ form.state.as_field_group }}
@@ -43,15 +44,26 @@
               <fieldset class="bnd-flex-image"> 
                 <legend>Image {{ item.index }}:</legend> 
                 {% if item.image_file %} 
-                  <img id="id_image_{{ item.index }}_preview" class="bnd-image-small" src="{{ item.image_file.url }}" onclick="imageModalOpen(this)" alt="No image found"> 
-                  <figcaption class="bnd-image-small-caption">{{ item.caption_value }}</figcaption> 
+                  <img id      = "id_image_{{ item.index }}_preview" 
+                       class   = "bnd-image-small" 
+                       src     = "{{ item.image_file.url }}" 
+                       onclick = "imageModalOpen(this)" 
+                       alt     = "No image found"> 
+                  <figcaption class="bnd-image-small-caption">
+                    {{ item.caption_value }}
+                  </figcaption> 
                   <hr> 
                   <div id="id_image_{{ item.index }}_file_input"> 
                     {{ item.form_image }} 
                   </div> 
                 {% else %} 
-                  <img id="id_image_{{ item.index }}_preview" class="bnd-image-small" src="" alt="--- Image displays here ---"> 
-                  <figcaption class="bnd-image-small-caption">--- Caption displays here ---</figcaption> 
+                  <img id    = "id_image_{{ item.index }}_preview" 
+                       class = "bnd-image-small" 
+                       src   = "" 
+                       alt   = "--- Image displays here ---"> 
+                  <figcaption class="bnd-image-small-caption">
+                    --- Caption displays here ---
+                  </figcaption> 
                   <hr> 
                   {{ item.form_image }} 
                 {% endif %} 

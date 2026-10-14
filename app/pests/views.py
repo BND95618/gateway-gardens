@@ -22,7 +22,18 @@ def pest_details(request, id):
         return HttpResponseRedirect(reverse('plants:index'))
     pest = Pest.objects.get(id=id)
     template = loader.get_template("pests/pest_details.html")
-    context = { "pest" : pest }
+    # Dynamically package image and caption attributes
+    image_fields   = []
+    image_quantity = 4
+    for i in range(1, image_quantity + 1):
+        image_fields.append(
+        {
+            'index'        : i,
+            'image_file'   : getattr(pest, f'image_{i}', None),
+            'caption_value': getattr(pest, f'caption_{i}', ''),
+        })
+    context = { "pest"         : pest, 
+                "image_fields" : image_fields, }
     return HttpResponse(template.render(context, request))
 
 def pest_add(request):
@@ -42,7 +53,10 @@ def pest_edit(request, id):
     """ Render the page to add pests to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    
     pest = Pest.objects.get(id=id)
+    image_quantity = 4
+
     if request.POST:
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
@@ -54,41 +68,34 @@ def pest_edit(request, id):
             pest.life_cycle  = form.cleaned_data.get('life_cycle')
             pest.pest_url    = form.cleaned_data.get('pest_url')
             pest.description = form.cleaned_data.get('description')
-            pest.management  = form.cleaned_data.get('management')
-            # Process images - check for new image - if yes, delete any existing image
+            pest.management  = form.cleaned_data.get('management') 
+            # Loop through the images - check for new image - if yes, delete any existing image
+            for i in range(1, image_quantity + 1):
+                image_attr   = f'image_{i}'
+                caption_attr = f'caption_{i}'
+                # Handle the image replacement and old file deletion
+                if image_attr in request.FILES:
+                    existing_image = getattr(pest, image_attr)
+                    if existing_image:
+                        existing_image.delete(save=False)
+                    setattr(pest, image_attr, request.FILES[image_attr])
+                # Update the caption
+                setattr(pest, caption_attr, form.cleaned_data.get(caption_attr))
+            # Save the thumbnail image
             if 'image_1' in request.FILES:
-                if (pest.image_1):
-                    pest.image_1.delete(save=False)
-                pest.image_1   = request.FILES['image_1']
+                if (pest.pest_thumbnail):
+                    pest.pest_thumbnail.delete(save=False)
                 pest.pest_thumbnail = request.FILES['image_1']
-            pest.caption_1 = form.cleaned_data.get('caption_1')
-            
-            if 'image_2' in request.FILES:
-                if (pest.image_2):
-                    pest.image_2.delete(save=False)
-                pest.image_2 = request.FILES['image_2']
-            pest.caption_2 = form.cleaned_data.get('caption_2')
-
-            if 'image_3' in request.FILES:
-                if (pest.image_3):
-                    pest.image_3.delete(save=False)
-                pest.image_3 = request.FILES['image_3']
-            pest.caption_3 = form.cleaned_data.get('caption_3') 
-
-            if 'image_4' in request.FILES:
-                if (pest.image_4):
-                    pest.image_4.delete(save=False)
-                pest.image_4 = request.FILES['image_4']
-            pest.caption_4 = form.cleaned_data.get('caption_4')
-
             pest.save()
 
         response_data = {
             'status': 'success',
-            'message': f'Received audio successfully',
+            'message': f'Edited pest successfully',
         }
         return JsonResponse(response_data)
     else:
+        template = loader.get_template('pests/pest_edit.html')
+        # set the edit form with the current db values
         form = PestAddUpdateForm(initial = { 'pest_name'   : pest.pest_name,
                                              'family'      : pest.family,
                                              'genus'       : pest.genus,
@@ -98,18 +105,23 @@ def pest_edit(request, id):
                                              'pest_url'    : pest.pest_url,
                                              'description' : pest.description,
                                              'management'  : pest.management,
-                                             'image_1'     : pest.image_1,
-                                             'caption_1'   : pest.caption_1,
-                                             'image_2'     : pest.image_2,
-                                             'caption_2'   : pest.caption_2,
-                                             'image_3'     : pest.image_3,
-                                             'caption_3'   : pest.caption_3,
-                                             'image_4'     : pest.image_4,
-                                             'caption_4'   : pest.caption_4,
                                            })
-        context = { 'pest' : pest,
-                    'form' : form }
-        return render(request, 'pests/pest_edit.html', context)
+        # Dynamically package image and caption attributes
+        image_fields = []
+        for i in range(1, image_quantity + 1):
+            image_fields.append(
+            {
+                'index'        : i,
+                'image_file'   : getattr(pest, f'image_{i}', None),
+                'caption_value': getattr(pest, f'caption_{i}', ''),
+                'form_image'   : form[f'image_{i}'],
+                'form_caption' : form[f'caption_{i}'],
+            })
+        context = { 'pest'           : pest,
+                    'form'           : form,
+                    'image_fields'   : image_fields, 
+                    'image_quantity' : image_quantity, }
+        return HttpResponse(template.render(context, request ))
   
 def pest_delete(request, id):
     """ Delete selected pest from the Pest database table """
