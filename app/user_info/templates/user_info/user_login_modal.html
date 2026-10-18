@@ -1,10 +1,10 @@
-<!-- /app/plants/templates/plants/user_login_modal.html -->
+<!-- /app/user_info/templates/plants/user_login_modal.html -->
 
 <div class="bnd-modal-container">
   <header class="bnd-modal-header">
     <h3>User Login</h3>
   </header>
-  <form action="{% url 'plants:user_login' %}" method="post">
+  <form action="{% url 'user_info:user_login' %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-contents">
       {{ form.username.as_field_group }}
@@ -18,7 +18,7 @@
       <!-- Sign-up modal -->
       <button type    = "button"
               class   = "bnd-button bnd-round-large" 
-              onclick = "openUserprofileModal()">
+              onclick = "openUserProfileModal()">
         Sign-up
       </button>
       <button type    = "button"

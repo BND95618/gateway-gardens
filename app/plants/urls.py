@@ -8,24 +8,9 @@ app_name = "plants"
 urlpatterns = [
     path('',                               views.index,                    name='index'),
     #
-    path('mygarden_summary',               views.mygarden_summary,         name='mygarden_summary'),
-    path('mygarden_add',                   views.mygarden_add,             name="mygarden_add"),
-    path('mygarden_edit/<int:id>',         views.mygarden_edit,            name="mygarden_edit"),
-    path('mygarden_plan',                  views.mygarden_plan,            name='mygarden_plan'),
-    path('mygarden_plan_edit_modal',       views.mygarden_plan_edit_modal, name='mygarden_plan_edit_modal'),
-    path('plant_details_modal',            views.plant_details_modal,      name='plant_details_modal'),
-    #
     path('my_column_chooser',              views.my_column_chooser,         name='my_column_chooser'),
     #
     path('myplants_summary',               views.myplants_summary,          name='myplants_summary'),
-    path('myplants_todo',                  views.myplants_todo,             name='myplants_todo'),
-    path('myplants_todo_details/<int:id>', views.myplants_todo_details,     name='myplants_todo_details'),
-    path('myplants_todo_add/<int:id>',     views.myplants_todo_add,         name='myplants_todo_add'),
-    path('myplants_todo_edit/<int:id>',    views.myplants_todo_edit,        name='myplants_todo_edit'),
-    path('myplants_todo_del/<int:id>',     views.myplants_todo_del,         name='myplants_todo_del'),
-    path('myplants_todo_done/<int:id>',    views.myplants_todo_done,        name='myplants_todo_done'),
-    path('myplants_todo_save/<int:id>',    views.myplants_todo_save,        name='myplants_todo_save'),
-    path('myplants_todo_fetch',            views.myplants_todo_fetch,       name='myplants_todo_fetch'),
     #
     path('myplant_status/<int:id>',        views.myplant_status,            name='myplant_status'),
     path('myplant_details/<int:id>',       views.myplant_details,           name='myplant_details'),
@@ -56,18 +41,6 @@ urlpatterns = [
     path('plant_details/<int:id>',         views.plant_details,             name='plant_details'),
     path('plant_comment/<int:id>',         views.plant_comment,             name='plant_comment'),
     path('plant_delete/<int:id>',          views.plant_delete,              name='plant_delete'),
-    path('plant_fetch',                    views.plant_fetch,               name='plant_fetch'),
-    #
-    path('user_profile_step1',             views.user_profile_step1,        name='user_profile_step1'),
-    path('user_profile_step2',             views.user_profile_step2,        name='user_profile_step2'),
-    path('user_profile_mfa',               views.user_profile_mfa,          name='user_profile_mfa'),
-    path('user_login',                     views.user_login,                name='user_login'),
-    path('user_pwd_rst_step1',             views.user_pwd_rst_step1,        name='user_pwd_rst_step1'),
-    path('user_pwd_rst_step2',             views.user_pwd_rst_step2,        name='user_pwd_rst_step2'),
-    path('user_pwd_rst_mfa',               views.user_pwd_rst_mfa,          name='user_pwd_rst_mfa'),
-    path('user_logout',                    views.user_logout,               name='user_logout'),
-    path('user_admin',                     views.user_admin,                name='user_admin'),
-    path('user_delete/<int:id>',           views.user_delete,               name='user_delete'),
     #
     path('column_chooser',                 views.column_chooser,            name='column_chooser'),
     # views for debug and testing purposes

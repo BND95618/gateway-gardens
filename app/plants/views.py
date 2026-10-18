@@ -1,7 +1,6 @@
 # app/plants/views.py
 
 import string, copy, math, json, random, base64
-from email_validator  import validate_email
 
 from django.core.mail import send_mail
 from django.core.files.base import ContentFile
@@ -12,16 +11,12 @@ from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 from django.conf      import settings
-from django.contrib                 import messages
-from django.contrib.auth            import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.models     import User, Group
-from django.contrib.auth.decorators import login_required
+from django.contrib   import messages
 
-from .models      import Garden, MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment, Plant, Comment
-from pests.models import Pest
+from mygarden.models  import Garden
+from .models          import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment, Plant, Comment
+from pests.models     import Pest
 
-from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
-from .forms  import GardenAddUpdateForm
 from .forms  import MyPlantAddUpdateForm, MyPlantLogForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 
@@ -67,215 +62,6 @@ def index(request):
 
 #
 
-def mygarden_summary(request):
-    """ Render the individual user's garden summary for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    gardens = Garden.objects.all()
-    template = loader.get_template("plants/mygarden_summary.html")
-    context = {}
-    # AR: Only allow a user to have one garden defined
-    my_gardens     = 0
-    all_gardens    = 0
-    image_fields   = []
-    image_quantity = 8
-    for garden in gardens:
-        if garden:
-             all_gardens = all_gardens + 1
-             if (request.user.username == garden.owner):
-
-                # Dynamically package image and caption attributes
-                for i in range(1, image_quantity + 1):
-                    image_fields.append(
-                    {
-                        'index'        : i,
-                        'image_file'   : getattr(garden, f'image_{i}', None),
-                        'caption_value': getattr(garden, f'caption_{i}', ''),
-                    })
-
-                context = { "garden"       : garden,
-                            "image_fields" : image_fields, }
-                my_gardens = my_gardens + 1
-        else:
-            # no user has a garden in db
-            return HttpResponseRedirect(reverse('plants:mygarden_add')) 
-    # current user has no gardens in db
-    if my_gardens == 0:
-        return HttpResponseRedirect(reverse('plants:mygarden_add'))
-    return HttpResponse(template.render(context, request))
-
-def mygarden_add(request):
-    """ Add garden to the database """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    garden = Garden()
-    garden.name = request.user.username + "'s Garden"
-    garden.save()
-    # Edit the newly created garden
-    return HttpResponseRedirect(reverse('plants:mygarden_edit', args=(garden.id,))) 
-
-def mygarden_edit(request, id):
-    """ Update garden details """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    garden = Garden.objects.get(id=id)
-    image_quantity = 8
-
-    if request.POST:
-        form = GardenAddUpdateForm(request.POST, request.FILES)
-        if form.is_valid():
-            garden.owner       = request.user.username
-            garden.name        = form.cleaned_data.get('name')
-            garden.city        = form.cleaned_data.get('city')
-            garden.state       = form.cleaned_data.get('state')
-            garden.usda_zone   = form.cleaned_data.get('usda_zone')
-            garden.sunset_zone = form.cleaned_data.get('sunset_zone')
-            garden.description = form.cleaned_data.get('description')
-            # Loop through the images - check for new image - if yes, delete any existing image
-            for i in range(1, image_quantity+1):
-                image_attr   = f'image_{i}'
-                caption_attr = f'caption_{i}'
-                # Handle the image replacement and old file deletion
-                if image_attr in request.FILES:
-                    existing_image = getattr(garden, image_attr)
-                    if existing_image:
-                        existing_image.delete(save=False)
-                    setattr(garden, image_attr, request.FILES[image_attr])
-                # Update the caption
-                setattr(garden, caption_attr, form.cleaned_data.get(caption_attr))
-            # Save the updated garden information
-            garden.save()
-
-        response_data = {
-            'status': 'success',
-            'message': f'Received audio successfully',
-        }
-        return JsonResponse(response_data)
-    else:
-        # set the edit form with the current db values
-        form = GardenAddUpdateForm(initial={ 'name'        : garden.name,
-                                             'city'        : garden.city,
-                                             'state'       : garden.state,
-                                             'usda_zone'   : garden.usda_zone,
-                                             'sunset_zone' : garden.sunset_zone,
-                                           })
-        # Dynamically package image and caption attributes
-        image_fields = []
-        for i in range(1, image_quantity + 1):
-            image_fields.append(
-            {
-                'index'        : i,
-                'image_file'   : getattr(garden, f'image_{i}', None),
-                'caption_value': getattr(garden, f'caption_{i}', ''),
-                'form_image'   : form[f'image_{i}'],
-                'form_caption' : form[f'caption_{i}'],
-            })
-        context = { 'garden'       : garden, 
-                    'form'         : form,
-                    'image_fields' : image_fields,
-                  }
-        return render(request, 'plants/mygarden_edit.html', context)
- 
-def mygarden_plan(request):
-    """ Render the Garden Plan page """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    plants = Plant.objects.all()
-    if request.method == 'POST':
-        # Parses the JSON data from the request body
-        shapes_JSON = json.loads(request.body)
-        # Save the garden design to db
-        gardens = Garden.objects.filter(owner = request.user.username)
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                garden.shapes_JSON = shapes_JSON
-                garden.save()
-            # AR: return without sending data back
-            shapes_JSON = json.dumps(garden.shapes_JSON)
-        return JsonResponse({'shapes_JSON' : shapes_JSON})
-    else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                shapes_JSON = json.dumps(garden.shapes_JSON)
-        context = { 'plants'      : plants,
-                    'shapes_JSON' : shapes_JSON }
-        return render(request, 'plants/mygarden_plan.html', context)
-
-def mygarden_plan_edit_modal(request):
-    """ Display shape edit menu in a pop-up modal """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    if request.method == 'POST':
-        # Get the JSON sring with the selected shape attributes
-        shape_JSON_string = request.body.decode('utf-8')
-        # Convert the JSON string into a dictionary
-        shape_dict = json.loads(shape_JSON_string)
-
-        context = { "x"      : shape_dict["x"],
-                    "y"      : shape_dict["y"],
-                    "width"  : shape_dict["width"],
-                    "height" : shape_dict["height"],
-                  }
-        return render(request, 'plants/mygarden_plan_edit_modal.html', context)
-    
-    else:
-        print("DEBUG: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
- 
-def plant_details_modal(request):
-    """ Display plant detail in a pop-up modal """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    if request.method == 'POST':
-        # Get the JSON sring with the common name of the requested plant
-        requestedPlant_json_string = request.body.decode('utf-8')
-        # Convert the JSON string into a dictionary
-        requestedPlant_dict = json.loads(requestedPlant_json_string)
-        # Get the Common Name of the plant requested
-        requestedPlant = requestedPlant_dict["requestedPlant"]
-        # Retrieve the requested plant from the db
-        plant = Plant.objects.get(commonName = requestedPlant)
-
-        plant.sun_exposure   = string_display(plant.sun_exposure)
-        plant.water_rqmts    = string_display(plant.water_rqmts)
-        plant.bloom_color    = string_display(plant.bloom_color)
-        plant.bloom_season   = string_display(plant.bloom_season)
-        plant.pollinators    = string_display(plant.pollinators)
-        plant.soil_type      = string_display(plant.soil_type)
-        plant.heat_tolerance  = string_display(plant.heat_tolerance)
-        plant.deer_resistance = string_display(plant.deer_resistance)
-
-        context = { "plant" : plant }
-        return render(request, 'plants/plant_details_modal.html', context)
-    else:
-        print("DEBUG: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
- 
-def plant_fetch(request):
-    """ """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-
-    if request.method == 'POST':
-        # Get the JSON sring with the common name of the requested plant
-        requestedPlant_json_string = request.body.decode('utf-8')
-        # Convert the JSON string into a dictionary
-        requestedPlant_dict = json.loads(requestedPlant_json_string)
-        # Get the Common Name of the plant requested
-        requestedPlant = requestedPlant_dict["requestedPlant"]
-        # Retrieve the requested plant from the db and convert to a dictionary
-        plant_json = list(Plant.objects.filter(commonName = requestedPlant).values())
-        # safe=False is needed if returning a list directly
-        return JsonResponse(plant_json, safe=False)
-    else:
-        print("DEBUG: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
-
-# 
-
 def myplants_summary(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
@@ -283,6 +69,9 @@ def myplants_summary(request):
     # AR: Determine if this is really necessary
     template = loader.get_template("plants/myplants_summary.html")
 
+    # Obtain the user's saved configuration information
+    user_info = request.user.userinfo
+    
     # Executed when search request is submitted
     if request.method == 'POST':
         # Get the search criteria from the "http request"
@@ -314,45 +103,38 @@ def myplants_summary(request):
         my_soil_type_search     = request.POST["my_soil_type_search"]
         my_happiness_search     = request.POST["my_happiness_search"]
 
-        # Store the search criteria and get the previously stored column selections for the user
-        gardens = Garden.objects.filter(owner = request.user.username)
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                # Store the search criteria in the user's garden db table
-                garden.common_name_search  = common_name_search
-                garden.genus_search        = genus_search
-                garden.species_search      = species_search
-                garden.type_x_search       = type_x_search
-                garden.bloom_color_search  = bloom_color_search
-                garden.bloom_season_search = bloom_season_search
-                garden.bloom_month_search  = bloom_month_search
-                garden.pollinators_search  = pollinators_search
-                garden.ca_native_search    = ca_native_search
-                garden.ucd_all_star_search = ucd_all_star_search
-                garden.davis_trees_search  = davis_trees_search
-                garden.sunset_z14_search   = sunset_z14_search
-                garden.sun_exposure_search = sun_exposure_search
-                garden.water_rqmts_search  = water_rqmts_search
-                garden.pH_search           = pH_search
-                garden.soil_type_search    = soil_type_search
-                garden.heat_tolerance_search  = heat_tolerance_search
-                garden.deer_resistance_search = deer_resistance_search
-                garden.usda_zone_search       = usda_zone_search
-                garden.sunset_zone_search     = sunset_zone_search
-                #
-                garden.my_sun_exposure_search = my_sun_exposure_search
-                garden.my_water_level_search  = my_water_level_search
-                garden.my_soil_type_search    = my_soil_type_search
-                garden.my_happiness_search    = my_happiness_search
-                #
-                garden.save()
-                # Get the user's previously stored column display sections
-                my_column_selection_list  = string2list(garden.column_selection)
+        # Store the search criteria in the user's user_info db table
+        user_info.common_name_search  = common_name_search
+        user_info.genus_search        = genus_search
+        user_info.species_search      = species_search
+        user_info.type_x_search       = type_x_search
+        user_info.bloom_color_search  = bloom_color_search
+        user_info.bloom_season_search = bloom_season_search
+        user_info.bloom_month_search  = bloom_month_search
+        user_info.pollinators_search  = pollinators_search
+        user_info.ca_native_search    = ca_native_search
+        user_info.ucd_all_star_search = ucd_all_star_search
+        user_info.davis_trees_search  = davis_trees_search
+        user_info.sunset_z14_search   = sunset_z14_search
+        user_info.sun_exposure_search = sun_exposure_search
+        user_info.water_rqmts_search  = water_rqmts_search
+        user_info.pH_search           = pH_search
+        user_info.soil_type_search    = soil_type_search
+        user_info.heat_tolerance_search  = heat_tolerance_search
+        user_info.deer_resistance_search = deer_resistance_search
+        user_info.usda_zone_search       = usda_zone_search
+        user_info.sunset_zone_search     = sunset_zone_search
+        #
+        user_info.my_sun_exposure_search = my_sun_exposure_search
+        user_info.my_water_level_search  = my_water_level_search
+        user_info.my_soil_type_search    = my_soil_type_search
+        user_info.my_happiness_search    = my_happiness_search
+        # Save the search criteria
+        user_info.save()
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
                                           Q(status = 'in_my_garden'))
-
         # Execute the search
         for myplant in myplants:
             # format multiselect attributes to remove [, ', and ]
@@ -403,45 +185,34 @@ def myplants_summary(request):
             else:
                 myplant.show = "no"
 
-            gardens = Garden.objects.filter(owner = request.user.username)
             # Get the user's previously stored column display sections
-            user_garden_found = False
-            for garden in gardens:     
-                # Get the user's previously stored column display sections  
-                my_column_selection_list  = string2list(garden.my_column_selection)
-                # Get the user's previously stored search criteria
-                common_name_search     = garden.common_name_search
-                genus_search           = garden.genus_search
-                species_search         = garden.species_search
-                type_x_search          = garden.type_x_search
-                bloom_color_search     = garden.bloom_color_search
-                bloom_season_search    = garden.bloom_season_search
-                bloom_month_search     = garden.bloom_month_search
-                pollinators_search     = garden.pollinators_search
-                ca_native_search       = garden.ca_native_search
-                ucd_all_star_search    = garden.ucd_all_star_search
-                davis_trees_search     = garden.davis_trees_search
-                sunset_z14_search      = garden.sunset_z14_search
-                sun_exposure_search    = garden.sun_exposure_search
-                water_rqmts_search     = garden.water_rqmts_search
-                pH_search              = garden.pH_search
-                soil_type_search       = garden.soil_type_search
-                heat_tolerance_search  = garden.heat_tolerance_search
-                deer_resistance_search = garden.deer_resistance_search
-                usda_zone_search       = garden.usda_zone_search
-                sunset_zone_search     = garden.sunset_zone_search
-                #
-                my_sun_exposure_search   = garden.my_sun_exposure_search
-                my_water_level_search    = garden.my_water_level_search
-                my_soil_type_search      = garden.my_soil_type_search
-                my_happiness_search      = garden.my_happiness_search
-                #
-                user_garden_found     = True
-                break # once the user's garden is found exit the loop
-
-            # the current user needs to have a registered garden
-            if (user_garden_found == False):
-                return HttpResponseRedirect(reverse('plants:mygarden_add'))
+            my_column_selection_list  = string2list(user_info.my_column_selection)
+            # Get the user's previously stored search criteria
+            common_name_search     = user_info.common_name_search
+            genus_search           = user_info.genus_search
+            species_search         = user_info.species_search
+            type_x_search          = user_info.type_x_search
+            bloom_color_search     = user_info.bloom_color_search
+            bloom_season_search    = user_info.bloom_season_search
+            bloom_month_search     = user_info.bloom_month_search
+            pollinators_search     = user_info.pollinators_search
+            ca_native_search       = user_info.ca_native_search
+            ucd_all_star_search    = user_info.ucd_all_star_search
+            davis_trees_search     = user_info.davis_trees_search
+            sunset_z14_search      = user_info.sunset_z14_search
+            sun_exposure_search    = user_info.sun_exposure_search
+            water_rqmts_search     = user_info.water_rqmts_search
+            pH_search              = user_info.pH_search
+            soil_type_search       = user_info.soil_type_search
+            heat_tolerance_search  = user_info.heat_tolerance_search
+            deer_resistance_search = user_info.deer_resistance_search
+            usda_zone_search       = user_info.usda_zone_search
+            sunset_zone_search     = user_info.sunset_zone_search
+            #
+            my_sun_exposure_search = user_info.my_sun_exposure_search
+            my_water_level_search  = user_info.my_water_level_search
+            my_soil_type_search    = user_info.my_soil_type_search
+            my_happiness_search    = user_info.my_happiness_search
 
             context = { "myplants"            : myplants,
                         # search field options - plant attributes
@@ -494,57 +265,41 @@ def myplants_summary(request):
                         "my_happiness_search"     : my_happiness_search,
                         # table column selection
                         "my_column_selection"     : my_column_selection_list, 
-                      }
-            
+                      }        
         return render(request, "plants/myplants_summary.html", context)
 
     # Executed when plants summary page is initialized
     else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column display sections
-        user_garden_found = False
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                # Get the user's previously stored column display sections
-                column_selection_list  = string2list(garden.column_selection)
-                # Get the user's previously stored search criteria
-                common_name_search      = garden.common_name_search
-                genus_search            = garden.genus_search
-                species_search          = garden.species_search
-                type_x_search           = garden.type_x_search
-                bloom_color_search      = garden.bloom_color_search
-                bloom_season_search     = garden.bloom_season_search
-                bloom_month_search      = garden.bloom_month_search
-                pollinators_search      = garden.pollinators_search
-                ca_native_search        = garden.ca_native_search
-                ucd_all_star_search     = garden.ucd_all_star_search
-                davis_trees_search      = garden.davis_trees_search
-                sunset_z14_search       = garden.sunset_z14_search
-                sun_exposure_search     = garden.sun_exposure_search
-                water_rqmts_search      = garden.water_rqmts_search
-                pH_search               = garden.pH_search
-                soil_type_search        = garden.soil_type_search
-                heat_tolerance_search   = garden.heat_tolerance_search
-                deer_resistance_search  = garden.deer_resistance_search
-                usda_zone_search        = garden.usda_zone_search
-                sunset_zone_search      = garden.sunset_zone_search
-                #
-                my_sun_exposure_search  = garden.my_sun_exposure_search
-                my_water_level_search   = garden.my_water_level_search
-                my_soil_type_search     = garden.my_soil_type_search
-                my_happiness_search     = garden.my_happiness_search
-
-                user_garden_found       = True
-                break # once the user's garden is found exit the loop
-
-        # the current user needs to have a registered garden
-        if (user_garden_found == False):
-            return HttpResponseRedirect(reverse('plants:mygarden_add'))
+        # Get the user's previously stored search criteria
+        common_name_search      = user_info.common_name_search
+        genus_search            = user_info.genus_search
+        species_search          = user_info.species_search
+        type_x_search           = user_info.type_x_search
+        bloom_color_search      = user_info.bloom_color_search
+        bloom_season_search     = user_info.bloom_season_search
+        bloom_month_search      = user_info.bloom_month_search
+        pollinators_search      = user_info.pollinators_search
+        ca_native_search        = user_info.ca_native_search
+        ucd_all_star_search     = user_info.ucd_all_star_search
+        davis_trees_search      = user_info.davis_trees_search
+        sunset_z14_search       = user_info.sunset_z14_search
+        sun_exposure_search     = user_info.sun_exposure_search
+        water_rqmts_search      = user_info.water_rqmts_search
+        pH_search               = user_info.pH_search
+        soil_type_search        = user_info.soil_type_search
+        heat_tolerance_search   = user_info.heat_tolerance_search
+        deer_resistance_search  = user_info.deer_resistance_search
+        usda_zone_search        = user_info.usda_zone_search
+        sunset_zone_search      = user_info.sunset_zone_search
+        #
+        my_sun_exposure_search  = user_info.my_sun_exposure_search
+        my_water_level_search   = user_info.my_water_level_search
+        my_soil_type_search     = user_info.my_soil_type_search
+        my_happiness_search     = user_info.my_happiness_search
 
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(Q(owner = request.user.username) &
                                           Q(status = 'in_my_garden')).order_by('plant__commonName')
-
         # Execute the search
         for myplant in myplants:
             # format multiselect attributes to remove [, ', and ]
@@ -598,10 +353,9 @@ def myplants_summary(request):
             else:
                 myplant.show = "no"
 
-        gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column display sections
-        for garden in gardens:       
-            my_column_selection_list  = string2list(garden.my_column_selection)
+        # Get the user's previously stored column display sections      
+        my_column_selection_list  = string2list(user_info.my_column_selection)
+        #
         context = { 'myplants'               : myplants,
                     # search field options - plant attributes
                     "plant_types"            : plant_types,
@@ -797,186 +551,26 @@ def myplant_delete(request, id):
 
 # 
 
-def myplants_todo(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    # AR: Determine if this is really necessary
-    template = loader.get_template("plants/myplants_todo.html")
-    # Obtain the user's garden
-    gardens = Garden.objects.all()
-    for garden in gardens:
-        if (request.user.username == garden.owner):
-            myGarden = garden
-
-    # Obtain all of the To Do items for the current user and sort by date
-    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username).order_by('date')
-
-    context = { 'myGarden'    : myGarden,
-                "myplants_todo" : myplants_todos, }
-    return HttpResponse(template.render(context, request))
-
-def myplants_todo_details(request, id):
-    """  My Plant To Do item details modal """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    myplant_todo = MyPlantToDo.objects.get(id=id)
-    context = { 'myplant_todo' : myplant_todo }
-    return render(request, 'plants/myplants_todo_details_modal.html', context)   
-
-def myplants_todo_add(request, id):
-    """ Add My Plant To Do item """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    if request.POST:
-        myplant_todo = MyPlantToDo()
-
-        common_name   = request.POST["common_name"]
-        myplants = MyPlant.objects.filter(owner = request.user.username)
-        for myplant in myplants:
-            if myplant.plant.commonName == common_name:
-                myplant_todo.myplant = myplant
-        # Get the rest of the To Do item attributes
-        myplant_todo.owner    = request.user.username
-        myplant_todo.complete = False
-        myplant_todo.date     = request.POST["todo_date"]
-        myplant_todo.action   = request.POST["todo_action"]
-        myplant_todo.repeat   = request.POST["todo_repeat"]
-        myplant_todo.details  = request.POST["todo_details"]
-        
-        myplant_todo.save()
-
-        return HttpResponseRedirect(reverse('plants:myplants_todo'))
-    else:
-        myGarden = Garden.objects.get(id=id)
-        myPlants = MyPlant.objects.filter(owner = request.user.username)
-        context = { 'myGarden'        : myGarden,
-                    'myPlants'        : myPlants,
-                    'todo_action_opt' : todo_action_opt,
-                    'todo_repeat_opt' : todo_repeat_opt,
-                  }
-        return render(request, 'plants/myplants_todo_add_modal.html', context)
-    
-def myplants_todo_edit(request, id):
-    """ edit My Plant To Do item """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    myplants     = MyPlant.objects.filter(owner = request.user.username)
-    myplant_todo = MyPlantToDo.objects.get(id=id)
-
-    if request.POST:
-        common_name = request.POST["common_name"]
-        for myplant in myplants:
-            if myplant.plant.commonName == common_name:
-                myplant_todo.myplant = myplant
-        # Get the rest of the To Do item attributes
-        myplant_todo.owner    = request.user.username
-        myplant_todo.complete = False
-        myplant_todo.date     = request.POST["todo_date"]
-        myplant_todo.action   = request.POST["todo_action"]
-        myplant_todo.repeat   = request.POST["todo_repeat"]
-        myplant_todo.details  = request.POST["todo_details"]
-        myplant_todo.save()
-        return HttpResponseRedirect(reverse('plants:myplants_todo'))
-    else:
-        context = { 'myplants'        : myplants,
-                    'myplant_todo'    : myplant_todo,
-                    'todo_action_opt' : todo_action_opt,
-                    'todo_repeat_opt' : todo_repeat_opt,
-                  }
-        return render(request, 'plants/myplants_todo_edit_modal.html', context)    
-    
-def myplants_todo_del(request, id):
-    """ Delete My Plant To Do item"""
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    # Get to To Do item to be deleted
-    myplant_todo = MyPlantToDo.objects.get(id=id)
-    # Delete the To Do item
-    if request.POST:
-        myplant_todo.delete()
-        return HttpResponseRedirect(reverse('plants:myplants_todo',))
-    # Populate the delete modal fields and render the modal
-    else:
-        context = { 'myplant_todo' : myplant_todo }
-        return render(request, 'plants/myplants_todo_del_modal.html', context)
-
-def myplants_todo_done(request, id):
-    """ My Plant To Do item - toggle conpletion status """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    # Get the To Do item to have completion status toggled
-    myplant_todo = MyPlantToDo.objects.get(id=id)
-    if request.method == 'POST':
-        if(myplant_todo.complete == True):
-            myplant_todo.complete = False
-        else:
-            myplant_todo.complete = True
-        myplant_todo.save()
-        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
-
-def myplants_todo_save(request, id):
-    """ My Plant To Do items - save sort column and direction """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    mygarden = Garden.objects.get(id=id)
-    if request.method == 'POST':
-
-        # Parses the JSON data from the request body
-        data_JSON_string = request.body.decode('utf-8')
-        # Convert the JSON string into a dictionary
-        data_dict= json.loads(data_JSON_string)
-
-        # Get the sort parameters and save to db
-        mygarden.lastToDoSortCol = data_dict["lastToDoSortCol"]
-        mygarden.lastToDoSortDir = data_dict["lastToDoSortDir"]
-        mygarden.save()
-        
-    return JsonResponse({'test' : 'test' })
-
-def myplants_todo_fetch(request):
-    """ My Plant To Do items - save sort column and direction """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    
-    # Obtain all of the To Do items for the current user
-    myplants_todos = MyPlantToDo.objects.filter(owner = request.user.username)
-    # Add the plant common name to the todo model for calendar display
-    for todo in myplants_todos:
-        todo.commonName = todo.myplant.plant.commonName
-        todo.pruning    = todo.myplant.plant.pruning
-        todo.save() 
-    # Convert queryset to a list of dictionaries
-    todos = list(myplants_todos.values()) 
-    return JsonResponse(todos, safe=False)
-
 def my_column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
+    # Obtain the user's saved configuration information
+    user_info = request.user.userinfo
+
     if request.POST:
         form = MyColumnChooserForm(request.POST)
         if form.is_valid():
             my_column_selection = form.cleaned_data.get('my_column_selection')
             # Associate the column selection to the user's garden
-            gardens = Garden.objects.filter(owner = request.user.username)
-            for garden in gardens:
-                if (garden.owner == request.user.username):
-                    garden.my_column_selection = my_column_selection
-                    garden.save()
+            user_info.my_column_selection = my_column_selection
+            user_info.save()
         else:
             return HttpResponseRedirect(reverse('myplants:summary')) 
         return HttpResponseRedirect(reverse('plants:myplants_summary'))
-    
     else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column selection list
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                my_column_selection = garden.my_column_selection
+        my_column_selection = user_info.my_column_selection
         # convert string-based list (retrieved from db) to true Python lists
         my_column_selection_list  = string2list(my_column_selection)
         form = MyColumnChooserForm(initial = {'my_column_selection' : my_column_selection_list})
@@ -1009,13 +603,15 @@ def myplant_details(request, id):
     myplant_todos         = MyPlantToDo.objects.filter(myplant__pk=id)
     # get all comments related to the plant                
     myplant_comments      = MyPlantComment.objects.filter(myplant__pk=id) 
-
+    # Obtain the user's saved configuration information
+    user_info = request.user.userinfo
     template = loader.get_template("plants/myplant_details.html")
     # Specify the two input forms that exist on the page modals
     # Prefixes are necessary for the Quill forms to work correctly
     log_add_form = MyPlantLogForm(prefix='log_add_form')
     comment_form = MyPlantCommentForm(prefix='comment_form')
-    context  = { "myplant"          : myplant, 
+    context  = { "user_info"        : user_info,
+                 "myplant"          : myplant, 
                  "plant"            : plant,
                  "myplant_logs"     : myplant_logs,
                  "myplant_todos"    : myplant_todos,
@@ -1235,7 +831,7 @@ def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
-    myplant = MyPlant.objects.get(id=id)
+    user_info = request.user.userinfo
     if request.method == 'POST':
 
         # Parses the JSON data from the request body
@@ -1244,9 +840,9 @@ def myplant_todo_save(request, id):
         data_dict= json.loads(data_JSON_string)
 
         # Get the sort parameters and save to db
-        myplant.lastToDoSortCol = data_dict["lastToDoSortCol"]
-        myplant.lastToDoSortDir = data_dict["lastToDoSortDir"]
-        myplant.save()
+        user_info.lastToDoSortCol = data_dict["lastToDoSortCol"]
+        user_info.lastToDoSortDir = data_dict["lastToDoSortDir"]
+        user_info.save()
         
     return JsonResponse({'test' : 'test' })
 
@@ -1274,6 +870,10 @@ def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
+    
+    # Obtain the user's saved configuration information
+    user_info = request.user.userinfo
+
     # Executed when search request is submitted
     if request.method == 'POST':   
         template = loader.get_template("plants/plants_summary.html")
@@ -1335,7 +935,7 @@ def plants_summary(request):
                 garden.status_search          = status_search
                 garden.save()
                 # Get the user's previously stored column display sections
-                column_selection_list  = string2list(garden.column_selection)
+                column_selection_list  = string2list(user_info.column_selection)
 
         # Obtain the plants that the current user has claimed for their garden - needed to populate the table
         myplants = MyPlant.objects.filter(owner = request.user.username) 
@@ -1469,46 +1069,35 @@ def plants_summary(request):
         return render(request, "plants/plants_summary.html", context)
     # Executed when plants summary page is initialized
     else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        user_garden_found = False
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                # Get the user's previously stored column display sections
-                column_selection_list  = string2list(garden.column_selection)
-                # Get the user's previously stored search criteria
-                common_name_search    = garden.common_name_search
-                genus_search          = garden.genus_search
-                species_search        = garden.species_search
-                type_x_search         = garden.type_x_search
-                bloom_color_search    = garden.bloom_color_search
-                bloom_season_search   = garden.bloom_season_search
-                bloom_month_search    = garden.bloom_month_search
-                pollinators_search    = garden.pollinators_search
-                ca_native_search      = garden.ca_native_search
-                ucd_all_star_search   = garden.ucd_all_star_search
-                davis_trees_search    = garden.davis_trees_search
-                sunset_z14_search     = garden.sunset_z14_search
-                sun_exposure_search   = garden.sun_exposure_search
-                water_rqmts_search    = garden.water_rqmts_search
-                pH_search             = garden.pH_search
-                soil_type_search      = garden.soil_type_search
-                heat_tolerance_search  = garden.heat_tolerance_search
-                deer_resistance_search = garden.deer_resistance_search
-                usda_zone_search      = garden.usda_zone_search
-                sunset_zone_search    = garden.sunset_zone_search
-                garden_search         = garden.garden_search
-                # Admin - if user not a "Garden-Editor" set to "Published"
-                if request.user.groups.filter(name='Garden-Editor').exists(): 
-                    status_search = garden.status_search
-                else:
-                    status_search = "Published"
-                #
-                user_garden_found     = True
-                break # once the user's garden is found exit the loop
-
-        # the current user needs to have a registered garden
-        if (user_garden_found == False):
-            return HttpResponseRedirect(reverse('plants:mygarden_add'))
+        # Get the user's previously stored column display sections
+        column_selection_list  = string2list(user_info.column_selection)
+        # Get the user's previously stored search criteria
+        common_name_search    = user_info.common_name_search
+        genus_search          = user_info.genus_search
+        species_search        = user_info.species_search
+        type_x_search         = user_info.type_x_search
+        bloom_color_search    = user_info.bloom_color_search
+        bloom_season_search   = user_info.bloom_season_search
+        bloom_month_search    = user_info.bloom_month_search
+        pollinators_search    = user_info.pollinators_search
+        ca_native_search      = user_info.ca_native_search
+        ucd_all_star_search   = user_info.ucd_all_star_search
+        davis_trees_search    = user_info.davis_trees_search
+        sunset_z14_search     = user_info.sunset_z14_search
+        sun_exposure_search   = user_info.sun_exposure_search
+        water_rqmts_search    = user_info.water_rqmts_search
+        pH_search             = user_info.pH_search
+        soil_type_search      = user_info.soil_type_search
+        heat_tolerance_search  = user_info.heat_tolerance_search
+        deer_resistance_search = user_info.deer_resistance_search
+        usda_zone_search      = user_info.usda_zone_search
+        sunset_zone_search    = user_info.sunset_zone_search
+        garden_search         = user_info.garden_search
+        # Admin - if user not a "Garden-Editor" set to "Published"
+        if request.user.groups.filter(name='Garden-Editor').exists(): 
+            status_search = user_info.status_search
+        else:
+            status_search = "Published"
         
         # Obtain the plants that the current user has claimed for their garden
         myplants = MyPlant.objects.filter(owner = request.user.username) 
@@ -1955,26 +1544,22 @@ def column_chooser(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     
+    # Obtain the user's saved configuration information
+    user_info = request.user.userinfo
+
     if request.POST:
         form = ColumnChooserForm(request.POST)
         if form.is_valid():
             column_selection = form.cleaned_data.get('column_selection')
             # Associate the column selection to the user's garden
-            gardens = Garden.objects.filter(owner = request.user.username)
-            for garden in gardens:
-                if (garden.owner == request.user.username):
-                    garden.column_selection = column_selection
-                    garden.save()
+            user_info.column_selection = column_selection
+            user_info.save()
         else:
             return HttpResponseRedirect(reverse('plants:summary')) 
         return HttpResponseRedirect(reverse('plants:plants_summary'))
     
     else:
-        gardens = Garden.objects.filter(owner = request.user.username)
-        # Get the user's previously stored column selection list
-        for garden in gardens:
-            if (garden.owner == request.user.username):
-                column_selection = garden.column_selection
+        column_selection = user_info.column_selection
         # convert string-based list (retrieved from db) to true Python lists
         column_selection_list  = string2list(column_selection)
         form = ColumnChooserForm(initial = {'column_selection' : column_selection_list})
@@ -2000,550 +1585,6 @@ def plants_about(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     return render(request, 'plants/plants_about.html')
-
-#
-
-def user_profile_step1(request):
-    """ Render the User Profile Page for Gateway Gardens app """
-    if request.user.is_authenticated:
-        profile_creation = False
-    else:
-        profile_creation = True
-
-    if request.POST:
-        form = UserProfileForm(request.POST)
-        if form.is_valid():
-            # ----------------------------------------------------------------------
-            # Get profile information from request
-            # ----------------------------------------------------------------------
-            profile_username   = form.cleaned_data.get('profile_username')
-            profile_password_1 = form.cleaned_data.get('profile_password_1')
-            profile_password_2 = form.cleaned_data.get('profile_password_2')
-            profile_email      = form.cleaned_data.get('profile_email')
-            profile_first_name = form.cleaned_data.get('profile_first_name')
-            profile_last_name  = form.cleaned_data.get('profile_last_name')
-            if 'profile_photo' in request.FILES:
-                profile_photo = request.FILES['profile_photo']
-                # Read binary and encode to base64 string for session storage
-                profile_photo_encoded = base64.b64encode(profile_photo.read()).decode('utf-8')
-            # ----------------------------------------------------------------------
-            # Input validation
-            # ----------------------------------------------------------------------
-            profile_error_message = ""
-            USERNAME_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "-")
-            PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
-            FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
-            LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
-            # Input validation - Username
-            if (profile_error_message == ""):
-                profile_error_message = username_validation(profile_creation, profile_username, USERNAME_ALLOWED_CHARS)
-            # Input validation - Passwords
-            if (profile_error_message == ""):
-                profile_error_message = password_validation(profile_password_1, PASSWORD_ALLOWED_CHARS)
-            if (profile_error_message == ""):
-                profile_error_message = password_validation(profile_password_2, PASSWORD_ALLOWED_CHARS)
-            if (profile_error_message == ""):
-                profile_error_message = password_match(profile_password_1, profile_password_2)
-            # Input validation - email
-            if (profile_error_message == ""):
-                profile_error_message = email_validation(profile_creation, profile_email)
-            # Input validation - first name
-            if (profile_error_message == ""):
-                profile_error_message = firstname_validation(profile_first_name, FIRSTNAME_ALLOWED_CHARS)
-            # Input validation - last name
-            if (profile_error_message == ""):
-                profile_error_message = lastname_validation(profile_last_name, LASTNAME_ALLOWED_CHARS)
-            # ----------------------------------------------------------------------
-            # If there is a profile error send message back to client.
-            # Else if all profile inputs are valid:
-            # 1. Generate MFA code
-            # 2. Store user profile inputs in session
-            # 3. email MFA code to user 
-            # 4. Inform client to open MFA modal
-            # ----------------------------------------------------------------------
-            if (profile_error_message != ""):
-                # Return failure status to client
-                response_data = {
-                    'status': 'failure',
-                    'message': profile_error_message,
-                }
-                return JsonResponse(response_data)
-            else:
-                # Generate a random 6-digit OTP code
-                otp_code = str(random.randint(100000, 999999))
-                print("INFO: MFA code =", otp_code)
-                # Store pending user data and OTP in the session (expire in 10 minutes)
-                if 'profile_photo' in request.FILES:
-                    request.session['pending_user'] = {
-                        'profile_username'           : profile_username,
-                        'profile_email'              : profile_email,
-                        'profile_password_1'         : profile_password_1,
-                        'profile_first_name'         : profile_first_name,
-                        'profile_last_name'          : profile_last_name,
-                        'profile_photo_encoded' : profile_photo_encoded,
-                        'profile_photo_name'    : profile_photo.name,
-                        'otp_code'                  : otp_code,
-                    }
-                else:
-                    request.session['pending_user'] = {
-                        'profile_username'   : profile_username,
-                        'profile_email'      : profile_email,
-                        'profile_password_1' : profile_password_1,
-                        'profile_first_name' : profile_first_name,
-                        'profile_last_name'  : profile_last_name,
-                        'otp_code'          : otp_code,
-                    }
-                request.session.set_expiry(600)
-                # Send the code via email
-                send_mail(
-                    subject='Your Verification Code',
-                    message=f'Your OTP code is {otp_code}',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[profile_email],
-                )
-                # Return email validation code request to client
-                response_data = {
-                    'status' : 'email-validation',
-                    'message': 'email validation code sent'
-                }
-                return JsonResponse(response_data)
-    else:
-        form = UserProfileForm()
-        # User profile update or creation
-        if request.user.is_authenticated:
-            garden = Garden.objects.get(owner = request.user.username)
-            form = UserProfileForm(initial = { 'profile_username' : request.user.username,
-                                            'profile_email'       : request.user.email,
-                                            'profile_first_name'  : request.user.first_name,
-                                            'profile_last_name'   : request.user.last_name
-                                            })
-            context = { 'form' : form, 'garden' : garden }
-        else:
-            form = UserProfileForm()
-            context = { 'form' : form }
-        messages.error(request, "")
-        return render(request, 'plants/user_profile_modal_step1.html', context)
-    
-def user_profile_step2(request):
-    """ Render the User Profile Page for Gateway Gardens app """
-
-    if request.user.is_authenticated:
-        profile_creation = False
-    else:
-        profile_creation = True
-
-    pending_data = request.session.get('pending_user')
-
-    if not pending_data:
-        messages.error(request, 'No registration session found. Please register again.')
-        return render(request, 'plants/index.html')
-    
-    if request.POST:
-        form = EmailVerificationForm(request.POST)
-        if form.is_valid():
-            entered_code = form.cleaned_data.get('entered_code')
-            # ----------------------------------------------------------------------
-            # If the user entered the MFA code correctly, setup the user
-            # ----------------------------------------------------------------------
-            if entered_code == pending_data['otp_code']:
-                # Retrieve the user information from the session setup in step 1
-                profile_username        = pending_data['profile_username']
-                profile_password_1      = pending_data['profile_password_1']
-                profile_email           = pending_data['profile_email']
-                profile_first_name      = pending_data['profile_first_name']
-                profile_last_name       = pending_data['profile_last_name']
-                if 'profile_photo_name' in  pending_data:
-                    profile_photo_name      = pending_data['profile_photo_name']
-                    # Decode base64 back to binary
-                    profile_photo_unencoded =  base64.b64decode(pending_data['profile_photo_encoded'])
-                    # Create a Django ContentFile
-                    profile_photo_obj = ContentFile(profile_photo_unencoded, name=profile_photo_name)
-                else:
-                    profile_photo_obj = None
-                #
-                if profile_creation:
-                    user = User.objects.create_user(profile_username, profile_email, profile_password_1)
-                    user.first_name = profile_first_name
-                    user.last_name  = profile_last_name
-                    user.save()
-                else:
-                    user = User.objects.get(username = request.user.username)
-                    user.username = profile_username
-                    user.set_password("profile_password_1")
-                    user.email    = profile_email
-                    user.first_name = profile_first_name
-                    user.last_name  = profile_last_name
-                    user.save()
-                    # Only update password if it was changed
-                    # Keep user logged if if password was changed
-                    new_password = "profile_password_1"
-                    # Only update if the password is actually different
-                    if not user.check_password(new_password):
-                        user.set_password(new_password)
-                    user.save()
-                    update_session_auth_hash(request, user)
-                #
-                if profile_creation:
-                    # Add the user to the "Gardener" group - default
-                    group = Group.objects.get(name='Gardener')
-                    group.user_set.add(user)
-                    # Create a Garden object for the user
-                    garden = Garden()
-                    garden.owner = profile_username
-                    garden.name  = profile_username + "'s Garden"
-                    if profile_photo_obj is not None and profile_photo_obj != "":
-                        garden.profile_photo = profile_photo_obj
-                else:
-                    garden = Garden.objects.get(owner = request.user.username)
-                    garden.owner = profile_username
-                    if profile_photo_obj is not None and profile_photo_obj != "":
-                        garden.profile_photo = profile_photo_obj
-                garden.save()
-                # Clean up session
-                del request.session['pending_user']
-                # Return success status to client
-                if profile_creation:
-                    response_data = {
-                        'status'  : 'user-creation-success',
-                        'message' : 'User creation successful',
-                    }
-                else:
-                    response_data = {
-                        'status'  : 'user-profile-update-success',
-                        'message' : 'User profile update successful',
-                    }
-                return JsonResponse(response_data)
-            else:
-                response_data = {
-                    'status'  : 'authentication-failure',
-                    'message' : 'User authentication failed',
-                }
-                return JsonResponse(response_data)
-    else:
-        form = EmailVerificationForm()
-        context = { 'form' : form }
-        return render(request, 'plants/user_profile_modal_step2.html', context)
-
-def user_profile_mfa(request):
-    """ Provide new authorization code """
-    session_data = request.session.get('pending_user')
-    if not session_data:
-        messages.error(request, 'No registration session found. Please register again.')
-        # return redirect('register_view')
-        return render(request, 'plants/index.html')
-    
-    if request.method == 'GET':
-        # Generate a random 6-digit OTP code
-        otp_code = str(random.randint(100000, 999999))
-        print("INFO: otp_code = ", otp_code)
-        # Store pending user OTP in the current session (expire in 10 minutes)
-        request.session['pending_user']['otp_code'] = otp_code
-        # Force Django to save the changes
-        request.session.modified = True 
-        # Reset expiration for 10 minutes
-        request.session.set_expiry(600)
-        # Retrieve all data for the current session
-        session_data = request.session.get('pending_user')
-        
-        # Send the code via email
-        profile_email = session_data['profile_email']
-        send_mail(
-            subject='Your Verification Code',
-            message=f'Your OTP code is {otp_code}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[profile_email],
-        )
-        response_data = {
-            'status' : 'auth-code-resent',
-            'message': 'Authentication code sent via email'
-        }
-        return JsonResponse(response_data)
-    else:
-        response_data = {
-            'status' : 'auth-code-failure',
-            'message': 'Authentication code failure'
-        }
-        return JsonResponse(response_data)
-   
-def user_pwd_rst_step1(request):
-    """ Render the User Password Reset Page for Gateway Gardens app """
-    if request.POST:
-        form = UserPwdResetForm(request.POST)
-        if form.is_valid():
-            # ----------------------------------------------------------------------
-            # Get password reset information from request
-            # ----------------------------------------------------------------------
-            pwd_rst_password_1 = form.cleaned_data.get('pwd_rst_password_1')
-            pwd_rst_password_2 = form.cleaned_data.get('pwd_rst_password_2')
-            pwd_rst_email      = form.cleaned_data.get('pwd_rst_email')
-            # ----------------------------------------------------------------------
-            # Input validation
-            # ----------------------------------------------------------------------
-            pwd_rst_error_message = ""
-            PASSWORD_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "!@#$&")
-            # Input validation - Passwords
-            if (pwd_rst_error_message == ""):
-                pwd_rst_error_message = password_validation(pwd_rst_password_1, PASSWORD_ALLOWED_CHARS)
-            if (pwd_rst_error_message == ""):
-                pwd_rst_error_message = password_validation(pwd_rst_password_2, PASSWORD_ALLOWED_CHARS)
-            if (pwd_rst_error_message == ""):
-                pwd_rst_error_message = password_match(pwd_rst_password_1, pwd_rst_password_2)
-            # Input validation - email
-            try:
-                emailinfo = validate_email(pwd_rst_email, check_deliverability=False)
-                pwd_rst_email= emailinfo.normalized
-            except:
-                pwd_rst_error_message = "invalid e-mail address"
-            # ----------------------------------------------------------------------
-            # If all password reset inputs are valid:
-            # 1. Generate MFA code
-            # 2. Store user password input and MFA code in session
-            # 3. email MFA code to user 
-            # 4. Inform client to open MFA modal
-            # ----------------------------------------------------------------------
-            if (pwd_rst_error_message != ""):
-                print("INFO: input validation failure")
-                # Return failure status to client
-                response_data = {
-                    'status': 'failure',
-                    'message': pwd_rst_error_message,
-                }
-                return JsonResponse(response_data)
-            else:
-                print("INFO: input validation success")
-                # Generate a random 6-digit OTP code
-                otp_code = str(random.randint(100000, 999999))
-                print("INFO: MFA code =", otp_code)
-                request.session['pending_user'] = { 'pwd_rst_password_1' : pwd_rst_password_1 }
-                request.session['pending_user'] = { 'pwd_rst_email'      : pwd_rst_email }
-                request.session['pending_user'] = { 'otp_code'           : otp_code }
-
-                request.session['pending_user'] = {
-                    'pwd_rst_email'      : pwd_rst_email,
-                    'pwd_rst_password_1' : pwd_rst_password_1,
-                    'otp_code'           : otp_code
-                }
-
-                request.session.set_expiry(600)
-                # Send the code via email
-                send_mail(
-                    subject='Your Verification Code',
-                    message=f'Your OTP code is {otp_code}',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[pwd_rst_email],
-                )
-                # Return email validation code request to client
-                response_data = {
-                    'status' : 'email-validation',
-                    'message': 'email validation code sent'
-                }
-                return JsonResponse(response_data)
-    else:
-        form = UserPwdResetForm()
-        context = { 'form' : form }
-        return render(request, 'plants/pwd_rst_modal_step1.html', context)
-
-def user_pwd_rst_step2(request):
-    """ Render the User Profile Page for Gateway Gardens app """
-
-    pending_data = request.session.get('pending_user')
-
-    if not pending_data:
-        messages.error(request, 'No registration session found. Please register again.')
-        return render(request, 'plants/index.html')
-
-    if request.POST:
-        form = EmailVerificationForm(request.POST)
-        if form.is_valid():
-            entered_code = form.cleaned_data.get('entered_code')
-            # ----------------------------------------------------------------------
-            # If the user entered the MFA code correctly, setup the user
-            # ----------------------------------------------------------------------
-            if entered_code == pending_data['otp_code']:
-                # Retrieve the user information from the session setup in step 1
-                pwd_rst_password_1 = pending_data['pwd_rst_password_1']
-                pwd_rst_email      = pending_data['pwd_rst_email']
-                #
-                user = User.objects.get(email = pwd_rst_email)
-                user.set_password(pwd_rst_password_1)
-                user.save()
-                #
-                update_session_auth_hash(request, user)
-                # Clean up session
-                del request.session['pending_user']
-                # Return success status to client
-                response_data = {
-                    'status'  : 'pwd_rst-success',
-                    'message' : 'User password reset successful',
-                }
-                return JsonResponse(response_data)
-            else:
-                print("INFO: user_pwd_rst_step2 - codes do not match")
-                response_data = {
-                    'status'  : 'pwd_rst-failure',
-                    'message' : 'User password reset failed',
-                }
-                return JsonResponse(response_data)
-    else:
-        form = EmailVerificationForm()
-        context = { 'form' : form }
-        return render(request, 'plants/pwd_rst_modal_step2.html', context)
-    
-def user_pwd_rst_mfa(request):
-    """ Provide new authorization code """
-    pending_data = request.session.get('pending_user')
-    if not pending_data:
-        messages.error(request, 'No registration session found. Please register again.')
-        # return redirect('register_view')
-        return render(request, 'plants/index.html')
-    
-    if request.method == 'GET':
-        # Generate a random 6-digit OTP code
-        otp_code = str(random.randint(100000, 999999))
-        print("INFO: otp_code = ", otp_code)
-        # Store pending user OTP in the current session (expire in 10 minutes)
-        request.session['pending_user']['otp_code'] = otp_code
-        # Force Django to save the changes
-        request.session.modified = True 
-        # Reset expiration for 10 minutes
-        request.session.set_expiry(600)
-        # Retrieve all data for the current session
-        pending_data = request.session.get('pending_user')
-        
-        # Send the code via email
-        pwd_rst_email = pending_data['pwd_rst_email']
-        send_mail(
-            subject='Your Verification Code',
-            message=f'Your OTP code is {otp_code}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[pwd_rst_email],
-        )
-        response_data = {
-            'status' : 'auth-code-resent',
-            'message': 'Authentication code sent via email'
-        }
-        return JsonResponse(response_data)
-    else:
-        response_data = {
-            'status' : 'auth-code-failure',
-            'message': 'Authentication code failure'
-        }
-        return JsonResponse(response_data)
-
-def user_login(request):
-    """ Render the User Login Page for Gateway Gardens app """
-    if request.POST:
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            username   = form.cleaned_data.get('username')
-            password   = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            # Login the user if they have been authenticated else indicate login failure
-            if user is not None:
-                login(request, user)
-                return render(request, 'plants/index.html')
-            else:
-                # AR: Indicate on password input form that the username and/or password was invalid
-                return render(request, 'plants/index.html')
-    else:
-        form = UserLoginForm()
-        context = { 'form' : form }
-        return render(request, 'plants/user_login_modal.html', context)
-    
-def user_logout(request):
-    """ User Logout function for Gateway Gardens app """
-    logout(request)
-    return render(request, 'plants/index.html')
-
-def user_admin(request):
-    """ Render the User Admin page for Gateway Gardens app """
-    if request.user.username == "Brent":
-        users = User.objects.all()
-        context = { 'users' : users, }
-        return render(request, 'plants/user_admin.html', context)
-    else:
-        return HttpResponseRedirect(reverse('plants:index'))
-
-def user_delete(request, id):
-    """ Delete selected user from the User database table """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    user = User.objects.get(id=id)
-    if request.POST:
-        user_garden = Garden.objects.get(owner = user.username)
-        # Delete the user's profile photo
-        if (user_garden.profile_photo):
-            user_garden.profile_photo.delete(save=False)
-        # Delete the user's garden
-        user_garden.delete()
-        # Delete the user
-        user.delete()
-        return HttpResponseRedirect(reverse('plants:index')) 
-    else:
-        context = {'user': user}
-        return render(request, 'plants/user_delete_modal.html', context)
-
-def username_validation(profile_creation, username, USERNAME_ALLOWED_CHARS):
-    error_message = ""
-    if (username == ""):
-        error_message = "Username is required"
-    elif profile_creation and User.objects.filter(username = username).exists():
-        error_message = "Username has already been taken"
-    elif (len(username) < 4):
-        error_message = "Username must be at least 4 characters long"
-    elif (not all(char in USERNAME_ALLOWED_CHARS for char in username)):
-        error_message = "Username can only contain letters, numbers and -"
-    return (error_message)
-    
-def password_validation(password, PASSWORD_ALLOWED_CHARS):
-    error_message = ""
-    if (not all(char in PASSWORD_ALLOWED_CHARS for char in password)):
-        error_message = "password can only contain letters, numbers and @#$&!"
-    elif (len(password) < 8):
-        error_message = "password must be at least 8 characters long"
-    elif not any(char.isupper() for char in password):
-        error_message = "password requires at least one uppercase letter"
-    elif not any(char.islower() for char in password):
-        error_message = "password requires at least one lowercase letter"
-    elif not any(char.isdigit() for char in password):
-        error_message = "password requires at least one number"
-    elif not any(char in "!@#$%^&*()(_+)" for char in password):
-        error_message = "password requires at least one special character '@#$&!'"  
-    return (error_message)
-
-def password_match(password_1, password_2):
-    error_message = ""
-    if (password_1 != password_2):
-        error_message = "passwords do not match"
-    return (error_message)
-    
-def email_validation(profile_creation, email):
-    error_message = ""
-    if profile_creation and User.objects.filter(email = email).exists():
-        error_message = "Email address has already been taken"
-    else:
-        try:
-            emailinfo = validate_email(email, check_deliverability=False)
-            # profile_email= emailinfo.normalized
-        except:
-            error_message = "Invalid e-mail address"
-    return (error_message)
-
-def firstname_validation(firstname, FIRSTNAME_ALLOWED_CHARS):
-    error_message = ""
-    if (firstname == ""):
-        error_message = "First name is required"
-    elif (not all(char in FIRSTNAME_ALLOWED_CHARS for char in firstname)):
-        error_message = "First name can only contain letters, numbers and -"
-    return (error_message)
-
-def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
-    error_message = ""
-    if (lastname == ""):
-        error_message = "Last name is required"
-    elif (not all(char in LASTNAME_ALLOWED_CHARS for char in lastname)):
-        error_message = "Last name can only contain letters, numbers and -"
-    return (error_message)
 
 #
 
@@ -2684,7 +1725,7 @@ def bloom_month_list(start, end, options):
 def DEBUG_print_request(request):
     """ Utility: print contents of HTTP Request to console """
     print(f"================================================================")  
-    print(f"DEBUG: Print HTTP request")  
+    print(f"INFO: Print HTTP request")  
     print(f"================================================================")  
     print(f"Request Path:           {request.path}")
     print(f"Request Method:         {request.method}")

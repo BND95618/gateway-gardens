@@ -3,7 +3,7 @@
     <header class="bnd-modal-header">
       <h4>Delete User?</h4>
     </header>
-    <form class="bnd-modal-contents" action="{% url 'plants:user_delete' user.id %}" method="post">
+    <form class="bnd-modal-contents" action="{% url 'user_info:user_delete' user.id %}" method="post">
       {% csrf_token %}
       <p>Username = {{ user.username }}</p>
       <footer class="bnd-modal-button-bar">

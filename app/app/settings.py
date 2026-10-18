@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     # Added for Dajango 5.2.8 S3 static/media file access
     'storages',
     # My apps
+    'mygarden',
     'plants',
     'pests',
+    'user_info',
     # Image processing
     'imagekit',
     # Rich text editor
@@ -150,7 +152,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # It is unclear if this code is being used since whitenoise has been installed and configured
 
 if (os.environ.get('IS_ON_AWS', '0') == '1'):
-    print("DEBUG: Running on AWS Lightsail")
+    print("INFO: Running on AWS Lightsail")
     #############################################################################
     # AWS/S3 setup for serving static and media files when using Django 5.2.8   #
     #############################################################################
@@ -204,7 +206,7 @@ else:
     #############################################################################
     # Setup for serving static and media files in local development environment #
     #############################################################################
-    print("DEBUG: Running in local development environment")
+    print("INFO: Running in local development environment")
     # STATIC_URL defines the URL prefix used to access static files in your templates
     STATIC_URL   = '/static/'
     STATIC_ROOT  = '/app/static/'

@@ -464,9 +464,8 @@
 // Get the current my plant ID when Django renders the page
 const myPlantID = {{ myplant.id }};
 // set initial sort column and direction from db
-// AR: are quotes needed?
-let lastToDoSortCol = "{{ myplant.lastToDoSortCol }}";
-let lastToDoSortDir = "{{ myplant.lastToDoSortDir }}";
+let lastToDoSortCol = "{{ user_info.lastToDoSortCol }}";
+let lastToDoSortDir = "{{ user_info.lastToDoSortDir }}";
 //-----------------------------------------------------------------------------
 // My Plant Log functions - add
 //-----------------------------------------------------------------------------
@@ -858,7 +857,7 @@ function todo_done(id)
     const requestMethod = "POST";
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,
-                        lastToDoSortDir : lastToDoSortDir };
+                       lastToDoSortDir : lastToDoSortDir };
     fetch(url, 
     {
         method: requestMethod,
@@ -923,7 +922,7 @@ function todo_sort(column)
     const requestMethod = "POST";
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,
-                        lastToDoSortDir : lastToDoSortDir };
+                       lastToDoSortDir : lastToDoSortDir };
 
     fetch(url, 
     {
@@ -948,8 +947,6 @@ function restoreToDoSort()
     {
         // Since the table has rows it is safe to proceed
         let tempSortDirection = "ascending";
-        console.log("Got to restoreToDoSort");
-
         sortTable(lastToDoSortCol, 'todoTable');
 
         // Determine sort direction
@@ -973,10 +970,6 @@ function restoreToDoSort()
         {
           tempSortDirection = "down";
         }
-
-        console.log("lastToDoSortDir  =", lastToDoSortDir);
-        console.log("tempSortDirection  =", tempSortDirection);
-
         if (tempSortDirection != lastToDoSortDir)
         {
           sortTable(lastToDoSortCol, 'todoTable');

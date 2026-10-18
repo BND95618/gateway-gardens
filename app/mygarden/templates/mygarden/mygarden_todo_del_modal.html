@@ -1,15 +1,15 @@
-<!-- /plants/templates/plants/myplants_todo_del_modal.html -->
+<!-- /app/mygarden/templates/mygarden/mygarden_todo_del_modal.html -->
 <div class="bnd-modal-container">
     <header class="bnd-modal-header">
       <h4>Delete To Do Item?</h4>
     </header>
     <!-- To Do delete - create form -->
-    <form class="bnd-modal-contents" action="{% url 'plants:myplants_todo_del' myplant_todo.id %}" method="post">
+    <form class="bnd-modal-contents" action="{% url 'mygarden:mygarden_todo_del' myplant_todo.id %}" method="post">
       {% csrf_token %}
       <div class="bnd-modal-button-bar">
         <button type="submit" class="bnd-button-submit">Submit</button>
         <button type="button"
-                onclick="document.getElementById('myplants_todo_del_modal').style.display='none'"
+                onclick="document.getElementById('mygarden_todo_del_modal').style.display='none'"
                 class="bnd-button-cancel">
           Cancel
         </button>

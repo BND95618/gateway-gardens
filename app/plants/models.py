@@ -1,8 +1,5 @@
 # app/plants/models.py
 
-import os
-import uuid  # Used to generate unique filenames for images
-
 from django.db           import models
 from django.conf         import settings
 from django.urls         import reverse
@@ -26,163 +23,6 @@ def get_default_user():
     # Returns the first user, or creates a system user if none exists
     user, created = User.objects.get_or_create(username='system_default')
     return user.pk
-
-# def get_file_path(instance, filename):
-#     """
-#     Generates dynamic upload path:
-#     - Images: images/{uuid}.{ext}
-#     - Audio: audio/{uuid}.{ext}
-#     - Ignores original, only saves a single renamed file.
-#     - Example path: MEDIA_ROOT/images/filename.jpg
-#     """
-#     ext = filename.split('.')[-1].lower()
-#     unique_name = f"{uuid.uuid4()}.{ext}"
-    
-#     # Determine the subdirectory based on file extension
-#     if ext in ['jpg', 'jpeg', 'png', 'webp', 'gif']:
-#         return os.path.join('images', unique_name)
-#     elif ext in ['mp3', 'wav', 'flac', 'ogg']:
-#         return os.path.join('audio', unique_name)
-    
-#     return os.path.join('audio', unique_name) # Fallback
-
-class Garden(models.Model):
-    """ My Garden description table - linked to one particular user """
-    # User garden details
-    name          = models.CharField(max_length=64, default="tbd", blank=True, null=True)
-    city          = models.CharField(max_length=32, default="tbd", blank=True, null=True)
-    state         = models.CharField(max_length=16, default="tbd", blank=True, null=True)
-    owner         = models.CharField(max_length=64, default="tbd", blank=True, null=True)
-    usda_zone     = models.CharField(max_length=16, default="tbd", blank=True, null=True)
-    sunset_zone   = models.CharField(max_length=32, default="tbd", blank=True, null=True)
-    description   = QuillField(blank=True, null=True)
-    question      = models.CharField(max_length=8,  default="No",  blank=True, null=True)
-    # Images
-    image_1       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_1     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_2       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_2     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_3       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_3     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_4       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_4     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_5       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_5     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_6       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_6     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_7       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_7     = models.CharField(max_length=64, default="tbd", blank=True)
-
-    image_8       = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 600)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    caption_8     = models.CharField(max_length=64, default="tbd", blank=True)
-    # Administrative stuff AR: Move to user info database table
-    # User details (extends information in user database)
-    profile_photo = ProcessedImageField(upload_to  = upload_to_uuid('images/'),
-                                        processors = [Transpose(), ResizeToFill(800, 800)],
-                                        format     = 'WEBP',
-                                        options    = {'quality': 95},
-                                        blank      = True, 
-                                        null       = True)
-    # Save the user's selection for plant search criteria
-    common_name_search     = models.CharField(max_length=32, default="",    blank=True)
-    genus_search           = models.CharField(max_length=32, default="",    blank=True)
-    species_search         = models.CharField(max_length=32, default="",    blank=True)
-    type_x_search          = models.CharField(max_length=32, default="Any", blank=True)
-    bloom_color_search     = models.CharField(max_length=32, default="Any", blank=True)
-    bloom_season_search    = models.CharField(max_length=32, default="Any", blank=True)
-    bloom_month_search     = models.CharField(max_length=32, default="Any", blank=True)
-    pollinators_search     = models.CharField(max_length=32, default="Any", blank=True)
-    ca_native_search       = models.CharField(max_length=32, default="Any", blank=True)
-    ucd_all_star_search    = models.CharField(max_length=32, default="Any", blank=True)
-    davis_trees_search     = models.CharField(max_length=32, default="Any", blank=True)
-    sunset_z14_search      = models.CharField(max_length=32, default="Any", blank=True)
-    sun_exposure_search    = models.CharField(max_length=32, default="Any", blank=True)
-    water_rqmts_search     = models.CharField(max_length=32, default="Any", blank=True)
-    pH_search              = models.CharField(max_length=32, default="Any", blank=True)
-    soil_type_search       = models.CharField(max_length=32, default="Any", blank=True)
-    heat_tolerance_search  = models.CharField(max_length=32, default="Any", blank=True)
-    deer_resistance_search = models.CharField(max_length=32, default="Any", blank=True)
-    usda_zone_search       = models.CharField(max_length=32, default="Any", blank=True)
-    sunset_zone_search     = models.CharField(max_length=32, default="Any", blank=True)
-    garden_search          = models.CharField(max_length=32, default="Any", blank=True)
-    # Admin
-    status_search          = models.CharField(max_length=16, default="Any", blank=True)
-    # Save the user's selection for my plant search criteria
-    my_sun_exposure_search = models.CharField(max_length=32, default="Any", blank=True)
-    my_water_level_search  = models.CharField(max_length=32, default="Any", blank=True)
-    my_soil_type_search    = models.CharField(max_length=32, default="Any", blank=True)
-    my_happiness_search    = models.CharField(max_length=32, default="Any", blank=True)
-
-    # Save the user's selection for the my plants column chooser
-    my_column_selection = models.CharField(max_length=256,  blank=True,
-                          default=["Common Name", "Genus/Species", "Variety", "Type", 
-                                   "Location", "Sun Exposure", "pH", "Happy?"],)
-    # Save the user's selection for the all plants column chooser
-    column_selection    = models.CharField(max_length=256,  blank=True,
-                          default=["Common Name", "Type", "Height", "Width", 
-                                   "Bloom Color", "Bloom Season", "Pollinators"],)
-    # Save the user's most recent To Do table sort column and direction
-    lastToDoSortCol = models.IntegerField(default=1, blank=True, null=True)
-    lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
-    # JSON array of shapes for garden design
-    shapes_JSON = models.JSONField(default=list, blank=True)
-    # Connection to a specific user in the User db table
-    # If the user is deleted, delete their assiciated garden
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, default=get_default_user)
-    # AR: Implement slug field
-    slug                = models.SlugField(default="tbd", null=False, blank=True)
-        
-    def __str__(self):
-        return self.name
-    
-    def get_absolute_url(self):
-        return reverse("plants_summary")
 
 class Plant(models.Model):
     """ Plant description table """
@@ -279,7 +119,7 @@ class Plant(models.Model):
     # during the plant filtering process
     plant_mine        = models.CharField(max_length=16,  default="no", blank=True)
     #
-    gardens           = models.ManyToManyField(Garden, related_name="plants", blank=True)
+    gardens           = models.ManyToManyField('mygarden.Garden', related_name="plants", blank=True)
     # 
     slug              = models.SlugField(default="", null=False, blank=True)
 
@@ -337,9 +177,6 @@ class MyPlant(models.Model):
     status       = models.CharField(max_length=16,  default="not_in_my_garden", blank=True)
     # Tags a plant for display/hidden in a summary table
     show         = models.CharField(max_length=8,   default="no", blank=True)
-    # Save the user's most recent To Do table sort column and direction
-    lastToDoSortCol = models.IntegerField(default=1, blank=True, null=True)
-    lastToDoSortDir = models.CharField(max_length=8, default="up", blank=True)
     # Administrative stuff
     slug         = models.SlugField(default="tbd", null=False, blank=True)
 

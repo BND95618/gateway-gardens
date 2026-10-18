@@ -1,11 +1,11 @@
-<!-- /plants/templates/plants/myplants_todo_add_modal.html -->
+<!-- app/mygarden/templates/mygarden/mygarden_todo_add_modal.html -->
 <div class="bnd-modal-container">
   <header class="bnd-modal-header">
     <h4>Add To Do Item</h4>
   </header>
   <!-- To Do add - create form -->
   {{ form.media }}
-  <form action="{% url 'plants:myplants_todo_add' myGarden.id%}" method="post" enctype="multipart/form-data">
+  <form action="{% url 'mygarden:mygarden_todo_add' myGarden.id%}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="bnd-modal-contents">

@@ -42,18 +42,18 @@
       <!-- Navigtion Bar                                                        -->
       <!-------------------------------------------------------------------------->
       <nav id="id_nav" class="bnd-page-nav">
-        <a id="home"             href="{% url 'plants:index' %}"           >Home          </a>
-        <a id="mygarden_summary" href="{% url 'plants:mygarden_summary' %}">My Garden     </a>
-        <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}">My Plants     </a>
-        <a id="myplants_todo"    href="{% url 'plants:myplants_todo' %}"   >My ToDo's     </a>
-        <a id="mygarden_plan"    href="{% url 'plants:mygarden_plan' %}"   >My Garden Plan</a>
-        <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"  >All Plants    </a>
-        <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"     >Pests         </a>
-        <a id="plants_glossary"  href="{% url 'plants:plants_glossary' %}" >Glossary      </a>
-        <a id="plants_reference" href="{% url 'plants:plants_reference' %}">Reference     </a>
-        <a id="plants_about"     href="{% url 'plants:plants_about' %}"    >About         </a>
+        <a id="home"             href="{% url 'plants:index' %}"             >Home          </a>
+        <a id="mygarden_summary" href="{% url 'mygarden:mygarden_summary' %}">My Garden     </a>
+        <a id="mygarden_plan"    href="{% url 'mygarden:mygarden_plan' %}"   >My Garden Plan</a>
+        <a id="mygarden_todo"    href="{% url 'mygarden:mygarden_todo' %}"   >My ToDo's     </a>
+        <a id="myplants_summary" href="{% url 'plants:myplants_summary' %}"  >My Plants     </a>
+        <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"    >All Plants    </a>
+        <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"       >Pests         </a>
+        <a id="plants_glossary"  href="{% url 'plants:plants_glossary' %}"   >Glossary      </a>
+        <a id="plants_reference" href="{% url 'plants:plants_reference' %}"  >Reference     </a>
+        <a id="plants_about"     href="{% url 'plants:plants_about' %}"      >About         </a>
         {% if request.user.username == "Brent" %}
-          <a id="plants_admin" href="{% url 'plants:user_admin' %}">Admin</a>
+          <a id="plants_admin" href="{% url 'user_info:user_admin' %}">Admin</a>
         {% endif %}
         <!-- drop down account menu item -->
         <div class="bnd-nav-dropdown-container">
@@ -69,7 +69,7 @@
                       onclick = "openUserProfileModal()">
                 Update Profile
               </button>
-              <form action="{% url 'plants:user_logout' %}" method="post">
+              <form action="{% url 'user_info:user_logout' %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Logout" class="bnd-dropdown-button"/>
               </form>
@@ -189,7 +189,7 @@
     function openUserProfileModal()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_profile_step1' %}") 
+      fetch("{% url 'user_info:user_profile_step1' %}") 
       .then(response => response.text())
       .then(html => {
         profile_modal.innerHTML      = html;
@@ -314,7 +314,7 @@
             //----------------------------------------------------------------------------
             // POST user inputs to server
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_profile_step1' %}";
+            const postURL   = "{% url 'user_info:user_profile_step1' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -354,7 +354,7 @@
     function openEmailVerificationModal()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_profile_step2' %}") 
+      fetch("{% url 'user_info:user_profile_step2' %}") 
       .then(response => response.text())
       .then(html => {
         user_profile_modal_step2.innerHTML     = html;
@@ -376,7 +376,7 @@
             //----------------------------------------------------------------------------
             const formData  = new FormData(form);
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_profile_step2' %}";
+            const postURL   = "{% url 'user_info:user_profile_step2' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -423,7 +423,7 @@
           // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'plants:user_profile_mfa' %}";
+            const getURL   = "{% url 'user_info:user_profile_mfa' %}";
             const response = await fetch(getURL, 
             {
               method:  "GET",
@@ -462,7 +462,7 @@
     //-----------------------------------------------------------------------------
     function openUserLoginModal()
     { 
-      fetch("{% url 'plants:user_login' %}") 
+      fetch("{% url 'user_info:user_login' %}") 
       .then(response => response.text())
       .then(html => {
         login_modal.innerHTML        = html;
@@ -489,7 +489,7 @@
     //-----------------------------------------------------------------------------
     function openPwdResetModal()
     {
-      fetch("{% url 'plants:user_pwd_rst_step1' %}") 
+      fetch("{% url 'user_info:user_pwd_rst_step1' %}") 
       .then(response => response.text())
       .then(html => {
         pwd_rst_modal_step1.innerHTML = html; 
@@ -570,7 +570,7 @@
             // Send the form
             //----------------------------------------------------------------------------
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_pwd_rst_step1' %}";
+            const postURL   = "{% url 'user_info:user_pwd_rst_step1' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -610,7 +610,7 @@
     function openPwdRstModal_step2()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'plants:user_pwd_rst_step2' %}") 
+      fetch("{% url 'user_info:user_pwd_rst_step2' %}") 
       .then(response => response.text())
       .then(html => {
         pwd_rst_modal_step2.innerHTML     = html;
@@ -632,7 +632,7 @@
             //----------------------------------------------------------------------------
             const formData  = new FormData(form);
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'plants:user_pwd_rst_step2' %}";
+            const postURL   = "{% url 'user_info:user_pwd_rst_step2' %}";
             const response = await fetch(postURL, 
             {
               method:  "POST",
@@ -673,7 +673,7 @@
           // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'plants:user_pwd_rst_mfa' %}";
+            const getURL   = "{% url 'user_info:user_pwd_rst_mfa' %}";
             const response = await fetch(getURL, 
             {
               method:  "GET",

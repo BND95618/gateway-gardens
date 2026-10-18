@@ -1,4 +1,4 @@
-<!-- /app/plants/templates/plants/user_profile_modal_step1.html -->
+<!-- /app/user_info/templates/user_info/user_profile_modal_step1.html -->
 
   <div class="bnd-modal-container">
     <header class="bnd-modal-header">
@@ -23,10 +23,10 @@
           <div class="bnd-flex-container-wrap">
             <!-- User Profile Photo -->
             <figure>
-              {% if garden.profile_photo %}
+              {% if user_info.profile_photo %}
                 <img id      = "id_profile_photo_preview" 
                      class   = "bnd-image-small" 
-                     src     = "{{ garden.profile_photo.url }}" 
+                     src     = "{{ user_info.profile_photo.url }}" 
                      onclick = "imageModalOpen(this)" 
                      alt     = "No image found">
               {% else %}

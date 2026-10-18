@@ -1,4 +1,4 @@
- <!-- /app/plants/templates/plants/mygarden_summary.html -->
+ <!-- /app/mygarden/templates/mygarden/mygarden_summary.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -34,7 +34,7 @@
       <i class="material-icons">menu</i>
     </button>
     <div class="bnd-banner-menu-content">
-      <a href="{% url 'plants:mygarden_edit' garden.id %}" class="bnd-dropdown-button">Update</a>
+      <a href="{% url 'mygarden:mygarden_edit' garden.id %}" class="bnd-dropdown-button">Update</a>
     </div>
   </div>
 
@@ -116,16 +116,19 @@
     let i;
     let x = document.getElementsByClassName("bnd-slideshow-slides");
     let icons = document.getElementsByClassName("bnd-slideshow-icon");
-    if (n > x.length) {slideIndex = 1}
-    if (n < 1) {slideIndex = x.length}
-    for (i = 0; i < x.length; i++) {
-      x[i].style.display = "none";  
-    }
-    for (i = 0; i < icons.length; i++) {
-      icons[i].className = icons[i].className.replace(" bnd-white", "");
-    }
-    x[slideIndex-1].style.display = "block";  
-    icons[slideIndex-1].className += " bnd-white";
+    if (x.length > 0)
+    {
+      if (n > x.length) {slideIndex = 1}
+      if (n < 1) {slideIndex = x.length}
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";  
+      }
+      for (i = 0; i < icons.length; i++) {
+        icons[i].className = icons[i].className.replace(" bnd-white", "");
+      }
+      x[slideIndex-1].style.display = "block";  
+      icons[slideIndex-1].className += " bnd-white";
+    } 
   }
   //-----------------------------------------------------------------------------
 </script>

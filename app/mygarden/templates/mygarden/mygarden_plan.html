@@ -1,4 +1,4 @@
-<!-- app/plants/templates/mygarden_plan.html -->
+<!-- /app/mygarden/templates/mygarden/mygarden_plan.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -2757,7 +2757,7 @@
             fetchDetails()
             {
                 // Fetch the plant details and create new javascript plant object
-                const url = "{% url 'plants:plant_fetch' %}";
+                const url = "{% url 'mygarden:plant_fetch' %}";
                 const requestMethod = "POST";
                 const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 const postData      = { requestedPlant : this.plant };
@@ -2811,7 +2811,7 @@
             }
             getModal()
             {
-                let url             = "{% url 'plants:plant_details_modal' %}";
+                let url             = "{% url 'mygarden:plant_details_modal' %}";
                 const requestMethod = "POST";
                 const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 const postData      = { requestedPlant : this.plant }
@@ -3437,7 +3437,7 @@
         //************************************************************//
         canvas.addEventListener("click", (e) => 
         {
-            console.log("DEBUG: *** Mouse click event registered ***");
+            console.log("INFO: *** Mouse click event registered ***");
 
             // canvas selection point - absolute position
             xSelectAbs = (e.clientX - canvas.offsetLeft - viewportTransform.x) / viewportTransform.scale ;
@@ -3566,7 +3566,7 @@
                 return;
             } 
 
-            console.log("DEBUG: *** Mouse down event registered ***");
+            console.log("INFO: *** Mouse down event registered ***");
 
             // Defiitions:
             //   e.clientX = horizontal coordinate at which a mouse event occurred, 
@@ -3839,7 +3839,7 @@
                 return;
             } 
 
-            console.log("DEBUG: *** Mouse move event registered ***");
+            console.log("INFO: *** Mouse move event registered ***");
 
             // get current mouse location (relative to viewport)
             xMouse = e.clientX - canvas.offsetLeft;
@@ -3918,7 +3918,7 @@
                 return;
             } 
 
-            console.log("DEBUG: *** Mouse up event registered ***");
+            console.log("INFO: *** Mouse up event registered ***");
             
             if (action == "draw")
             {
@@ -3951,7 +3951,7 @@
                 return;
             } 
 
-            console.log("DEBUG: *** Mouse out event registered ***");
+            console.log("INFO: *** Mouse out event registered ***");
         
             // reset the current shape and flags
             activeShape = null;
@@ -4033,7 +4033,7 @@
         // Context menu: Open the context menu
         canvas.addEventListener("contextmenu", (e) => 
         {
-            console.log("DEBUG: *** Mouse right click event registered ***");
+            console.log("INFO: *** Mouse right click event registered ***");
 
             // Prevent default browser context menu
             e.preventDefault()
@@ -4196,7 +4196,7 @@
                 return;
             } 
 
-            console.log("DEBUG: *** Mouse wheel event registered ***");
+            console.log("INFO: *** Mouse wheel event registered ***");
 
             // Save the previous transforms and scale factor
             const previousScale = viewportTransform.scale;
@@ -4233,7 +4233,7 @@
         const group = document.getElementById("id_group");
         group.onclick = (event) => 
         {
-            console.log("DEBUG: *** Grouping Shapes ***");
+            console.log("INFO: *** Grouping Shapes ***");
             // give a numerical value to each layer
             const layerGround      = 1;
             const layerGroundcover = 2;
@@ -4411,7 +4411,7 @@
         //************************************************************//
         function zIndexSort()
         {
-            console.log("DEBUG: z-Index sort");
+            console.log("INFO: z-Index sort");
         }
         
         //************************************************************//
@@ -4495,7 +4495,6 @@
         save = document.getElementById("id_save");
         save.onclick = (event) => 
         {
-            // AR: Is this necessary?
             event.preventDefault();
             // Acquire the CSRF token
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -4606,8 +4605,8 @@
             console.log("=======================================");
             console.log("Retrieving landscape design from server");
             console.log("=======================================");
-            console.log("DEBUG: restored shapes:", shapes);
-            console.log("DEBUG: restored shapeGroups:", shapeGroups);
+            console.log("INFO: restored shapes:", shapes);
+            console.log("INFO: restored shapeGroups:", shapeGroups);
             console.log("=======================================");
         }         
 

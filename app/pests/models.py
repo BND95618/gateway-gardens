@@ -69,7 +69,7 @@ class Pest(models.Model):
                      null       = True)
     
     # Many-to-Many relationship - many different "pests" can be associated with many different "Plant" records
-    plants    = models.ManyToManyField('plants.Plant')
+    plants = models.ManyToManyField('plants.Plant')
 
     def __str__(self):
         return self.pest_name

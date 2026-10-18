@@ -1,4 +1,4 @@
-<!-- /app/plants/templates/plants/nyplants_todo.html -->
+<!-- /app/mygarden/templates/mygarden/mygarden_todo.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -9,7 +9,7 @@
 {% block css %}
   <!-- Insert template css here -->
   <style>
-    #myplants_todo
+    #mygarden_todo
   {
     background-color: slategray;
     color:            white;
@@ -67,7 +67,7 @@
           <th class="bnd-table-icon"></th>
         </tr>
       </thead>
-      {% for todo in myplants_todo  %}  
+      {% for todo in mygarden_todo  %}  
         <tbody>
           <tr>
             <!-- To Do complete -->
@@ -158,7 +158,7 @@
   </div>
 
   <!-- To Do delete modal - html to be inserted by Javascript -->
-  <div id="myplants_todo_del_modal" class="bnd-modal">
+  <div id="mygarden_todo_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
   </div>
 {% endblock content %}
@@ -168,14 +168,14 @@
     // Get the current my garden ID when Django renders the page
     const myGardenID = {{ myGarden.id }};
     // set initial sort column and direction from db
-    let lastToDoSortCol = "{{ myGarden.lastToDoSortCol }}";
-    let lastToDoSortDir = "{{ myGarden.lastToDoSortDir }}";
+    let lastToDoSortCol = "{{ user_info.lastToDoSortCol }}";
+    let lastToDoSortDir = "{{ user_info.lastToDoSortDir }}";
         
     function todo_details(id)
     {
       // use '1234' placeholder id in Django template for servier-side rendering
       // javascript will replace placeholder id with actual todo record id
-      const url = "{% url 'plants:myplants_todo_details' id=1234 %}".replace('1234', id);
+      const url = "{% url 'mygarden:mygarden_todo_details' id=1234 %}".replace('1234', id);
       fetch(url) 
       .then(response => response.text())
       .then(html => {todo_details_modal.innerHTML = html;})
@@ -184,7 +184,7 @@
     }
     function todo_add()  
     {
-        const url = "{% url 'plants:myplants_todo_add' myGarden.id %}"
+        const url = "{% url 'mygarden:mygarden_todo_add' myGarden.id %}"
         fetch(url) 
         .then(response => response.text())
         .then(html => {todo_add_modal.innerHTML = html;})
@@ -195,7 +195,7 @@
     {
       // use '1234' placeholder id in Django template for servier-side rendering
       // javascript will replace placeholder id with actual todo record id
-      const url = "{% url 'plants:myplants_todo_edit' id=1234 %}".replace('1234', id);
+      const url = "{% url 'mygarden:mygarden_todo_edit' id=1234 %}".replace('1234', id);
       fetch(url) 
         .then(response => response.text())
         .then(html => {todo_edit_modal.innerHTML = html;})
@@ -206,18 +206,18 @@
     {
       // use '1234' placeholder id in Django template for servier-side rendering
       // javascript will replace placeholder id with actual todo record id
-      const url = "{% url 'plants:myplants_todo_del' id=1234 %}".replace('1234', id);
+      const url = "{% url 'mygarden:mygarden_todo_del' id=1234 %}".replace('1234', id);
       fetch(url) 
         .then(response => response.text())
-        .then(html => {myplants_todo_del_modal.innerHTML = html;})
+        .then(html => {mygarden_todo_del_modal.innerHTML = html;})
         .then(restoreToDoSort())
-        myplants_todo_del_modal.style.display='block';
+        mygarden_todo_del_modal.style.display='block';
     }
     function todo_done(id)
     {
       // use '1234' placeholder id in Django template for servier-side rendering
       // javascript will replace placeholder id with actual todo record id
-      url = "{% url 'plants:myplants_todo_done' id=1234 %}".replace('1234', id);
+      url = "{% url 'mygarden:mygarden_todo_done' id=1234 %}".replace('1234', id);
       const requestMethod = "POST";
       const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
       const postData = { lastToDoSortCol : lastToDoSortCol,
@@ -283,7 +283,7 @@
         sortDirection(column);
 
         // Save sort column and direction to the server db
-        const url = "/myplants_todo_save/" + myGardenID;
+        const url = "/mygarden_todo_save/" + myGardenID;
         const requestMethod = "POST";
         const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const postData = { lastToDoSortCol : lastToDoSortCol,
@@ -312,13 +312,9 @@
         {
             // Since the table has rows it is safe to proceed
             let tempSortDirection = "ascending";
-            console.log("Got to restoreToDoSort");
-
             sortTable(lastToDoSortCol, 'todoTable');
-
             // Determine sort direction
             const rows  = table.getElementsByTagName("tr");
-
             const firstRow = rows[1];
             const firstRowCells = firstRow.getElementsByTagName('td');
             const firstRowCellContents = firstRowCells[lastToDoSortCol].textContent.trim();
@@ -396,7 +392,7 @@
     // On page load fetch the user's To Do items and put into list of todo objects
     function fetchToDoItems()
     {
-        const url = "{% url 'plants:myplants_todo_fetch' %}"
+        const url = "{% url 'mygarden:mygarden_todo_fetch' %}"
         const requestMethod = "POST";
         const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
