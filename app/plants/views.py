@@ -891,31 +891,31 @@ def plants_summary(request):
         # Save the plant show flag to the database
         plant.save()
 
-    # format multiselect attributes to remove [, ', and ]
-    plant.bloom_color     = string_display(plant.bloom_color)
-    plant.bloom_season    = string_display(plant.bloom_season)
-    plant.bloom_months    = string_display(plant.bloom_months)
-    plant.pollinators     = string_display(plant.pollinators)
-    plant.sun_exposure    = string_display(plant.sun_exposure)
-    plant.water_rqmts     = string_display(plant.water_rqmts)
-    plant.soil_type       = string_display(plant.soil_type)
-    plant.heat_tolerance  = string_display(plant.heat_tolerance)
-    plant.deer_resistance = string_display(plant.deer_resistance)
+        # format multiselect attributes to remove [, ', and ]
+        plant.bloom_color     = string_display(plant.bloom_color)
+        plant.bloom_season    = string_display(plant.bloom_season)
+        plant.bloom_months    = string_display(plant.bloom_months)
+        plant.pollinators     = string_display(plant.pollinators)
+        plant.sun_exposure    = string_display(plant.sun_exposure)
+        plant.water_rqmts     = string_display(plant.water_rqmts)
+        plant.soil_type       = string_display(plant.soil_type)
+        plant.heat_tolerance  = string_display(plant.heat_tolerance)
+        plant.deer_resistance = string_display(plant.deer_resistance)
 
-    # Create short version of usda_zones for table display
-    plant.usda_zone_min = plant.usda_zone_min.split()[0]
-    plant.usda_zone_max = plant.usda_zone_max.split()[0]
+        # Create short version of usda_zones for table display
+        plant.usda_zone_min = plant.usda_zone_min.split()[0]
+        plant.usda_zone_max = plant.usda_zone_max.split()[0]
 
-    # Set the plant status regarding its status wrt my_plants 
-    plant.plant_mine = 'not_in_my_garden'
-    for myplant in myplants:
-        if myplant.plant == plant:
-            if myplant.status == 'in_my_garden':
-                plant.plant_mine = 'in_my_garden' 
-                break # Found the plant in myplants  
-            elif myplant.status == 'wish_list':
-                plant.plant_mine = 'wish_list'
-                break # Found the plant in myplants
+        # Set the plant status regarding its status wrt my_plants 
+        plant.plant_mine = 'not_in_my_garden'
+        for myplant in myplants:
+            if myplant.plant == plant:
+                if myplant.status == 'in_my_garden':
+                    plant.plant_mine = 'in_my_garden' 
+                    break # Found the plant in myplants  
+                elif myplant.status == 'wish_list':
+                    plant.plant_mine = 'wish_list'
+                    break # Found the plant in myplants
 
     # Send selected plant details to template
     context = { "plants"                 : plants,
