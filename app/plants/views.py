@@ -1238,11 +1238,9 @@ def plant2garden(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('plants:index'))
     plant = Plant.objects.get(id=id)
-    gardens = Garden.objects.all()
-    for garden in gardens:
-        # Only the owner of the garden can add plants to their garden
-        if (garden.owner == request.user.username):      # Select the garden based upon current user
-            plant.gardens.add(garden)                    # Associate the plant to the selected garden
+    garden = Garden.objects.get(owner = request.user.username)
+    # Associate the plant to the user's garden
+    plant.gardens.add(garden)                    
     return HttpResponseRedirect(reverse('plants:plants_summary'))
 
 def plant_delete(request, id):
