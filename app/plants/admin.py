@@ -1,7 +1,7 @@
 # /app/plants/admin.py
 
 from django.contrib import admin
-from plants.models  import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment, Plant, Comment
+from plants.models  import Plant, Comment
    
 class PlantAdmin(admin.ModelAdmin):
     list_display = ("creator",
@@ -17,35 +17,3 @@ class CommentAdmin(admin.ModelAdmin):
 
 admin.site.register(Plant,          PlantAdmin)
 admin.site.register(Comment,        CommentAdmin)
-
-
-class MyPlantAdmin(admin.ModelAdmin):
-    list_display = ("owner",
-                    "plant",
-                    "sun_exposure",)
-    prepopulated_fields = {"slug": ("plant",) }
-
-class MyPlantLogAdmin(admin.ModelAdmin):
-    list_display = ("author",
-                    "subject",)
-    prepopulated_fields = {"slug": ("myplant",) }
-
-class MyPlantToDoAdmin(admin.ModelAdmin):
-    list_display = ("owner",
-                    "complete",
-                    "date",
-                    "action",
-                    "details",)
-    prepopulated_fields = {"slug": ("myplant",) }
-
-class MyPlantCommentAdmin(admin.ModelAdmin):
-    list_display = ("author",
-                    "date",
-                    "subject",
-                    "comment",)
-    prepopulated_fields = {"slug": ("myplant",) }
-
-admin.site.register(MyPlant,        MyPlantAdmin)
-admin.site.register(MyPlantLog,     MyPlantLogAdmin)
-admin.site.register(MyPlantToDo,    MyPlantToDoAdmin)
-admin.site.register(MyPlantComment, MyPlantCommentAdmin)

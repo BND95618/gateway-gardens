@@ -1,4 +1,4 @@
-# app/plants/views.py
+# app/myplants/views.py
 
 import string, copy, math, json, random, base64
 
@@ -13,10 +13,8 @@ from django.db.models import Q # used to create complex database queries that in
 from django.conf      import settings
 from django.contrib   import messages
 
-from mygarden.models  import Garden
 from .models          import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment
 from plants.models    import Plant
-from pests.models     import Pest
 
 from .forms  import MyPlantAddUpdateForm, MyPlantLogForm, MyPlantToDoForm, MyPlantCommentForm, MyColumnChooserForm
 

@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 
 from user_info.models import UserInfo
 from mygarden.models  import Garden
-
+""" 
 from plants.models    import MyPlant        as MyPlant_orig
 from plants.models    import MyPlantLog     as MyPlantLog_orig
 from plants.models    import MyPlantToDo    as MyPlantToDo_orig
@@ -29,7 +29,7 @@ from myplants.models  import MyPlant        as MyPlant_new
 from myplants.models  import MyPlantLog     as MyPlantLog_new
 from myplants.models  import MyPlantToDo    as MyPlantToDo_new
 from myplants.models  import MyPlantComment as MyPlantComment_new
-
+ """
 from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
 
 def user_profile_step1(request):
@@ -593,7 +593,7 @@ def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
         error_message = "Last name can only contain letters, numbers and -"
     return (error_message)
 
-def myplant_db_xfer(request):
+""" def myplant_db_xfer(request):
     myplants_orig = MyPlant_orig.objects.all()
     for myplant_orig in myplants_orig:
         myplant_new = MyPlant_new()
@@ -668,3 +668,4 @@ def myplant_db_xfer(request):
             myplantcomment_new.save()
         
     return HttpResponseRedirect(reverse('user_info:user_admin'))
+ """

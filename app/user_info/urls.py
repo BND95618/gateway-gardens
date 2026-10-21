@@ -20,5 +20,5 @@ urlpatterns = [
     path('user_admin',           views.user_admin,         name='user_admin'),
     path('user_delete/<int:id>', views.user_delete,        name='user_delete'),
 
-    path('myplant_db_xfer',      views.myplant_db_xfer,    name='myplant_db_xfer'),
+    # path('myplant_db_xfer',      views.myplant_db_xfer,    name='myplant_db_xfer'),
 ]

@@ -8,7 +8,8 @@ from django.template  import loader
 from django.urls      import reverse
 
 from mygarden.models  import Garden
-from plants.models    import Plant, MyPlant, MyPlantToDo
+from myplants.models  import MyPlant, MyPlantToDo
+from plants.models    import Plant
 
 from mygarden.forms   import GardenAddUpdateForm
 
