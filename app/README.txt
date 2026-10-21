@@ -106,7 +106,7 @@ a user's browser to a different URL. It is commonly used after processing form
 data (especially POST requests) to prevent resubmission if the user refreshes
 the page, a practice known as the "Post/Redirect/Get" pattern.
 
-  return HttpResponseRedirect(reverse('plants:myplants_summary'))
+  return HttpResponseRedirect(reverse('myplants:myplants_summary'))
 
 To return a JSON response in Django, the primary method involves using the 
 JsonResponse class from django.http

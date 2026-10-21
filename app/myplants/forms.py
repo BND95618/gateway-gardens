@@ -1,0 +1,328 @@
+# app/myplants/forms.py
+
+from django import forms 
+from django_quill.forms       import QuillFormField
+from django.core.validators   import URLValidator
+import datetime
+
+BLOOM_COLOR_CHOICES = ( 
+	('tbd',          'tbd'),
+	('white',        'white'),
+	('creamy white', 'creamy white'),
+	('yellow',       'yellow'),
+	('red',          'red'), 
+	('burgundy',     'burgundy'), 
+	('pink',         'pink'),
+	('pale pink',    'pale pink'),
+	('lavendar',     'lavendar'),
+	('purple',       'purple'),
+	('green',        'green'), 
+	('blue',         'blue'), 
+	('orange',       'orange'), 
+	('none',         'none'),
+) 
+SUN_EXPOSURE_CHOICES = (
+	("tbd",             "tbd"),
+	("Full Sun",        "Full Sun"),
+	("Partial Sun",     "Partial Sun"),
+	("Partial Shade",   "Partial Shade"),
+	("Full Shade",      "Full Shade"),
+	("Afternoon Shade", "Afternoon Shade")
+)
+WATER_RQMTS_CHOICES = (
+	("tbd",       "tbd"),
+	("Very Low",  "Very Low"),
+	("Low",       "Low"),
+	("Medium",    "Medium"),
+	("High",      "High"),
+	("Very High", "Very High"),
+)
+PH_CHOICES = (
+	("tbd", "tbd"),
+	("5.0", "5.0"),
+	("5.1", "5.1"),
+	("5.2", "5.2"),
+	("5.3", "5.3"),
+	("5.4", "5.4"),
+	("5.5", "5.5"),
+	("5.6", "5.6"),
+	("5.7", "5.7"),
+	("5.8", "5.8"),
+	("5.9", "5.9"),
+	("6.0", "6.0"),
+	("6.1", "6.1"),
+	("6.2", "6.2"),
+	("6.3", "6.3"),
+	("6.4", "6.4"),
+	("6.5", "6.5"),
+	("6.6", "6.6"),
+	("6.7", "6.7"),
+	("6.8", "6.8"),
+	("6.9", "6.9"),
+	("7.0", "7.0"),
+	("7.1", "7.1"),
+	("7.2", "7.2"),
+	("7.3", "7.3"),
+	("7.4", "7.4"),
+	("7.5", "7.5"),
+	("7.6", "7.6"),
+	("7.7", "7.7"),
+	("7.8", "7.8"),
+	("7.9", "7.9"),
+	("8.0", "8.0"),
+)
+SOIL_TYPE_CHOICES = (
+	("tbd",    "tbd"),
+	("Sandy",  "Sandy"),
+	("Loamy",  "Loamy"),
+	("Clay",   "Clay"),
+)
+TODO_ACTION_CHOICES = (
+	("Fertilize", "Fertilize"),
+	("Harvest",   "Harvest"),
+	("Mow",       "Mow"),
+	("Plant",     "Plant"),
+	("Prune",     "Prune"),
+	("Spray",     "Spray"),
+	("Other",     "Other"),
+)
+TODO_REPEAT_CHOICES = (
+	("Daily",     "Daily"),
+	("Weekly",    "Weekly"),
+	("Bi-Weekly", "Bi-Weekly"),
+	("Monthly",   "Monthly"),
+	("Yearly",    "Yearly"),
+	("None",      "None"),
+)
+MONTH_CHOICES = (
+	("tbd",  "tbd"),
+	("Jan",  "Jan"),
+	("Feb",  "Feb"),
+	("Mar",  "Mar"),
+	("Apr",  "Apr"),
+	("May",  "May"),
+	("Jun",  "Jun"),
+	("Jul",  "Jul"),
+	("Aug",  "Aug"),
+	("Sep",  "Sep"),
+	("Oct",  "Oct"),
+	("Nov",  "Nov"),
+	("Dec",  "Dec"),
+	("None", "None")
+)
+HAPPINESS_CHOICES = (
+	("tbd",          "tbd"),
+	("Very Happy",   "Very Happy"),
+	("Happy",        "Happy"),
+	("Neutral",      "Neutral"),
+	("Unhappy",      "Unhappy"),
+	("Very Unhappy", "Very Unhappy"),
+)
+MY_COLUMN_CHOICES = (
+	("Common Name",                 "Common Name"),
+	("Genus/Species",               "Genus/Species"),
+	("Subspecies/Variety/Cultivar", "Subspecies/Variety/Cultivar"),
+	# Plant Characteristics
+	("Type",             "Type"),
+	("Height",           "Height"),
+	("Width", 		     "Width"),
+	("Bloom Color",      "Bloom Color"),
+	("Bloom Season",     "Bloom Season"),
+	("Bloom Range",      "Bloom Range"),
+	("Pollinators",      "Pollinators"),
+	("CA Native",        "CA Native"),
+	("UCD All-Star",     "UCD All-Star"),
+	("Davis Trees",      "Davis Trees"),
+	("Sunset Z14",       "Sunset Z14"),
+	# Plant Requirements
+	("Sun Exposure",     "Sun Exposure"),
+	("Water Rqmts",      "Water Rqmts"),
+	("Soil Type",        "Soil Type"),
+	("pH Range",         "pH Range"),
+	("Heat Tolerance",   "Heat Tolerance"),
+	("Deer Resistance",  "Deer Resistance"),
+	("USDA Zones",       "USDA Zones"),
+	("Sunset Zones",     "Sunset Zones"), 
+	# Garden Environment
+	("My Location",      "My Location"),
+	("My Sun Exposure",  "My Sun Exposure"),
+	("My Water Level",   "My Water Level"),
+	("My Soil Type",     "My Soil Type"),
+	("My pH",            "My pH"),
+	("My Bloom Color",   "My Bloom Color"),
+	("My Bloom Range",   "My Bloom Range"),
+	#
+	("Happy?",           "Happy?"),
+)
+
+class MyPlantAddUpdateForm(forms.Form):
+	date_planted = forms.DateField(
+		label="Date Planted",
+		required=False,
+		widget=forms.DateInput( attrs= {'type' : 'date'}, format='%Y-%m-%d'),
+		)
+	location = forms.CharField(
+		label='Location', 
+		initial='tbd',      	
+		max_length=64, 
+		required=False,
+		)
+	sun_exposure = forms.MultipleChoiceField(
+		label='Sun Exposure',
+		initial='tbd',
+		choices = SUN_EXPOSURE_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	water_level = forms.MultipleChoiceField(
+		label='Water Level',
+		initial='tbd',
+		choices = WATER_RQMTS_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	soil_type = forms.MultipleChoiceField(
+		label="Soil Type",
+		initial='tbd',
+		choices = SOIL_TYPE_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=False,
+		)
+	pH = forms.ChoiceField(
+		label="pH",
+		choices = PH_CHOICES, 
+		required=False,
+		)
+	bloom_color = forms.ChoiceField(
+		label="Bloom Color",
+		initial='tbd',
+		choices = BLOOM_COLOR_CHOICES, 
+		required=False,
+		)
+	bloom_start = forms.ChoiceField(
+		label="Bloom Start",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
+		required=False,
+		)
+	bloom_end = forms.ChoiceField(
+		label="Bloom End",
+		initial='tbd',
+		choices = MONTH_CHOICES, 
+		required=False,
+		)
+	happiness = forms.ChoiceField(
+		label="Happiness?",
+		initial='tbd',
+		choices = HAPPINESS_CHOICES, 
+		required=False,
+		)
+	notes = QuillFormField(
+		label="My Notes",
+		initial="tbd",
+		required=False,
+		)
+
+class MyPlantLogForm(forms.Form):
+    log_subject = forms.CharField(
+        label='Subject', 
+        max_length=64, 
+        required=False,
+        )
+    log_date = forms.DateField(
+		label="Date",
+		required=False,
+		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
+		)
+    log_entry = QuillFormField(
+        label="Log Entry",
+        required=False,
+        )
+	# images
+    log_image_1   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    log_caption_1 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    log_image_2   = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    log_caption_2 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    log_image_3 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    log_caption_3 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False
+		)
+    log_image_4 = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+	)
+    log_caption_4 = forms.CharField(
+		label="Caption",
+		initial="tbd", 
+		max_length=64, 
+		required=False,
+	)
+
+class MyPlantToDoForm(forms.Form):
+	todo_date = forms.DateField(
+		label="Due Date",
+		required=True,
+		widget=forms.DateInput( attrs= {'type' : 'date', 'min' : datetime.date.today()}, format='%Y-%m-%d'),
+        )
+	todo_action = forms.ChoiceField(
+		label="Action",
+		initial=' ',
+		choices = TODO_ACTION_CHOICES, 
+		required=True,
+		widget=forms.RadioSelect
+		)
+	todo_repeat = forms.ChoiceField(
+		label="Repeat",
+		initial=' ',
+		choices = TODO_REPEAT_CHOICES, 
+		required=True,
+		widget=forms.RadioSelect
+		)
+	todo_details = forms.CharField(
+		label="Details", 
+		max_length=128, 
+		required=True,
+		widget=forms.TextInput(attrs={'class' : 'bnd-input bnd-border'}),
+		)
+
+class MyPlantCommentForm(forms.Form):
+	subject = forms.CharField(
+		label='Subject', 
+		max_length=64, 
+		required=False,
+		)
+	comment = QuillFormField(
+		label="Comment",
+		required=False,
+		)
+
+class MyColumnChooserForm(forms.Form):
+	my_column_selection = forms.MultipleChoiceField(
+		label="",
+		initial='',
+		choices = MY_COLUMN_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=True,
+		)

@@ -316,7 +316,7 @@ def mygarden_todo_done(request, id):
         else:
             myplant_todo.complete = True
         myplant_todo.save()
-        return HttpResponseRedirect(reverse('plants:myplant_details', args=(myplant_todo.myplant.id,)))
+        return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_todo.myplant.id,)))
 
 def mygarden_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """

@@ -1,4 +1,4 @@
-<!-- app/plants/templates/plants/myplant_update.html -->
+<!-- app/myplants/templates/myplants/myplant_update.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -62,7 +62,7 @@
       {{ form.as_p }}
       <button type="submit" class="bnd-button-submit">Submit</button>
       <button type="reset"  class="bnd-button bnd-grey  bnd-round-medium">Reset</button>
-      <a href="{% url 'plants:myplants_summary' %}">
+      <a href="{% url 'myplants:myplants_summary' %}">
         <button type="button" class="bnd-button-cancel">Cancel</button>
       </a>
     </form>

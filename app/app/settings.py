@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'storages',
     # My apps
     'mygarden',
+    'myplants',
     'plants',
     'pests',
     'user_info',

@@ -1,4 +1,4 @@
-<!-- /plants/templates/plants/myplant_details.html -->
+<!-- /myplants/templates/myplants/myplant_details.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -72,7 +72,7 @@
       <i class="material-icons">menu</i>
     </button>
     <div class="bnd-banner-menu-content">
-      <a href="{% url 'plants:myplant_update' myplant.id %}" class="bnd-dropdown-button">update</a>
+      <a href="{% url 'myplants:myplant_update' myplant.id %}" class="bnd-dropdown-button">update</a>
     </div>
   </div>
 
@@ -305,7 +305,7 @@
       </header>
       {{ log_add_form.media }}
       <form id="id_logQuillForm" 
-            action="{% url 'plants:myplant_log_add' myplant.id %}"
+            action="{% url 'myplants:myplant_log_add' myplant.id %}"
             method="POST" 
             enctype = "multipart/form-data">
         {% csrf_token %}
@@ -438,7 +438,7 @@
         <h4>Add comment for: {{ myplant.plant.commonName }}</h4>
       </header>
       <form id="commentQuillForm" 
-            action="{% url 'plants:myplant_comment' myplant.id %}"
+            action="{% url 'myplants:myplant_comment' myplant.id %}"
             method="POST" 
             enctype = "multipart/form-data">
         {% csrf_token %}
@@ -591,7 +591,7 @@ form.addEventListener('submit', async (event) => {
     // Send the form entered by the user
     //----------------------------------------------------------------------------
     statusDiv.innerText = "Upload in process...";
-    const postURL = "{% url 'plants:myplant_log_add' myplant.id %}"
+    const postURL = "{% url 'myplants:myplant_log_add' myplant.id %}"
     const response = await fetch(postURL, 
     {
       method:  "POST",
@@ -604,7 +604,7 @@ form.addEventListener('submit', async (event) => {
       statusDiv.innerText = "Upload successful!";
       console.log('Success:', data);
       // Handle your JSON response here (e.g., update DOM)
-      let returnURL = "{% url 'plants:myplant_details' myplant.id %}";
+      let returnURL = "{% url 'myplants:myplant_details' myplant.id %}";
       window.location.href = returnURL;
     } 
     else 
@@ -628,7 +628,7 @@ function log_edit(id)
   //----------------------------------------------------------------------------
   // use '1234' placeholder id in Django template for servier-side rendering
   // javascript will replace placeholder id with actual todo record id
-  const url = "{% url 'plants:myplant_log_edit' id=1234 %}".replace('1234', id);
+  const url = "{% url 'myplants:myplant_log_edit' id=1234 %}".replace('1234', id);
   fetch(url) 
   .then(response => response.text())
   .then(html => 
@@ -766,7 +766,7 @@ function log_edit(id)
         //----------------------------------------------------------------------------
         statusDiv.innerText = "Upload in process...";
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const postURL   = "{% url 'plants:myplant_log_edit' id=1234 %}".replace('1234', id);
+        const postURL   = "{% url 'myplants:myplant_log_edit' id=1234 %}".replace('1234', id);
         const response  = await fetch(postURL, 
         {
           method:  "POST",
@@ -779,7 +779,7 @@ function log_edit(id)
           statusDiv.innerText = "Upload successful!";
           console.log('Success:', data);
           // Handle your JSON response here (e.g., update DOM)
-          let returnURL = "{% url 'plants:myplant_details' myplant.id %}";
+          let returnURL = "{% url 'myplants:myplant_details' myplant.id %}";
           window.location.href = returnURL;
         } 
         else 
@@ -809,7 +809,7 @@ function log_delete(id)
 {
   // use '1234' placeholder id in Django template for servier-side rendering
   // javascript will replace placeholder id with actual todo record id
-  const url = "{% url 'plants:myplant_log_del' id=1234 %}".replace('1234', id);
+  const url = "{% url 'myplants:myplant_log_del' id=1234 %}".replace('1234', id);
   fetch(url) 
   .then(response => response.text())
   .then(html => {log_del_modal.innerHTML = html;})
@@ -820,7 +820,7 @@ function log_delete(id)
 //-----------------------------------------------------------------------------
 function todo_add()
 {
-    url = "{% url 'plants:myplant_todo_add' myplant.id %}"
+    url = "{% url 'myplants:myplant_todo_add' myplant.id %}"
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_add_modal.innerHTML = html;})
@@ -831,7 +831,7 @@ function todo_edit(id)
 {
     // use '1234' placeholder id in Django template for servier-side rendering
     // javascript will replace placeholder id with actual todo record id
-    const url = "{% url 'plants:myplant_todo_edit' id=1234 %}".replace('1234', id);
+    const url = "{% url 'myplants:myplant_todo_edit' id=1234 %}".replace('1234', id);
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_edit_modal.innerHTML = html;})
@@ -842,7 +842,7 @@ function todo_delete(id)
 {
     // use '1234' placeholder id in Django template for servier-side rendering
     // javascript will replace placeholder id with actual todo record id
-    const url = "{% url 'plants:myplant_todo_del' id=1234 %}".replace('1234', id);
+    const url = "{% url 'myplants:myplant_todo_del' id=1234 %}".replace('1234', id);
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_del_modal.innerHTML = html;})
@@ -853,7 +853,7 @@ function todo_done(id)
 {
     // use '1234' placeholder id in Django template for servier-side rendering
     // javascript will replace placeholder id with actual todo record id
-    const url = "{% url 'plants:myplant_todo_done' id=1234 %}".replace('1234', id);;
+    const url = "{% url 'myplants:myplant_todo_done' id=1234 %}".replace('1234', id);;
     const requestMethod = "POST";
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,

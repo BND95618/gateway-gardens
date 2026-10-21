@@ -19,7 +19,16 @@ from django.contrib.auth.decorators import login_required
 
 from user_info.models import UserInfo
 from mygarden.models  import Garden
-from plants.models    import MyPlant, MyPlantToDo
+
+from plants.models    import MyPlant        as MyPlant_orig
+from plants.models    import MyPlantLog     as MyPlantLog_orig
+from plants.models    import MyPlantToDo    as MyPlantToDo_orig
+from plants.models    import MyPlantComment as MyPlantComment_orig
+
+from myplants.models  import MyPlant        as MyPlant_new
+from myplants.models  import MyPlantLog     as MyPlantLog_new
+from myplants.models  import MyPlantToDo    as MyPlantToDo_new
+from myplants.models  import MyPlantComment as MyPlantComment_new
 
 from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
 
@@ -583,3 +592,79 @@ def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
     elif (not all(char in LASTNAME_ALLOWED_CHARS for char in lastname)):
         error_message = "Last name can only contain letters, numbers and -"
     return (error_message)
+
+def myplant_db_xfer(request):
+    myplants_orig = MyPlant_orig.objects.all()
+    for myplant_orig in myplants_orig:
+        myplant_new = MyPlant_new()
+
+        myplant_new.plant        = myplant_orig.plant
+        myplant_new.owner        = myplant_orig.owner
+        myplant_new.date         = myplant_orig.date
+        myplant_new.date_planted = myplant_orig.date_planted
+        myplant_new.bloom_color  = myplant_orig.bloom_color
+        myplant_new.bloom_start  = myplant_orig.bloom_start
+        myplant_new.bloom_end    = myplant_orig.bloom_end
+        myplant_new.bloom_months = myplant_orig.bloom_months
+        myplant_new.location     = myplant_orig.location
+        myplant_new.sun_exposure = myplant_orig.sun_exposure
+        myplant_new.water_level  = myplant_orig.water_level
+        myplant_new.soil_type    = myplant_orig.soil_type
+        myplant_new.pH           = myplant_orig.pH
+        myplant_new.happiness    = myplant_orig.happiness
+        myplant_new.notes        = myplant_orig.notes
+        myplant_new.status       = myplant_orig.status
+        myplant_new.show         = myplant_orig.show
+        myplant_new.id           = myplant_orig.id
+
+        myplant_new.save()
+
+        myplantlogs_orig = MyPlantLog_orig.objects.filter(myplant = myplant_orig)
+        for myplantlog_orig in myplantlogs_orig:
+            myplantlog_new = MyPlantLog_new()
+
+            myplantlog_new.author    = myplantlog_orig.author
+            myplantlog_new.subject   = myplantlog_orig.subject
+            myplantlog_new.date      = myplantlog_orig.date
+            myplantlog_new.entry     = myplantlog_orig.entry
+            myplantlog_new.image_1   = myplantlog_orig.image_1
+            myplantlog_new.caption_1 = myplantlog_orig.caption_1
+            myplantlog_new.image_2   = myplantlog_orig.image_2
+            myplantlog_new.caption_2 = myplantlog_orig.caption_2
+            myplantlog_new.image_3   = myplantlog_orig.image_3
+            myplantlog_new.caption_3 = myplantlog_orig.caption_3
+            myplantlog_new.image_4   = myplantlog_orig.image_4
+            myplantlog_new.caption_4 = myplantlog_orig.caption_4
+            myplantlog_new.myplant   = myplant_new
+
+            myplantlog_new.save()
+
+        myplanttodos_orig = MyPlantToDo_orig.objects.filter(myplant = myplant_orig)
+        for myplanttodo_orig in myplanttodos_orig:
+            myplanttodo_new = MyPlantToDo_new()
+
+            myplanttodo_new.owner      = myplanttodo_orig.owner
+            myplanttodo_new.commonName = myplanttodo_orig.commonName
+            myplanttodo_new.pruning    = myplanttodo_orig.pruning
+            myplanttodo_new.complete   = myplanttodo_orig.complete
+            myplanttodo_new.date       = myplanttodo_orig.date
+            myplanttodo_new.action     = myplanttodo_orig.action
+            myplanttodo_new.details    = myplanttodo_orig.details
+            myplanttodo_new.repeat     = myplanttodo_orig.repeat
+            myplanttodo_new.myplant    = myplant_new
+
+            myplanttodo_new.save()
+
+        myplantcomments_orig = MyPlantComment_orig.objects.filter(myplant = myplant_orig)
+        for myplantcomment_orig in myplantcomments_orig:
+            myplantcomment_new = MyPlantComment_new()
+
+            myplantcomment_new.author  = myplantcomment_orig.author
+            myplantcomment_new.date    = myplantcomment_orig.date
+            myplantcomment_new.subject = myplantcomment_orig.subject
+            myplantcomment_new.comment = myplantcomment_orig.comment
+            myplantcomment_new.myplant = myplant_new
+
+            myplantcomment_new.save()
+        
+    return HttpResponseRedirect(reverse('user_info:user_admin'))

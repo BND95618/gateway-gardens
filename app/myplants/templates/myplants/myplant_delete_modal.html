@@ -1,14 +1,14 @@
-<!-- app/plants/templates/plants/myplant_delete_modal.html -->
+<!-- app/myplants/templates/myplants/myplant_delete_modal.html -->
 
 <div class="bnd-modal-container">
   <div class="bnd-modal-header">
     <h4>Remove "{{ myplant.plant.commonName }}" from your garden?</h4>
   </div>
-  <form class="bnd-modal-contents" action="{% url 'plants:myplant_delete' myplant.id %}" method="post">
+  <form class="bnd-modal-contents" action="{% url 'myplants:myplant_delete' myplant.id %}" method="post">
     {% csrf_token %}
     <div class="bnd-modal-button-bar">
       <button type="submit" class="bnd-button-submit">Confirm</button>
-      <a href="{% url 'plants:myplants_summary' %}">
+      <a href="{% url 'myplants:myplants_summary' %}">
         <button type="button" class="bnd-button-cancel">Cancel</button>
       </a>
     </div>

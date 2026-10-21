@@ -2,14 +2,23 @@
 
 from django.contrib import admin
 from plants.models  import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment, Plant, Comment
+   
+class PlantAdmin(admin.ModelAdmin):
+    list_display = ("creator",
+                    "commonName", 
+                    "genus", 
+                    "species",)
+    prepopulated_fields = {"slug": ("commonName",) }
+  
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("author",
+                    "subject",)
+    prepopulated_fields = {"slug": ("author",) }
 
-# Register your models here.
-class GardenAdmin(admin.ModelAdmin):
-    list_display = ("owner",
-                    "name",
-                    "question",)
-    prepopulated_fields = {"slug": ("name",) }
-    
+admin.site.register(Plant,          PlantAdmin)
+admin.site.register(Comment,        CommentAdmin)
+
+
 class MyPlantAdmin(admin.ModelAdmin):
     list_display = ("owner",
                     "plant",
@@ -35,22 +44,8 @@ class MyPlantCommentAdmin(admin.ModelAdmin):
                     "subject",
                     "comment",)
     prepopulated_fields = {"slug": ("myplant",) }
-    
-class PlantAdmin(admin.ModelAdmin):
-    list_display = ("creator",
-                    "commonName", 
-                    "genus", 
-                    "species",)
-    prepopulated_fields = {"slug": ("commonName",) }
-  
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ("author",
-                    "subject",)
-    prepopulated_fields = {"slug": ("author",) }
 
 admin.site.register(MyPlant,        MyPlantAdmin)
 admin.site.register(MyPlantLog,     MyPlantLogAdmin)
 admin.site.register(MyPlantToDo,    MyPlantToDoAdmin)
 admin.site.register(MyPlantComment, MyPlantCommentAdmin)
-admin.site.register(Plant,          PlantAdmin)
-admin.site.register(Comment,        CommentAdmin)

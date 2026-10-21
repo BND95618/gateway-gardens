@@ -1,10 +1,10 @@
-<!-- app/plants/templates/plants/myplant_status_modal.html -->
+<!-- app/myplants/templates/myplants/myplant_status_modal.html -->
 
 <div class="bnd-modal-container">
     <div class="bnd-modal-header">
       <h4> {{ plant.commonName }} Status</h4>
     </div>
-    <form class="bnd-modal-contents" action="{% url 'plants:myplant_status' plant.id %}" method="post">
+    <form class="bnd-modal-contents" action="{% url 'myplants:myplant_status' plant.id %}" method="post">
       {% csrf_token %}
       <div class="bnd-modal-contents">
         <p>Select status of the plant in "My Plants":</p>

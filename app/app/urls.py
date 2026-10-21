@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mygarden.urls')),
     path('', include('plants.urls')),
+    path('', include('myplants.urls')),
     path('', include('pests.urls' )),
     path('', include('user_info.urls' )),
 ]

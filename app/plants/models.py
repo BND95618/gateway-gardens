@@ -157,7 +157,7 @@ class MyPlant(models.Model):
     # - connection to a specific plant in the Plant db table
     # - many "My Plant" items can be associated with each "Plant" record
     # - if the associated plant is deleted then the "My Plant" item is automatically deleted
-    plant        = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='myplants')
+    plant        = models.ForeignKey(Plant, on_delete=models.CASCADE, related_name='myplants_orig')
     #
     owner        = models.CharField(max_length=64, default="tbd", blank=True)
     date         = models.DateField(auto_now_add=True)
@@ -227,7 +227,7 @@ class MyPlantLog(models.Model):
     # - connection to a specific plant in the MyPlant db table
     # - many "Log Entries" items can be associated with each "My Plant" record
     # - if the associated myplant is deleted then the "Log Entries" item is automatically deleted
-    myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+    myplant   = models.ForeignKey(MyPlant, on_delete=models.CASCADE, related_name='myplantlogs_orig')
     # Administrative stuff
     slug    = models.SlugField(default="", null=False, blank=True)
 
@@ -253,7 +253,7 @@ class MyPlantToDo(models.Model):
     # - connection to a specific plant in the MyPlant db table
     # - many "To Do" items can be associated with each "My Plant" record
     # - if the associated myplant is deleted then the "To Do" item is automatically deleted
-    myplant    = models.ForeignKey(MyPlant, on_delete=models.CASCADE)
+    myplant    = models.ForeignKey(MyPlant, on_delete=models.CASCADE, related_name='myplanttodos_orig')
     # Administrative stuff
     slug       = models.SlugField(default="", null=False, blank=True)
 

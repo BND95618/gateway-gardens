@@ -1,4 +1,4 @@
-<!-- /app/plants/templates/plants/myplants_summary.html -->
+<!-- /app/myplants/templates/myplants/myplants_summary.html -->
 {% extends "plants/master.html" %}
 {% load static %}
 
@@ -49,7 +49,7 @@
   <!-- Vertical Search Bar                                                  -->
   <!-------------------------------------------------------------------------->
   <div id="bnd-search-sidebar" class="bnd-search-container-flex">
-    <form method="POST" action="{% url 'plants:myplants_summary' %}" class="bnd-search-contents-flex">
+    <form method="POST" action="{% url 'myplants:myplants_summary' %}" class="bnd-search-contents-flex">
       {% csrf_token %}
       <p class="bnd-center"><i>Plant Attributes</i></p>
 
@@ -487,7 +487,7 @@
             <!-- MyPlant Details Icon/Link -->
             <td class="bnd-center">
               <div class="bnd-tooltip">
-                <a href="{% url 'plants:myplant_details' myplant.id %}">
+                <a href="{% url 'myplants:myplant_details' myplant.id %}">
                   <i class="material-icons bnd-text-black">library_books</i>
                   <span class="bnd-tooltip-text">Details</span>
                 </a>
@@ -496,7 +496,7 @@
             <!-- MyPlant Update Icon/Link -->
             <td class="bnd-center">
               <div class="bnd-tooltip">
-                <a href="{% url 'plants:myplant_update' myplant.id %}">
+                <a href="{% url 'myplants:myplant_update' myplant.id %}">
                   <i class="material-icons bnd-text-black">edit</i>
                   <span class="bnd-tooltip-text">Edit</span>
                 </a>
@@ -553,10 +553,10 @@
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
           <table id="bloomTable" class="bnd-table">
-            {% include "plants/myplants_chart_modal_head.html" %}
+            {% include "plants/plants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
+                {% include "plants/plants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -570,10 +570,10 @@
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
           <table id="beeTable" class="bnd-table">
-            {% include "plants/myplants_chart_modal_head.html" %}
+            {% include "plants/plants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Bees" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
+                {% include "plants/plants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -587,10 +587,10 @@
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
           <table id="butterflyTable" class="bnd-table">
-            {% include "plants/myplants_chart_modal_head.html" %}
+            {% include "plants/plants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Butterflies" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
+                {% include "plants/plants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -604,10 +604,10 @@
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
           <table id="hummingbirdTable" class="bnd-table">
-            {% include "plants/myplants_chart_modal_head.html" %}
+            {% include "plants/plants_chart_modal_head.html" %}
             {% for myplant in myplants %}
               {% if myplant.show == "yes" and "Hummingbirds" in myplant.plant.pollinators and myplant.bloom_months != '' %} 
-                {% include "plants/myplants_chart_modal_rows.html" %}
+                {% include "plants/plants_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -628,7 +628,7 @@
     //-----------------------------------------------------------------------------
     // Plant Table - Column Chooser Modal Script
     //----------------------------------------------------------------------------- 
-    const my_column_chooser_url = "{% url 'plants:my_column_chooser' %}"
+    const my_column_chooser_url = "{% url 'myplants:my_column_chooser' %}"
     const my_column_chooser_modal = document.getElementById('my_column_chooser_modal')
     function my_column_chooser() {
       // Get the column chooser html from the server
