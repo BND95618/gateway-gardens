@@ -1,4 +1,4 @@
-#/app/myplants/apps.py
+# /app/myplants/apps.py
 
 from django.apps import AppConfig
 

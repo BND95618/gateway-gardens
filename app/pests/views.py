@@ -10,7 +10,7 @@ from pests.forms      import PestAddUpdateForm
 def pest_summary(request):
     """ Render the page to show all pests for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     pests = Pest.objects.all().order_by('pest_type', 'pest_name')
     template = loader.get_template("pests/pest_summary.html")
     context = { 'pests' : pests }
@@ -19,7 +19,7 @@ def pest_summary(request):
 def pest_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     pest = Pest.objects.get(id=id)
     template = loader.get_template("pests/pest_details.html")
     # Dynamically package image and caption attributes
@@ -39,7 +39,7 @@ def pest_details(request, id):
 def pest_add(request):
     """ Render the page to add pests to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Create a new pest and save it to obtain an ID
     pest = Pest()
     pest.save()
@@ -52,7 +52,7 @@ def pest_add(request):
 def pest_edit(request, id):
     """ Render the page to add pests to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     pest = Pest.objects.get(id=id)
     image_quantity = 4
@@ -126,7 +126,7 @@ def pest_edit(request, id):
 def pest_delete(request, id):
     """ Delete selected pest from the Pest database table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     pest = Pest.objects.get(id=id)
     if request.POST:
         pest.delete()

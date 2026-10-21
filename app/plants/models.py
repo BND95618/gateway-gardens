@@ -150,5 +150,3 @@ class Comment(models.Model):
     
     def get_absolute_url(self):
         return reverse("plants_summary")
-
-# class Fiddle(models.Model):

@@ -498,12 +498,12 @@ def user_admin(request):
         context = { 'users' : users, }
         return render(request, 'user_info/user_admin.html', context)
     else:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
 
 def user_delete(request, id):
     """ Delete selected user from the User database table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     user = User.objects.get(id=id)
     if request.POST:
         # Delete the user's "To Do" items
@@ -526,7 +526,7 @@ def user_delete(request, id):
         user_info.delete()
         # Delete the user
         user.delete()
-        return HttpResponseRedirect(reverse('plants:index')) 
+        return HttpResponseRedirect(reverse('general:index')) 
     else:
         context = {'user': user}
         return render(request, 'user_info/user_delete_modal.html', context)

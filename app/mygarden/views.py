@@ -1,4 +1,4 @@
-# app/mygarden/views.py
+# /app/mygarden/views.py
 
 import json
 
@@ -20,7 +20,7 @@ status_opt       = ["Development", "Review", "Published", "Archived"]
 def mygarden_summary(request):
     """ Render the individual user's garden summary for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     garden = Garden.objects.get(owner = request.user.username)
     template = loader.get_template("mygarden/mygarden_summary.html")
     image_fields   = []
@@ -40,7 +40,7 @@ def mygarden_summary(request):
 def mygarden_add(request):
     """ Add garden to the database """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     garden = Garden()
     garden.name = request.user.username + "'s Garden"
     garden.save()
@@ -50,7 +50,7 @@ def mygarden_add(request):
 def mygarden_edit(request, id):
     """ Update garden details """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     garden = Garden.objects.get(id=id)
     image_quantity = 8
 
@@ -112,7 +112,7 @@ def mygarden_edit(request, id):
 def mygarden_plan(request):
     """ Render the Garden Plan page """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
     plants = Plant.objects.all()
@@ -134,7 +134,7 @@ def mygarden_plan(request):
 def mygarden_plan_edit_modal(request):
     """ Display shape edit menu in a pop-up modal """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     if request.method == 'POST':
         # Get the JSON sring with the selected shape attributes
@@ -150,12 +150,12 @@ def mygarden_plan_edit_modal(request):
         return render(request, 'mygarden/mygarden_plan_edit_modal.html', context)
     else:
         print("INFO: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
  
 def plant_details_modal(request):
     """ Display plant detail in a pop-up modal """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     if request.method == 'POST':
         # Get the JSON sring with the common name of the requested plant
@@ -180,12 +180,12 @@ def plant_details_modal(request):
         return render(request, 'mygarden/plant_details_modal.html', context)
     else:
         print("INFO: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
  
 def plant_fetch(request):
     """ """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
 
     if request.method == 'POST':
         # Get the JSON sring with the common name of the requested plant
@@ -200,11 +200,11 @@ def plant_fetch(request):
         return JsonResponse(plant_json, safe=False)
     else:
         print("INFO: Error!")
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
 
 def mygarden_todo(request):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     template = loader.get_template("mygarden/mygarden_todo.html")
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -220,7 +220,7 @@ def mygarden_todo(request):
 def mygarden_todo_details(request, id):
     """  My Plant To Do item details modal """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     myplant_todo = MyPlantToDo.objects.get(id=id)
     context = { 'myplant_todo' : myplant_todo }
@@ -229,7 +229,7 @@ def mygarden_todo_details(request, id):
 def mygarden_todo_add(request, id):
     """ Add My Plant To Do item """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     if request.POST:
         myplant_todo = MyPlantToDo()
@@ -263,7 +263,7 @@ def mygarden_todo_add(request, id):
 def mygarden_todo_edit(request, id):
     """ edit My Plant To Do item """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     myplants     = MyPlant.objects.filter(owner = request.user.username)
     myplant_todo = MyPlantToDo.objects.get(id=id)
@@ -293,7 +293,7 @@ def mygarden_todo_edit(request, id):
 def mygarden_todo_del(request, id):
     """ Delete My Plant To Do item"""
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get to To Do item to be deleted
     myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
@@ -308,7 +308,7 @@ def mygarden_todo_del(request, id):
 def mygarden_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get the To Do item to have completion status toggled
     myplant_todo = MyPlantToDo.objects.get(id=id)
     if request.method == 'POST':
@@ -322,7 +322,7 @@ def mygarden_todo_done(request, id):
 def mygarden_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     user_info = request.user.userinfo
     if request.method == 'POST':
 
@@ -341,7 +341,7 @@ def mygarden_todo_save(request, id):
 def mygarden_todo_fetch(request):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     # Obtain all of the To Do items for the current user
     mygarden_todos = MyPlantToDo.objects.filter(owner = request.user.username)

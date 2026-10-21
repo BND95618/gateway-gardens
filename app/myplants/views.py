@@ -1,4 +1,4 @@
-# app/myplants/views.py
+# /app/myplants/views.py
 
 import string, copy, math, json, random, base64
 
@@ -59,13 +59,13 @@ status_opt       = ["Development", "Review", "Published", "Archived"]
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
-    return render(request, 'plants/index.html')
+    return render(request, 'general/index.html')
 
 #
 
 def myplants_summary(request):
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -280,7 +280,7 @@ def myplants_summary(request):
 def my_column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -308,7 +308,7 @@ def my_column_chooser(request):
 def myplant_status(request, id):
     """ Set the selected plant's status  """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     #
     plant = Plant.objects.get(id=id)
     myplants = MyPlant.objects.filter(owner = request.user.username)
@@ -355,7 +355,7 @@ def myplant_status(request, id):
 def myplant_add(request, id):
     """ Associate a 'plant' to 'myplant' """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     myplant = MyPlant()
     if request.POST:
@@ -389,7 +389,7 @@ def myplant_add(request, id):
 def myplant_update(request, id):
     """ Update details related a specific My Plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
     plant   = Plant.objects.get(id=myplant.plant.id)
     if request.POST:
@@ -437,7 +437,7 @@ def myplant_update(request, id):
 def myplant_delete(request, id):
     """ Delete selected plant from the MyPlants database table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
     if request.POST:
         myplant.delete()
@@ -451,7 +451,7 @@ def myplant_delete(request, id):
 def myplant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Uses the id to locate the correct record in the MyPlant and MyPlant tables
     myplant = MyPlant.objects.get(id=id)
     plant   = Plant.objects.get(id=myplant.plant.id)
@@ -494,7 +494,7 @@ def myplant_details(request, id):
 def myplant_log_add(request, id):
     """ Add My Plant Log Entry """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     myplant     = MyPlant.objects.get(id=id)
     myplant_log = MyPlantLog()
@@ -530,12 +530,12 @@ def myplant_log_add(request, id):
             }
         return JsonResponse(response_data)
     else:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
 
 def myplant_log_edit(request, id):
     """ Edit My Plant Log Entry item"""
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get the Log item to be edited
     myplant_log = MyPlantLog.objects.get(id=id)
     # Edit the To Do item
@@ -596,7 +596,7 @@ def myplant_log_edit(request, id):
 def myplant_log_del(request, id):
     """ Delete My Plant Log Entry item"""
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get to Log item to be deleted
     myplant_log = MyPlantLog.objects.get(id=id)
     # Delete the To Do item
@@ -611,7 +611,7 @@ def myplant_log_del(request, id):
 def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     myplant      = MyPlant.objects.get(id=id)
     myplant_todo = MyPlantToDo()
     if request.POST:
@@ -637,7 +637,7 @@ def myplant_todo_add(request, id):
 def myplant_todo_edit(request, id):
     """ Edit My Plant To Do item """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get To Do item to be edited
     myplant_todo = MyPlantToDo.objects.get(id=id)
     #
@@ -666,7 +666,7 @@ def myplant_todo_edit(request, id):
 def myplant_todo_del(request, id):
     """ Delete My Plant To Do item"""
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get to To Do item to be deleted
     myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
@@ -681,7 +681,7 @@ def myplant_todo_del(request, id):
 def myplant_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Get the To Do item to have completion status toggled
     myplant_todo = MyPlantToDo.objects.get(id=id)
     if request.method == 'POST':
@@ -699,7 +699,7 @@ def myplant_todo_done(request, id):
 def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     user_info = request.user.userinfo
     if request.method == 'POST':
 
@@ -718,7 +718,7 @@ def myplant_todo_save(request, id):
 def myplant_comment(request, id):
     """ Associate a comment to a plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     myplant         = MyPlant.objects.get(id=id)
     myplant_comment = MyPlantComment()
     if request.POST:
@@ -731,4 +731,4 @@ def myplant_comment(request, id):
             myplant_comment.save()
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant.id,))) 
     else:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))

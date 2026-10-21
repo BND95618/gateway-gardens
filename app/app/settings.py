@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     # Added for Dajango 5.2.8 S3 static/media file access
     'storages',
     # My apps
+    'general',
     'mygarden',
     'myplants',
     'plants',
@@ -79,7 +80,8 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Needed for Django to locate the project-level templates (e.g., master.html)
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -218,8 +220,8 @@ else:
 
 # Directs user to login page when login is required
 # AR: Login redirection should be fixed
-LOGIN_REDIRECT_URL  = "/plants/index"
-LOGOUT_REDIRECT_URL = "/plants/index"
+LOGIN_REDIRECT_URL  = "/general/index"
+LOGOUT_REDIRECT_URL = "/general/index"
 #################################################################################
 # email settings for sending email from gmail account
 #################################################################################

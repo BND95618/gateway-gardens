@@ -131,3 +131,31 @@ def bloom_month_list(start, end, options):
             list.append(option)
         if begin and option == end:
             return(list)
+
+def DEBUG_print_request(request):
+    """ Utility: print contents of HTTP Request to console """
+    print(f"================================================================")  
+    print(f"INFO: Print HTTP request")  
+    print(f"================================================================")  
+    print(f"Request Path:           {request.path}")
+    print(f"Request Method:         {request.method}")
+    if(request.method == 'GET'):
+        print(f"Request GET Parameters: {request.GET}")
+    if request.method == 'POST':
+        print(f"Request POST Parameters:")
+        max_length = 0
+        for key in request.POST:
+            max_length = max(max_length, len(key))
+        for key in request.POST:
+            value = request.POST.getlist(key)
+            spaces_to_align = max_length - len(key)
+            print(f"  Key: {key} {" "*spaces_to_align} Value: {value}")
+            # use following print command to also list the type of the value
+            # print(f"Key: {key} {" "*spaces_to_align} Value: {value} Type: {type(value)}")
+    print(f"================================================================") 
+    # For more complex data structures like request.META, use pprint
+    # print("Request META data:")
+    # pp = pprint.PrettyPrinter(indent=4)
+    # print(pp.pformat(request.META))
+    # print(f"================================================================")  
+    return()

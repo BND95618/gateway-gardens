@@ -1,24 +1,19 @@
-# app/plants/views.py
+# /app/plants/views.py
 
-import string, copy, math, json, random, base64
-
-from django.core.mail import send_mail
-from django.core.files.base import ContentFile
+import math
  
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
 from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
-from django.conf      import settings
-from django.contrib   import messages
 
 from mygarden.models  import Garden
 from myplants.models  import MyPlant
 from .models          import Plant, Comment
 from pests.models     import Pest
 
-from .forms  import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
+from .forms           import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 
 from core_utils.helpers import string2list, string_display
 from core_utils.helpers import pH_check, usda_zone_check, sunset_zone_check, bloom_month_check, bloom_month_list
@@ -59,14 +54,10 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
-def index(request):
-    """ Render the landing page for Gateway Gardens app """
-    return render(request, 'plants/index.html')
-
 def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -302,7 +293,7 @@ def plants_summary(request):
 def plant_details(request, id):
     """ Show a detailed view of a specific plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)             
     # get all comments related to the selected plant        
     comments = Comment.objects.filter(plant__pk=id)      
@@ -337,7 +328,7 @@ def plant_details(request, id):
 def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     # Create a new plant and save it to obtain an ID
     plant = Plant()
     plant.save()
@@ -352,7 +343,7 @@ def plant_add(request):
 def plant_edit(request, id):
     """ Update the attributes for an existing plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -547,7 +538,7 @@ def plant_edit(request, id):
 def plant_comment(request, id):
     """ Associate a comment to a plant """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     comment = Comment()
     if request.POST:
@@ -560,12 +551,12 @@ def plant_comment(request, id):
             comment.save()
         return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,))) 
     else:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
 def plant2garden(request, id):
     """ Add a plant to a garden """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     garden = Garden.objects.get(owner = request.user.username)
     # Associate the plant to the user's garden
@@ -575,7 +566,7 @@ def plant2garden(request, id):
 def plant_delete(request, id):
     """ Delete selected plant from the Plant database table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
         # Check for and delete audio file
@@ -602,7 +593,7 @@ def plant_delete(request, id):
 def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
+        return HttpResponseRedirect(reverse('general:index'))
     
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -625,77 +616,3 @@ def column_chooser(request):
         form = ColumnChooserForm(initial = {'column_selection' : column_selection_list})
         context = {'form' : form }
         return render(request, 'plants/column_chooser_modal.html', context)
-
-#
-
-def plants_glossary(request):
-    """ Render the Glossary Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    return render(request, 'plants/plants_glossary.html')
-
-def plants_reference(request):
-    """ Render the Reference Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    return render(request, 'plants/plants_reference.html')
-
-def plants_about(request):
-    """ Render the About Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    return render(request, 'plants/plants_about.html')
-
-#
-
-def DEBUG_print_request(request):
-    """ Utility: print contents of HTTP Request to console """
-    print(f"================================================================")  
-    print(f"INFO: Print HTTP request")  
-    print(f"================================================================")  
-    print(f"Request Path:           {request.path}")
-    print(f"Request Method:         {request.method}")
-    if(request.method == 'GET'):
-        print(f"Request GET Parameters: {request.GET}")
-    if request.method == 'POST':
-        print(f"Request POST Parameters:")
-        max_length = 0
-        for key in request.POST:
-            max_length = max(max_length, len(key))
-        for key in request.POST:
-            value = request.POST.getlist(key)
-            spaces_to_align = max_length - len(key)
-            print(f"  Key: {key} {" "*spaces_to_align} Value: {value}")
-            # use following print command to also list the type of the value
-            # print(f"Key: {key} {" "*spaces_to_align} Value: {value} Type: {type(value)}")
-    print(f"================================================================") 
-    # For more complex data structures like request.META, use pprint
-    # print("Request META data:")
-    # pp = pprint.PrettyPrinter(indent=4)
-    # print(pp.pformat(request.META))
-    # print(f"================================================================")  
-    return()
-
-def fiddle(request):
-    """ Render the Fiddle Page for testing of new functions """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    if request.method == 'POST':
-        send_mail(
-            subject        = 'Gateway Gardens test email - 4',
-            message        = 'Gateway Gardens test email - 4',
-            from_email     = None,  # Defaults to DEFAULT_FROM_EMAIL
-            recipient_list = ['b_dichter@yahoo.com'],
-            fail_silently  = False,
-        )
-        context = { 'fiddle' : 'fiddle', }
-        return render(request, 'plants/fiddle.html', context)
-    else:
-        context = { 'fiddle' : 'fiddle', }
-        return render(request, 'plants/fiddle.html', context)
-
-def debug(request):
-    """ Render the Debug Page for debugging of new functions """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('plants:index'))
-    return render(request, 'plants/debug.html')

@@ -1,4 +1,4 @@
-# app/myplants/models.py
+# /app/myplants/models.py
 
 from django.db           import models
 from django.conf         import settings
