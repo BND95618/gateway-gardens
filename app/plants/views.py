@@ -327,7 +327,7 @@ def plant_details(request, id):
 
 def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
-    if not request.user.is_authenticated:
+    if not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     # Create a new plant and save it to obtain an ID
     plant = Plant()
@@ -342,7 +342,7 @@ def plant_add(request):
 
 def plant_edit(request, id):
     """ Update the attributes for an existing plant """
-    if not request.user.is_authenticated:
+    if not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:
@@ -565,7 +565,7 @@ def plant2garden(request, id):
 
 def plant_delete(request, id):
     """ Delete selected plant from the Plant database table """
-    if not request.user.is_authenticated:
+    if not request.user.groups.filter(name='Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.POST:

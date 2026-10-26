@@ -49,9 +49,9 @@
         <a id="myplants_summary" href="{% url 'myplants:myplants_summary' %}">My Plants     </a>
         <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"    >All Plants    </a>
         <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"       >Pests         </a>
-        <a id="glossary"  href="{% url 'general:glossary' %}"  >Glossary      </a>
-        <a id="reference" href="{% url 'general:reference' %}" >Reference     </a>
-        <a id="about"     href="{% url 'general:about' %}"     >About         </a>
+        <a id="glossary"         href="{% url 'general:glossary' %}"         >Glossary      </a>
+        <a id="reference"        href="{% url 'general:reference' %}"        >Reference     </a>
+        <a id="about"            href="{% url 'general:about' %}"            >About         </a>
         {% if request.user.username == "Brent" %}
           <a id="plants_admin" href="{% url 'user_info:user_admin' %}">Admin</a>
         {% endif %}

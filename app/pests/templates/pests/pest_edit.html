@@ -168,7 +168,7 @@
         statusDiv.innerText = "Upload successful!";
         console.log("Upload successful!", data);
         // Handle your JSON response here (e.g., update DOM)
-        let returnURL = "{% url 'pests:pest_summary' %}";
+        let returnURL = "{% url 'pests:pest_details' pest.id %}";
         window.location.href = returnURL;
       } 
       else 

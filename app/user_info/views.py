@@ -166,7 +166,7 @@ def user_profile_step2(request):
 
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
-        return render(request, 'plants/index.html')
+        return render(request, 'general/index.html')
     
     if request.POST:
         form = EmailVerificationForm(request.POST)
@@ -266,7 +266,7 @@ def user_profile_mfa(request):
     if not session_data:
         messages.error(request, 'No registration session found. Please register again.')
         # return redirect('register_view')
-        return render(request, 'plants/index.html')
+        return render(request, 'general/index.html')
     
     if request.method == 'GET':
         # Generate a random 6-digit OTP code
@@ -386,7 +386,7 @@ def user_pwd_rst_step2(request):
 
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
-        return render(request, 'plants/index.html')
+        return render(request, '')
 
     if request.POST:
         form = EmailVerificationForm(request.POST)
@@ -431,7 +431,7 @@ def user_pwd_rst_mfa(request):
     if not pending_data:
         messages.error(request, 'No registration session found. Please register again.')
         # return redirect('register_view')
-        return render(request, 'plants/index.html')
+        return render(request, 'general/index.html')
     
     if request.method == 'GET':
         # Generate a random 6-digit OTP code
@@ -477,10 +477,10 @@ def user_login(request):
             # Login the user if they have been authenticated else indicate login failure
             if user is not None:
                 login(request, user)
-                return render(request, 'plants/index.html')
+                return render(request, 'general/index.html')
             else:
                 # AR: Indicate on password input form that the username and/or password was invalid
-                return render(request, 'plants/index.html')
+                return render(request, 'general/index.html')
     else:
         form = UserLoginForm()
         context = { 'form' : form }
@@ -489,7 +489,7 @@ def user_login(request):
 def user_logout(request):
     """ User Logout function for Gateway Gardens app """
     logout(request)
-    return render(request, 'plants/index.html')
+    return render(request, 'general/index.html')
 
 def user_admin(request):
     """ Render the User Admin page for Gateway Gardens app """

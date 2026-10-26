@@ -1,4 +1,4 @@
-# app/app/urls.py
+# /app/app/urls.py
 """
 URL configuration for app project.
 

@@ -22,45 +22,48 @@ LIFE_CYCLE_CHOICES = (
 class PestAddUpdateForm(forms.Form):
 	pest_name = forms.CharField(
 		label="Pest Name", 
-		max_length=255,
+		max_length=255
 		)
 	family = forms.CharField(
 		label="Family", 
 		max_length=64,
+		required=False
 		)
 	genus = forms.CharField(
 		label="Genus", 
 		max_length=64,
+		required=False
 		)
 	species = forms.CharField(
 		label="Species", 
 		max_length=64,
+		required=False
 		)
 	# Attributes
 	pest_type = forms.ChoiceField(
 		label    = "Pest Type",
 		initial  = 'tbd',
 		choices  = PEST_TYPE_CHOICES,
-		required = False,
+		required = False
 		)
 	#
 	life_cycle = forms.ChoiceField(
 		label    = "Life cycle",
 		initial  = 'tbd',
 		choices  = LIFE_CYCLE_CHOICES,
-		required = False,
+		required = False
 		)
 	#
 	description = QuillFormField(
 		label="Description",
 		initial="tbd",
-		required=False,
+		required=False
 	)
 	#
 	management = QuillFormField(
 		label="Management",
 		initial="tbd",
-		required=False,
+		required=False
 	)
 	# pest images
 	image_1   = forms.ImageField(
@@ -101,7 +104,7 @@ class PestAddUpdateForm(forms.Form):
 		label="Caption",
 		initial="tbd", 
 		max_length=64, 
-		required=False,
+		required=False
 	)
 	# UC IPM URL
 	pest_url = forms.URLField(

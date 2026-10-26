@@ -38,7 +38,7 @@ def pest_details(request, id):
 
 def pest_add(request):
     """ Render the page to add pests to the database for Gateway Gardens app """
-    if not request.user.is_authenticated:
+    if not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     # Create a new pest and save it to obtain an ID
     pest = Pest()
@@ -51,7 +51,7 @@ def pest_add(request):
 
 def pest_edit(request, id):
     """ Render the page to add pests to the database for Gateway Gardens app """
-    if not request.user.is_authenticated:
+    if not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     
     pest = Pest.objects.get(id=id)
@@ -125,7 +125,7 @@ def pest_edit(request, id):
   
 def pest_delete(request, id):
     """ Delete selected pest from the Pest database table """
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated or not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     pest = Pest.objects.get(id=id)
     if request.POST:

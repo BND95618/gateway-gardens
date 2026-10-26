@@ -75,4 +75,4 @@ class Pest(models.Model):
         return self.pest_name
     
     def get_absolute_url(self):
-        return reverse("plants_summary")
+        return reverse("pests:pest_summary")

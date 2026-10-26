@@ -549,10 +549,10 @@
       <div id="bloomTabContent" class="tabContent">
         {% with table_name="bloomTable" %}
           <table id="bloomTable" class="bnd-table-flex">
-            {% include "plants/plants_chart_modal_head.html" %}
+            {% include "bloom_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and plant.bloom_months != '' %} 
-                {% include "plants/plants_chart_modal_rows.html" %}
+                {% include "plants_bloom_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -566,10 +566,10 @@
       <div id="beeTabContent" class="tabContent">
         {% with table_name="beeTable" %}
           <table id="beeTable" class="bnd-table-flex">
-            {% include "plants/plants_chart_modal_head.html" %}
+            {% include "bloom_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Bees" in plant.pollinators and plant.bloom_months != '' %} 
-                {% include "plants/plants_chart_modal_rows.html" %}
+                {% include "plants_bloom_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -583,10 +583,10 @@
       <div id="butterflyTabContent" class="tabContent">
         {% with table_name="butterflyTable" %}
           <table id="butterflyTable" class="bnd-table-flex">
-            {% include "plants/plants_chart_modal_head.html" %}
+            {% include "bloom_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Butterflies" in plant.pollinators and plant.bloom_months != '' %} 
-                {% include "plants/plants_chart_modal_rows.html" %}
+                {% include "plants_bloom_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>
@@ -600,10 +600,10 @@
       <div id="hummingbirdTabContent" class="tabContent">
         {% with table_name="hummingbirdTable" %}
           <table id="hummingbirdTable" class="bnd-table-flex">
-            {% include "plants/plants_chart_modal_head.html" %}
+            {% include "bloom_chart_modal_head.html" %}
             {% for plant in plants %}
               {% if plant.plant_show == "yes" and "Hummingbirds" in plant.pollinators and plant.bloom_months != '' %} 
-                {% include "plants/plants_chart_modal_rows.html" %}
+                {% include "plants_bloom_chart_modal_rows.html" %}
               {% endif %}
             {% endfor %}
           </table>

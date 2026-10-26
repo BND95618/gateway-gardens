@@ -83,7 +83,7 @@ AWS Lightsail build and deployment
 User Groups:
 ##################################################################################
 > Gardener
-> Garden-Conributor
+> Garden-Contributor
 > Garden-Editor
 ##################################################################################
 Django response objects

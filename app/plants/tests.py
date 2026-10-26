@@ -1,3 +1,3 @@
-from django.test import TestCase
+# /app/plants/tests.py
 
-# Create your tests here.
+from django.test import TestCase
