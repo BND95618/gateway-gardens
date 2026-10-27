@@ -162,7 +162,12 @@ cython_debug/
 #.idea/
 
 # Django migrations 
+app/general/migrations
+app/mygarden/migrations
+app/myplants/migrations
+app/pests/migrations
 app/plants/migrations
+app/user_info/migrations
 
 # Uploaded images
 app/media/

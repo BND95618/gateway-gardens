@@ -593,7 +593,7 @@ def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
         error_message = "Last name can only contain letters, numbers and -"
     return (error_message)
 
-""" def myplant_db_xfer(request):
+def myplant_db_xfer(request):
     myplants_orig = MyPlant_orig.objects.all()
     for myplant_orig in myplants_orig:
         myplant_new = MyPlant_new()
@@ -668,4 +668,3 @@ def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
             myplantcomment_new.save()
         
     return HttpResponseRedirect(reverse('user_info:user_admin'))
- """

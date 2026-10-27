@@ -7,9 +7,12 @@ services:
     ports:
       - 8000:8000
     command: >
-      sh -c "python manage.py makemigrations plants && \
-             python manage.py makemigrations pests  && \
-             python manage.py migrate               && \
+      sh -c "python manage.py makemigrations user_info && \
+             python manage.py makemigrations mygarden  && \
+             python manage.py makemigrations myplants  && \
+             python manage.py makemigrations plants    && \
+             python manage.py makemigrations pests     && \
+             python manage.py migrate                  && \
              python manage.py runserver 0.0.0.0:8000"
     environment:
       - DEBUG=1
