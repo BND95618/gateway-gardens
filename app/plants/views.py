@@ -345,7 +345,7 @@ def plant_edit(request, id):
     if not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
-    if request.POST:
+    if request.method == "POST":
         form = PlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             plant.status          = form.cleaned_data.get('status')
@@ -541,7 +541,7 @@ def plant_comment(request, id):
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     comment = Comment()
-    if request.POST:
+    if request.method == "POST":
         form = PlantCommentForm(request.POST, request.FILES)
         if form.is_valid():
             comment.author  = request.user.username            #
@@ -568,7 +568,7 @@ def plant_delete(request, id):
     if not request.user.groups.filter(name='Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
-    if request.POST:
+    if request.method == "POST":
         # Check for and delete audio file
         if (plant.audio_name):
             plant.audio_name.delete(save=False)
@@ -598,7 +598,7 @@ def column_chooser(request):
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
 
-    if request.POST:
+    if request.method == "POST":
         form = ColumnChooserForm(request.POST)
         if form.is_valid():
             column_selection = form.cleaned_data.get('column_selection')

@@ -39,7 +39,7 @@ def user_profile_step1(request):
     else:
         profile_creation = True
 
-    if request.POST:
+    if request.method == "POST":
         form = UserProfileForm(request.POST)
         if form.is_valid():
             # ----------------------------------------------------------------------
@@ -168,7 +168,7 @@ def user_profile_step2(request):
         messages.error(request, 'No registration session found. Please register again.')
         return render(request, 'general/index.html')
     
-    if request.POST:
+    if request.method == "POST":
         form = EmailVerificationForm(request.POST)
         if form.is_valid():
             entered_code = form.cleaned_data.get('entered_code')
@@ -303,7 +303,7 @@ def user_profile_mfa(request):
    
 def user_pwd_rst_step1(request):
     """ Render the User Password Reset Page for Gateway Gardens app """
-    if request.POST:
+    if request.method == "POST":
         form = UserPwdResetForm(request.POST)
         if form.is_valid():
             # ----------------------------------------------------------------------
@@ -388,7 +388,7 @@ def user_pwd_rst_step2(request):
         messages.error(request, 'No registration session found. Please register again.')
         return render(request, '')
 
-    if request.POST:
+    if request.method == "POST":
         form = EmailVerificationForm(request.POST)
         if form.is_valid():
             entered_code = form.cleaned_data.get('entered_code')
@@ -468,7 +468,7 @@ def user_pwd_rst_mfa(request):
 
 def user_login(request):
     """ Render the User Login Page for Gateway Gardens app """
-    if request.POST:
+    if request.method == "POST":
         form = UserLoginForm(request.POST)
         if form.is_valid():
             username   = form.cleaned_data.get('username')
@@ -505,7 +505,7 @@ def user_delete(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('general:index'))
     user = User.objects.get(id=id)
-    if request.POST:
+    if request.method == "POST":
         # Delete the user's "To Do" items
         user_todos = MyPlantToDo.objects.get(owner = user.username)
         user_todos.delete()

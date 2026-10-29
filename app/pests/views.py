@@ -1,7 +1,7 @@
 # app/pests/views.py
 
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template  import loader
 from django.urls      import reverse
 from pests.models     import Pest
@@ -11,34 +11,37 @@ def pest_summary(request):
     """ Render the page to show all pests for Gateway Gardens app """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('general:index'))
+
     pests = Pest.objects.all().order_by('pest_type', 'pest_name')
-    template = loader.get_template("pests/pest_summary.html")
-    context = { 'pests' : pests }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'pests/pest_summary.html', {'pests': pests})
 
 def pest_details(request, id):
-    """ Show a detailed view of a specific plant """
+    """ Show a detailed view of a specific pest """
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('general:index'))
-    pest = Pest.objects.get(id=id)
-    template = loader.get_template("pests/pest_details.html")
+    
+    # Check to see if the id points to a valid pest
+    pest = get_object_or_404(Pest, id=id)
+    
     # Dynamically package image and caption attributes
-    image_fields   = []
-    image_quantity = 4
-    for i in range(1, image_quantity + 1):
-        image_fields.append(
-        {
-            'index'        : i,
-            'image_file'   : getattr(pest, f'image_{i}', None),
-            'caption_value': getattr(pest, f'caption_{i}', ''),
-        })
+    # Pack only valid/existing images to save memory and avoid template rendering bugs
+    image_fields = []
+    for i in range(1, 5):
+        image_file = getattr(pest, f'image_{i}', None)
+        if image_file:  # Only append if an image actually exists in this slot
+            image_fields.append({
+                'index': i,
+                'image_file': image_file,
+                'caption_value': getattr(pest, f'caption_{i}', ''),
+            })
+
     context = { "pest"         : pest, 
                 "image_fields" : image_fields, }
-    return HttpResponse(template.render(context, request))
+    return render(request, 'pests/pest_details.html', context)
 
 def pest_add(request):
     """ Render the page to add pests to the database for Gateway Gardens app """
-    if not request.user.groups.filter(name='Garden-Editor').exists():
+    if not ((request.user.is_authenticated) and (request.user.groups.filter(name='Garden-Editor').exists())):
         return HttpResponseRedirect(reverse('general:index'))
     # Create a new pest and save it to obtain an ID
     pest = Pest()
@@ -57,7 +60,7 @@ def pest_edit(request, id):
     pest = Pest.objects.get(id=id)
     image_quantity = 4
 
-    if request.POST:
+    if request.method == "POST":
         form = PestAddUpdateForm(request.POST)
         if form.is_valid():
             pest.pest_name   = form.cleaned_data.get('pest_name')
@@ -127,10 +130,13 @@ def pest_delete(request, id):
     """ Delete selected pest from the Pest database table """
     if not request.user.is_authenticated or not request.user.groups.filter(name='Garden-Editor').exists():
         return HttpResponseRedirect(reverse('general:index'))
-    pest = Pest.objects.get(id=id)
-    if request.POST:
+    
+    # Check to see if the id points to a valid pest
+    pest = get_object_or_404(Pest, id=id)
+    
+    if request.method == "POST":
         pest.delete()
-        return HttpResponseRedirect(reverse('pests:pest_summary')) 
+        return HttpResponseRedirect(reverse('pests:pest_summary'))             
     else:
         context = {'pest': pest}
         return render(request, 'pests/pest_delete_modal.html', context)

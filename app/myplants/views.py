@@ -285,7 +285,7 @@ def my_column_chooser(request):
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
 
-    if request.POST:
+    if request.method == "POST":
         form = MyColumnChooserForm(request.POST)
         if form.is_valid():
             my_column_selection = form.cleaned_data.get('my_column_selection')
@@ -312,7 +312,7 @@ def myplant_status(request, id):
     #
     plant = Plant.objects.get(id=id)
     myplants = MyPlant.objects.filter(owner = request.user.username)
-    if request.POST:
+    if request.method == "POST":
         my_plant_status = request.POST["my_plant_status"]
 
         # Cases where the user already has a my_plant associated with the plant
@@ -358,7 +358,7 @@ def myplant_add(request, id):
         return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     myplant = MyPlant()
-    if request.POST:
+    if request.method == "POST":
         form = MyPlantAddUpdateForm(request.POST)
         if form.is_valid():
             myplant.owner        = request.user.username                 #
@@ -392,7 +392,7 @@ def myplant_update(request, id):
         return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
     plant   = Plant.objects.get(id=myplant.plant.id)
-    if request.POST:
+    if request.method == "POST":
         form = MyPlantAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             myplant.date_planted = form.cleaned_data.get("date_planted") #
@@ -439,7 +439,7 @@ def myplant_delete(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
-    if request.POST:
+    if request.method == "POST":
         myplant.delete()
         return HttpResponseRedirect(reverse('myplants:myplants_summary')) 
     else:
@@ -498,7 +498,7 @@ def myplant_log_add(request, id):
     
     myplant     = MyPlant.objects.get(id=id)
     myplant_log = MyPlantLog()
-    if request.POST:
+    if request.method == "POST":
         log_add_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_add_form')
         if log_add_form.is_valid():
             myplant_log.author  = request.user.username
@@ -539,7 +539,7 @@ def myplant_log_edit(request, id):
     # Get the Log item to be edited
     myplant_log = MyPlantLog.objects.get(id=id)
     # Edit the To Do item
-    if request.POST:
+    if request.method == "POST":
         log_edit_form = MyPlantLogForm(request.POST, request.FILES, prefix='log_edit_form')
         if log_edit_form.is_valid():
             myplant_log.subject = log_edit_form.cleaned_data.get("log_subject")
@@ -600,7 +600,7 @@ def myplant_log_del(request, id):
     # Get to Log item to be deleted
     myplant_log = MyPlantLog.objects.get(id=id)
     # Delete the To Do item
-    if request.POST:
+    if request.method == "POST":
         myplant_log.delete()
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_log.myplant.id,)))
     # Populate the delete modal fields and render the modal
@@ -614,7 +614,7 @@ def myplant_todo_add(request, id):
         return HttpResponseRedirect(reverse('general:index'))
     myplant      = MyPlant.objects.get(id=id)
     myplant_todo = MyPlantToDo()
-    if request.POST:
+    if request.method == "POST":
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
             myplant_todo.owner    = request.user.username
@@ -641,7 +641,7 @@ def myplant_todo_edit(request, id):
     # Get To Do item to be edited
     myplant_todo = MyPlantToDo.objects.get(id=id)
     #
-    if request.POST:
+    if request.method == "POST":
         form = MyPlantToDoForm(request.POST, request.FILES)
         if form.is_valid():
             myplant_todo.date     = form.cleaned_data.get("todo_date")
@@ -670,7 +670,7 @@ def myplant_todo_del(request, id):
     # Get to To Do item to be deleted
     myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
-    if request.POST:
+    if request.method == "POST":
         myplant_todo.delete()
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_todo.myplant.id,)))
     # Populate the delete modal fields and render the modal
@@ -721,7 +721,7 @@ def myplant_comment(request, id):
         return HttpResponseRedirect(reverse('general:index'))
     myplant         = MyPlant.objects.get(id=id)
     myplant_comment = MyPlantComment()
-    if request.POST:
+    if request.method == "POST":
         comment_form = MyPlantCommentForm(request.POST, request.FILES, prefix='comment_form')
         if comment_form.is_valid():
             myplant_comment.author  = request.user.username            #

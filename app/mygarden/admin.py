@@ -1,7 +1,7 @@
 # /app/mygarden/admin.py
 
-from django.contrib import admin
-from mygarden.models  import Garden
+from django.contrib  import admin
+from mygarden.models import Garden
 
 class GardenAdmin(admin.ModelAdmin):
     list_display = ("owner",

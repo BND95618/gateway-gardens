@@ -54,7 +54,7 @@ def mygarden_edit(request, id):
     garden = Garden.objects.get(id=id)
     image_quantity = 8
 
-    if request.POST:
+    if request.method == "POST":
         form = GardenAddUpdateForm(request.POST, request.FILES)
         if form.is_valid():
             garden.owner       = request.user.username
@@ -231,7 +231,7 @@ def mygarden_todo_add(request, id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse('general:index'))
     
-    if request.POST:
+    if request.method == "POST":
         myplant_todo = MyPlantToDo()
 
         common_name   = request.POST["common_name"]
@@ -268,7 +268,7 @@ def mygarden_todo_edit(request, id):
     myplants     = MyPlant.objects.filter(owner = request.user.username)
     myplant_todo = MyPlantToDo.objects.get(id=id)
 
-    if request.POST:
+    if request.method == "POST":
         common_name = request.POST["common_name"]
         for myplant in myplants:
             if myplant.plant.commonName == common_name:
@@ -297,7 +297,7 @@ def mygarden_todo_del(request, id):
     # Get to To Do item to be deleted
     myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
-    if request.POST:
+    if request.method == "POST":
         myplant_todo.delete()
         return HttpResponseRedirect(reverse('mygarden:mygarden_todo',))
     # Populate the delete modal fields and render the modal

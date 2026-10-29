@@ -97,4 +97,4 @@ class UserInfo(models.Model):
         return self.common_name_search
     
     def get_absolute_url(self):
-        return reverse("plants_summary")
+        return reverse("index")
