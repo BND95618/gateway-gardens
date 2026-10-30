@@ -2,11 +2,14 @@
 
 import math
  
+from django.contrib.auth.decorators import login_required, user_passes_test 
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render, redirect # Added for images
+from django.shortcuts import render
 from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
+
+from core_utils.helpers import login_required_no_next, is_garden_editor
 
 from mygarden.models  import Garden
 from myplants.models  import MyPlant
@@ -15,6 +18,7 @@ from pests.models     import Pest
 
 from .forms           import PlantAddUpdateForm, PlantCommentForm, ColumnChooserForm
 
+from core_utils.helpers import is_garden_editor
 from core_utils.helpers import string2list, string_display
 from core_utils.helpers import pH_check, usda_zone_check, sunset_zone_check, bloom_month_check, bloom_month_list
 
@@ -54,11 +58,9 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
+@login_required_no_next
 def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
 
@@ -290,10 +292,9 @@ def plants_summary(request):
     template = loader.get_template("plants/plants_summary.html")
     return HttpResponse(template.render(context, request))
 
+@login_required_no_next
 def plant_details(request, id):
     """ Show a detailed view of a specific plant """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)             
     # get all comments related to the selected plant        
     comments = Comment.objects.filter(plant__pk=id)      
@@ -325,10 +326,10 @@ def plant_details(request, id):
             }
     return HttpResponse(template.render(context, request))
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
-    if not request.user.groups.filter(name='Garden-Editor').exists():
-        return HttpResponseRedirect(reverse('general:index'))
     # Create a new plant and save it to obtain an ID
     plant = Plant()
     plant.save()
@@ -340,10 +341,10 @@ def plant_add(request):
     # Edit the newly created plant
     return HttpResponseRedirect(reverse('plants:plant_edit', args=(plant.id,))) 
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def plant_edit(request, id):
     """ Update the attributes for an existing plant """
-    if not request.user.groups.filter(name='Garden-Editor').exists():
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.method == "POST":
         form = PlantAddUpdateForm(request.POST, request.FILES)
@@ -535,10 +536,9 @@ def plant_edit(request, id):
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plant_edit.html', context)
 
+@login_required_no_next
 def plant_comment(request, id):
     """ Associate a comment to a plant """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     comment = Comment()
     if request.method == "POST":
@@ -552,21 +552,20 @@ def plant_comment(request, id):
         return HttpResponseRedirect(reverse('plants:plant_details', args=(plant.id,))) 
     else:
         return HttpResponseRedirect(reverse('general:index'))
-    
+
+@login_required_no_next    
 def plant2garden(request, id):
     """ Add a plant to a garden """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     garden = Garden.objects.get(owner = request.user.username)
     # Associate the plant to the user's garden
     plant.gardens.add(garden)                    
     return HttpResponseRedirect(reverse('plants:plants_summary'))
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def plant_delete(request, id):
     """ Delete selected plant from the Plant database table """
-    if not request.user.groups.filter(name='Editor').exists():
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     if request.method == "POST":
         # Check for and delete audio file
@@ -590,11 +589,9 @@ def plant_delete(request, id):
         context = {'plant': plant}
         return render(request, 'plants/plant_delete_modal.html', context)
 
+@login_required_no_next
 def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
 

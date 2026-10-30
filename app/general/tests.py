@@ -21,16 +21,16 @@ class UnauthenticatedUserPageAccessTest(TestCase):
         self.assertTemplateUsed(response, "general/index.html")
         self.assertContains(response, "<h1>Garden/Plant Web Site</h1>")
     def test_glossary_page(self):
-        print("General - Test 1.2: Reference test")
+        print("General - Test 1.2: Glossary test")
 
         url = reverse("general:glossary")
-        response = self.client.get("/glossary/")
-
+        response = self.client.get(url)
+        
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.client.get(url).status_code, 302)
         self.assertEqual(response.url, '/')
+
     def test_reference_page(self):
-        print("General - Test 1.3: Glossary test")
+        print("General - Test 1.3: Reference test")
 
         url = reverse("general:reference")
         response = self.client.get("/reference/")

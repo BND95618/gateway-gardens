@@ -1,3 +1,22 @@
+# /app/core_utils/helpers.py
+
+from functools import wraps
+from django.shortcuts import redirect
+from django.conf import settings
+
+def login_required_no_next(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # Redirect straight to your login page without appending ?next=
+            return redirect(settings.LOGIN_URL)
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+def is_garden_editor(user):
+    """ Helper function to verify user group """
+    return user.is_authenticated and user.groups.filter(name='Garden-Editor').exists()
+
 def string2list(string):
     """ Utility: convert list in string form to a list """
     # print('string: ', string)

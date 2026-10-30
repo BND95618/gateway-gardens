@@ -15,20 +15,19 @@ class UnauthenticatedUserPageAccessTest(TestCase):
     def test_pest_summary_page(self):
         print("Pests - Test 1.1: pest_summary test")
 
-        url = reverse("pests:pest_summary")
-        response = self.client.get("/pest_summary/")
-
+        url = reverse('pests:pest_summary')
+        response = self.client.get(url)
+        
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.client.get(url).status_code, 302)
         self.assertEqual(response.url, '/')
+    
     def test_pest_add_page(self):
         print("Pests - Test 1.2: pest_add test")
 
-        url = reverse("pests:pest_add")
-        response = self.client.get("/pest_add/")
-
+        url = reverse('pests:pest_add')
+        response = self.client.get(url)
+        
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.client.get(url).status_code, 302)
         self.assertEqual(response.url, '/')
 # ------------------------------------------------------------------------------
 # Web page access: Autenticated users with 'Gardener' group privileges

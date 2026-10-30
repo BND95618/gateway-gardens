@@ -1,25 +1,23 @@
 # app/pests/views.py
 
-from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render, get_object_or_404
-from django.template  import loader
-from django.urls      import reverse
-from pests.models     import Pest
-from pests.forms      import PestAddUpdateForm
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http        import HttpResponse, HttpResponseRedirect, JsonResponse 
+from django.shortcuts   import render, get_object_or_404
+from django.template    import loader
+from django.urls        import reverse
+from core_utils.helpers import login_required_no_next, is_garden_editor
+from pests.models       import Pest
+from pests.forms        import PestAddUpdateForm
 
+@login_required_no_next
 def pest_summary(request):
     """ Render the page to show all pests for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-
     pests = Pest.objects.all().order_by('pest_type', 'pest_name')
     return render(request, 'pests/pest_summary.html', {'pests': pests})
 
+@login_required_no_next
 def pest_details(request, id):
     """ Show a detailed view of a specific pest """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     # Check to see if the id points to a valid pest
     pest = get_object_or_404(Pest, id=id)
     
@@ -39,10 +37,11 @@ def pest_details(request, id):
                 "image_fields" : image_fields, }
     return render(request, 'pests/pest_details.html', context)
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def pest_add(request):
     """ Render the page to add pests to the database for Gateway Gardens app """
-    if not ((request.user.is_authenticated) and (request.user.groups.filter(name='Garden-Editor').exists())):
-        return HttpResponseRedirect(reverse('general:index'))
+  
     # Create a new pest and save it to obtain an ID
     pest = Pest()
     pest.save()
@@ -52,11 +51,11 @@ def pest_add(request):
     # Edit the newly created pest
     return HttpResponseRedirect(reverse('pests:pest_edit', args=(pest.id,))) 
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def pest_edit(request, id):
     """ Render the page to add pests to the database for Gateway Gardens app """
-    if not request.user.groups.filter(name='Garden-Editor').exists():
-        return HttpResponseRedirect(reverse('general:index'))
-    
+
     pest = Pest.objects.get(id=id)
     image_quantity = 4
 
@@ -126,10 +125,10 @@ def pest_edit(request, id):
                     'image_quantity' : image_quantity, }
         return HttpResponse(template.render(context, request ))
   
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def pest_delete(request, id):
     """ Delete selected pest from the Pest database table """
-    if not request.user.is_authenticated or not request.user.groups.filter(name='Garden-Editor').exists():
-        return HttpResponseRedirect(reverse('general:index'))
     
     # Check to see if the id points to a valid pest
     pest = get_object_or_404(Pest, id=id)

@@ -13,6 +13,5 @@ urlpatterns = [
     path('reference/', views.reference, name='reference'),
     path('about/',     views.about,     name='about'),
     # views for debug and testing purposes
-    path('debug/',     views.debug,     name='debug'),
     path('fiddle/',    views.fiddle,    name='fiddle'),
 ]

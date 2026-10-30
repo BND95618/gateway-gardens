@@ -37,10 +37,12 @@
       <thead>
         <tr>
           <!-- User Attributes -->
-          <th onclick="sortTable( 0, 'userTable')" >User ID     </th>
-          <th onclick="sortTable( 1, 'userTable')" >User Name   </th>
-          <th onclick="sortTable( 2, 'userTable')" >First Name  </th>
-          <th onclick="sortTable( 3, 'userTable')" >Last Name   </th>
+          <th onclick="sortTable( 0, 'userTable')" >User ID   </th>
+          <th onclick="sortTable( 1, 'userTable')" >User Name </th>
+          <th onclick="sortTable( 2, 'userTable')" >First Name</th>
+          <th onclick="sortTable( 3, 'userTable')" >Last Name </th>
+          <th onclick="sortTable( 4, 'userTable')" >e-mail    </th>
+          <th onclick="sortTable( 5, 'userTable')" >Group     </th>
           <!-- User Detail header placeholder -->
           <th class="bnd-center"></th>
           <!-- User Update header placeholder -->
@@ -57,6 +59,8 @@
         <td>{{ user.username     }}</td>
         <td>{{ user.first_name   }}</td>
         <td>{{ user.last_name    }}</td>
+        <td>{{ user.email        }}</td>
+        <td>AR: Determine group(s) </td>
         <!-- User Details Icon/Link -->
         <td class="bnd-table-icon-flex">
             <div class="bnd-tooltip">
@@ -93,13 +97,13 @@
   </div>
 </div>
 <br>
-
+{% comment %} 
 <div>
   <form action="{x% url 'user_info:myplant_db_xfer' %x}" method="get">
     <button type="submit">Myplant db transfer</button>
   </form>
 </div> 
-
+{% endcomment %}
 <!-------------------------------------------------------------------------->
 <!-- Modals                                                               -->
 <!-------------------------------------------------------------------------->

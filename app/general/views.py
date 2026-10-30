@@ -1,47 +1,38 @@
-# app/plants/views.py
+# app/general/views.py
  
-from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render, redirect # Added for images
-from django.template  import loader
-from django.urls      import reverse
+from django.contrib.auth.decorators import login_required, user_passes_test 
+from django.shortcuts   import render
+
+from core_utils.helpers import login_required_no_next, is_garden_editor
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
     return render(request, 'general/index.html')
 
+@login_required_no_next
 def glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     return render(request, 'general/glossary.html')
 
+@login_required_no_next
 def reference(request):
     """ Render the Reference Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     return render(request, 'general/reference.html')
 
+@login_required_no_next
 def about(request):
     """ Render the About Page for Gateway Gardens app """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     return render(request, 'general/about.html')
 
 #
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     if request.method == 'POST':
         context = { 'fiddle' : 'fiddle', }
         return render(request, 'general/fiddle.html', context)
     else:
         context = { 'fiddle' : 'fiddle', }
         return render(request, 'general/fiddle.html', context)
-
-def debug(request):
-    """ Render the Debug Page for debugging of new functions """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    return render(request, 'plants/debug.html')

@@ -1,21 +1,22 @@
 # /app/user_info/views.py
 
-import string, copy, math, json, random, base64
+import string, random, base64
 from email_validator  import validate_email
+
+from django.contrib.auth.decorators import login_required, user_passes_test 
 
 from django.core.mail import send_mail
 from django.core.files.base import ContentFile
  
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
-from django.template  import loader
 from django.urls      import reverse
-from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 from django.conf      import settings
 from django.contrib                 import messages
 from django.contrib.auth            import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.models     import User, Group
-from django.contrib.auth.decorators import login_required
+
+from core_utils.helpers             import login_required_no_next, is_garden_editor
 
 from user_info.models import UserInfo
 from mygarden.models  import Garden
@@ -491,6 +492,8 @@ def user_logout(request):
     logout(request)
     return render(request, 'general/index.html')
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def user_admin(request):
     """ Render the User Admin page for Gateway Gardens app """
     if request.user.username == "Brent":
@@ -500,10 +503,10 @@ def user_admin(request):
     else:
         return HttpResponseRedirect(reverse('general:index'))
 
+@login_required_no_next
+@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def user_delete(request, id):
     """ Delete selected user from the User database table """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     user = User.objects.get(id=id)
     if request.method == "POST":
         # Delete the user's "To Do" items
@@ -592,7 +595,7 @@ def lastname_validation(lastname, LASTNAME_ALLOWED_CHARS):
     elif (not all(char in LASTNAME_ALLOWED_CHARS for char in lastname)):
         error_message = "Last name can only contain letters, numbers and -"
     return (error_message)
-
+""" 
 def myplant_db_xfer(request):
     myplants_orig = MyPlant_orig.objects.all()
     for myplant_orig in myplants_orig:
@@ -668,3 +671,4 @@ def myplant_db_xfer(request):
             myplantcomment_new.save()
         
     return HttpResponseRedirect(reverse('user_info:user_admin'))
+ """

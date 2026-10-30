@@ -217,11 +217,12 @@ else:
     MEDIA_URL    = '/media/'
     MEDIA_ROOT   = '/app/media/'
     #############################################################################
-
+#
+LOGIN_URL = 'general:index'
 # Directs user to login page when login is required
 # AR: Login redirection should be fixed
-LOGIN_REDIRECT_URL  = "/general/index"
-LOGOUT_REDIRECT_URL = "/general/index"
+LOGIN_REDIRECT_URL  = "general:index"
+LOGOUT_REDIRECT_URL = "general:index"
 #################################################################################
 # email settings for sending email from gmail account
 #################################################################################

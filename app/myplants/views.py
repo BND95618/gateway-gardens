@@ -1,17 +1,15 @@
 # /app/myplants/views.py
 
-import string, copy, math, json, random, base64
-
-from django.core.mail import send_mail
-from django.core.files.base import ContentFile
+import json
  
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
-from django.shortcuts import render, redirect # Added for images
+from django.shortcuts import render
 from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
-from django.conf      import settings
-from django.contrib   import messages
+
+from core_utils.helpers import login_required_no_next
 
 from .models          import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment
 from plants.models    import Plant
@@ -57,16 +55,8 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
-def index(request):
-    """ Render the landing page for Gateway Gardens app """
-    return render(request, 'general/index.html')
-
-#
-
+@login_required_no_next
 def myplants_summary(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
     
@@ -277,11 +267,9 @@ def myplants_summary(request):
                 'my_column_selection'    : my_column_selection_list, }
     return HttpResponse(template.render(context, request))
 
+@login_required_no_next
 def my_column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
 
@@ -305,11 +293,9 @@ def my_column_chooser(request):
 
 #
 
+@login_required_no_next
 def myplant_status(request, id):
     """ Set the selected plant's status  """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    #
     plant = Plant.objects.get(id=id)
     myplants = MyPlant.objects.filter(owner = request.user.username)
     if request.method == "POST":
@@ -351,11 +337,10 @@ def myplant_status(request, id):
         context = { 'plant'  : plant,
                     'status' : status, }
         return render(request, 'myplants/myplant_status_modal.html', context)
-    
+
+@login_required_no_next
 def myplant_add(request, id):
     """ Associate a 'plant' to 'myplant' """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     plant = Plant.objects.get(id=id)
     myplant = MyPlant()
     if request.method == "POST":
@@ -385,11 +370,10 @@ def myplant_add(request, id):
         context = { 'plant' : plant,
                     'form'  : form }
         return render(request, 'myplants/myplant_add.html', context)
-    
+
+@login_required_no_next
 def myplant_update(request, id):
     """ Update details related a specific My Plant """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
     plant   = Plant.objects.get(id=myplant.plant.id)
     if request.method == "POST":
@@ -434,10 +418,9 @@ def myplant_update(request, id):
                     'form'    : form }
         return render(request, 'myplants/myplant_update.html', context)
 
+@login_required_no_next
 def myplant_delete(request, id):
     """ Delete selected plant from the MyPlants database table """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     myplant = MyPlant.objects.get(id=id)
     if request.method == "POST":
         myplant.delete()
@@ -448,10 +431,9 @@ def myplant_delete(request, id):
 
 #
 
+@login_required_no_next
 def myplant_details(request, id):
     """ Show a detailed view of a specific plant """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Uses the id to locate the correct record in the MyPlant and MyPlant tables
     myplant = MyPlant.objects.get(id=id)
     plant   = Plant.objects.get(id=myplant.plant.id)
@@ -491,11 +473,9 @@ def myplant_details(request, id):
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
 
+@login_required_no_next
 def myplant_log_add(request, id):
     """ Add My Plant Log Entry """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
-    
     myplant     = MyPlant.objects.get(id=id)
     myplant_log = MyPlantLog()
     if request.method == "POST":
@@ -532,10 +512,9 @@ def myplant_log_add(request, id):
     else:
         return HttpResponseRedirect(reverse('general:index'))
 
+@login_required_no_next
 def myplant_log_edit(request, id):
     """ Edit My Plant Log Entry item"""
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Get the Log item to be edited
     myplant_log = MyPlantLog.objects.get(id=id)
     # Edit the To Do item
@@ -593,10 +572,9 @@ def myplant_log_edit(request, id):
                     'log_edit_form' : log_edit_form }
         return render(request, 'myplants/myplant_log_edit_modal.html', context)
 
+@login_required_no_next
 def myplant_log_del(request, id):
     """ Delete My Plant Log Entry item"""
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Get to Log item to be deleted
     myplant_log = MyPlantLog.objects.get(id=id)
     # Delete the To Do item
@@ -608,10 +586,9 @@ def myplant_log_del(request, id):
         context = { 'myplant_log' : myplant_log }
         return render(request, 'myplants/myplant_log_del_modal.html', context)
 
+@login_required_no_next
 def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     myplant      = MyPlant.objects.get(id=id)
     myplant_todo = MyPlantToDo()
     if request.method == "POST":
@@ -633,11 +610,10 @@ def myplant_todo_add(request, id):
                     'todo_repeat_opt' : todo_repeat_opt,
                   }
         return render(request, 'myplants/myplant_todo_add_modal.html', context)
-    
+
+@login_required_no_next
 def myplant_todo_edit(request, id):
     """ Edit My Plant To Do item """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Get To Do item to be edited
     myplant_todo = MyPlantToDo.objects.get(id=id)
     #
@@ -662,11 +638,10 @@ def myplant_todo_edit(request, id):
                     'todo_repeat'     : myplant_todo.repeat 
                   }
         return render(request, 'myplants/myplant_todo_edit_modal.html', context)
-    
+
+@login_required_no_next
 def myplant_todo_del(request, id):
     """ Delete My Plant To Do item"""
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Get to To Do item to be deleted
     myplant_todo = MyPlantToDo.objects.get(id=id)
     # Delete the To Do item
@@ -677,11 +652,10 @@ def myplant_todo_del(request, id):
     else:
         context = { 'myplant_todo' : myplant_todo }
         return render(request, 'myplants/myplant_todo_del_modal.html', context)
-    
+
+@login_required_no_next
 def myplant_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     # Get the To Do item to have completion status toggled
     myplant_todo = MyPlantToDo.objects.get(id=id)
     if request.method == 'POST':
@@ -696,10 +670,9 @@ def myplant_todo_done(request, id):
         # return JsonResponse({'test' : 'test' })
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_todo.myplant.id,)))
 
+@login_required_no_next
 def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     user_info = request.user.userinfo
     if request.method == 'POST':
 
@@ -715,10 +688,9 @@ def myplant_todo_save(request, id):
         
     return JsonResponse({'test' : 'test' })
 
+@login_required_no_next
 def myplant_comment(request, id):
     """ Associate a comment to a plant """
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('general:index'))
     myplant         = MyPlant.objects.get(id=id)
     myplant_comment = MyPlantComment()
     if request.method == "POST":
