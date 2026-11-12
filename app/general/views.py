@@ -3,30 +3,30 @@
 from django.contrib.auth.decorators import login_required, user_passes_test 
 from django.shortcuts   import render
 
-from core_utils.helpers import login_required_no_next, is_garden_editor
+from core_utils.helpers import is_garden_editor
 
 def index(request):
     """ Render the landing page for Gateway Gardens app """
     return render(request, 'general/index.html')
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def glossary(request):
     """ Render the Glossary Page for Gateway Gardens app """
     return render(request, 'general/glossary.html')
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def reference(request):
     """ Render the Reference Page for Gateway Gardens app """
     return render(request, 'general/reference.html')
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def about(request):
     """ Render the About Page for Gateway Gardens app """
     return render(request, 'general/about.html')
 
 #
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 @user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def fiddle(request):
     """ Render the Fiddle Page for testing of new functions """

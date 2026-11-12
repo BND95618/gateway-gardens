@@ -1,0 +1,51 @@
+<!-- /app/user_info/templates/user_info/user_edit_modal.html -->
+<div class="bnd-modal-container">
+    <header class="bnd-modal-header">
+        <h4>Edit User</h4>
+    </header>
+    <form id="id_user_edit_form">
+        {% csrf_token %}
+        <div class="bnd-modal-contents">
+            {{ form.username.as_field_group }}
+            {{ form.email.as_field_group }}
+            {{ form.first_name.as_field_group }}
+            {{ form.last_name.as_field_group }}
+            {{ form.is_active.as_field_group }}    </br>
+            {{ form.is_staff.as_field_group }}     </br>
+            {{ form.is_superuser.as_field_group }} </br>
+            {{ form.groups.as_field_group }} </br>
+            <div class="images">
+                <div class="bnd-flex-container-wrap">
+                <!-- User Profile Photo -->
+                    <figure>
+                        {% if target_user_info.profile_photo %}
+                            <img id      = "id_profile_photo_preview" 
+                                class   = "bnd-image-small" 
+                                src     = "{{ target_user_info.profile_photo.url }}" 
+                                onclick = "imageModalOpen(this)" 
+                                alt     = "No image found">
+                        {% else %}
+                            <img id      = "id_profile_photo_preview" 
+                                class   = "bnd-image-small" 
+                                src     = "" 
+                                alt     = "--- Image displays here ---">
+                        {% endif %}
+                        <hr>
+                        {{ form.profile_photo }}
+                    </figure>
+                </div>
+            </div>
+            <div id="id_error_msg" class="bnd-text-red">
+                <!-- Error message goes here -->
+            </div>
+        </div>
+        <footer class="bnd-modal-button-bar">
+            <button type="submit" class="bnd-button-submit">Confirm</button>
+            <button type  = "button"
+                    id    = "id_user_edit_modal_close"
+                    class = "bnd-button-cancel">
+                Cancel
+            </button>
+        </footer>
+    </form>
+</div>

@@ -41,7 +41,13 @@
       <button onclick="column_chooser()" class="bnd-banner-menu-item">Column Chooser</button>
       <button onclick="plants_chart()"   class="bnd-banner-menu-item">Bloom Charts  </button>
       {% if perms.plants.add_plant %}
-        <a href="{% url 'plants:plant_add' %}" class="bnd-banner-menu-item">Add Plant</a>
+        <!-- form required so that request is via POST - security measure -->
+        <form action="{% url 'plants:plant_add' %}" method="post" style="display: inline;">
+          {% csrf_token %}
+          <button type="submit" class="bnd-banner-menu-item">
+              Add Plant
+          </button>
+        </form>
       {% endif %}
     </div>
   </div>

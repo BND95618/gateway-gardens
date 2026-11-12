@@ -5,6 +5,49 @@ from django_quill.forms       import QuillFormField
 from django.core.validators   import URLValidator
 import datetime
 
+GROUP_CHOICES = (
+	("Gardener",      "Gardener"),
+	("Garden-Editor", "Garden-Editor"),
+)
+
+class UserEditForm(forms.Form):
+	username = forms.CharField(
+		label="Username", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class': 'bnd-input bnd-border'}),
+		)
+	email = forms.CharField(
+		label="e-mail address", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
+								      'autocomplete' : 'email'}),
+		)
+	first_name = forms.CharField(
+		label="First Name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
+								      'autocomplete' : 'given-name'}),
+		)
+	last_name = forms.CharField(
+		label="Last Name", 
+		max_length=64,
+		widget=forms.TextInput(attrs={'class'        : 'bnd-input bnd-border', 
+								      'autocomplete' : 'family-name'}),
+		)
+	profile_photo = forms.ImageField(
+		required=False,
+		widget=forms.FileInput()
+		)
+	groups = forms.MultipleChoiceField(
+		label="Groups",
+		choices = GROUP_CHOICES, 
+		widget=forms.CheckboxSelectMultiple,
+		required=False
+		)
+	is_active    = forms.BooleanField(required=False)
+	is_staff     = forms.BooleanField(required=False)
+	is_superuser = forms.BooleanField(required=False)
+	
 class UserProfileForm(forms.Form):
 	profile_username = forms.CharField(
 		label="Username", 

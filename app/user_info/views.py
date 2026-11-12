@@ -5,21 +5,23 @@ from email_validator  import validate_email
 
 from django.contrib.auth.decorators import login_required, user_passes_test 
 
-from django.core.mail import send_mail
+from django.core.mail       import send_mail
 from django.core.files.base import ContentFile
  
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, redirect # Added for images
 from django.urls      import reverse
 from django.conf      import settings
-from django.contrib                 import messages
-from django.contrib.auth            import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.models     import User, Group
+from django.contrib             import messages
+from django.contrib.auth        import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.models import User, Group
 
-from core_utils.helpers             import login_required_no_next, is_garden_editor
+from core_utils.helpers         import is_garden_editor
 
 from user_info.models import UserInfo
 from mygarden.models  import Garden
+from myplants.models  import MyPlant
+from myplants.models  import MyPlantToDo
 """ 
 from plants.models    import MyPlant        as MyPlant_orig
 from plants.models    import MyPlantLog     as MyPlantLog_orig
@@ -31,7 +33,10 @@ from myplants.models  import MyPlantLog     as MyPlantLog_new
 from myplants.models  import MyPlantToDo    as MyPlantToDo_new
 from myplants.models  import MyPlantComment as MyPlantComment_new
  """
-from .forms  import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
+from .forms import UserEditForm
+from .forms import UserProfileForm, UserLoginForm, UserPwdResetForm, EmailVerificationForm
+
+# User sign-up, login, and logout views
 
 def user_profile_step1(request):
     """ Render the User Profile Page for Gateway Gardens app """
@@ -492,47 +497,143 @@ def user_logout(request):
     logout(request)
     return render(request, 'general/index.html')
 
-@login_required_no_next
-@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
+# Admin views
+
+@login_required(redirect_field_name=None)
+@user_passes_test(lambda user: user.is_superuser, login_url='general:index', redirect_field_name=None)
 def user_admin(request):
     """ Render the User Admin page for Gateway Gardens app """
-    if request.user.username == "Brent":
-        users = User.objects.all()
-        context = { 'users' : users, }
-        return render(request, 'user_info/user_admin.html', context)
-    else:
-        return HttpResponseRedirect(reverse('general:index'))
+    users     = User.objects.all()
+    context = { 'users' : users, }
+    return render(request, 'user_info/user_admin.html', context)
 
-@login_required_no_next
-@user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
+@login_required(redirect_field_name=None)
+@user_passes_test(lambda user: user.is_superuser, login_url='general:index', redirect_field_name=None)
+def user_edit(request, id):
+    """ Edit selected user """
+    print("DEBUG: Got to user edit")
+    target_user      = User.objects.get(id=id)
+    print("DEBUG: target_user =", target_user)
+    target_user_info = target_user.userinfo
+    if request.method == "POST":
+        print("DEBUG: Got to user edit POST")
+        form = UserEditForm(request.POST, request.FILES)
+        if form.is_valid():
+            target_user.username     = form.cleaned_data.get('username')
+            target_user.email        = form.cleaned_data.get('email')
+            target_user.first_name   = form.cleaned_data.get('first_name')
+            target_user.last_name    = form.cleaned_data.get('last_name')
+            target_user.is_active    = form.cleaned_data.get('is_active')
+            target_user.is_staff     = form.cleaned_data.get('is_staff')
+            target_user.is_superuser = form.cleaned_data.get('is_superuser')
+            # Capture the Groups that the Target User is assigned to
+            # In Django, many-to-many relationships require .set()
+            # MultipleChoiceField requires that the code queries the Group objects by name before calling .set()
+            group_names = form.cleaned_data.get('groups')
+            groups = Group.objects.filter(name__in=group_names)
+            target_user.groups.set(groups)
+            # Process images - check for new image - if yes, delete any existing image
+            if 'profile_photo' in request.FILES:
+                if (target_user_info.profile_photo):
+                    target_user_info.profile_photo.delete(save=False)
+                target_user_info.profile_photo = request.FILES['profile_photo']
+            else:
+                print("DEBUG: No new profile photo")
+            # ----------------------------------------------------------------------
+            # Input validation
+            # ----------------------------------------------------------------------
+            error_message = ""
+            USERNAME_ALLOWED_CHARS  = set(string.ascii_letters + string.digits + "-")
+            FIRSTNAME_ALLOWED_CHARS = set(string.ascii_letters + "-")
+            LASTNAME_ALLOWED_CHARS  = set(string.ascii_letters + "-")
+            # Input validation - Username
+            if (error_message == ""):
+                error_message = username_validation(False, target_user.username, USERNAME_ALLOWED_CHARS)
+            # Input validation - email
+            if (error_message == ""):
+                error_message = email_validation(False, target_user.email)
+            # Input validation - first name
+            if (error_message == ""):
+                error_message = firstname_validation(target_user.first_name, FIRSTNAME_ALLOWED_CHARS)
+            # Input validation - last name
+            if (error_message == ""):
+                error_message = lastname_validation(target_user.last_name, LASTNAME_ALLOWED_CHARS)
+            # ----------------------------------------------------------------------
+            # Save inputs if there are no input errors
+            # ----------------------------------------------------------------------   
+            if error_message == "":
+                target_user.save()
+                target_user_info.save()
+                # Return success status to client
+                response_data = {
+                    'status'  : 'user-edit-success',
+                    'message' : 'User edit successful',
+                }
+            else:
+                # Return error status to client
+                response_data = {
+                    'status'  : 'user-edit-error',
+                    'message' : error_message,
+                    }
+            return JsonResponse(response_data)
+    else:
+        # convert string-based lists (retrieved from db) to true Python lists
+        print("DEBUG: groups =", target_user.groups.all())
+        print("DEBUG: groups =", list(target_user.groups.values_list('name', flat=True)))
+        group_list = list(target_user.groups.values_list('name', flat=True))
+        # group_list = string2list(target_user.groups.all())
+        # Obtain the user's saved configuration information
+        form = UserEditForm(initial = { 'username'     : target_user.username,
+                                        'email'        : target_user.email,
+                                        'first_name'   : target_user.first_name,
+                                        'last_name'    : target_user.last_name,
+                                        'is_active'    : target_user.is_active,
+                                        'is_staff'     : target_user.is_staff,
+                                        'is_superuser' : target_user.is_superuser,
+                                        'groups'       : group_list,
+                                        'photo'        : target_user_info.profile_photo,
+                                      })
+        context = { 'form'             : form,
+                    'target_user'      : target_user, 
+                    'target_user_info' : target_user_info}
+        return render(request, 'user_info/user_edit_modal.html', context)
+
+@login_required(redirect_field_name=None)
+@user_passes_test(lambda user: user.is_superuser, login_url='general:index', redirect_field_name=None)
 def user_delete(request, id):
     """ Delete selected user from the User database table """
     user = User.objects.get(id=id)
     if request.method == "POST":
         # Delete the user's "To Do" items
-        user_todos = MyPlantToDo.objects.get(owner = user.username)
-        user_todos.delete()
+        MyPlantToDo.objects.filter(owner=user.username).delete()
+
         # Delete the user's "My Plants"
-        user_plants = MyPlant.objects.get(owner = user.username)
-        user_plants.delete()
+        MyPlant.objects.filter(owner = user.username).delete()
+
         # Delete the user's garden photos and database information
-        user_garden = Garden.objects.get(owner = user.username)
-        for i in range(1, 9):
-            image_field = getattr(user_garden, f"image_{i}", None)
-            if image_field:
-                image_field.delete(save=False)
-        user_garden.delete()
+        if Garden.objects.filter(owner = user.username).exists():
+            user_garden = Garden.objects.get(owner = user.username)
+            for i in range(1, 9):
+                image_field = getattr(user_garden, f"image_{i}", None)
+                if image_field:
+                    image_field.delete(save=False)
+            user_garden.delete()
+
         # Delete the user's profile photo and auxilliary database information
-        user_info = UserInfo.objects.get(user = user)
-        if (user_info.profile_photo):
-            user_info.profile_photo.delete(save=False)
-        user_info.delete()
+        if UserInfo.objects.filter(user = user).exists():
+            user_info = UserInfo.objects.get(user = user)
+            if (user_info.profile_photo):
+                user_info.profile_photo.delete(save=False)
+            user_info.delete()
+            
         # Delete the user
         user.delete()
         return HttpResponseRedirect(reverse('general:index')) 
     else:
         context = {'user': user}
         return render(request, 'user_info/user_delete_modal.html', context)
+
+#
 
 def username_validation(profile_creation, username, USERNAME_ALLOWED_CHARS):
     error_message = ""

@@ -13,8 +13,6 @@ from .models                    import Pest
 # ------------------------------------------------------------------------------
 class UnauthenticatedUserPageAccessTest(TestCase):
     def test_pest_summary_page(self):
-        print("Pests - Test 1.1: pest_summary test")
-
         url = reverse('pests:pest_summary')
         response = self.client.get(url)
         
@@ -22,8 +20,6 @@ class UnauthenticatedUserPageAccessTest(TestCase):
         self.assertEqual(response.url, '/')
     
     def test_pest_add_page(self):
-        print("Pests - Test 1.2: pest_add test")
-
         url = reverse('pests:pest_add')
         response = self.client.get(url)
         
@@ -51,8 +47,6 @@ class AuthenticatedGardenerPageAccessTest(TestCase):
     # pest_summary view tests
     #--------------------------------------------------------------------------------
     def test_pest_summary_page(self):
-        print("Pests - Test 2.1: pest_summary test")
-
         url = reverse("pests:pest_summary")
         response = self.client.get("/pest_summary/")
         
@@ -64,8 +58,6 @@ class AuthenticatedGardenerPageAccessTest(TestCase):
     # pest_add view tests
     #--------------------------------------------------------------------------------
     def test_pest_add_page(self):
-        print("Pests - Test 2.2: pest_add test")
-
         url = reverse("pests:pest_add")
         response = self.client.get("/pest_add/")
         
@@ -76,8 +68,6 @@ class AuthenticatedGardenerPageAccessTest(TestCase):
     # pest_edit view tests
     #--------------------------------------------------------------------------------
     def test_pest_edit_page(self):
-        print("Pests - Test 2.3: pest_edit test")
-
         url = reverse('pests:pest_delete', kwargs={'id': self.pest.id})
         response = self.client.get(url)
         
@@ -87,8 +77,6 @@ class AuthenticatedGardenerPageAccessTest(TestCase):
     # delete view tests
     #--------------------------------------------------------------------------------
     def test_pest_delete_page(self):
-        print("Pests - Test 2.4: pest_delete test")
-
         url = reverse('pests:pest_delete', kwargs={'id': self.pest.id})
         response = self.client.get(url)
         
@@ -117,8 +105,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     # pest_summary view tests
     #--------------------------------------------------------------------------------
     def test_pest_summary_page(self):
-        print("Pests - Test 3.1: pest_summary test")
-
         url = reverse("pests:pest_summary")
         response = self.client.get("/pest_summary/")
         
@@ -130,8 +116,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     # pest_add view tests
     #--------------------------------------------------------------------------------
     def test_pest_add_page(self):
-        print("Pests - Test 3.2: pest_add test")
-
         url = reverse("pests:pest_add")
         response = self.client.get("/pest_add/")
         
@@ -142,8 +126,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     #--------------------------------------------------------------------------------
     def test_pest_edit_view_get_request(self):
         """Verify the pest_edit page loads and pre-populates the form with existing data."""
-        print("Pests - Test 3.3: pest_edit test")
-
         # Make the page load request
         edit_url = reverse('pests:pest_edit', kwargs={'id': self.pest.id})
 
@@ -161,8 +143,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     
     def test_pest_edit_view_post_request(self):
         """Verify submits valid form data, updates the instance, and returns JSON response."""
-        print("Pests - Test 3.4: pest_edit test")
-
         # Make the page load request
         edit_url = reverse('pests:pest_edit', kwargs={'id': self.pest.id})
 
@@ -213,7 +193,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     
     def test_pest_delete(self):
         """  """
-        print("Pests - Test 3.5: pest_delete test")
         # Create a pest db record
         self.pest = Pest.objects.create(pest_name = "test delete pest",
                                         family    = "test delete family")
@@ -229,7 +208,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     
     def test_pest_delete_nonexistent_pest_returns_404(self):
         """ Attempting to delete a non-existent item primary key must return a 404."""
-        print("Pests - Test 3.6: pest_delete non-existent item test")
         invalid_url = reverse('pests:pest_delete', kwargs={'id': 99999})
         response = self.client.post(invalid_url)
         self.assertEqual(response.status_code, 404)
@@ -237,7 +215,6 @@ class AuthenticatedGardenEditorPageAccessTest(TestCase):
     # pest model tests
     #--------------------------------------------------------------------------------
     def test_pest_model(self):
-        print("Pests - Test 3.5: pest model add/access db contents")
         self.assertEqual(self.pest.pest_name,          "test pest")
         self.assertEqual(self.pest.family,             "test family")
         self.assertEqual(self.pest.get_absolute_url(), "/pest_summary/")

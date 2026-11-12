@@ -87,7 +87,7 @@ class UserInfo(models.Model):
     shapes_JSON = models.JSONField(default=list, blank=True)
 
     # Connection to a specific user in the User db table
-    # If the user is deleted, delete their assiciated garden
+    # If the user is deleted, delete their associated garden
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE, default=get_default_user)
 
     # AR: Implement slug field

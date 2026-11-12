@@ -219,8 +219,7 @@ else:
     #############################################################################
 #
 LOGIN_URL = 'general:index'
-# Directs user to login page when login is required
-# AR: Login redirection should be fixed
+# Directs user to home page when login is required
 LOGIN_REDIRECT_URL  = "general:index"
 LOGOUT_REDIRECT_URL = "general:index"
 #################################################################################

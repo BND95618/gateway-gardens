@@ -37,12 +37,18 @@
       <thead>
         <tr>
           <!-- User Attributes -->
-          <th onclick="sortTable( 0, 'userTable')" >User ID   </th>
-          <th onclick="sortTable( 1, 'userTable')" >User Name </th>
-          <th onclick="sortTable( 2, 'userTable')" >First Name</th>
-          <th onclick="sortTable( 3, 'userTable')" >Last Name </th>
-          <th onclick="sortTable( 4, 'userTable')" >e-mail    </th>
-          <th onclick="sortTable( 5, 'userTable')" >Group     </th>
+          <th onclick="sortTable(  0, 'userTable' )" >ID         </th>
+          <th onclick="sortTable(  1, 'userTable' )" >Photo      </th>
+          <th onclick="sortTable(  2, 'userTable' )" >User Name  </th>
+          <th onclick="sortTable(  3, 'userTable' )" >First Name </th>
+          <th onclick="sortTable(  4, 'userTable' )" >Last Name  </th>
+          <th onclick="sortTable(  5, 'userTable' )" >e-mail     </th>
+          <th onclick="sortTable(  6, 'userTable' )" >Group      </th>
+          <th onclick="sortTable(  7, 'userTable' )" >Active?    </th>
+          <th onclick="sortTable(  8, 'userTable' )" >Staff?     </th>
+          <th onclick="sortTable(  9, 'userTable' )" >Superuser? </th>
+          <th onclick="sortTable( 10, 'userTable' )" >Last Login </th>
+          <th onclick="sortTable( 11, 'userTable' )" >Date Joined</th>
           <!-- User Detail header placeholder -->
           <th class="bnd-center"></th>
           <!-- User Update header placeholder -->
@@ -56,11 +62,50 @@
         <tr>
         <!-- User Attributes -->
         <td>{{ user.id           }}</td>
+        <td class="bnd-table-icon-flex">
+          <!-- Perform reverse lookup to obtain the profile photo -->
+          {% if user.userinfo.profile_photo %}
+            <img class="bnd-image-thumbnail" src="{{ user.userinfo.profile_photo.url }}" alt="No image found">
+          {% endif %}
+        </td>
         <td>{{ user.username     }}</td>
         <td>{{ user.first_name   }}</td>
         <td>{{ user.last_name    }}</td>
         <td>{{ user.email        }}</td>
-        <td>AR: Determine group(s) </td>
+        <td>
+          {% for group in user.groups.all %}
+            <span>{{ group.name }}</span>
+          {% empty %}
+            <li>You do not belong to any groups.</li>
+          {% endfor %}
+        </td>
+        <td>
+          {% if user.is_active %}
+            Yes
+          {% else %}
+            ---
+          {% endif %}
+        </td>
+        <td>
+          {% if user.is_staff %}
+            Yes
+          {% else %}
+            ---
+          {% endif %}
+        </td>
+        <td>
+          {% if user.is_superuser %}
+            Yes
+          {% else %}
+            ---
+          {% endif %}
+        </td>
+        <td>
+          {{ user.last_login|date:"Y-m-d" }}
+        </td>
+        <td>
+          {{ user.date_joined|date:"Y-m-d" }}
+        </td>
         <!-- User Details Icon/Link -->
         <td class="bnd-table-icon-flex">
             <div class="bnd-tooltip">
@@ -73,11 +118,11 @@
         <!-- User Update Icon/Link -->
         {% if perms.plants.change_plant %}
         <td class="bnd-table-icon-flex">
-            <div class="bnd-tooltip">
-            <a href="">
+          <div class="bnd-tooltip">
+            <button onclick="user_edit( {{ user.id }} )" class="bnd-button-table">
                 <i    class="material-icons bnd-text-black">edit</i>
                 <span class="bnd-tooltip-text">Edit</span>
-            </a>
+            </button>
             </div>
         </td>
         {% endif %}
@@ -107,17 +152,173 @@
 <!-------------------------------------------------------------------------->
 <!-- Modals                                                               -->
 <!-------------------------------------------------------------------------->
+<!-- User Edit modal - html to be inserted by Javascript -->
+<div id="id_user_edit_modal" class="bnd-modal">
+  <p>User edit modal HTML to be Inserted Here!</p>
+</div>
 <!-- User Delete modal - html to be inserted by Javascript -->
 <div id="id_user_delete_modal" class="bnd-modal">
-    <p>User delete form HTML to be Inserted Here!</p>
+    <p>User delete modal HTML to be Inserted Here!</p>
 </div>
 {% endblock content %}
 
 {% block js %}
 <script>
+//--------------------------------------------------------------------------
+// User Details Modal scripts
+//--------------------------------------------------------------------------
+
+//--------------------------------------------------------------------------
+// User Edit Modal scripts
+//--------------------------------------------------------------------------
+const user_edit_modal = document.getElementById('id_user_edit_modal'); 
+function user_edit(id) 
+{
+    // fetch the modal html from the server
+    const url = "{% url 'user_info:user_edit' id=1234 %}".replace('1234', id);
+    fetch(url) 
+    .then(response => response.text())
+    .then(html => {
+        user_edit_modal.innerHTML      = html;
+        user_edit_modal.style.display  = 'block';
+        //-----------------------------------------------------------------------------
+        // User inputs
+        //-----------------------------------------------------------------------------
+        const username   = document.getElementById('id_username');
+        const email      = document.getElementById('id_email');
+        const first_name = document.getElementById('id_first_name');
+        const last_name  = document.getElementById('id_last_name');
+        //-----------------------------------------------------------------------------
+        // On-the-Fly input validation
+        //-----------------------------------------------------------------------------
+        // Variable to hold error message
+        const error_msg  = document.getElementById('id_error_msg');
+        // Username input validation    
+        username.addEventListener('change', (event) =>
+        {
+          error_msg.innerHTML = userNameValidation(username);
+        });
+        // Email input validation
+        email.addEventListener('change', (event) =>
+        {
+          error_msg.innerHTML = userEmailValidation(email);
+        });
+        // First name input validation
+        first_name.addEventListener('change', (event) =>
+        {
+          error_msg.innerHTML = userFirstNameValidation(first_name);
+        });
+        // Last name input validation
+        last_name.addEventListener('change', (event) =>
+        {
+          error_msg.innerHTML = userLastNameValidation(last_name);
+        });
+        //-----------------------------------------------------------------------------
+        // Update preview profile photo when new profile photo is selected
+        //-----------------------------------------------------------------------------
+        setupImagePreview(`id_profile_photo`, `id_profile_photo_preview`);
+        //----------------------------------------------------------------------------
+        // Create compressed profile photo for upload
+        //----------------------------------------------------------------------------
+        const profile_photo = document.getElementById('id_profile_photo');
+        const file          = profile_photo.files[0];
+        const imageWidth       = 800; // pixels
+        const imageCompression = 1.0; // range 0.0 to 1.0
+        let compressedBlob = null;
+        if (file)
+        {
+            compressedBlob = compressImage(file, imageWidth, imageCompression);
+        }
+        //-----------------------------------------------------------------------------
+        // Form submission process
+        //-----------------------------------------------------------------------------
+        const form = document.getElementById('id_user_edit_form');
+        form.addEventListener('submit', async (event) => {
+            // Prevent standard browser form submission
+            event.preventDefault();
+            //----------------------------------------------------------------------------- 
+            // 
+            //-----------------------------------------------------------------------------
+            try 
+            {
+                //----------------------------------------------------------------------------
+                // Create the form data to send to the user
+                //----------------------------------------------------------------------------
+                // Get the form data entered by the user
+                const formData  = new FormData(form);
+                // Append the compressed image to the FormData object
+                if (typeof compressedBlob !== 'undefined' && compressedBlob !== null)
+                {
+                    formData.delete('image');
+                    formData.append('image', compressedBlob, 'profile_photo.jpg');
+                }
+                //----------------------------------------------------------------------------
+                // Send the form
+                //----------------------------------------------------------------------------
+                // POST user inputs to server
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                console.log("DEBUG: id =",id)
+                const url = "{% url 'user_info:user_edit' id=1234 %}".replace('1234', id);
+                const response = await fetch(url, 
+                {
+                    method:  "POST",
+                    headers: {'X-CSRFToken' : csrfToken},
+                    body:    formData
+                });
+                if (response.ok) 
+                {
+                    const data = await response.json();
+                    if (data.status === "user-edit-success")
+                    {
+                        console.log(data.message);
+                        user_edit_modal.style.display = 'none';
+                        window.location.reload();
+                    }
+                    else
+                    {
+                        console.log('User update failed:', data);
+                        error_msg.innerHTML = "<p>Error: " + data.message + "</p>";
+                    }
+                } 
+                else 
+                {
+                    console.error('Server Error:', response.status);
+                }
+            } 
+            catch (error) 
+            {
+                console.error('Network error:', error);
+            }
+        });
+        //-----------------------------------------------------------------------------
+        // connection to the user edit modal cancel button has to be made after the
+        // modal html has been downloaded from the server
+        //-----------------------------------------------------------------------------
+        const user_edit_modal_close = document.getElementById('id_user_edit_modal_close')
+        user_edit_modal_close.addEventListener('click', () =>
+        {
+            user_edit_modal.style.display='none';
+            document.body.classList.remove('bnd-modal-open');
+        });
+    });
+    //-----------------------------------------------------------------------------
+    // Close the open modal if user clicks anywhere outside of the modal content
+    //-----------------------------------------------------------------------------
+    window.onclick = function(event) 
+    {
+        if (event.target == user_edit_modal) 
+        {
+            user_edit_modal.style.display = "none";
+            document.body.classList.remove('bnd-modal-open');
+        }
+    }
+}
+//--------------------------------------------------------------------------
+// User Delete Modal scripts                                                               -->
+//--------------------------------------------------------------------------
+const user_delete_modal = document.getElementById('id_user_delete_modal'); 
 function user_delete(id) 
 {
-    const user_delete_modal = document.getElementById('id_user_delete_modal');
     // fetch the modal html from the server
     const url = "{% url 'user_info:user_delete' id=1234 %}".replace('1234', id);
     fetch(url) 
@@ -125,8 +326,25 @@ function user_delete(id)
     .then(html => {
         user_delete_modal.innerHTML      = html;
         user_delete_modal.style.display  = 'block';
+        // connection to the user delete modal cancel button has to be made after the
+        // modal html has been downloaded from the server
+        const user_delete_modal_close = document.getElementById('id_user_delete_modal_close')
+        user_delete_modal_close.addEventListener('click', () =>
+        {
+            user_delete_modal.style.display='none';
+            document.body.classList.remove('bnd-modal-open');
+        });
     });
+    // Close the open modal if user clicks anywhere outside of the modal content
+    window.onclick = function(event) 
+    {
+        if (event.target == user_delete_modal) 
+        {
+            user_delete_modal.style.display = "none";
+            document.body.classList.remove('bnd-modal-open');
+        }
+    }
 }
-        
+//--------------------------------------------------------------------------
 </script>
 {% endblock js %}

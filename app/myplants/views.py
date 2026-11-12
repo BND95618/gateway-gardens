@@ -9,8 +9,6 @@ from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 
-from core_utils.helpers import login_required_no_next
-
 from .models          import MyPlant, MyPlantLog, MyPlantToDo, MyPlantComment
 from plants.models    import Plant
 
@@ -55,7 +53,7 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplants_summary(request):
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
@@ -267,7 +265,7 @@ def myplants_summary(request):
                 'my_column_selection'    : my_column_selection_list, }
     return HttpResponse(template.render(context, request))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def my_column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     # Obtain the user's saved configuration information
@@ -293,7 +291,7 @@ def my_column_chooser(request):
 
 #
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_status(request, id):
     """ Set the selected plant's status  """
     plant = Plant.objects.get(id=id)
@@ -338,7 +336,7 @@ def myplant_status(request, id):
                     'status' : status, }
         return render(request, 'myplants/myplant_status_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_add(request, id):
     """ Associate a 'plant' to 'myplant' """
     plant = Plant.objects.get(id=id)
@@ -371,7 +369,7 @@ def myplant_add(request, id):
                     'form'  : form }
         return render(request, 'myplants/myplant_add.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_update(request, id):
     """ Update details related a specific My Plant """
     myplant = MyPlant.objects.get(id=id)
@@ -418,7 +416,7 @@ def myplant_update(request, id):
                     'form'    : form }
         return render(request, 'myplants/myplant_update.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_delete(request, id):
     """ Delete selected plant from the MyPlants database table """
     myplant = MyPlant.objects.get(id=id)
@@ -431,7 +429,7 @@ def myplant_delete(request, id):
 
 #
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_details(request, id):
     """ Show a detailed view of a specific plant """
     # Uses the id to locate the correct record in the MyPlant and MyPlant tables
@@ -473,7 +471,7 @@ def myplant_details(request, id):
     # Send "context" to template and output the html from the template
     return HttpResponse(template.render(context, request)) 
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_log_add(request, id):
     """ Add My Plant Log Entry """
     myplant     = MyPlant.objects.get(id=id)
@@ -512,7 +510,7 @@ def myplant_log_add(request, id):
     else:
         return HttpResponseRedirect(reverse('general:index'))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_log_edit(request, id):
     """ Edit My Plant Log Entry item"""
     # Get the Log item to be edited
@@ -572,7 +570,7 @@ def myplant_log_edit(request, id):
                     'log_edit_form' : log_edit_form }
         return render(request, 'myplants/myplant_log_edit_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_log_del(request, id):
     """ Delete My Plant Log Entry item"""
     # Get to Log item to be deleted
@@ -586,7 +584,7 @@ def myplant_log_del(request, id):
         context = { 'myplant_log' : myplant_log }
         return render(request, 'myplants/myplant_log_del_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_todo_add(request, id):
     """ Add My Plant To Do item """
     myplant      = MyPlant.objects.get(id=id)
@@ -611,7 +609,7 @@ def myplant_todo_add(request, id):
                   }
         return render(request, 'myplants/myplant_todo_add_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_todo_edit(request, id):
     """ Edit My Plant To Do item """
     # Get To Do item to be edited
@@ -639,7 +637,7 @@ def myplant_todo_edit(request, id):
                   }
         return render(request, 'myplants/myplant_todo_edit_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_todo_del(request, id):
     """ Delete My Plant To Do item"""
     # Get to To Do item to be deleted
@@ -653,7 +651,7 @@ def myplant_todo_del(request, id):
         context = { 'myplant_todo' : myplant_todo }
         return render(request, 'myplants/myplant_todo_del_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
     # Get the To Do item to have completion status toggled
@@ -670,7 +668,7 @@ def myplant_todo_done(request, id):
         # return JsonResponse({'test' : 'test' })
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_todo.myplant.id,)))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     user_info = request.user.userinfo
@@ -688,7 +686,7 @@ def myplant_todo_save(request, id):
         
     return JsonResponse({'test' : 'test' })
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def myplant_comment(request, id):
     """ Associate a comment to a plant """
     myplant         = MyPlant.objects.get(id=id)

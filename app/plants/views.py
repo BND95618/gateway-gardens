@@ -3,13 +3,15 @@
 import math
  
 from django.contrib.auth.decorators import login_required, user_passes_test 
+from django.views.decorators.http   import require_POST
+
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render
 from django.template  import loader
 from django.urls      import reverse
 from django.db.models import Q # used to create complex database queries that involve logical operators such as OR, AND, and NOT
 
-from core_utils.helpers import login_required_no_next, is_garden_editor
+from core_utils.helpers import is_garden_editor
 
 from mygarden.models  import Garden
 from myplants.models  import MyPlant
@@ -58,7 +60,7 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def plants_summary(request):
     """ Render the Searchable summary list of plants with comments for Gateway Gardens app """
     # Obtain the user's saved configuration information
@@ -292,7 +294,7 @@ def plants_summary(request):
     template = loader.get_template("plants/plants_summary.html")
     return HttpResponse(template.render(context, request))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def plant_details(request, id):
     """ Show a detailed view of a specific plant """
     plant = Plant.objects.get(id=id)             
@@ -326,8 +328,9 @@ def plant_details(request, id):
             }
     return HttpResponse(template.render(context, request))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 @user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
+@require_POST
 def plant_add(request):
     """ Render the page to add plants to the database for Gateway Gardens app """
     # Create a new plant and save it to obtain an ID
@@ -341,7 +344,7 @@ def plant_add(request):
     # Edit the newly created plant
     return HttpResponseRedirect(reverse('plants:plant_edit', args=(plant.id,))) 
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 @user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def plant_edit(request, id):
     """ Update the attributes for an existing plant """
@@ -456,10 +459,7 @@ def plant_edit(request, id):
         sun_exposure_list = string2list(plant.sun_exposure)
         soil_type_list    = string2list(plant.soil_type)
         # Get the full list of pests in the database
-
         pests = Pest.objects.filter( Q(pest_type = 'Insect' ) | Q(pest_type = 'Disease') | Q(pest_type = 'Mollusk') ).order_by('pest_type', 'pest_name')
-        # pests = Pest.objects.all().order_by('pest_type', 'pest_name')
-        
         # Get the pests currently associated with this particular plant
         pests_current = Pest.objects.filter(plants__id=plant.id).order_by('pest_type', 'pest_name')
         pest_name_list = []
@@ -536,7 +536,7 @@ def plant_edit(request, id):
                     'sunset_zones_opt' : sunset_zones_opt }
         return render(request, 'plants/plant_edit.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def plant_comment(request, id):
     """ Associate a comment to a plant """
     plant = Plant.objects.get(id=id)
@@ -553,7 +553,7 @@ def plant_comment(request, id):
     else:
         return HttpResponseRedirect(reverse('general:index'))
 
-@login_required_no_next    
+@login_required(redirect_field_name=None)    
 def plant2garden(request, id):
     """ Add a plant to a garden """
     plant = Plant.objects.get(id=id)
@@ -562,7 +562,7 @@ def plant2garden(request, id):
     plant.gardens.add(garden)                    
     return HttpResponseRedirect(reverse('plants:plants_summary'))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 @user_passes_test(is_garden_editor, login_url='general:index', redirect_field_name=None)
 def plant_delete(request, id):
     """ Delete selected plant from the Plant database table """
@@ -589,7 +589,7 @@ def plant_delete(request, id):
         context = {'plant': plant}
         return render(request, 'plants/plant_delete_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def column_chooser(request):
     """ Capture the columns that the user wants to display in the plant table """
     # Obtain the user's saved configuration information

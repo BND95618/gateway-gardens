@@ -3,12 +3,11 @@
 import json
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.views.decorators.http   import require_POST
 from django.http      import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render
 from django.template  import loader
 from django.urls      import reverse
-
-from core_utils.helpers import login_required_no_next
 
 from mygarden.models  import Garden
 from myplants.models  import MyPlant, MyPlantToDo
@@ -20,14 +19,18 @@ todo_action_opt  = ["Fertilize", "Harvest", "Mow", "Plant", "Prune", "Spray", "O
 todo_repeat_opt  = ["Daily", "Weekly", "Bi-Weekly", "Monthly", "Yearly", "Never"]
 status_opt       = ["Development", "Review", "Published", "Archived"]
 
-@login_required_no_next
+#--------------------------------------------------------------------------------
+#
+#--------------------------------------------------------------------------------
+
+@login_required(redirect_field_name=None)
 def mygarden_summary(request):
     """ Render the individual user's garden summary for Gateway Gardens app """
+    # Retrieve the user's garden
     garden = Garden.objects.get(owner = request.user.username)
-    template = loader.get_template("mygarden/mygarden_summary.html")
+    # Dynamically package image and caption attributes
     image_fields   = []
     image_quantity = 8
-    # Dynamically package image and caption attributes
     for i in range(1, image_quantity + 1):
         image_fields.append(
         {
@@ -35,20 +38,29 @@ def mygarden_summary(request):
             'image_file'   : getattr(garden, f'image_{i}', None),
             'caption_value': getattr(garden, f'caption_{i}', ''),
         })
+    # Return the response
+    template = loader.get_template("mygarden/mygarden_summary.html")
     context = { "garden"       : garden,
                 "image_fields" : image_fields, } 
     return HttpResponse(template.render(context, request))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
+@require_POST
 def mygarden_add(request):
     """ Add garden to the database """
-    garden = Garden()
-    garden.name = request.user.username + "'s Garden"
+    # This prevents duplicate gardens and ensures the owner field is populated
+    # This method returns a tuple (object, created), where object is the retrieved 
+    # or newly created instance, and created is a boolean flag 
+    # (True if a new instance was created, False if it already existed).
+    garden, created = Garden.objects.get_or_create(
+        owner=request.user.username,
+        defaults={'name': f"{request.user.username}'s Garden"}
+    )
     garden.save()
     # Edit the newly created garden
     return HttpResponseRedirect(reverse('mygarden:mygarden_edit', args=(garden.id,))) 
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_edit(request, id):
     """ Update garden details """
     garden = Garden.objects.get(id=id)
@@ -81,7 +93,7 @@ def mygarden_edit(request, id):
 
         response_data = {
             'status': 'success',
-            'message': f'Received audio successfully',
+            'message': f'Edited My Garden successfully',
         }
         return JsonResponse(response_data)
     else:
@@ -108,8 +120,12 @@ def mygarden_edit(request, id):
                     'image_fields' : image_fields,
                   }
         return render(request, 'mygarden/mygarden_edit.html', context)
- 
-@login_required_no_next
+
+#--------------------------------------------------------------------------------
+#
+#--------------------------------------------------------------------------------
+
+@login_required(redirect_field_name=None)
 def mygarden_plan(request):
     """ Render the Garden Plan page """
     # Obtain the user's saved configuration information
@@ -130,7 +146,7 @@ def mygarden_plan(request):
                     'shapes_JSON' : shapes_JSON }
         return render(request, 'mygarden/mygarden_plan.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_plan_edit_modal(request):
     """ Display shape edit menu in a pop-up modal """
     if request.method == 'POST':
@@ -149,7 +165,7 @@ def mygarden_plan_edit_modal(request):
         print("INFO: Error!")
         return HttpResponseRedirect(reverse('general:index'))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def plant_details_modal(request):
     """ Display plant detail in a pop-up modal """
     if request.method == 'POST':
@@ -177,7 +193,7 @@ def plant_details_modal(request):
         print("INFO: Error!")
         return HttpResponseRedirect(reverse('general:index'))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def plant_fetch(request):
     """ """
     if request.method == 'POST':
@@ -195,28 +211,32 @@ def plant_fetch(request):
         print("INFO: Error!")
         return HttpResponseRedirect(reverse('general:index'))
 
-@login_required_no_next
+#--------------------------------------------------------------------------------
+#
+#--------------------------------------------------------------------------------
+
+@login_required(redirect_field_name=None)
 def mygarden_todo(request):
-    template = loader.get_template("mygarden/mygarden_todo.html")
     # Obtain the user's saved configuration information
     user_info = request.user.userinfo
     # Obtain the user's garden
     myGarden = Garden.objects.get(owner = request.user.username)
     # Obtain all of the To Do items for the current user and sort by date
     mygarden_todos = MyPlantToDo.objects.filter(owner = request.user.username).order_by('date')
+    template = loader.get_template("mygarden/mygarden_todo.html")
     context = { 'user_info'     : user_info,
                 'myGarden'      : myGarden,
                 "mygarden_todo" : mygarden_todos, }
     return HttpResponse(template.render(context, request))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_todo_details(request, id):
     """  My Plant To Do item details modal """
     myplant_todo = MyPlantToDo.objects.get(id=id)
     context = { 'myplant_todo' : myplant_todo }
     return render(request, 'mygarden/mygarden_todo_details_modal.html', context)   
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_todo_add(request, id):
     """ Add My Plant To Do item """
     if request.method == "POST":
@@ -248,7 +268,7 @@ def mygarden_todo_add(request, id):
                   }
         return render(request, 'mygarden/mygarden_todo_add_modal.html', context)
 
-@login_required_no_next   
+@login_required(redirect_field_name=None)   
 def mygarden_todo_edit(request, id):
     """ edit My Plant To Do item """
     myplants     = MyPlant.objects.filter(owner = request.user.username)
@@ -276,7 +296,7 @@ def mygarden_todo_edit(request, id):
                   }
         return render(request, 'mygarden/mygarden_todo_edit_modal.html', context)    
 
-@login_required_no_next   
+@login_required(redirect_field_name=None)   
 def mygarden_todo_del(request, id):
     """ Delete My Plant To Do item"""
     # Get to To Do item to be deleted
@@ -290,7 +310,7 @@ def mygarden_todo_del(request, id):
         context = { 'myplant_todo' : myplant_todo }
         return render(request, 'mygarden/mygarden_todo_del_modal.html', context)
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_todo_done(request, id):
     """ My Plant To Do item - toggle conpletion status """
     # Get the To Do item to have completion status toggled
@@ -303,7 +323,7 @@ def mygarden_todo_done(request, id):
         myplant_todo.save()
         return HttpResponseRedirect(reverse('myplants:myplant_details', args=(myplant_todo.myplant.id,)))
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_todo_save(request, id):
     """ My Plant To Do items - save sort column and direction """
     user_info = request.user.userinfo
@@ -321,7 +341,7 @@ def mygarden_todo_save(request, id):
         
     return JsonResponse({'test' : 'test' })
 
-@login_required_no_next
+@login_required(redirect_field_name=None)
 def mygarden_todo_fetch(request):
     """ My Plant To Do items - save sort column and direction """
     # Obtain all of the To Do items for the current user
@@ -334,6 +354,10 @@ def mygarden_todo_fetch(request):
     # Convert queryset to a list of dictionaries
     todos = list(mygarden_todos.values()) 
     return JsonResponse(todos, safe=False)
+
+#--------------------------------------------------------------------------------
+# Utilities
+#--------------------------------------------------------------------------------
 
 def string2list(string):
     """ Utility: convert list in string form to a list """
