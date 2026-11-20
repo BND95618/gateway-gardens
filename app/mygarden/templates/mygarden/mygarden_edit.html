@@ -23,6 +23,8 @@
 
 {% block content %}
   <section>
+    <!-- Added for Quill -->
+    {{ form.media }}
     <h2 class="bnd-page-main-top-margin-adjust">Garden Details:</h2>
     <form id = "id_garden_form" action="" method="post" enctype="multipart/form-data">
       {% csrf_token %}
@@ -150,9 +152,9 @@ form.addEventListener('submit', async (event) => {
     // Send the form plus compressed images to the server
     //----------------------------------------------------------------------------
     statusDiv.innerText = "Upload in process...";
+    const url = window.location.pathname;
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const postURL   = window.location.pathname;
-    const response  = await fetch(postURL, 
+    const response  = await fetch(url, 
     {
       method:  "POST",
       headers: {'X-CSRFToken' : csrfToken},
@@ -164,7 +166,7 @@ form.addEventListener('submit', async (event) => {
       statusDiv.innerText = "Upload successful!";
       console.log('Success:', data);
       // Handle your JSON response here (e.g., update DOM)
-      let returnURL = "{% url 'mygarden:mygarden_summary' %}";
+      const returnURL = "{% url 'mygarden:mygarden_summary' %}";
       window.location.href = returnURL;
     } 
     else 

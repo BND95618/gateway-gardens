@@ -298,7 +298,7 @@
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
   <!-- MyPlant Log add modal -->
-  <div id="myplant_log_add_modal" class="bnd-modal">
+  <dialog id="myplant_log_add_modal" class="bnd-modal">
     <div id="myplant_log_add_modal_body" class="bnd-modal-container">
       <header class="bnd-modal-header">
         <h4>Add log entry for: {{ myplant.plant.commonName }}</h4>
@@ -404,35 +404,35 @@
         </div>
       </form>
     </div>
-  </div>
+  </dialog>
 
   <!-- MyPlant Log edit modal -->
-  <div id="log_edit_modal" class="bnd-modal">
+  <dialog id="log_edit_modal" class="bnd-modal">
     <p> Log edit form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- MyPlant Log delete modal -->
-  <div id="log_del_modal" class="bnd-modal">
+  <dialog id="log_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- MyPlant To Do add modal -->
-  <div id="todo_add_modal" class="bnd-modal">
+  <dialog id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- MyPlant To Do edit modal  -->
-  <div id="todo_edit_modal" class="bnd-modal">
+  <dialog id="todo_edit_modal" class="bnd-modal">
     <p> To Do edit form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- MyPlant To Do delete modal -->
-  <div id="todo_del_modal" class="bnd-modal">
+  <dialog id="todo_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- MyPlant Add Comment modal -->
-  <div id="myplant_comment_modal" class="bnd-modal">
+  <dialog id="myplant_comment_modal" class="bnd-modal">
     <div id="myplant_comment_modal_body" class="bnd-modal-container">
       <header class="bnd-modal-header">
         <h4>Add comment for: {{ myplant.plant.commonName }}</h4>
@@ -455,7 +455,7 @@
         </div>
       </form>
     </div>
-  </div>
+  </dialog>
 
 {% endblock content %}
 
@@ -561,7 +561,6 @@ form.addEventListener('submit', async (event) => {
     //----------------------------------------------------------------------------
     //
     //----------------------------------------------------------------------------
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     // Get the form entered by the user
     const formData  = new FormData(form);
     //----------------------------------------------------------------------------
@@ -591,8 +590,9 @@ form.addEventListener('submit', async (event) => {
     // Send the form entered by the user
     //----------------------------------------------------------------------------
     statusDiv.innerText = "Upload in process...";
-    const postURL = "{% url 'myplants:myplant_log_add' myplant.id %}"
-    const response = await fetch(postURL, 
+    const url = "{% url 'myplants:myplant_log_add' myplant.id %}";
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const response = await fetch(url, 
     {
       method:  "POST",
       headers: {'X-CSRFToken' : csrfToken},
@@ -604,8 +604,8 @@ form.addEventListener('submit', async (event) => {
       statusDiv.innerText = "Upload successful!";
       console.log('Success:', data);
       // Handle your JSON response here (e.g., update DOM)
-      let returnURL = "{% url 'myplants:myplant_details' myplant.id %}";
-      window.location.href = returnURL;
+      const url = "{% url 'myplants:myplant_details' myplant.id %}";
+      window.location.href = url;
     } 
     else 
     {
@@ -765,9 +765,9 @@ function log_edit(id)
         // Send the form entered by the user
         //----------------------------------------------------------------------------
         statusDiv.innerText = "Upload in process...";
+        const url = "{% url 'myplants:myplant_log_edit' id=1234 %}".replace('1234', id);
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const postURL   = "{% url 'myplants:myplant_log_edit' id=1234 %}".replace('1234', id);
-        const response  = await fetch(postURL, 
+        const response = await fetch(url, 
         {
           method:  "POST",
           headers: {'X-CSRFToken' : csrfToken},
@@ -779,8 +779,8 @@ function log_edit(id)
           statusDiv.innerText = "Upload successful!";
           console.log('Success:', data);
           // Handle your JSON response here (e.g., update DOM)
-          let returnURL = "{% url 'myplants:myplant_details' myplant.id %}";
-          window.location.href = returnURL;
+          const url = "{% url 'myplants:myplant_details' myplant.id %}";
+          window.location.href = url;
         } 
         else 
         {
@@ -820,7 +820,7 @@ function log_delete(id)
 //-----------------------------------------------------------------------------
 function todo_add()
 {
-    url = "{% url 'myplants:myplant_todo_add' myplant.id %}"
+    const url = "{% url 'myplants:myplant_todo_add' myplant.id %}"
     fetch(url) 
     .then(response => response.text())
     .then(html => {todo_add_modal.innerHTML = html;})
@@ -854,13 +854,12 @@ function todo_done(id)
     // use '1234' placeholder id in Django template for servier-side rendering
     // javascript will replace placeholder id with actual todo record id
     const url = "{% url 'myplants:myplant_todo_done' id=1234 %}".replace('1234', id);;
-    const requestMethod = "POST";
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,
                        lastToDoSortDir : lastToDoSortDir };
     fetch(url, 
     {
-        method: requestMethod,
+        method: "POST",
         headers: 
         {
             // Tells the server that the request body is in JSON format
@@ -918,15 +917,13 @@ function todo_sort(column)
     sortDirection(column);
 
     // Save sort column and direction to the server db
-    const url = "/myplant_todo_save/" + myPlantID;
-    const requestMethod = "POST";
+    const url = "{% url 'myplants:myplant_todo_save' myplant.id %}"
     const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const postData = { lastToDoSortCol : lastToDoSortCol,
                        lastToDoSortDir : lastToDoSortDir };
-
     fetch(url, 
     {
-        method: requestMethod,
+        method: "POST",
         headers: 
         {
             // Tells the server that the request body is in JSON format

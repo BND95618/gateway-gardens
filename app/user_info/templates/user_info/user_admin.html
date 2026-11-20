@@ -153,13 +153,13 @@
 <!-- Modals                                                               -->
 <!-------------------------------------------------------------------------->
 <!-- User Edit modal - html to be inserted by Javascript -->
-<div id="id_user_edit_modal" class="bnd-modal">
+<dialog id="id_user_edit_modal" class="bnd-modal">
   <p>User edit modal HTML to be Inserted Here!</p>
-</div>
+</dialog>
 <!-- User Delete modal - html to be inserted by Javascript -->
-<div id="id_user_delete_modal" class="bnd-modal">
+<dialog id="id_user_delete_modal" class="bnd-modal">
     <p>User delete modal HTML to be Inserted Here!</p>
-</div>
+</dialog>
 {% endblock content %}
 
 {% block js %}
@@ -256,9 +256,8 @@ function user_edit(id)
                 // Send the form
                 //----------------------------------------------------------------------------
                 // POST user inputs to server
-                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                console.log("DEBUG: id =",id)
                 const url = "{% url 'user_info:user_edit' id=1234 %}".replace('1234', id);
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
                 const response = await fetch(url, 
                 {
                     method:  "POST",

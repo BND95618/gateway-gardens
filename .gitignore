@@ -175,6 +175,12 @@ app/media/
 # My stuff
 app/app/README
 
+# Playwright files
+playwright/.auth
+playwright/.env
+playwright/node_modules/
+playwright/playwright-report/
+
 # Clean-up
 .DS_Store
 app/.DS_Store

@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-  <title>Garden | Plan</title>
+  <title>Gateway Gardens | My Garden Plan</title>
 {% endblock title %}
 
 {% block css %}
@@ -341,9 +341,9 @@
     <!-- Modals                                                               -->
     <!-------------------------------------------------------------------------->
     <!-- Plant Details Modal -->
-    <div id="plant_details_modal" class="bnd-modal">
+    <dialog id="plant_details_modal" class="bnd-modal">
         <p> Modal HTML to be Inserted Here! </p>
-    </div>
+    </dialog>
 
     <!-- Shape Edit Modal -->
     <div id="mygarden_plan_edit_modal" class="bnd-modal bnd-background-visible">
@@ -2758,14 +2758,13 @@
             {
                 // Fetch the plant details and create new javascript plant object
                 const url = "{% url 'mygarden:plant_fetch' %}";
-                const requestMethod = "POST";
-                const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                const postData      = { requestedPlant : this.plant };
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const postData = { requestedPlant : this.plant };
                 let downloadedPlant;
 
                 fetch(url,
                 {
-                    method: requestMethod,
+                    method: "POST",
                     headers: 
                     {
                         // Tells the server that the request body is in JSON format
@@ -2811,16 +2810,15 @@
             }
             getModal()
             {
-                let url             = "{% url 'mygarden:plant_details_modal' %}";
-                const requestMethod = "POST";
-                const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
-                const postData      = { requestedPlant : this.plant }
+                const url = "{% url 'mygarden:plant_details_modal' %}";
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                const postData = { requestedPlant : this.plant }
                 const plant_details_modal = document.getElementById('plant_details_modal');
 
                 // Fetch the plant details modal
                 fetch(url, 
                 {
-                    method: requestMethod,
+                    method: "POST",
                     headers:
                     {
                         // Tells the server that the request body is in JSON format
@@ -4496,8 +4494,6 @@
         save.onclick = (event) => 
         {
             event.preventDefault();
-            // Acquire the CSRF token
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
             // Concatenate data to be saved into a single array
             saveData = [...shapes, ...shapeGroups];
 
@@ -4506,9 +4502,9 @@
             // Converts the JavaScript object to a JSON string
             let saveData_JSON = JSON.stringify(saveData);
             // Send the data to be saved back to the Django view
-            const postURL = window.location.pathname;
-            // Sends the HTTP request
-            fetch(postURL, 
+            const url = window.location.pathname;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch(url, 
             {
                // Specifies the request method
                 method: "POST",

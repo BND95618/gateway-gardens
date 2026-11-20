@@ -103,6 +103,7 @@ def mygarden_edit(request, id):
                                              'state'       : garden.state,
                                              'usda_zone'   : garden.usda_zone,
                                              'sunset_zone' : garden.sunset_zone,
+                                             'description' : garden.description,
                                            })
         # Dynamically package image and caption attributes
         image_fields = []
@@ -120,11 +121,9 @@ def mygarden_edit(request, id):
                     'image_fields' : image_fields,
                   }
         return render(request, 'mygarden/mygarden_edit.html', context)
-
 #--------------------------------------------------------------------------------
 #
 #--------------------------------------------------------------------------------
-
 @login_required(redirect_field_name=None)
 def mygarden_plan(request):
     """ Render the Garden Plan page """

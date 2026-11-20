@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-  <title>Gateway Gardens | Todo</title>
+  <title>Gateway Gardens | My ToDo's</title>
 {% endblock title %}
 
 {% block css %}
@@ -143,24 +143,24 @@
   <!-- Modals                          -->
   <!------------------------------------->
   <!-- To Do details modal - html to be inserted by Javascript -->
-  <div id="todo_details_modal" class="bnd-modal">
+  <dialog id="todo_details_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- To Do add modal - html to be inserted by Javascript -->
-  <div id="todo_add_modal" class="bnd-modal">
+  <dialog id="todo_add_modal" class="bnd-modal">
     <p> To Do add form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- To Do edit modal - html to be inserted by Javascript -->
-  <div id="todo_edit_modal" class="bnd-modal">
+  <dialog id="todo_edit_modal" class="bnd-modal">
     <p> To Do edit form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- To Do delete modal - html to be inserted by Javascript -->
-  <div id="mygarden_todo_del_modal" class="bnd-modal">
+  <dialog id="mygarden_todo_del_modal" class="bnd-modal">
     <p> To Do delete form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 {% endblock content %}
 
 {% block js %}
@@ -217,15 +217,14 @@
     {
       // use '1234' placeholder id in Django template for servier-side rendering
       // javascript will replace placeholder id with actual todo record id
-      url = "{% url 'mygarden:mygarden_todo_done' id=1234 %}".replace('1234', id);
-      const requestMethod = "POST";
-      const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const url = "{% url 'mygarden:mygarden_todo_done' id=1234 %}".replace('1234', id);
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       const postData = { lastToDoSortCol : lastToDoSortCol,
                          lastToDoSortDir : lastToDoSortDir };
 
         fetch(url, 
         {
-            method: requestMethod,
+            method: "POST",
             headers: 
             {
                 // Tells the server that the request body is in JSON format
@@ -283,15 +282,13 @@
         sortDirection(column);
 
         // Save sort column and direction to the server db
-        const url = "/mygarden_todo_save/" + myGardenID;
-        const requestMethod = "POST";
-        const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const url = "{% url 'mygarden:mygarden_todo_save' myGarden.id %}"
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const postData = { lastToDoSortCol : lastToDoSortCol,
                            lastToDoSortDir : lastToDoSortDir };
-
         fetch(url, 
         {
-            method: requestMethod,
+            method: "POST",
             headers: 
             {
                 // Tells the server that the request body is in JSON format
@@ -393,12 +390,11 @@
     function fetchToDoItems()
     {
         const url = "{% url 'mygarden:mygarden_todo_fetch' %}"
-        const requestMethod = "POST";
-        const csrfToken     = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         fetch(url,
         {
-            method: requestMethod,
+            method: "POST",
             headers: 
             {
                 //  Provides CSRF protection, necessary for Django

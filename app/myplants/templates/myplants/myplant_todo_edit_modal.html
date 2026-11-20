@@ -3,7 +3,7 @@
   <header class="bnd-modal-header">
     <h4>Edit To Do Item</h4>
   </header>
-  <!-- To Do edit - create form -->
+  <!-- Added for Quill -->
   {{ form.media }}
   <form action="{% url 'myplants:myplant_todo_edit' myplant_todo.id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}

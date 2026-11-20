@@ -1,7 +1,5 @@
 <!-- app/plants/templates/plants/plant_edit.html -->
 {% extends "master.html" %}
-{% load static %}
-
 <!-- Required in order to load static files -->
 {% load static %}
 
@@ -892,7 +890,6 @@
       //----------------------------------------------------------------------------
       //
       //----------------------------------------------------------------------------
-      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
       // Get the form plus the audio recording data entered by the user
       const formData  = new FormData(form);
       //----------------------------------------------------------------------------
@@ -929,8 +926,9 @@
       // Send the form plus the audio recording data entered by the user
       //----------------------------------------------------------------------------
       statusDiv.innerText = "Upload in process...";
-      const postURL = window.location.pathname;
-      const response = await fetch(postURL, 
+      const url = window.location.pathname;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const response = await fetch(url, 
       {
         method:  "POST",
         headers: {'X-CSRFToken' : csrfToken},
@@ -942,8 +940,8 @@
         statusDiv.innerText = "Upload successful!";
         console.log('Success:', data);
         // Handle your JSON response here (e.g., update DOM)
-        let returnURL = "{% url 'plants:plant_details' plant.id %}";
-        window.location.href = returnURL;
+        const url = "{% url 'plants:plant_details' plant.id %}";
+        window.location.href = url;
       } 
       else 
       {

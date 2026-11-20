@@ -43,24 +43,28 @@
       <!-------------------------------------------------------------------------->
       <nav id="id_nav" class="bnd-page-nav">
         <a id="home"             href="{% url 'general:index' %}"            >Home          </a>
+        <span>|</span>
         <a id="mygarden_summary" href="{% url 'mygarden:mygarden_summary' %}">My Garden     </a>
         <a id="mygarden_plan"    href="{% url 'mygarden:mygarden_plan' %}"   >My Garden Plan</a>
         <a id="mygarden_todo"    href="{% url 'mygarden:mygarden_todo' %}"   >My ToDo's     </a>
         <a id="myplants_summary" href="{% url 'myplants:myplants_summary' %}">My Plants     </a>
-        <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"    >All Plants    </a>
+        <span>|</span>
+        <a id="plants_summary"   href="{% url 'plants:plants_summary' %}"    >Plants        </a>
         <a id="pest_summary"     href="{% url 'pests:pest_summary' %}"       >Pests         </a>
+        <span>|</span>
         <a id="glossary"         href="{% url 'general:glossary' %}"         >Glossary      </a>
         <a id="reference"        href="{% url 'general:reference' %}"        >Reference     </a>
         <a id="about"            href="{% url 'general:about' %}"            >About         </a>
+        <!-- User Administration page link - only assessible by the superuser -->
         {% if user.is_superuser %}
           <a id="plants_admin" href="{% url 'user_info:user_admin' %}">Admin</a>
         {% endif %}
         <!-- drop down account menu item -->
         <div class="bnd-nav-dropdown-container">
           {% if user.is_authenticated %}
-            {{ user.username }}
+            <button>{{ user.username }}</button>
           {% else %}
-            Account
+            <button>Account</button>
           {% endif %}
           <div class="bnd-nav-dropdown-content">
             {% if user.is_authenticated %}
@@ -313,9 +317,9 @@
             // Send the form
             //----------------------------------------------------------------------------
             // POST user inputs to server
+            const url = "{% url 'user_info:user_profile_step1' %}";
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'user_info:user_profile_step1' %}";
-            const response = await fetch(postURL, 
+            const response = await fetch(url, 
             {
               method:  "POST",
               headers: {'X-CSRFToken' : csrfToken},
@@ -374,10 +378,10 @@
             //----------------------------------------------------------------------------
             // Create/Send the form data to send to the user
             //----------------------------------------------------------------------------
-            const formData  = new FormData(form);
+            const url = "{% url 'user_info:user_profile_step2' %}";
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'user_info:user_profile_step2' %}";
-            const response = await fetch(postURL, 
+            const formData = new FormData(form);
+            const response = await fetch(url, 
             {
               method:  "POST",
               headers: {'X-CSRFToken' : csrfToken},
@@ -423,8 +427,8 @@
           // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'user_info:user_profile_mfa' %}";
-            const response = await fetch(getURL, 
+            const url = "{% url 'user_info:user_profile_mfa' %}";
+            const response = await fetch(url, 
             {
               method:  "GET",
               headers: {
@@ -569,9 +573,9 @@
             //----------------------------------------------------------------------------
             // Send the form
             //----------------------------------------------------------------------------
+            const url = "{% url 'user_info:user_pwd_rst_step1' %}";
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'user_info:user_pwd_rst_step1' %}";
-            const response = await fetch(postURL, 
+            const response = await fetch(url, 
             {
               method:  "POST",
               headers: {'X-CSRFToken' : csrfToken},
@@ -610,7 +614,8 @@
     function openPwdRstModal_step2()
     { 
       // fetch the modal html from the server
-      fetch("{% url 'user_info:user_pwd_rst_step2' %}") 
+      const url = "{% url 'user_info:user_pwd_rst_step2' %}";
+      fetch(url) 
       .then(response => response.text())
       .then(html => {
         pwd_rst_modal_step2.innerHTML     = html;
@@ -630,10 +635,10 @@
             //----------------------------------------------------------------------------
             // Create/Send the form data to send to the user
             //----------------------------------------------------------------------------
-            const formData  = new FormData(form);
+            const url = "{% url 'user_info:user_pwd_rst_step2' %}";
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            const postURL   = "{% url 'user_info:user_pwd_rst_step2' %}";
-            const response = await fetch(postURL, 
+            const formData = new FormData(form);
+            const response = await fetch(url, 
             {
               method:  "POST",
               headers: {'X-CSRFToken' : csrfToken},
@@ -673,8 +678,8 @@
           // Get new MFA code from server
           try
           {
-            const getURL   = "{% url 'user_info:user_pwd_rst_mfa' %}";
-            const response = await fetch(getURL, 
+            const url = "{% url 'user_info:user_pwd_rst_mfa' %}";
+            const response = await fetch(url, 
             {
               method:  "GET",
               headers: {

@@ -6,7 +6,7 @@
 {% load user_tags %}
 
 {% block title %}
-  <title>Plant | Search</title>
+  <title>Gateway Gardens | Plant Summary</title>
 {% endblock title %}
 
 {% block css %}
@@ -514,27 +514,27 @@
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
   <!-- Plant Delete modal - html to be inserted by Javascript -->
-  <div id="plant_delete_modal" class="bnd-modal">
+  <dialog id="plant_delete_modal" class="bnd-modal">
     <p>Plant delete form HTML to be Inserted Here!</p>
-  </div>
+  </dialog>
 
   <!-- My Plant Status modal - html to be inserted by Javascript -->
-  <div id="myplant_status_modal" class="bnd-modal">s
+  <dialog id="myplant_status_modal" class="bnd-modal">s
     <p>My Plant Status form HTML to be Inserted Here!</p>
-  </div>
+  </dialog>
 
   <!-- My Plant Remove modal - html to be inserted by Javascript -->
-  <div id="myplant_remove_modal" class="bnd-modal">
+  <dialog id="myplant_remove_modal" class="bnd-modal">
     <p>My Plant remove form HTML to be Inserted Here!</p>
-  </div>
+  </dialog>
   
   <!-- Column Chooser modal - html to be inserted by Javascript -->
-  <div id="column_chooser_modal" class="bnd-modal">
+  <dialog id="column_chooser_modal" class="bnd-modal">
     <p>Column Chooser HTML to be Inserted Here!</p>
-  </div>
+  </dialog>
   
   <!-- Plant Bloom Chart modals -->
-  <div id="plants_chart_modal" class="bnd-modal">
+  <dialog id="plants_chart_modal" class="bnd-modal">
     <div class="bnd-chart-modal-container" >
       <header class="bnd-modal-header bnd-margin-none">
         <h3>
@@ -620,7 +620,7 @@
       </div>
     
     </div>
-  </div>
+  </dialog>
   <!-------------------------------------------------------------------------->
 {% endblock content %}
 
@@ -750,7 +750,7 @@
     function plant_delete(id) 
     {
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/plant_delete/" + id
+      const url = "{% url 'plants:plant_delete' id=1234 %}".replace('1234', id);      
       fetch(url)
         .then(response => response.text())
         .then(html => {plant_delete_modal.innerHTML = html;})
@@ -765,28 +765,12 @@
     function myplant_status(id)
     {
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/myplant_status/" + id
+      const url = "{% url 'myplants:myplant_status' id=1234 %}".replace('1234', id);
       fetch(url)
         .then(response => response.text())
         .then(html => {myplant_status_modal.innerHTML = html;})
       // Display the plant delete modal
       myplant_status_modal.style.display='block'
-      // Freeze the main body while the modal is open
-      document.body.classList.add("bnd-modal-open");
-    }
-    //-----------------------------------------------------------------------------
-    // Remove My Plant Modal Script
-    //-----------------------------------------------------------------------------
-    const myplant_remove_modal = document.getElementById('myplant_remove_modal')
-    function myplant_remove(id)
-    {
-      // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/myplants_remove/" + id
-      fetch(url)
-        .then(response => response.text())
-        .then(html => {myplant_remove_modal.innerHTML = html;})
-      // Display the plant delete modal
-      myplant_remove_modal.style.display='block'
       // Freeze the main body while the modal is open
       document.body.classList.add("bnd-modal-open");
     }

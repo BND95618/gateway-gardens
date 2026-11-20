@@ -511,12 +511,9 @@ def user_admin(request):
 @user_passes_test(lambda user: user.is_superuser, login_url='general:index', redirect_field_name=None)
 def user_edit(request, id):
     """ Edit selected user """
-    print("DEBUG: Got to user edit")
     target_user      = User.objects.get(id=id)
-    print("DEBUG: target_user =", target_user)
     target_user_info = target_user.userinfo
     if request.method == "POST":
-        print("DEBUG: Got to user edit POST")
         form = UserEditForm(request.POST, request.FILES)
         if form.is_valid():
             target_user.username     = form.cleaned_data.get('username')
@@ -537,8 +534,6 @@ def user_edit(request, id):
                 if (target_user_info.profile_photo):
                     target_user_info.profile_photo.delete(save=False)
                 target_user_info.profile_photo = request.FILES['profile_photo']
-            else:
-                print("DEBUG: No new profile photo")
             # ----------------------------------------------------------------------
             # Input validation
             # ----------------------------------------------------------------------
@@ -578,8 +573,6 @@ def user_edit(request, id):
             return JsonResponse(response_data)
     else:
         # convert string-based lists (retrieved from db) to true Python lists
-        print("DEBUG: groups =", target_user.groups.all())
-        print("DEBUG: groups =", list(target_user.groups.values_list('name', flat=True)))
         group_list = list(target_user.groups.values_list('name', flat=True))
         # group_list = string2list(target_user.groups.all())
         # Obtain the user's saved configuration information

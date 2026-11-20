@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-  <title>My Plants | Summary</title>
+  <title>Gateway Gardens | My Plants Summary</title>
 {% endblock title %}
 
 {% block css %}
@@ -521,17 +521,17 @@
   <!-- Modals                                                               -->
   <!-------------------------------------------------------------------------->
   <!-- MyPlant Delete modal - html to be inserted by Javascript -->
-  <div id="myplant_delete_modal" class="bnd-modal">
+  <dialog id="myplant_delete_modal" class="bnd-modal">
     <p> MyPlant delete form HTML to be Inserted Here! </p>
-  </div>
+  </dialog>
 
   <!-- Column Chooser modal - html to be inserted by Javascript -->
-  <div id="my_column_chooser_modal" class="bnd-modal">
+  <dialog id="my_column_chooser_modal" class="bnd-modal">
     <p> My Column Chooser HTML to be Inserted Here! </p>
-  </div>
+  </ddialogiv>
 
   <!-- Plant Chart modal -->
-  <div id="plants_chart_modal" class="bnd-modal">
+  <dialog id="plants_chart_modal" class="bnd-modal">
     <div class="bnd-modal-container">
       
       <header class="bnd-modal-header bnd-margin-none"> 
@@ -618,7 +618,7 @@
       </div>
     
     </div>
-  </div>
+  </dialog>
 
 {% endblock content %}
 
@@ -766,7 +766,7 @@
       // Get the MyPlant delete modal
       const myplant_delete_modal  = document.getElementById('myplant_delete_modal')
       // The Fetch API provides a JavaScript interface for making HTTP requests and processing the responses
-      url = "/myplant_delete/" + id
+      const url = "{% url 'myplants:myplant_delete' id=1234 %}".replace('1234', id);
       fetch(url)
         .then(response => response.text())
         .then(html => {myplant_delete_modal.innerHTML = html;})

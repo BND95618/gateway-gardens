@@ -1,7 +1,7 @@
 # /app/mygarden/forms.py
 
 from django import forms 
-from django_quill.forms       import QuillFormField
+from django_quill.forms import QuillFormField
 
 USDA_ZONE_CHOICES = (
 	("tbd",               "tbd"),

@@ -154,9 +154,9 @@
       // Send the form plus compressed images to the server
       //----------------------------------------------------------------------------
       statusDiv.innerText = "Upload in process...";
+      const url       = window.location.pathname;
       const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-      const postURL   = window.location.pathname;
-      const response  = await fetch(postURL, 
+      const response  = await fetch(url, 
       {
         method:  "POST",
         headers: {'X-CSRFToken' : csrfToken},
@@ -168,8 +168,8 @@
         statusDiv.innerText = "Upload successful!";
         console.log("Upload successful!", data);
         // Handle your JSON response here (e.g., update DOM)
-        let returnURL = "{% url 'pests:pest_details' pest.id %}";
-        window.location.href = returnURL;
+        const url = "{% url 'pests:pest_details' pest.id %}";
+        window.location.href = url;
       } 
       else 
       {
