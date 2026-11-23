@@ -23,10 +23,10 @@
   <div class="bnd-banner-scientific-name-container"></div>
 
   <div class="bnd-banner-menu-container">
-    <button class="bnd-banner-menu-icon">
+    <button popovertarget="id_page_dropdown_menu" class="bnd-banner-menu-icon">
       <i class="material-icons">menu</i>
     </button>
-    <div class="bnd-banner-menu-content">
+    <div popover id="id_page_dropdown_menu" class="bnd-banner-menu-content">
       <a href="{% url 'pests:pest_edit' pest.id %}" class="bnd-dropdown-button">update</a>
     </div>
   </div>

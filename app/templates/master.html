@@ -59,14 +59,17 @@
         {% if user.is_superuser %}
           <a id="plants_admin" href="{% url 'user_info:user_admin' %}">Admin</a>
         {% endif %}
-        <!-- drop down account menu item -->
+        <!-- drop down account menu button -->
         <div class="bnd-nav-dropdown-container">
-          {% if user.is_authenticated %}
-            <button>{{ user.username }}</button>
-          {% else %}
-            <button>Account</button>
-          {% endif %}
-          <div class="bnd-nav-dropdown-content">
+          <button id = "bnd-nav-dropdown-button" popovertarget="id_dropdown_menu" class = "bnd-button-textonly">
+            {% if user.is_authenticated %}
+              {{ user.username }}
+            {% else %}
+              Account
+            {% endif %}
+          </button>
+          <!-- drop down account menu items -->
+          <div popover id="id_dropdown_menu"  class="bnd-nav-dropdown-content">
             {% if user.is_authenticated %}
               <button id      = "update_button" 
                       class   = "bnd-dropdown-button"

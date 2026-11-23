@@ -11,11 +11,13 @@ setup('authenticate', async ({ page }) => {
     if (!username || !password) {
         throw new Error('TEST_USERNAME and TEST_PASSWORD must be set in .env');
     }
-    // Navigate to the Gateway Gardens homepage
-    await page.goto('http://127.0.0.1:8000/');
-
+    //-----------------------------------------------------------------------
+    // Go to Home page (uses baseURL from playwright.config.ts)
+    //-----------------------------------------------------------------------
+    await page.goto('/');
+    //-----------------------------------------------------------------------
     // Perform authentication steps
-
+    //-----------------------------------------------------------------------
     // Open the 'Account drop-down menu'
     await page.getByRole('button', { name: 'Account' }).hover();
     // Open the login modal
@@ -33,4 +35,6 @@ setup('authenticate', async ({ page }) => {
     
     //
     await page.context().storageState({ path: authFile });
+
+    // await page.pause();
 });
