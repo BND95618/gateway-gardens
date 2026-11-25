@@ -354,7 +354,6 @@ img {
     margin:           0;
     border:           none;
     padding:          12px 16px;
-    vertical-align:   middle;
     font-size:        16px;
     text-decoration:  none;
     color:            inherit;
@@ -368,6 +367,8 @@ img {
 }
 /* ------------------------------------------------------------ */
 /* Horizontal navigation bar formatting - responsive            */
+/* > horizontal for large displays                              */
+/* > vertical for small displays                                */
 /* ------------------------------------------------------------ */
 .bnd-page-nav {
     display:          block;
@@ -399,7 +400,7 @@ img {
     }
     @media print { display: none; }
 }
-/* web-site navigation links */
+/* navigation bar links */
 .bnd-page-nav a {
     display:          inline-block;
     width:            auto;
@@ -410,51 +411,58 @@ img {
     outline:          0;
     text-decoration:  none;
 }
-/* hide all navigation links except for "Home" unless large screen */
-.bnd-page-nav a:not(:first-child) {
-    display: none;
-    @media screen and (400px <= width <= 849px) { display: none;  }
-    @media screen and (850px <= width <= 999px) { display: block; }
-    @media screen and (min-width: 1000px)       { display: block; }
-}
-.bnd-page-nav a:hover {
-    color:            white;
-    background-color: gray;
-}
-/* user authentication drop-down - only display for large screens */
-.bnd-nav-dropdown-container {
-    anchor-name:      --menu-anchor;
+/* navigation bar dividers */
+.bnd-page-nav-divider {
     display:          none;
-    right:            0;
     width:            auto;
-    margin-left:      auto;
     border:           none;
+    padding:          0px;
     color:            black;
     text-align:       center;
     outline:          0;
     text-decoration:  none;
     @media screen and (400px <= width <= 849px) { display: none;  }
-    @media screen and (850px <= width <= 999px) { 
-        display:      block; 
-        padding:      0px 18px 0px 10px;
-    }
-    @media screen and (min-width: 1000px)       { 
-        display:      block; 
-        padding:      0px 18px 0px 10px;
-    }
-}   
-.bnd-nav-dropdown-container:hover #bnd-nav-dropdown-button {
+    @media screen and (850px <= width <= 999px) { display: inline-block; }
+    @media screen and (min-width: 1000px)       { display: inline-block; }
+}
+/* small screens - hide all navigation links except for "Home" */
+/* large screens - show all navigation links                   */
+.bnd-page-nav a:not(:first-child), 
+.bnd-page-nav #bnd-nav-dropdown-button
+{
+    display: none;
+    @media screen and (400px <= width <= 849px) { display: none;  }
+    @media screen and (850px <= width <= 999px) { display: block; }
+    @media screen and (min-width: 1000px)       { display: block; }
+}
+/* Highlight navigation link when the cursor hovers over it */
+.bnd-page-nav a:hover {
     color:            white;
     background-color: gray;
 }
-.bnd-nav-dropdown-content {
+/* Format account menu button */
+#bnd-nav-dropdown-button {
+    anchor-name:      --account-menu-anchor;
+    display:          block;
+    border:           none;
+    margin-left:      auto;
+    width:            auto;
+    background-color: transparent;
+    right:            0;
+}
+/* Highlight account menu button when the cursor hovers over it */
+#bnd-nav-dropdown-button:hover {
+    color:            white;
+    background-color: gray;
+}
+/* Format account menu dropdown */
+.bnd-nav-dropdown-menu {
     /* Position the dropdown menu relative to the button */
-    position-anchor: --menu-anchor;
-    inset: auto;
-    margin: 0;
-    top: calc(anchor(bottom) + 0px);
-    right: anchor(right);
-
+    position-anchor:  --account-menu-anchor;
+    inset:            auto;
+    margin:           0;
+    top:              calc(anchor(bottom) + 0px);
+    right:            anchor(right);
     min-width:        fit-content;
     border-style:     solid;
     border-width:     1px;
@@ -471,38 +479,50 @@ img {
 /* - small screens - show                */
 /* - large screens - hide                */
 .bnd-page-nav a.bnd-nav-phone-icon {
-    float:   right;
     display: block;
+    float:   right;
     @media screen and (400px <= width <= 849px) { display: block; }
     @media screen and (850px <= width <= 999px) { display: none; }
     @media screen and (min-width: 1000px)       { display: none; }
 }
-/* Style when menu icon is selected */
-.bnd-page-nav.responsive { position: relative; }
+/* ------------------------------------------------------------ */ 
+/* Style when the small screen dropdown menu icon is enabled    */
+/* ------------------------------------------------------------ */
+.bnd-page-nav.responsive { 
+    position: relative; 
+}
+/* Horizontal nav: style show nav link icon */
 .bnd-page-nav.responsive a.bnd-nav-phone-icon {
+    display:  block;
     position: absolute;
     right:    0;
     top:      0;
-    @media screen and (400px <= width <= 849px) { display: block; }
-    @media screen and (850px <= width <= 999px) { display: none; }
-    @media screen and (min-width: 1000px)       { display: none; }
 }
-/* Style horizontal list of navigation links */
-.bnd-page-nav.responsive a,
-.bnd-page-nav.responsive .bnd-nav-dropdown-container {
-    float:      none;
-    display:    block;
+/* Horizontal nav: Style navigation links */
+.bnd-page-nav.responsive a {
+    display:          block;
+    padding:          4px 8px 4px 8px;
     background-color: lightgray;
-    text-align: center;
+    text-align:       center;
 }
-.bnd-page-nav.responsive .bnd-nav-dropdown-content {
-    position:   relative;
-    width:      100px;
+/* Horizontal nav: Style account button */
+.bnd-page-nav.responsive #bnd-nav-dropdown-button {
+    display:          block;
+    width:            100%;
+    padding:          4px 8px 4px 8px;
+    background-color: lightgray;
+    text-align:       center;
 }
-.bnd-page-nav.responsive .bnd-nav-dropdown-container .bnd-dropdown-button {
+/* Horizontal nav: - Extend account dropdown menu across screen */
+.bnd-page-nav.responsive .bnd-nav-dropdown-menu {
+    width:      100%;
+}
+/* Horizontal nav: Style account menu items */
+.bnd-page-nav.responsive .bnd-nav-dropdown-menu .bnd-dropdown-button {
     display:    block;
     width:      100%;
-    text-align: left;
+    text-align: center;
+    font-size:  14px;
 }
 /* ------------------------------------------------------------ */
 /* Create whitespace between banner/nav and table header        */
@@ -873,19 +893,6 @@ img {
     overflow:         hidden;
     text-decoration:  none;
     color:            inherit;
-    text-align:       center;
-    cursor:           pointer;
-    white-space:      nowrap;
-}
-.bnd-button-textonly {
-    display:          inline-block;
-    margin:           0;
-    border:           none;
-    padding:          0 10px;
-    background-color: transparent;
-    overflow:         hidden;
-    text-decoration:  none;
-    color:            black;
     text-align:       center;
     cursor:           pointer;
     white-space:      nowrap;
