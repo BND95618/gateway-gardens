@@ -14,6 +14,21 @@
     > Pseudo-classes  = :   current state or position in the document tree
     > Pseudo-elements = ::  target a specific part of an element
 
+    Verticle position calculation:
+                    Small   Medium   Large  X-large
+    ------------------------------------------------               
+    > Banner
+      - Top             0        0        0        0
+      - Height         48       56       56       56
+    > Nav bar
+      - Top            48       56       56       56
+      - Height         20       20       20       24 
+    > White space
+      - Top            68       76       76       80
+      - Height          8       16       16       16     
+    > Main
+      - Top            76       92       92       96
+
     z-index values:
       10: search sidebar
       20: main content table th
@@ -375,22 +390,22 @@ img {
     position:         fixed;    /* prevent scrolling off screen */
     z-index:          60;
     width:            100%;
-    height:           24px;
     margin:           0px;
     padding:          0px;
     background-color: lightgray;
     align-items:      center;
     /* position nav below banner */
     top:              48px;
+    height:           20px;
     @media screen and (400px <= width <= 849px) { 
         top:          56px; 
-        height:       24px;
+        height:       20px;
     }
     @media screen and (850px <= width <= 999px) {
         display:      flex;
         flex-wrap:    nowrap;
         top:          56px; 
-        height:       24px;
+        height:       20px;
     }
     @media screen and (min-width: 1000px) {  
         display:      flex;
@@ -428,8 +443,7 @@ img {
 /* small screens - hide all navigation links except for "Home" */
 /* large screens - show all navigation links                   */
 .bnd-page-nav a:not(:first-child), 
-.bnd-page-nav #bnd-nav-dropdown-button
-{
+.bnd-page-nav #bnd-nav-dropdown-button {
     display: none;
     @media screen and (400px <= width <= 849px) { display: none;  }
     @media screen and (850px <= width <= 999px) { display: block; }
@@ -491,21 +505,21 @@ img {
 .bnd-page-nav.responsive { 
     position: relative; 
 }
-/* Horizontal nav: style show nav link icon */
+/* Verticle nav: style show nav link icon */
 .bnd-page-nav.responsive a.bnd-nav-phone-icon {
     display:  block;
     position: absolute;
     right:    0;
     top:      0;
 }
-/* Horizontal nav: Style navigation links */
+/* Verticle nav: Style navigation links */
 .bnd-page-nav.responsive a {
     display:          block;
     padding:          4px 8px 4px 8px;
     background-color: lightgray;
     text-align:       center;
 }
-/* Horizontal nav: Style account button */
+/* Verticle nav: Style account button */
 .bnd-page-nav.responsive #bnd-nav-dropdown-button {
     display:          block;
     width:            100%;
@@ -513,11 +527,11 @@ img {
     background-color: lightgray;
     text-align:       center;
 }
-/* Horizontal nav: - Extend account dropdown menu across screen */
+/* Verticle nav: - Extend account dropdown menu across screen */
 .bnd-page-nav.responsive .bnd-nav-dropdown-menu {
     width:      100%;
 }
-/* Horizontal nav: Style account menu items */
+/* Verticle nav: Style account menu items */
 .bnd-page-nav.responsive .bnd-nav-dropdown-menu .bnd-dropdown-button {
     width:      100%;
     text-align: center;
@@ -536,15 +550,15 @@ img {
     top:              66px;
     height:           8px;
     @media screen and (400px <= width <=  849px) { 
-        top:          74px;
+        top:          76px;
         height:       16px;
     }
     @media screen and (850px <= width <= 999px) {
-        top:          80px;
+        top:          76px;
         height:       16px;
     }
     @media screen and (min-width: 1000px) { 
-        top:          88px;
+        top:          80px;
         height:       16px;
      }
     @media print { display: none; }
@@ -556,17 +570,17 @@ img {
     flex-grow:  1;
     padding:    0.01em 4px;
     /* position content below banner/nav/mask  */
-    margin-top: 88px;   
+    margin-top: 76px;   
     @media screen and (400px <= width <= 849px) { 
-        margin-top:  96px;
+        margin-top:  92px;
         padding:     0.01em 8px;
     }
     @media screen and (850px <= width <= 999px) { 
-        margin-top:  96px;
+        margin-top:  92px;
         padding:     0.01em 4px;
     }
     @media screen and (min-width:        853px) { 
-        margin-top:  104px;
+        margin-top:  96px;
         padding:     0.01em 16px; 
     }
     @media print {
