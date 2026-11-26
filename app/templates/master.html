@@ -152,6 +152,7 @@
     {% endblock js %}
 
     <script>
+    const dropdown_menu = document.getElementById("id_dropdown_menu")
     // Toggle between adding and removing the "responsive" class from the small  
     // screen verticle navigation menu when the user clicks on the menu icon
     const id_nav = document.getElementById("id_nav");
@@ -175,14 +176,14 @@
     }
     // Close responsive verticle navigation menu when the user clicks outside of the menu
     // window.onclick = function(event) 
+    // {
+    //   console.log(event.target);
+    //   if ((event.target.className != "bnd-page-nav responsive") && event.target.className != "bnd-nav-phone-icon")
     //   {
-    //     console.log(event.target);
-    //     if ((event.target.className != "bnd-page-nav responsive") && event.target.className != "bnd-nav-phone-icon")
-    //     {
-    //       id_nav.className = "bnd-page-nav";
-    //     }
+    //     id_nav.className = "bnd-page-nav";
     //   }
-    //
+    // }
+    
     const profile_modal            = document.getElementById('profile_modal')
     const login_modal              = document.getElementById('login_modal')
     const user_profile_modal_step2 = document.getElementById('user_profile_modal_step2')
@@ -194,8 +195,10 @@
     //-----------------------------------------------------------------------------
     function openUserProfileModal()
     { 
-      // Remove any "responsive" class from nav bar
+      // Remove any "responsive" class from nav bar to collapse horizontal menu
       id_nav.className = "bnd-page-nav";
+      // Close account menu
+      dropdown_menu.togglePopover();
       // fetch the modal html from the server
       fetch("{% url 'user_info:user_profile_step1' %}") 
       .then(response => response.text())
@@ -470,8 +473,10 @@
     //-----------------------------------------------------------------------------
     function openUserLoginModal()
     { 
-      // Remove any "responsive" class from nav bar
+      // Remove any "responsive" class from nav bar to collapse horizontal menu
       id_nav.className = "bnd-page-nav";
+      // Close account menu
+      dropdown_menu.togglePopover();
       //
       fetch("{% url 'user_info:user_login' %}") 
       .then(response => response.text())
@@ -500,8 +505,10 @@
     //-----------------------------------------------------------------------------
     function openPwdResetModal()
     {
-      // Remove any "responsive" class from nav bar
+      // Remove any "responsive" class from nav bar to collapse horizontal menu
       id_nav.className = "bnd-page-nav";
+      // Close account menu
+      dropdown_menu.togglePopover();
       //
       fetch("{% url 'user_info:user_pwd_rst_step1' %}") 
       .then(response => response.text())

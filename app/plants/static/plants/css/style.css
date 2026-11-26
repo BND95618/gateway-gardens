@@ -519,7 +519,6 @@ img {
 }
 /* Horizontal nav: Style account menu items */
 .bnd-page-nav.responsive .bnd-nav-dropdown-menu .bnd-dropdown-button {
-    display:    block;
     width:      100%;
     text-align: center;
     font-size:  14px;
